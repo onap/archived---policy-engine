@@ -82,8 +82,8 @@ public class PolicyRestController extends RestrictedBaseController{
 
     private static final Logger policyLogger = FlexLogger.getLogger(PolicyRestController.class);
 
-    private static final String model = "model";
-    private static final String importDictionary = "import_dictionary";
+    private static final String MODEL = "model";
+    private static final String IMPORT_DICTIONARY = "import_dictionary";
     private static final String FILE = "file";
     private static final String TYPE = "type";
     private static final String PATH = "path";
@@ -97,6 +97,11 @@ public class PolicyRestController extends RestrictedBaseController{
     private static final String XML = ".xml";
     private static final String UTF_8 = "UTF-8";
     private static final String DATA = "data";
+    private static final String USER_ID = "UserId:  ";
+    private static final String BASIC = "Basic ";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String ONAP = "/onap";
 
     private static CommonClassDao commonClassDao;
 
@@ -135,7 +140,7 @@ public class PolicyRestController extends RestrictedBaseController{
         JsonNode root = mapper.readTree(request.getReader());
 
         policyLogger.info("****************************************Logging UserID while Create/Update Policy**************************************************");
-        policyLogger.info("UserId:  " + userId + "Policy Data Object:  "+ root.get(PolicyController.getPolicydata()).get("policy").toString());
+        policyLogger.info(USER_ID + userId + "Policy Data Object:  "+ root.get(PolicyController.getPolicydata()).get("policy").toString());
         policyLogger.info("***********************************************************************************************************************************");
 
         PolicyRestAdapter policyData = mapper.readValue(root.get(PolicyController.getPolicydata()).get("policy").toString(), PolicyRestAdapter.class);
@@ -194,21 +199,23 @@ public class PolicyRestController extends RestrictedBaseController{
     }
 
     private void modifyPolicyData(JsonNode root, PolicyRestAdapter policyData) {
-        if(FILE.equals(root.get(PolicyController.getPolicydata()).get(model).get(TYPE).toString().replace("\"", ""))){
+        if(FILE.equals(root.get(PolicyController.getPolicydata()).get(MODEL).get(TYPE).toString().replace("\"", ""))){
             policyData.setEditPolicy(true);
         }
-        if(root.get(PolicyController.getPolicydata()).get(model).get(PATH).size() != 0){
+        if(root.get(PolicyController.getPolicydata()).get(MODEL).get(PATH).size() != 0){
             String dirName = "";
-            for(int i = 0; i < root.get(PolicyController.getPolicydata()).get(model).get(PATH).size(); i++){
-                dirName = dirName.replace("\"", "") + root.get(PolicyController.getPolicydata()).get(model).get(PATH).get(i).toString().replace("\"", "") + File.separator;
+            for(int i = 0; i < root.get(PolicyController.getPolicydata()).get(MODEL).get(PATH).size(); i++){
+                dirName = dirName.replace("\"", "") + root.get(PolicyController.getPolicydata()).get(
+                    MODEL).get(PATH).get(i).toString().replace("\"", "") + File.separator;
             }
             if(policyData.isEditPolicy()){
                 policyData.setDomainDir(dirName.substring(0, dirName.lastIndexOf(File.separator)));
             }else{
-                policyData.setDomainDir(dirName + root.get(PolicyController.getPolicydata()).get(model).get(NAME).toString().replace("\"", ""));
+                policyData.setDomainDir(dirName + root.get(PolicyController.getPolicydata()).get(
+                    MODEL).get(NAME).toString().replace("\"", ""));
             }
         }else{
-            String domain = root.get(PolicyController.getPolicydata()).get(model).get(NAME).toString();
+            String domain = root.get(PolicyController.getPolicydata()).get(MODEL).get(NAME).toString();
             if(domain.contains("/")){
                 domain = domain.substring(0, domain.lastIndexOf('/')).replace("/", File.separator);
             }
@@ -226,8 +233,8 @@ public class PolicyRestController extends RestrictedBaseController{
         Base64.Encoder encoder = Base64.getEncoder();
         String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Basic " + encoding);
-        headers.set("Content-Type", PolicyController.getContenttype());
+        headers.set(AUTHORIZATION, BASIC + encoding);
+        headers.set(CONTENT_TYPE, PolicyController.getContenttype());
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<?> requestEntity = new HttpEntity<>(body, headers);
@@ -268,7 +275,6 @@ public class PolicyRestController extends RestrictedBaseController{
 
     private String callPAP(HttpServletRequest request , String method, String uriValue){
         String uri = uriValue;
-        String boundary = null;
         String papUrl = PolicyController.getPapUrl();
         String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
         String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
@@ -276,15 +282,15 @@ public class PolicyRestController extends RestrictedBaseController{
         Base64.Encoder encoder = Base64.getEncoder();
         String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Basic " + encoding);
-        headers.set("Content-Type", PolicyController.getContenttype());
+        headers.set(AUTHORIZATION, BASIC + encoding);
+        headers.set(CONTENT_TYPE, PolicyController.getContenttype());
 
 
         HttpURLConnection connection = null;
         List<FileItem> items;
         FileItem item = null;
         File file = null;
-        if(uri.contains(importDictionary)){
+        if(uri.contains(IMPORT_DICTIONARY)){
             try {
                 items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
                 item = items.get(0);
@@ -302,7 +308,7 @@ public class PolicyRestController extends RestrictedBaseController{
             connection.setRequestMethod(method);
             connection.setUseCaches(false);
             connection.setInstanceFollowRedirects(false);
-            connection.setRequestProperty("Authorization", "Basic " + encoding);
+            connection.setRequestProperty(AUTHORIZATION, BASIC + encoding);
             connection.setDoOutput(true);
             connection.setDoInput(true);
 
@@ -339,8 +345,8 @@ public class PolicyRestController extends RestrictedBaseController{
 
     private void checkURI(HttpServletRequest request, String uri, HttpURLConnection connection, FileItem item) throws IOException {
         String boundary;
-        if(!(uri.endsWith("set_BRMSParamData") || uri.contains(importDictionary))){
-            connection.setRequestProperty("Content-Type",PolicyController.getContenttype());
+        if(!(uri.endsWith("set_BRMSParamData") || uri.contains(IMPORT_DICTIONARY))){
+            connection.setRequestProperty(CONTENT_TYPE,PolicyController.getContenttype());
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = getJsonNode(request, mapper);
@@ -361,13 +367,13 @@ public class PolicyRestController extends RestrictedBaseController{
             }
         }else{
             if(uri.endsWith("set_BRMSParamData")){
-                connection.setRequestProperty("Content-Type",PolicyController.getContenttype());
+                connection.setRequestProperty(CONTENT_TYPE,PolicyController.getContenttype());
                 try (OutputStream os = connection.getOutputStream()) {
                     IOUtils.copy((InputStream) request.getInputStream(), os);
                 }
             }else{
                 boundary = "===" + System.currentTimeMillis() + "===";
-                connection.setRequestProperty("Content-Type","multipart/form-data; boundary=" + boundary);
+                connection.setRequestProperty(CONTENT_TYPE,"multipart/form-data; boundary=" + boundary);
                 try (OutputStream os = connection.getOutputStream()) {
                     if(item != null){
                         IOUtils.copy((InputStream) item.getInputStream(), os);
@@ -436,14 +442,14 @@ public class PolicyRestController extends RestrictedBaseController{
         if(uri.startsWith("/")){
             uri = uri.substring(uri.indexOf('/')+1);
         }
-        uri = "/onap" + uri.substring(uri.indexOf('/'));
-        if(uri.contains(importDictionary)){
+        uri = ONAP + uri.substring(uri.indexOf('/'));
+        if(uri.contains(IMPORT_DICTIONARY)){
             userId = UserUtils.getUserSession(request).getOrgUserId();
             uri = uri+ "?userId=" +userId;
         }
 
         policyLogger.info("****************************************Logging UserID while Saving Dictionary*****************************************************");
-        policyLogger.info("UserId:  " + userId);
+        policyLogger.info(USER_ID + userId);
         policyLogger.info("***********************************************************************************************************************************");
 
         String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
@@ -460,11 +466,11 @@ public class PolicyRestController extends RestrictedBaseController{
         if(uri.startsWith("/")){
             uri = uri.substring(uri.indexOf('/')+1);
         }
-        uri = "/onap" + uri.substring(uri.indexOf('/'));
+        uri = ONAP + uri.substring(uri.indexOf('/'));
 
         String userId = UserUtils.getUserSession(request).getOrgUserId();
         policyLogger.info("****************************************Logging UserID while Deleting Dictionary*****************************************************");
-        policyLogger.info("UserId:  " + userId);
+        policyLogger.info(USER_ID + userId);
         policyLogger.info("*************************************************************************************************************************************");
 
         String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
@@ -482,7 +488,7 @@ public class PolicyRestController extends RestrictedBaseController{
         if(uri.startsWith("/")){
             uri = uri.substring(uri.indexOf('/')+1);
         }
-        uri = "/onap" + uri.substring(uri.indexOf('/'));
+        uri = ONAP + uri.substring(uri.indexOf('/'));
         try{
             String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
             if(body.contains("CouldNotConnectException")){
@@ -515,7 +521,7 @@ public class PolicyRestController extends RestrictedBaseController{
         if(uri.startsWith("/")){
             uri = uri.substring(uri.indexOf('/')+1);
         }
-        uri = "/onap" + uri.substring(uri.indexOf('/'));
+        uri = ONAP + uri.substring(uri.indexOf('/'));
         String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
 
         JSONObject json = new JSONObject(body);
