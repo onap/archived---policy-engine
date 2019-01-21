@@ -56,6 +56,7 @@ public class PolicyNotificationMail{
     private static final String ACTIVE_VERSION = "Active Version  : ";
     private static final String SCOPE_POLICY_NAME = "Scope + Policy Name  : ";
     private static final String DELETED_TIME = "Deleted Time  : ";
+    private static final String DELETED_BY = "Deleted By : ";
     private static Logger policyLogger	= FlexLogger.getLogger(PolicyNotificationMail.class);
 
     @Bean
@@ -102,17 +103,17 @@ public class PolicyNotificationMail{
         if("DeleteAll".equalsIgnoreCase(mode)){
             subject = "Policy has been Deleted : "+entityItem.getPolicyName();
             message = POLICY_WATCHING_MESSAGE + PolicyController.getSmtpApplicationName() + " has been Deleted with All Versions" + '\n'  + '\n'  + '\n'+ SCOPE_POLICY_NAME + policyName + '\n'
-                     + '\n'  + '\n' + "Deleted By : " +entityItem.getModifiedBy() + '\n' + DELETED_TIME +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + EMAIL_MESSAGE_POSTSCRIPT;
+                     + '\n'  + '\n' + DELETED_BY +entityItem.getModifiedBy() + '\n' + DELETED_TIME +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + EMAIL_MESSAGE_POSTSCRIPT;
         }
         if("DeleteOne".equalsIgnoreCase(mode)){
             subject = "Policy has been Deleted : "+entityItem.getPolicyName();
             message = POLICY_WATCHING_MESSAGE + PolicyController.getSmtpApplicationName() + " has been Deleted" + '\n'  + '\n'  + '\n'+ SCOPE_POLICY_NAME + policyName + '\n'  +"Policy Version : " +entityItem.getActiveVersion()
-                     + '\n'  + '\n' + "Deleted By : " +entityItem.getModifiedBy() + '\n' + DELETED_TIME +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + EMAIL_MESSAGE_POSTSCRIPT;
+                     + '\n'  + '\n' + DELETED_BY +entityItem.getModifiedBy() + '\n' + DELETED_TIME +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + EMAIL_MESSAGE_POSTSCRIPT;
         }
         if("DeleteScope".equalsIgnoreCase(mode)){
             subject = "Scope has been Deleted : "+entityItem.getPolicyName();
             message = "The Scope Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been Deleted" + '\n'  + '\n'  + '\n'+ "Scope + Scope Name  : "  + policyName + '\n'
-                     + '\n'  + '\n' + "Deleted By : " +entityItem.getModifiedBy() + '\n' + DELETED_TIME +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + EMAIL_MESSAGE_POSTSCRIPT;
+                     + '\n'  + '\n' + DELETED_BY +entityItem.getModifiedBy() + '\n' + DELETED_TIME +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + EMAIL_MESSAGE_POSTSCRIPT;
         }
         if("SwitchVersion".equalsIgnoreCase(mode)){
             subject = "Policy has been SwitchedVersion : "+entityItem.getPolicyName();
@@ -129,7 +130,9 @@ public class PolicyNotificationMail{
         String policyFileName = findPolicyFileName(entityItem);
         String query = "from WatchPolicyNotificationTable where policyName like:policyFileName";
         List<Object> watchList = findWatchList(policyNotificationDao, policyFileName, query);
-        if (watchList == null) return;
+        if (watchList == null) {
+            return;
+        }
 
         composeAndSendMail(mode, policyNotificationDao, subject, message, checkPolicyName, watchList);
     }
