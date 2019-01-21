@@ -2870,6 +2870,18 @@ public class PolicyDBDao {
         String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName) throws PolicyDBException {
             return PolicyDBDao.this.getPolicyNameAndVersionFromPolicyFileName(originalPolicyName);
         }
+        
+        String[] getNameScopeAndVersionFromPdpPolicy(String fileName) {
+            return PolicyDBDao.this.getNameScopeAndVersionFromPdpPolicy(fileName);
+        }
+        
+        String getPdpPolicyName(String name, String scope) {
+            return PolicyDBDao.this.getPdpPolicyName(name, scope);
+        }
+        
+        Path getPolicySubFile(String inputFileName, String subFileType) {
+            return PolicyDBDao.this.getPolicySubFile(inputFileName, subFileType);
+        }
     }
 
 }

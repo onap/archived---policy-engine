@@ -143,6 +143,47 @@ public class PolicyDBDaoTest extends Mockito{
         configFile = d.getConfigFile("Action_mypolicy.xml", "org.onap", pra);
         Assert.assertEquals("org.onap.Action_mypolicy.json", configFile);
     }
+    
+    @Test
+    public void getPolicyNameAndVersionFromPolicyFileNameTest() throws PolicyDBException {
+        String policyName = "com.Decision_testname.1.xml";
+        String[] expectedNameAndVersion = new String[2];
+        expectedNameAndVersion[0] = "com.Decision_testname";
+        expectedNameAndVersion[1] = "1";
+        String[] actualNameAndVersion = d.getPolicyNameAndVersionFromPolicyFileName(policyName);
+        Assert.assertArrayEquals(expectedNameAndVersion, actualNameAndVersion);
+    }
+    
+    @Test
+    public void getNameScopeAndVersionFromPdpPolicyTest() {
+        String fileName = "com.Decision_testname.1.xml";
+        String[] expectedArray = new String[3];
+        expectedArray[0] = "Decision_testname.1.xml";
+        expectedArray[2] = "1";
+        expectedArray[1] = "com";
+ 
+        String[] returnArray = d.getNameScopeAndVersionFromPdpPolicy(fileName);
+        Assert.assertArrayEquals(expectedArray, returnArray);
+    }
+    
+    @Test
+    public void getPdpPolicyNameTest() {
+        String name = "Decision_testname.1.json";
+        String scope = "com";
+        String expectedFinalname = "com.Decision_testname.1.xml";
+        
+        String finalname = d.getPdpPolicyName(name, scope);
+        Assert.assertEquals(expectedFinalname, finalname);
+    }
+    
+    @Test
+    public void getPolicySubFileTest() {
+        String name = "Config_testname.1.json";
+        String subFileType = "Config";
+        
+        Path path = d.getPolicySubFile(name, subFileType);
+        Assert.assertNull(path);
+    }
 
     @Test
     public void createFromPolicyObject(){
