@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -2869,6 +2869,18 @@ public class PolicyDBDao {
 
         String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName) throws PolicyDBException {
             return PolicyDBDao.this.getPolicyNameAndVersionFromPolicyFileName(originalPolicyName);
+        }
+        
+        String[] getNameScopeAndVersionFromPdpPolicy(String fileName) {
+            return PolicyDBDao.this.getNameScopeAndVersionFromPdpPolicy(fileName);
+        }
+        
+        String getPdpPolicyName(String name, String scope) {
+            return PolicyDBDao.this.getPdpPolicyName(name, scope);
+        }
+        
+        Path getPolicySubFile(String inputFileName, String subFileType) {
+            return PolicyDBDao.this.getPolicySubFile(inputFileName, subFileType);
         }
     }
 
