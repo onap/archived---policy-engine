@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_12a8b88b",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/api/PolicyEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-01-24T20:30:38Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces",
+      "revId": "5d4c99af4ba6960d6ac8b728b3cfce4e63384b95",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_b2aa0c83",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/api/PolicyEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-01-24T20:30:38Z",
+      "side": 1,
+      "message": "\"PAP\" \u003d\u003e \"PDP\"?",
+      "revId": "5d4c99af4ba6960d6ac8b728b3cfce4e63384b95",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_9293485a",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-01-24T20:30:38Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces",
+      "revId": "5d4c99af4ba6960d6ac8b728b3cfce4e63384b95",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_f28bb41c",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 820,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-01-24T20:30:38Z",
+      "side": 1,
+      "message": "need any spacing before the exception? Or just add the exception as an argument to LOGGER.error()?",
+      "revId": "5d4c99af4ba6960d6ac8b728b3cfce4e63384b95",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_128f582b",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/ListPolicyClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-01-24T20:30:38Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces",
+      "revId": "5d4c99af4ba6960d6ac8b728b3cfce4e63384b95",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_b281acfc",
+        "filename": "docs/platform/api-docs.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-01-24T20:30:38Z",
+      "side": 1,
+      "message": "by any chance, can this be pretty-printed?",
+      "revId": "5d4c99af4ba6960d6ac8b728b3cfce4e63384b95",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
