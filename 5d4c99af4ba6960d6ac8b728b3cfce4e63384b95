@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "9adffdf1_927a6822",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/api/PolicyEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-01-24T20:45:21Z",
+      "side": 1,
+      "message": "This is correct Jim, the request is to get policies from the PAP",
+      "parentUuid": "9adffdf1_b2aa0c83",
+      "revId": "5d4c99af4ba6960d6ac8b728b3cfce4e63384b95",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9adffdf1_9293485a",
         "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
         "patchSetId": 3
