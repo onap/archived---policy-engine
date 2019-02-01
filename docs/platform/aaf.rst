@@ -19,7 +19,7 @@ AAF is supported for externally facing entry points into the Policy subsystem.  
 +--------+------+------------+-----+-----+---------------------------------+
 | Policy | Role | Remote     |HTTPS| AAF | Notes                           |
 +========+======+============+=====+=====+=================================+
-| pdp-d  |server| \*         |true |true |Healthchek and Telemetry APIs    |
+| pdp-d  |server| \*         |true |true |Healthcheck and Telemetry APIs   |
 +--------+------+------------+-----+-----+---------------------------------+
 | pdp-d  |client| aaf        |true |true |Two-way TLS                      |
 +--------+------+------------+-----+-----+---------------------------------+
