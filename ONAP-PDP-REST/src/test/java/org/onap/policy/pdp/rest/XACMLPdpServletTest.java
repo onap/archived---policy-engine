@@ -4,12 +4,14 @@
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,15 +28,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,8 +53,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
+
 import com.att.research.xacml.util.XACMLProperties;
 import com.mockrunner.mock.web.MockServletInputStream;
+
 import junit.framework.TestCase;
 
 @RunWith(PowerMockRunner.class)
@@ -68,7 +71,6 @@ public class XACMLPdpServletTest extends TestCase {
   private ServletInputStream mockInput;
   private ServletConfig servletConfig;
   private XACMLPdpServlet pdpServlet;
-  private String persistenceUnit;
   private Properties properties;
   private String resourceName;
   private static final String DEFAULT_DB_DRIVER = "org.h2.Driver";
@@ -76,6 +78,8 @@ public class XACMLPdpServletTest extends TestCase {
   private static final String DEFAULT_DB_PWD = "";
   private StdPDPStatus status;
   private StdPDPPolicy foobarPolicy;
+
+  private static final String ERROR_TEXT = "Exception occurred: ";
 
   @Override
   @Before
@@ -87,7 +91,6 @@ public class XACMLPdpServletTest extends TestCase {
     foobarPolicy.setName("nothing");
     status.addLoadedPolicy(foobarPolicy);
 
-
     properties = new Properties();
     properties.put(IntegrityAuditProperties.DB_DRIVER, XACMLPdpServletTest.DEFAULT_DB_DRIVER);
     properties.put(IntegrityAuditProperties.DB_URL, "jdbc:h2:file:./sql/xacmlTest");
@@ -95,25 +98,16 @@ public class XACMLPdpServletTest extends TestCase {
     properties.put(IntegrityAuditProperties.DB_PWD, XACMLPdpServletTest.DEFAULT_DB_PWD);
     properties.put(IntegrityAuditProperties.SITE_NAME, "SiteA");
     properties.put(IntegrityAuditProperties.NODE_TYPE, "pap");
-    persistenceUnit = "testPdpPU";
     resourceName = "siteA.pdp1";
 
     System.setProperty("com.sun.management.jmxremote.port", "9999");
 
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUnit, properties);
-
-    EntityManager em = emf.createEntityManager();
-    // Start a transaction
-    EntityTransaction et = em.getTransaction();
-
     IntegrityMonitor im = null;
     try {
       im = IntegrityMonitor.getInstance(resourceName, properties);
-    } catch (Exception e2) {
-      // TODO Auto-generated catch block
-      e2.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-    // cleanDb(persistenceUnit, properties);
 
     httpServletRequest = Mockito.mock(HttpServletRequest.class);
     Mockito.when(httpServletRequest.getMethod()).thenReturn("POST");
@@ -145,11 +139,7 @@ public class XACMLPdpServletTest extends TestCase {
     System.setProperty("xacml.properties", "src/test/resources/xacml.pdp.properties");
     System.setProperty("xacml.rest.pdp.config", "src/test/resources/config_testing");
     System.setProperty("xacml.rest.pdp.webapps", "src/test/resources/webapps");
-    /*
-     * System.setProperty("xacml.rootPolicies", "test_PolicyEngine.xml");
-     * System.setProperty("xacml.referencedPolicies", "test_PolicyEngine.xml");
-     * System.setProperty("test_PolicyEngine.xml.file", "config_testing\\test_PolicyEngine.xml");
-     */
+
     System.setProperty("xacml.rest.pdp.register", "false");
     System.setProperty("com.sun.management.jmxremote.port", "9999");
 
@@ -161,8 +151,8 @@ public class XACMLPdpServletTest extends TestCase {
       PowerMockito
           .when(IntegrityMonitor.getInstance(Mockito.anyString(), Mockito.any(Properties.class)))
           .thenReturn(im);
-    } catch (Exception e1) {
-      LOGGER.error("Exception Occured" + e1);
+    } catch (Exception e) {
+      LOGGER.error(ERROR_TEXT + e);
     }
 
     try {
@@ -173,6 +163,13 @@ public class XACMLPdpServletTest extends TestCase {
     Mockito.doNothing().when(im).endTransaction();
   }
 
+  @Override
+  @After
+  public void tearDown()
+  {
+    System.clearProperty("xacml.rest.pdp.config");
+  }
+
   @Test
   public void testInit() {
     LOGGER.info("XACMLPdpServletTest - testInit");
@@ -181,7 +178,7 @@ public class XACMLPdpServletTest extends TestCase {
 
       assertTrue(true);
     } catch (Exception e) {
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
 
     }
@@ -206,7 +203,7 @@ public class XACMLPdpServletTest extends TestCase {
       XACMLPdpLoader.sendNotification();
       assertTrue(true);
     } catch (Exception e) {
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
 
     }
@@ -231,7 +228,7 @@ public class XACMLPdpServletTest extends TestCase {
       XACMLPdpLoader.sendNotification();
       assertTrue(true);
     } catch (Exception e) {
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
 
     }
@@ -249,7 +246,7 @@ public class XACMLPdpServletTest extends TestCase {
       regThread.run();
       assertTrue(true);
     } catch (Exception e) {
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -264,8 +261,7 @@ public class XACMLPdpServletTest extends TestCase {
       Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoGetNoTypeError");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -281,8 +277,7 @@ public class XACMLPdpServletTest extends TestCase {
       Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoGetConfigType");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
 
@@ -298,8 +293,7 @@ public class XACMLPdpServletTest extends TestCase {
       Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoGetTypeHb");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -314,8 +308,7 @@ public class XACMLPdpServletTest extends TestCase {
       Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoGetTypeStatus");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -328,8 +321,7 @@ public class XACMLPdpServletTest extends TestCase {
       pdpServlet.doPost(httpServletRequest, httpServletResponse);
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoPost");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -345,8 +337,7 @@ public class XACMLPdpServletTest extends TestCase {
       pdpServlet.doPost(httpServletRequest, httpServletResponse);
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoPostToLong");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -362,8 +353,7 @@ public class XACMLPdpServletTest extends TestCase {
       pdpServlet.doPost(httpServletRequest, httpServletResponse);
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoPostContentLengthNegative");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -379,8 +369,7 @@ public class XACMLPdpServletTest extends TestCase {
       pdpServlet.doPost(httpServletRequest, httpServletResponse);
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoPostContentTypeNonValid");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -396,8 +385,7 @@ public class XACMLPdpServletTest extends TestCase {
       pdpServlet.doPost(httpServletRequest, httpServletResponse);
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoPostContentTypeConfigurationError");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -417,8 +405,7 @@ public class XACMLPdpServletTest extends TestCase {
           "PUT must contain at least one property");
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoPutCacheEmpty");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -439,8 +426,7 @@ public class XACMLPdpServletTest extends TestCase {
       pdpServlet.doPut(httpServletRequest, httpServletResponse);
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoPutConfigPolicies");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -459,8 +445,7 @@ public class XACMLPdpServletTest extends TestCase {
           "Content-Length larger than server will accept.");
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoPutToLong");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -480,8 +465,7 @@ public class XACMLPdpServletTest extends TestCase {
           "Invalid cache: 'policies' or content-type: 'text/json'");
       assertTrue(true);
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDoPutInvalidContentType");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
@@ -494,8 +478,7 @@ public class XACMLPdpServletTest extends TestCase {
       pdpServlet.init(servletConfig);
       pdpServlet.destroy();
     } catch (Exception e) {
-      System.out.println("Unexpected exception in testDestroy");
-      LOGGER.error("Exception Occured" + e);
+      LOGGER.error(ERROR_TEXT + e);
       fail();
     }
   }
