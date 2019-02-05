@@ -1,15 +1,17 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-PAP-REST
+ * ONAP-PDP-REST
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,37 +30,50 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.api.PolicyParameters;
 
 public class ConfigPolicyServiceTest {
-	@Test
-	public void testRaw() throws FileNotFoundException, IOException  {
+
+	private static final String SYSTEM_KEY = "xacml.properties";
+	private static String oldProperty;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
 		Properties prop = new Properties();
 		prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
 		String succeeded = prop.getProperty("xacml.rest.pap.url");
 		List<String> paps = Arrays.asList(succeeded.split(","));
 		PAPServices.setPaps(paps);
 		PAPServices.setJunit(true);
-		
-		String systemKey = "xacml.properties";
+		oldProperty = System.getProperty(SYSTEM_KEY);
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() {
+		PAPServices.setPaps(null);
+		PAPServices.setJunit(false);
+		// Restore the original system property
+		if (oldProperty != null) {
+			System.setProperty(SYSTEM_KEY, oldProperty);
+		} else {
+			System.clearProperty(SYSTEM_KEY);
+		}
+	}
+
+	@Test
+	public void testRaw() throws FileNotFoundException, IOException {
+
 		String testVal = "testVal";
 		PolicyParameters testParams = new PolicyParameters();
-		
+
 		// Set the system property temporarily
-		String oldProperty = System.getProperty(systemKey);
-		System.setProperty(systemKey, "xacml.pdp.properties");
-		
+		System.setProperty(SYSTEM_KEY, "xacml.pdp.properties");
+
 		ConfigPolicyService service = new ConfigPolicyService(testVal, testVal, testParams, testVal);
 		assertEquals(service.getValidation(), false);
 		assertEquals(service.getMessage(), "PE300 - Data Issue: No Config Body given.");
-		
-		// Restore the original system property
-		if (oldProperty != null) {
-			System.setProperty(systemKey, oldProperty);
-		}
-		else {
-			System.clearProperty(systemKey);
-		} 
-	} 
+	}
 }
