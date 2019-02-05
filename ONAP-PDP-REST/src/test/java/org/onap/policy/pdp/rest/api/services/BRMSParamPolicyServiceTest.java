@@ -71,14 +71,14 @@ public class BRMSParamPolicyServiceTest {
         Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
         attributes.put(AttributeType.RULE, ruleAttributes);
         policyParameters.setAttributes(attributes);
-        
+
 		String policyName = "testBRMSPolicy";
 		String policyScope = "Test";
 		service = new BRMSParamPolicyService(policyName, policyScope, policyParameters, date.toString());
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		PAPServices.setPaps(null);
 		PAPServices.setJunit(false);
 	}

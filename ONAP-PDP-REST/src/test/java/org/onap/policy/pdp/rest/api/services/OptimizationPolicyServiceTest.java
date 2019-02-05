@@ -68,7 +68,9 @@ public class OptimizationPolicyServiceTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
+		PAPServices.setPaps(null);
+		PAPServices.setJunit(false);
 	}
 
 	@Test
