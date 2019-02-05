@@ -4,12 +4,14 @@
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,16 +22,13 @@
 package org.onap.policy.pdp.rest.api.test;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import java.lang.reflect.Method;
-
 import org.junit.Test;
 import org.onap.policy.api.DictionaryParameters;
 import org.onap.policy.pdp.rest.api.services.GetDictionaryService;
 
 public class GetDictionaryServiceTest {
-	
+
 	@Test
 	public void dictionaryJsonTest() throws Exception{
 		Method formatDictionary = GetDictionaryService.class.getDeclaredMethod("formatDictionaryJson", String.class);
