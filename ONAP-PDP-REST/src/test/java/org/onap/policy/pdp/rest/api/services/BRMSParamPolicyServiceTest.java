@@ -40,9 +40,9 @@ import org.onap.policy.api.PolicyException;
 import org.onap.policy.api.PolicyParameters;
 
 public class BRMSParamPolicyServiceTest {
-    
+
 	BRMSParamPolicyService service = null;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		Properties prop = new Properties();
@@ -51,7 +51,7 @@ public class BRMSParamPolicyServiceTest {
 		List<String> paps = Arrays.asList(succeeded.split(","));
 		PAPServices.setPaps(paps);
 		PAPServices.setJunit(true);
-		
+
 		PolicyParameters policyParameters = new PolicyParameters();
         policyParameters.setPolicyConfigType(PolicyConfigType.BRMS_PARAM);
         policyParameters.setPolicyName("Test.testBRMSPolicy");
@@ -62,23 +62,23 @@ public class BRMSParamPolicyServiceTest {
 		policyParameters.setGuard(true);
 		policyParameters.setRiskLevel("5");
 		policyParameters.setRiskType("TEST");
-		
+
         Map<String, String> ruleAttributes = new HashMap<>();
         ruleAttributes.put("templateName", "Sample");
-        ruleAttributes.put("controller", "default"); 
-        ruleAttributes.put("SamPoll", "300");  
+        ruleAttributes.put("controller", "default");
+        ruleAttributes.put("SamPoll", "300");
         ruleAttributes.put("value", "abcd");
         Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
         attributes.put(AttributeType.RULE, ruleAttributes);
         policyParameters.setAttributes(attributes);
-        
+
 		String policyName = "testBRMSPolicy";
 		String policyScope = "Test";
 		service = new BRMSParamPolicyService(policyName, policyScope, policyParameters, date.toString());
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		PAPServices.setPaps(null);
 		PAPServices.setJunit(false);
 	}

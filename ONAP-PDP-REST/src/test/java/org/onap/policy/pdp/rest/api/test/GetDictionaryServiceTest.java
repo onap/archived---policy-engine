@@ -20,10 +20,7 @@
 package org.onap.policy.pdp.rest.api.test;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import java.lang.reflect.Method;
-
 import org.junit.Test;
 import org.onap.policy.api.DictionaryParameters;
 import org.onap.policy.pdp.rest.api.services.GetDictionaryService;
