@@ -13,13 +13,13 @@ The pap, console, pdp-x, brmsgw, and pdp-d components have been migrated from HT
 AAF is supported for externally facing entry points into the Policy subsystem.   These are:
 
 * PDP-D supports AAF for its telemetry and healthcheck APIs.
-* PDP-X supports AAF for its external policy APIs.  It is currently disabled as some of clients are not AAF-capable, and this is a global setting.
+* PDP-X supports AAF for its external policy APIs. It is currently disabled as some of clients are not AAF-capable, and this is a global setting.
 * Console (for Browser Portal redirects) supports AAF when accessed through Portal.
 
 +--------+------+------------+-----+-----+---------------------------------+
 | Policy | Role | Remote     |HTTPS| AAF | Notes                           |
 +========+======+============+=====+=====+=================================+
-| pdp-d  |server| \*         |true |true |Healthchek and Telemetry APIs    |
+| pdp-d  |server| \*         |true |true |Healthcheck and Telemetry APIs   |
 +--------+------+------------+-----+-----+---------------------------------+
 | pdp-d  |client| aaf        |true |true |Two-way TLS                      |
 +--------+------+------------+-----+-----+---------------------------------+
