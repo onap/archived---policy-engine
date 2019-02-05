@@ -28,37 +28,53 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.api.PolicyParameters;
 
 public class ConfigPolicyServiceTest {
-	@Test
-	public void testRaw() throws FileNotFoundException, IOException  {
+
+	private static final String SYSTEM_KEY = "xacml.properties";
+	String oldProperty;
+
+	@Before
+	public void setUp() throws Exception {
+
 		Properties prop = new Properties();
 		prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
 		String succeeded = prop.getProperty("xacml.rest.pap.url");
 		List<String> paps = Arrays.asList(succeeded.split(","));
 		PAPServices.setPaps(paps);
 		PAPServices.setJunit(true);
-		
-		String systemKey = "xacml.properties";
+		prop.clear();
+
+		oldProperty = System.getProperty(SYSTEM_KEY);
+	}
+
+	@After
+	public void tearDown() {
+		PAPServices.setPaps(null);
+		PAPServices.setJunit(false);
+		// Restore the original system property
+		if (oldProperty != null) {
+			System.setProperty(SYSTEM_KEY, oldProperty);
+		} else {
+			System.clearProperty(SYSTEM_KEY);
+		}
+	}
+
+	@Test
+	public void testRaw() throws FileNotFoundException, IOException {
+
 		String testVal = "testVal";
 		PolicyParameters testParams = new PolicyParameters();
-		
+
 		// Set the system property temporarily
-		String oldProperty = System.getProperty(systemKey);
-		System.setProperty(systemKey, "xacml.pdp.properties");
-		
+		System.setProperty(SYSTEM_KEY, "xacml.pdp.properties");
+
 		ConfigPolicyService service = new ConfigPolicyService(testVal, testVal, testParams, testVal);
 		assertEquals(service.getValidation(), false);
 		assertEquals(service.getMessage(), "PE300 - Data Issue: No Config Body given.");
-		
-		// Restore the original system property
-		if (oldProperty != null) {
-			System.setProperty(systemKey, oldProperty);
-		}
-		else {
-			System.clearProperty(systemKey);
-		} 
-	} 
+	}
 }
