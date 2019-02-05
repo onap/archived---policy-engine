@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ec10011f_f2bf9fd9",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyServiceTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-05T16:37:46Z",
+      "side": 1,
+      "message": "I know the original file didn\u0027t, but the reformatting should meet the checkstyle guidelines.",
+      "revId": "6ea2d94d03c04b849d388f6c2905e1d9c04939c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
