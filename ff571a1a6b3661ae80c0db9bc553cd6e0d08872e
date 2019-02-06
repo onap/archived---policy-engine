@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b411bf5_a7200e70",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSParamPolicyServiceTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-06T14:10:37Z",
+      "side": 1,
+      "message": "Please remove the tabs and replace them with spaces.",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 1
+      },
+      "revId": "ff571a1a6b3661ae80c0db9bc553cd6e0d08872e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a56ba641_9ea5e468",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ConfigPolicyServiceTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-06T14:10:37Z",
+      "side": 1,
+      "message": "Tabs",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 1
+      },
+      "revId": "ff571a1a6b3661ae80c0db9bc553cd6e0d08872e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3337abcb_3bdd6486",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/OptimizationPolicyServiceTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-06T14:10:37Z",
+      "side": 1,
+      "message": "tabs",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 2
+      },
+      "revId": "ff571a1a6b3661ae80c0db9bc553cd6e0d08872e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6b59d74_ed61f2fd",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/test/GetDictionaryServiceTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-06T14:10:37Z",
+      "side": 1,
+      "message": "Tabs",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 1
+      },
+      "revId": "ff571a1a6b3661ae80c0db9bc553cd6e0d08872e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
