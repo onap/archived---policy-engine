@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56ce84b5_f642b253",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2019-02-06T11:05:28Z",
+      "side": 1,
+      "message": "these are already below, remove.",
+      "range": {
+        "startLine": 144,
+        "startChar": 4,
+        "endLine": 145,
+        "endChar": 79
+      },
+      "revId": "6b64801da003a153debded9ca7c27cf0e5d2906c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
