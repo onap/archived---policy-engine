@@ -34,6 +34,24 @@
       "revId": "6ea2d94d03c04b849d388f6c2905e1d9c04939c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adb85f2c_d99f4630",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyServiceTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-06T08:59:26Z",
+      "side": 1,
+      "message": "ah sorry I actually did reformat this - I have to check my format rules, they don\u0027t seem to be correct",
+      "parentUuid": "8bedbc7a_22384ad6",
+      "revId": "6ea2d94d03c04b849d388f6c2905e1d9c04939c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
