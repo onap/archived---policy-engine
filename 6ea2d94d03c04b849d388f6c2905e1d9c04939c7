@@ -16,6 +16,24 @@
       "revId": "6ea2d94d03c04b849d388f6c2905e1d9c04939c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bedbc7a_22384ad6",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyServiceTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-06T08:54:28Z",
+      "side": 1,
+      "message": "I noticed this too. However if I reformat it in this commit, it will make my actual changes to the tests harder to detect, so maybe should be done separately?",
+      "parentUuid": "ec10011f_f2bf9fd9",
+      "revId": "6ea2d94d03c04b849d388f6c2905e1d9c04939c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
