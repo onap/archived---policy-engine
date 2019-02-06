@@ -52,6 +52,24 @@
       "revId": "6ea2d94d03c04b849d388f6c2905e1d9c04939c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8d5258d_8fafcc8d",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyServiceTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-06T11:28:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adb85f2c_d99f4630",
+      "revId": "6ea2d94d03c04b849d388f6c2905e1d9c04939c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
