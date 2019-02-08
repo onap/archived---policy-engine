@@ -97,6 +97,52 @@
     },
     {
       "key": {
+        "uuid": "ec9ead9b_802c303c",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-08T16:20:54Z",
+      "side": 1,
+      "message": "Is this testing something or being used to test something?  I am not sure the purpose of this line.. it doesn\u0027t seem to be needed.",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 111
+      },
+      "revId": "ff571a1a6b3661ae80c0db9bc553cd6e0d08872e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bc92112_da99c3ad",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-08T16:20:54Z",
+      "side": 1,
+      "message": "please remove commented code",
+      "range": {
+        "startLine": 116,
+        "startChar": 0,
+        "endLine": 116,
+        "endChar": 44
+      },
+      "revId": "ff571a1a6b3661ae80c0db9bc553cd6e0d08872e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b411bf5_a7200e70",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSParamPolicyServiceTest.java",
         "patchSetId": 5
