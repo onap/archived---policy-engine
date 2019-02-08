@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff375dd5_c8789e08",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-08T16:20:54Z",
+      "side": 1,
+      "message": "I am not sure the purpose of this line of code in the setup() if its not being used in any of the tests.",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 111
+      },
+      "revId": "5ff345b7a12f899797ce567c6ef91df1bae5ec25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d347718_6226c581",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSParamPolicyServiceTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-08T16:20:54Z",
+      "side": 1,
+      "message": "This file is filled with tabs.. please change to spaces instead of tabs per Developer Best Practices",
+      "revId": "5ff345b7a12f899797ce567c6ef91df1bae5ec25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "26663e61_c071066c",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ConfigPolicyServiceTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-08T16:20:54Z",
+      "side": 1,
+      "message": "Please change tabs to spaces per Developer Best Practices",
+      "revId": "5ff345b7a12f899797ce567c6ef91df1bae5ec25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89000103_782c64cb",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/OptimizationPolicyServiceTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-08T16:20:54Z",
+      "side": 1,
+      "message": "Please change tabs to spaces per Developer Best Practices",
+      "revId": "5ff345b7a12f899797ce567c6ef91df1bae5ec25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "330f0c7b_9260ff01",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/test/GetDictionaryServiceTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-08T16:20:54Z",
+      "side": 1,
+      "message": "Tabs to spaces again please",
+      "revId": "5ff345b7a12f899797ce567c6ef91df1bae5ec25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
