@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "eb8e9b87_36c925b1",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSParamPolicyServiceTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-11T09:51:26Z",
+      "side": 1,
+      "message": "As discussed in previous comments, I am proposing to do this separately under https://jira.onap.org/browse/POLICY-1506 as to not to obfuscate the functional changes made in this commit",
+      "parentUuid": "7d347718_6226c581",
+      "revId": "5ff345b7a12f899797ce567c6ef91df1bae5ec25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "26663e61_c071066c",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ConfigPolicyServiceTest.java",
         "patchSetId": 7
