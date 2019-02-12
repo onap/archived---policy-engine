@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0bc81317_4a09c748",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSParamPolicyServiceTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-12T09:26:15Z",
+      "side": 1,
+      "message": "As discussed in previous comments, I am proposing to do this separately under https://jira.onap.org/browse/POLICY-1506 as to not to obfuscate the functional changes made in this commit",
+      "parentUuid": "5ba6698b_fb996d4e",
+      "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "07b73fa0_d3a5c804",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyServiceTest.java",
         "patchSetId": 10
@@ -30,6 +48,24 @@
       "writtenOn": "2019-02-11T19:58:00Z",
       "side": 1,
       "message": "make this static",
+      "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2b71c0d_7245eb29",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyServiceTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-12T09:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07b73fa0_d3a5c804",
       "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "9d63bc89_ecc08c41",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyServiceTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-12T09:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43996167_f23aa79d",
+      "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f8b156f9_01545775",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyServiceTest.java",
         "patchSetId": 10
@@ -64,6 +118,24 @@
       "writtenOn": "2019-02-11T19:58:00Z",
       "side": 1,
       "message": "this line is not needed",
+      "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2fa1d60f_98d0bd10",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyServiceTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-12T09:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8b156f9_01545775",
       "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "55093943_e3cfefe3",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyServiceTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-12T09:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c601011_f5a460f1",
+      "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f8df1757_73331d44",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ConfigPolicyServiceTest.java",
         "patchSetId": 10
@@ -98,6 +188,24 @@
       "writtenOn": "2019-02-11T19:58:00Z",
       "side": 1,
       "message": "make this static",
+      "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "645bf2e9_b1cb8b57",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ConfigPolicyServiceTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-12T09:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8df1757_73331d44",
       "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "5949a9a5_ae6c444c",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ConfigPolicyServiceTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-12T09:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a2e23ce_88852ea9",
+      "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5256b6e2_4eb0362c",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ConfigPolicyServiceTest.java",
         "patchSetId": 10
@@ -132,6 +258,24 @@
       "writtenOn": "2019-02-11T19:58:00Z",
       "side": 1,
       "message": "this line is not needed",
+      "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e22e6b5b_747fe153",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ConfigPolicyServiceTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-12T09:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5256b6e2_4eb0362c",
       "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "9b56d438_074b5cae",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ConfigPolicyServiceTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-12T09:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c7d8b78_a8dd0338",
+      "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "623e7fbd_119fddc9",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/OptimizationPolicyServiceTest.java",
         "patchSetId": 10
@@ -172,6 +334,24 @@
     },
     {
       "key": {
+        "uuid": "3bb94626_124f9cbb",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/OptimizationPolicyServiceTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-12T09:26:15Z",
+      "side": 1,
+      "message": "Done - this comment applies also to BRMSParamPolicyServiceTest.java (which I changed accordingly as I\u0027m modifying that anyway) and a number of other test classes such as ClosedLoopFaultPolicyServiceTest.java (any of which I did not change in order to keep this commit focused on fixing only the immediate interdependence issues)",
+      "parentUuid": "623e7fbd_119fddc9",
+      "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "453188c3_b4613aa3",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/OptimizationPolicyServiceTest.java",
         "patchSetId": 10
@@ -183,6 +363,24 @@
       "writtenOn": "2019-02-11T19:58:00Z",
       "side": 1,
       "message": "change to AfterClass (and change method name)",
+      "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b07c66a6_2449b75d",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/OptimizationPolicyServiceTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-12T09:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "453188c3_b4613aa3",
       "revId": "9ba6c07b3711c82a8ecf6c99fee3b5ac102959b9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
