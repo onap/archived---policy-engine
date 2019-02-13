@@ -1,0 +1,15 @@
+Code-Review+1: Robert Bogacki <r.bogacki@samsung.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Katsia Kazak <k.kazak@samsung.com>
+Code-Review+1: Pamela Dragosh <pdragosh@research.att.com>
+Code-Review+1: Jim Hahn <jrh3@att.com>
+Code-Review+1: Praveen Augustus <pa834y@att.com>
+Code-Review+1: Liam Fallon <liam.fallon@est.tech>
+Code-Review+1: Samuli Silvius <s.silvius@partner.samsung.com>
+Code-Review+1: Michael Mokry <michael.mokry@att.com>
+Code-Review+2: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-by: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-at: Wed, 13 Feb 2019 14:28:57 +0000
+Reviewed-on: https://gerrit.onap.org/r/77873
+Project: policy/engine
+Branch: refs/heads/master
