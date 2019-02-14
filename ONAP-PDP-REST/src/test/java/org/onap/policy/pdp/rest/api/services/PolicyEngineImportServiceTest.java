@@ -25,30 +25,30 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 public class PolicyEngineImportServiceTest {
-	@Test
-	public final void negativeTestService1() {
-		// Negative test constructor
-		String json = "testJson";
-		MultipartFile file = null;
-		String id = "testID";
-		PolicyEngineImportService service = new PolicyEngineImportService(json, file, id);
-		
-		// Test gets
-		assertNotNull(service.getResult());
-		assertEquals(service.getResponseCode().value(), 400);
-	}
+    @Test
+    public final void negativeTestService1() {
+        // Negative test constructor
+        String json = "testJson";
+        MultipartFile file = null;
+        String id = "testID";
+        PolicyEngineImportService service = new PolicyEngineImportService(json, file, id);
 
-	@Test
-	public final void negativeTestService2() {
-		// Negative test constructor
-		String json = "{\n\"serviceName\": \"testVal\"\n}\n";
-		byte[] content = "bar".getBytes();
-		MultipartFile file = new MockMultipartFile("foo", content);
-		String id = "testID";
-		PolicyEngineImportService service = new PolicyEngineImportService(json, file, id);
-		
-		// Test gets
-		assertNotNull(service.getResult());
-		assertEquals(service.getResponseCode().value(), 400);
-	}
+        // Test gets
+        assertNotNull(service.getResult());
+        assertEquals(service.getResponseCode().value(), 400);
+    }
+
+    @Test
+    public final void negativeTestService2() {
+        // Negative test constructor
+        String json = "{\n\"serviceName\": \"testVal\"\n}\n";
+        byte[] content = "bar".getBytes();
+        MultipartFile file = new MockMultipartFile("foo", content);
+        String id = "testID";
+        PolicyEngineImportService service = new PolicyEngineImportService(json, file, id);
+
+        // Test gets
+        assertNotNull(service.getResult());
+        assertEquals(service.getResponseCode().value(), 400);
+    }
 }

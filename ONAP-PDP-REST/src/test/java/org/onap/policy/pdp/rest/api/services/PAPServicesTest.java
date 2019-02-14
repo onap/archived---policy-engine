@@ -20,13 +20,11 @@
 package org.onap.policy.pdp.rest.api.services;
 
 import static org.junit.Assert.*;
-
 import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +45,6 @@ public class PAPServicesTest {
         List<String> paps = Arrays.asList(succeeded.split(","));
         PAPServices.setPaps(paps);
         papServices = new PAPServices();
-
     }
 
     @After
@@ -60,23 +57,22 @@ public class PAPServicesTest {
     public final void testCallPAP() throws PolicyException {
         StdPAPPolicy newPAPPolicy = new StdPAPPolicy();
         String response = null;
-        response = (String) papServices.callPAP(newPAPPolicy, new String[]{"operation=create", "apiflag=api",
-                "policyType=Config"}, UUID.randomUUID(), "Config");
+        response = (String) papServices.callPAP(newPAPPolicy,
+                new String[] {"operation=create", "apiflag=api", "policyType=Config"}, UUID.randomUUID(), "Config");
         assertEquals("success", response);
     }
 
     @Test
     public final void testGetActiveVersion() {
-        String activeVersion = papServices.getActiveVersion("test", "Config_", "test.testpolicy", "Config",
-                UUID.randomUUID());
+        String activeVersion =
+                papServices.getActiveVersion("test", "Config_", "test.testpolicy", "Config", UUID.randomUUID());
         assertNull(activeVersion);
     }
 
     @Test
     public final void testPushPolicy() throws PolicyException {
-        StdPDPPolicy selectedPolicy = papServices.pushPolicy("test", "Config_", "test.testpolicy", "Config", "default"
-                , UUID.randomUUID());
+        StdPDPPolicy selectedPolicy =
+                papServices.pushPolicy("test", "Config_", "test.testpolicy", "Config", "default", UUID.randomUUID());
         assertNull(selectedPolicy);
     }
-
 }

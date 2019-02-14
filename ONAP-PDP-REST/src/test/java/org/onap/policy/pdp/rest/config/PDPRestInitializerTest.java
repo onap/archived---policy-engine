@@ -28,17 +28,16 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 public class PDPRestInitializerTest {
-	@Test
-	public void testNegativeStartup() throws ServletException {
-		try {
-			PDPRestInitializer init = new PDPRestInitializer();
-			ServletContext container = Mockito.mock(ServletContext.class);
-			init.onStartup(container);
-			fail("Expecting an exception.");
-		}
-		catch (Exception ex) {
-			// Expecting an exception
-			assertTrue(true);
-		}
-	}
+    @Test
+    public void testNegativeStartup() throws ServletException {
+        try {
+            PDPRestInitializer init = new PDPRestInitializer();
+            ServletContext container = Mockito.mock(ServletContext.class);
+            init.onStartup(container);
+            fail("Expecting an exception.");
+        } catch (Exception ex) {
+            // Expecting an exception
+            assertTrue(true);
+        }
+    }
 }

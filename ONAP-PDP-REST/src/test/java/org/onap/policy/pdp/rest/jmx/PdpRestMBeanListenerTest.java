@@ -21,35 +21,30 @@ package org.onap.policy.pdp.rest.jmx;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import javax.servlet.ServletContextEvent;
-
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
 public class PdpRestMBeanListenerTest {
 
-	private static Logger LOGGER = FlexLogger.getLogger(PdpRestMBeanListenerTest.class);
-	
-	@Test
-	public void test() {
+    private static Logger LOGGER = FlexLogger.getLogger(PdpRestMBeanListenerTest.class);
 
-		try {	
-			PdpRestMBeanListener listener = new PdpRestMBeanListener();
-			DummyServerContextImpl source = new DummyServerContextImpl();
-			ServletContextEvent event = new ServletContextEvent(source);
-			
-			listener.contextInitialized(event);
-			listener.contextDestroyed(event);
-			
-			assertTrue(true);
-		} catch (Exception e) {
-			LOGGER.error("Exception Occured"+e);
-			fail();
-			
-		}
-		
-	}
+    @Test
+    public void test() {
 
+        try {
+            PdpRestMBeanListener listener = new PdpRestMBeanListener();
+            DummyServerContextImpl source = new DummyServerContextImpl();
+            ServletContextEvent event = new ServletContextEvent(source);
+
+            listener.contextInitialized(event);
+            listener.contextDestroyed(event);
+
+            assertTrue(true);
+        } catch (Exception e) {
+            LOGGER.error("Exception Occured" + e);
+            fail();
+        }
+    }
 }

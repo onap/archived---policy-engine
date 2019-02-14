@@ -30,53 +30,53 @@ import org.onap.policy.api.PolicyResponseStatus;
 import org.onap.policy.api.PolicyType;
 
 public class PDPResponseTest {
-  @Test
-  public void testSetAndGet() {
-    // Test values
-    String message = "testMessage";
-    String config = "testConfig";
-    String policyName = "testPolicyName";
-    String policyVersion = "1.0";
-    PolicyResponseStatus policyResponseStatus = PolicyResponseStatus.ACTION_ADVISED;
-    PolicyConfigStatus policyConfigStatus = PolicyConfigStatus.CONFIG_RETRIEVED;
-    PolicyType type = PolicyType.JSON;
-    Map<String, String> property = new HashMap<String, String>();
-    PolicyDecision policyDecision = PolicyDecision.PERMIT;
+    @Test
+    public void testSetAndGet() {
+        // Test values
+        String message = "testMessage";
+        String config = "testConfig";
+        String policyName = "testPolicyName";
+        String policyVersion = "1.0";
+        PolicyResponseStatus policyResponseStatus = PolicyResponseStatus.ACTION_ADVISED;
+        PolicyConfigStatus policyConfigStatus = PolicyConfigStatus.CONFIG_RETRIEVED;
+        PolicyType type = PolicyType.JSON;
+        Map<String, String> property = new HashMap<String, String>();
+        PolicyDecision policyDecision = PolicyDecision.PERMIT;
 
-    PDPResponse response = new PDPResponse();
+        PDPResponse response = new PDPResponse();
 
-    response.setStatus(message, policyResponseStatus, policyConfigStatus);
-    response.setConfig(config);
-    assertEquals(config, response.getConfig());
-    response.setType(type);
-    assertEquals(type, response.getType());
-    response.setPolicyConfigStatus(policyConfigStatus);
-    assertEquals(policyConfigStatus, response.getPolicyConfigStatus());
-    response.setPolicyConfigMessage(message);
-    assertEquals(message, response.getPolicyConfigMessage());
-    response.setProperty(property);
-    assertEquals(property, response.getProperty());
-    response.setPolicyName(policyName);
-    assertEquals(policyName, response.getPolicyName());
-    response.setPolicyVersion(policyVersion);
-    assertEquals(policyVersion, response.getPolicyVersion());
-    response.setMatchingConditions(property);
-    assertEquals(property, response.getMatchingConditions());
-    response.setResponseAttributes(property);
-    assertEquals(property, response.getResponseAttributes());
-    response.setPolicyResponseStatus(policyResponseStatus);
-    assertEquals(policyResponseStatus, response.getPolicyResponseStatus());
-    response.setDecision(policyDecision);
-    assertEquals(policyDecision, response.getDecision());
-    response.setDetails(message);
-    assertEquals(message, response.getDetails());
-    response.setActionAdvised(property);
-    assertEquals(property, response.getActionAdvised());
-    response.setActionTaken(property);
-    assertEquals(property, response.getActionTaken());
-    response.setRequestAttributes(property);
-    assertEquals(property, response.getRequestAttributes());
-    response.setPolicyResponseMessage(message);
-    assertEquals(message, response.getPolicyResponseMessage());
-  }
+        response.setStatus(message, policyResponseStatus, policyConfigStatus);
+        response.setConfig(config);
+        assertEquals(config, response.getConfig());
+        response.setType(type);
+        assertEquals(type, response.getType());
+        response.setPolicyConfigStatus(policyConfigStatus);
+        assertEquals(policyConfigStatus, response.getPolicyConfigStatus());
+        response.setPolicyConfigMessage(message);
+        assertEquals(message, response.getPolicyConfigMessage());
+        response.setProperty(property);
+        assertEquals(property, response.getProperty());
+        response.setPolicyName(policyName);
+        assertEquals(policyName, response.getPolicyName());
+        response.setPolicyVersion(policyVersion);
+        assertEquals(policyVersion, response.getPolicyVersion());
+        response.setMatchingConditions(property);
+        assertEquals(property, response.getMatchingConditions());
+        response.setResponseAttributes(property);
+        assertEquals(property, response.getResponseAttributes());
+        response.setPolicyResponseStatus(policyResponseStatus);
+        assertEquals(policyResponseStatus, response.getPolicyResponseStatus());
+        response.setDecision(policyDecision);
+        assertEquals(policyDecision, response.getDecision());
+        response.setDetails(message);
+        assertEquals(message, response.getDetails());
+        response.setActionAdvised(property);
+        assertEquals(property, response.getActionAdvised());
+        response.setActionTaken(property);
+        assertEquals(property, response.getActionTaken());
+        response.setRequestAttributes(property);
+        assertEquals(property, response.getRequestAttributes());
+        response.setPolicyResponseMessage(message);
+        assertEquals(message, response.getPolicyResponseMessage());
+    }
 }

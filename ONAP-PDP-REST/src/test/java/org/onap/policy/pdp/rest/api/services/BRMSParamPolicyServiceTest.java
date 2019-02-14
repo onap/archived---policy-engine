@@ -25,7 +25,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -35,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -47,30 +45,30 @@ import org.onap.policy.api.PolicyParameters;
 
 public class BRMSParamPolicyServiceTest {
 
-	BRMSParamPolicyService service = null;
+    BRMSParamPolicyService service = null;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		Properties prop = new Properties();
-		prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
-		String succeeded = prop.getProperty("xacml.rest.pap.url");
-		List<String> paps = Arrays.asList(succeeded.split(","));
-		PAPServices.setPaps(paps);
-		PAPServices.setJunit(true);
-	}
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        Properties prop = new Properties();
+        prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
+        String succeeded = prop.getProperty("xacml.rest.pap.url");
+        List<String> paps = Arrays.asList(succeeded.split(","));
+        PAPServices.setPaps(paps);
+        PAPServices.setJunit(true);
+    }
 
-	@Before
-	public void setUp() throws Exception {
-		PolicyParameters policyParameters = new PolicyParameters();
+    @Before
+    public void setUp() throws Exception {
+        PolicyParameters policyParameters = new PolicyParameters();
         policyParameters.setPolicyConfigType(PolicyConfigType.BRMS_PARAM);
         policyParameters.setPolicyName("Test.testBRMSPolicy");
         policyParameters.setRequestID(UUID.randomUUID());
-      	SimpleDateFormat dateformat3 = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = dateformat3.parse("15/10/2016");
-		policyParameters.setTtlDate(date);
-		policyParameters.setGuard(true);
-		policyParameters.setRiskLevel("5");
-		policyParameters.setRiskType("TEST");
+        SimpleDateFormat dateformat3 = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = dateformat3.parse("15/10/2016");
+        policyParameters.setTtlDate(date);
+        policyParameters.setGuard(true);
+        policyParameters.setRiskLevel("5");
+        policyParameters.setRiskType("TEST");
 
         Map<String, String> ruleAttributes = new HashMap<>();
         ruleAttributes.put("templateName", "Sample");
@@ -81,39 +79,37 @@ public class BRMSParamPolicyServiceTest {
         attributes.put(AttributeType.RULE, ruleAttributes);
         policyParameters.setAttributes(attributes);
 
-		String policyName = "testBRMSPolicy";
-		String policyScope = "Test";
-		service = new BRMSParamPolicyService(policyName, policyScope, policyParameters, date.toString());
-	}
+        String policyName = "testBRMSPolicy";
+        String policyScope = "Test";
+        service = new BRMSParamPolicyService(policyName, policyScope, policyParameters, date.toString());
+    }
 
-	@AfterClass
-	public static void tearDownAfterClass() {
-		PAPServices.setPaps(null);
-		PAPServices.setJunit(false);
-	}
+    @AfterClass
+    public static void tearDownAfterClass() {
+        PAPServices.setPaps(null);
+        PAPServices.setJunit(false);
+    }
 
-	@Test
-	public final void testFirewallPolicyService() {
-		assertNotNull(service);
-	}
+    @Test
+    public final void testFirewallPolicyService() {
+        assertNotNull(service);
+    }
 
-	@Test
-	public final void testGetValidation() {
-		assertTrue(service.getValidation());
-	}
+    @Test
+    public final void testGetValidation() {
+        assertTrue(service.getValidation());
+    }
 
-	@Test
-	public final void testGetMessage() {
-		String message = service.getMessage();
-		assertNull(message);
-	}
+    @Test
+    public final void testGetMessage() {
+        String message = service.getMessage();
+        assertNull(message);
+    }
 
-	@Test
-	public final void testGetResult() throws PolicyException {
-		service.getValidation();
-		String result = service.getResult(false);
-		assertEquals("success",result);
-	}
-
-
+    @Test
+    public final void testGetResult() throws PolicyException {
+        service.getValidation();
+        String result = service.getResult(false);
+        assertEquals("success", result);
+    }
 }

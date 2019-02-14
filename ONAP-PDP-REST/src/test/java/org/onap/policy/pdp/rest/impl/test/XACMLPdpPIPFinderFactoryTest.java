@@ -28,19 +28,19 @@ import com.att.research.xacml.api.pip.PIPException;
 import com.att.research.xacml.api.pip.PIPFinder;
 
 public class XACMLPdpPIPFinderFactoryTest {
-	@Test
-	public void testGets() throws PIPException {
-		// Test constructors
-		Properties props = new Properties();
-		XACMLPdpPIPFinderFactory blankFactory = new XACMLPdpPIPFinderFactory();
-		assertNotNull(blankFactory);
-		XACMLPdpPIPFinderFactory factory = new XACMLPdpPIPFinderFactory(props);
-		assertNotNull(factory);
-		
-		// Test get
-		PIPFinder finder = factory.getFinder();
-		assertNotNull(finder);
-		finder = blankFactory.getFinder(props);
-		assertNotNull(finder);
-	}
+    @Test
+    public void testGets() throws PIPException {
+        // Test constructors
+        Properties props = new Properties();
+        XACMLPdpPIPFinderFactory blankFactory = new XACMLPdpPIPFinderFactory();
+        assertNotNull(blankFactory);
+        XACMLPdpPIPFinderFactory factory = new XACMLPdpPIPFinderFactory(props);
+        assertNotNull(factory);
+
+        // Test get
+        PIPFinder finder = factory.getFinder();
+        assertNotNull(finder);
+        finder = blankFactory.getFinder(props);
+        assertNotNull(finder);
+    }
 }
