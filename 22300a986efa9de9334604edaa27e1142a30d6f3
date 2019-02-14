@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c8fe452c_e313a065",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/PapUrlResolverTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-14T11:56:17Z",
+      "side": 1,
+      "message": "If format changes require copyright updates, I assume the proper way is to add Modifications Samsung copyright for 2019 and leave the original as it is?",
+      "parentUuid": "74386063_191b4680",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "22300a986efa9de9334604edaa27e1142a30d6f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30839e77_bc5ed50b",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/PapUrlResolverTest.java",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2019-02-14T10:38:52Z",
       "side": 1,
       "message": "\u003e 120 characters",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 121
+      },
+      "revId": "22300a986efa9de9334604edaa27e1142a30d6f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "60fa9c80_6ee6d57f",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/PapUrlResolverTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-14T11:56:17Z",
+      "side": 1,
+      "message": "Yet, this is how Eclipse formats it with Google\u0027s Java code  Formatter when Maximum line width (org.eclipse.jdt.core.formatter.lineSplit in the xml) is modified to 120. In fact, its length remains 122 even with default Google style value of 100, so it is probably considered as unsplittable exception case under https://google.github.io/styleguide/javaguide.html#s4.4-column-limit ? Is the 120 characters column limit then treated in ONAP as hard ONAP-specific limit regardless of Google style exceptions and their automatic appliance (which means lines like these would have to be manually adjusted after every automatic formatting of the file)?",
+      "parentUuid": "30839e77_bc5ed50b",
       "range": {
         "startLine": 119,
         "startChar": 0,
