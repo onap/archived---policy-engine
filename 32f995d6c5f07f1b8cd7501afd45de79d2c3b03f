@@ -16,6 +16,24 @@
       "revId": "32f995d6c5f07f1b8cd7501afd45de79d2c3b03f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d329197_b19d347f",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/OptimizationDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-14T14:58:13Z",
+      "side": 1,
+      "message": "good catch - I didn\u0027t notice that these embedded tabs appeared in other strings",
+      "parentUuid": "f68ccc3b_6cdb86be",
+      "revId": "32f995d6c5f07f1b8cd7501afd45de79d2c3b03f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
