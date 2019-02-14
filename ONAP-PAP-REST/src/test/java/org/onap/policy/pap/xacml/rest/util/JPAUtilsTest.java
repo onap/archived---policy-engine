@@ -29,19 +29,19 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 public class JPAUtilsTest {
-  @Test(expected = IllegalAccessException.class)
-  public void testJPAUtils() throws IllegalAccessException {
-    // Setup test data
-    EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
-    EntityManager em = Mockito.mock(EntityManager.class);
-    Query query = Mockito.mock(Query.class);
-    Mockito.when(emf.createEntityManager()).thenReturn(em);
-    Mockito.when(em.createNamedQuery(Mockito.any())).thenReturn(query);
+    @Test(expected = IllegalAccessException.class)
+    public void testJPAUtils() throws IllegalAccessException {
+        // Setup test data
+        EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
+        EntityManager em = Mockito.mock(EntityManager.class);
+        Query query = Mockito.mock(Query.class);
+        Mockito.when(emf.createEntityManager()).thenReturn(em);
+        Mockito.when(em.createNamedQuery(Mockito.any())).thenReturn(query);
 
-    // Test lockdown
-    JPAUtils utils = JPAUtils.getJPAUtilsInstance(emf);
-    assertEquals(utils.dbLockdownIgnoreErrors(), false);
-    utils.dbLockdown();
-    fail("Expecting an exception");
-  }
+        // Test lockdown
+        JPAUtils utils = JPAUtils.getJPAUtilsInstance(emf);
+        assertEquals(utils.dbLockdownIgnoreErrors(), false);
+        utils.dbLockdown();
+        fail("Expecting an exception");
+    }
 }

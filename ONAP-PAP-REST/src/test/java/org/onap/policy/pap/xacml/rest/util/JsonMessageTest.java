@@ -24,28 +24,28 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class JsonMessageTest {
-  @Test
-  public void testSetAndGet() {
-    String data = "testData";
-    String data2 = "testData2";
-    String data3 = "testData3";
+    @Test
+    public void testSetAndGet() {
+        String data = "testData";
+        String data2 = "testData2";
+        String data3 = "testData3";
 
-    // Test constructors
-    JsonMessage msg = new JsonMessage(data);
-    assertEquals(msg.getData(), data);
+        // Test constructors
+        JsonMessage msg = new JsonMessage(data);
+        assertEquals(msg.getData(), data);
 
-    JsonMessage msg2 = new JsonMessage(data, data2);
-    assertEquals(msg2.getData2(), data2);
+        JsonMessage msg2 = new JsonMessage(data, data2);
+        assertEquals(msg2.getData2(), data2);
 
-    JsonMessage msg3 = new JsonMessage(data, data2, data3);
-    assertEquals(msg3.getData3(), data3);
+        JsonMessage msg3 = new JsonMessage(data, data2, data3);
+        assertEquals(msg3.getData3(), data3);
 
-    // Test set and get
-    msg.setData(data);
-    msg.setData2(data2);
-    msg.setData3(data3);
-    assertEquals(msg.getData(), data);
-    assertEquals(msg.getData2(), data2);
-    assertEquals(msg.getData3(), data3);
-  }
+        // Test set and get
+        msg.setData(data);
+        msg.setData2(data2);
+        msg.setData3(data3);
+        assertEquals(msg.getData(), data);
+        assertEquals(msg.getData2(), data2);
+        assertEquals(msg.getData3(), data3);
+    }
 }

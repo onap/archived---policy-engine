@@ -24,21 +24,21 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 public class DictionaryHandlerTest {
-  @Test
-  public void negTestHandler() {
-    // Set the system property temporarily
-    String systemKey = "dictionary.impl.className";
-    String oldProperty = System.getProperty(systemKey);
-    System.setProperty(systemKey, "foobar");
+    @Test
+    public void negTestHandler() {
+        // Set the system property temporarily
+        String systemKey = "dictionary.impl.className";
+        String oldProperty = System.getProperty(systemKey);
+        System.setProperty(systemKey, "foobar");
 
-    // Run negative test on instance
-    assertNull(DictionaryHandler.getInstance());
+        // Run negative test on instance
+        assertNull(DictionaryHandler.getInstance());
 
-    // Restore the original system property
-    if (oldProperty != null) {
-      System.setProperty(systemKey, oldProperty);
-    } else {
-      System.clearProperty(systemKey);
+        // Restore the original system property
+        if (oldProperty != null) {
+            System.setProperty(systemKey, oldProperty);
+        } else {
+            System.clearProperty(systemKey);
+        }
     }
-  }
 }
