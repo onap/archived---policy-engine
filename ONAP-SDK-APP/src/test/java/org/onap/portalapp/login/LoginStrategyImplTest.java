@@ -27,13 +27,13 @@ import org.onap.portalsdk.core.onboarding.exception.PortalAPIException;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 public class LoginStrategyImplTest {
-	@Test
-	public void testLoginStrategyImpl() throws PortalAPIException {
-		LoginStrategyImpl impl = new LoginStrategyImpl();
-		MockHttpServletRequest request = new MockHttpServletRequest();
-		Cookie cookie1 = new Cookie("EPService", "serviceName");
-		Cookie cookie2 = new Cookie("UserId", "userName");
-		request.setCookies(cookie1, cookie2);
-		assertNull(impl.getUserId(request));
-	}
+    @Test
+    public void testLoginStrategyImpl() throws PortalAPIException {
+        LoginStrategyImpl impl = new LoginStrategyImpl();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Cookie cookie1 = new Cookie("EPService", "serviceName");
+        Cookie cookie2 = new Cookie("UserId", "userName");
+        request.setCookies(cookie1, cookie2);
+        assertNull(impl.getUserId(request));
+    }
 }

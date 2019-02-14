@@ -30,39 +30,39 @@ import org.onap.portalsdk.workflow.services.WorkflowScheduleService;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 public class RegistryAdapterTest {
-	@Rule 
-	public final ExpectedException thrown = ExpectedException.none();
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
 
-	@Test
-	public void testRegistryAdapter() {
-		RegistryAdapter adapter = new RegistryAdapter();
-		SchedulerFactoryBean schedulerBean = new SchedulerFactoryBean();
-		Registerable registry = null;
-		WorkflowScheduleService workflowScheduleService = null;
+    @Test
+    public void testRegistryAdapter() {
+        RegistryAdapter adapter = new RegistryAdapter();
+        SchedulerFactoryBean schedulerBean = new SchedulerFactoryBean();
+        Registerable registry = null;
+        WorkflowScheduleService workflowScheduleService = null;
 
-		adapter.setSchedulerBean(schedulerBean);
-		assertEquals(adapter.getSchedulerBean(), schedulerBean);
-		adapter.setRegistry(registry);
-		assertEquals(adapter.getRegistry(), registry);
-		adapter.setWorkflowScheduleService(workflowScheduleService);
-		assertEquals(adapter.getWorkflowScheduleService(), workflowScheduleService);
-	}
-	
-	@Test
-	public void testRegistryAdapterNegCase1() {
-		thrown.expect(NullPointerException.class);
+        adapter.setSchedulerBean(schedulerBean);
+        assertEquals(adapter.getSchedulerBean(), schedulerBean);
+        adapter.setRegistry(registry);
+        assertEquals(adapter.getRegistry(), registry);
+        adapter.setWorkflowScheduleService(workflowScheduleService);
+        assertEquals(adapter.getWorkflowScheduleService(), workflowScheduleService);
+    }
 
-		RegistryAdapter adapter = new RegistryAdapter();
-		adapter.getTriggers();
-		fail("Expecting an exception.");
-	}
-	
-	@Test
-	public void testRegistryAdapterNegCase2() {
-		thrown.expect(NullPointerException.class);
+    @Test
+    public void testRegistryAdapterNegCase1() {
+        thrown.expect(NullPointerException.class);
 
-		RegistryAdapter adapter = new RegistryAdapter();
-		adapter.addCoreTriggers();
-		fail("Expecting an exception.");
-	}
+        RegistryAdapter adapter = new RegistryAdapter();
+        adapter.getTriggers();
+        fail("Expecting an exception.");
+    }
+
+    @Test
+    public void testRegistryAdapterNegCase2() {
+        thrown.expect(NullPointerException.class);
+
+        RegistryAdapter adapter = new RegistryAdapter();
+        adapter.addCoreTriggers();
+        fail("Expecting an exception.");
+    }
 }

@@ -20,15 +20,14 @@
 package org.onap.portalapp.conf;
 
 import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
 public class HibernateMappingLocationsTest {
 
-	@Test
-	public void testHibernateMappingLocations(){
-		HibernateMappingLocations locations = new HibernateMappingLocations();
-		assertTrue(locations.getMappingLocations()!=null);
-		assertTrue(locations.getPackagesToScan()!=null);
-	}
+    @Test
+    public void testHibernateMappingLocations() {
+        HibernateMappingLocations locations = new HibernateMappingLocations();
+        assertTrue(locations.getMappingLocations() != null);
+        assertTrue(locations.getPackagesToScan() != null);
+    }
 }

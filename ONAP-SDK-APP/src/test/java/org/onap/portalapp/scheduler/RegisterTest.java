@@ -22,10 +22,8 @@ package org.onap.portalapp.scheduler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.Test;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
