@@ -22,6 +22,30 @@
       "revId": "7daa93cde1110a307464dd70e5aab137c0513338",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbc9b31e_b857a267",
+        "filename": "ONAP-SDK-APP/src/test/java/org/onap/portalapp/conf/ExternalAppConfigTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-14T14:03:35Z",
+      "side": 1,
+      "message": "actually, just add Samsung copyrights.  I think the AT\u0026T line should remain unchanged until AT\u0026T actually modifies the files.",
+      "parentUuid": "685e7c02_0a91301d",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 70
+      },
+      "revId": "7daa93cde1110a307464dd70e5aab137c0513338",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
