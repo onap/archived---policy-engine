@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f68ccc3b_6cdb86be",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/OptimizationDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-14T14:01:27Z",
+      "side": 1,
+      "message": "replace tab with \"\\t\" in this string (or with spaces)\n\nsame comment for the next line",
+      "revId": "32f995d6c5f07f1b8cd7501afd45de79d2c3b03f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
