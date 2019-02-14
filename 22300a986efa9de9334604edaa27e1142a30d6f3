@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "c46f37d1_5afd0c9a",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/PapUrlResolverTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-14T11:59:43Z",
+      "side": 1,
+      "message": "...then again, if the long strings are split and concatenated by +, autoformatting will leave them to separate lines so I can do that",
+      "parentUuid": "60fa9c80_6ee6d57f",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 121
+      },
+      "revId": "22300a986efa9de9334604edaa27e1142a30d6f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "46423dad_77a97bec",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ClosedLoopFaultPolicyServiceTest.java",
         "patchSetId": 2
