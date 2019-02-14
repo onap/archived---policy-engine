@@ -24,7 +24,6 @@ package org.onap.policy.pdp.rest.api.services;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -32,7 +31,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
-
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -43,58 +41,57 @@ import org.onap.policy.api.PolicyParameters;
 
 public class OptimizationPolicyServiceTest {
 
-	OptimizationPolicyService service = null;
+    OptimizationPolicyService service = null;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		Properties prop = new Properties();
-		prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
-		String succeeded = prop.getProperty("xacml.rest.pap.url");
-		List<String> paps = Arrays.asList(succeeded.split(","));
-		PAPServices.setPaps(paps);
-		PAPServices.setJunit(true);
-	}
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        Properties prop = new Properties();
+        prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
+        String succeeded = prop.getProperty("xacml.rest.pap.url");
+        List<String> paps = Arrays.asList(succeeded.split(","));
+        PAPServices.setPaps(paps);
+        PAPServices.setJunit(true);
+    }
 
-		@Before
-		public void setUp() throws Exception {
-		PolicyParameters policyParameters = new PolicyParameters();
+    @Before
+    public void setUp() throws Exception {
+        PolicyParameters policyParameters = new PolicyParameters();
         policyParameters.setPolicyConfigType(PolicyConfigType.Optimization);
         policyParameters.setPolicyName("Test.testOOFPolicy");
-		policyParameters.setOnapName("OOF");
+        policyParameters.setOnapName("OOF");
         policyParameters.setRequestID(UUID.randomUUID());
-      	SimpleDateFormat dateformat3 = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = dateformat3.parse("15/10/2016");
-		policyParameters.setTtlDate(date);
-		policyParameters.setGuard(true);
-		policyParameters.setRiskLevel("5");
-		policyParameters.setRiskType("TEST");
-		policyParameters.setConfigBody("{\"optimization\":\"test\"}");
-		String policyName = "testOOFPolicy";
-		String policyScope = "Test";
-		service = new OptimizationPolicyService(policyName, policyScope, policyParameters, date.toString());
-	}
+        SimpleDateFormat dateformat3 = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = dateformat3.parse("15/10/2016");
+        policyParameters.setTtlDate(date);
+        policyParameters.setGuard(true);
+        policyParameters.setRiskLevel("5");
+        policyParameters.setRiskType("TEST");
+        policyParameters.setConfigBody("{\"optimization\":\"test\"}");
+        String policyName = "testOOFPolicy";
+        String policyScope = "Test";
+        service = new OptimizationPolicyService(policyName, policyScope, policyParameters, date.toString());
+    }
 
-	@AfterClass
-	public static void tearDownAfterClass() {
-		PAPServices.setPaps(null);
-		PAPServices.setJunit(false);
-	}
+    @AfterClass
+    public static void tearDownAfterClass() {
+        PAPServices.setPaps(null);
+        PAPServices.setJunit(false);
+    }
 
-	@Test
-	public final void testOptimizationPolicyService() {
-		assertNotNull(service);
-	}
+    @Test
+    public final void testOptimizationPolicyService() {
+        assertNotNull(service);
+    }
 
-	@Test
-	public final void testGetMessage() {
-		String message = service.getMessage();
-		assertNull(message);
-	}
+    @Test
+    public final void testGetMessage() {
+        String message = service.getMessage();
+        assertNull(message);
+    }
 
-	@Test
-	public final void testGetResult() throws PolicyException {
-		String result = service.getResult(false);
-		assertEquals("success",result);
-	}
-
+    @Test
+    public final void testGetResult() throws PolicyException {
+        String result = service.getResult(false);
+        assertEquals("success", result);
+    }
 }

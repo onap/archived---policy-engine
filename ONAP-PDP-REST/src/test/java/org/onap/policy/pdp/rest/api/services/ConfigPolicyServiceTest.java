@@ -22,14 +22,12 @@
 package org.onap.policy.pdp.rest.api.services;
 
 import static org.junit.Assert.assertEquals;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,43 +35,43 @@ import org.onap.policy.api.PolicyParameters;
 
 public class ConfigPolicyServiceTest {
 
-	private static final String SYSTEM_KEY = "xacml.properties";
-	private static String oldProperty;
+    private static final String SYSTEM_KEY = "xacml.properties";
+    private static String oldProperty;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		Properties prop = new Properties();
-		prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
-		String succeeded = prop.getProperty("xacml.rest.pap.url");
-		List<String> paps = Arrays.asList(succeeded.split(","));
-		PAPServices.setPaps(paps);
-		PAPServices.setJunit(true);
-		oldProperty = System.getProperty(SYSTEM_KEY);
-	}
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        Properties prop = new Properties();
+        prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
+        String succeeded = prop.getProperty("xacml.rest.pap.url");
+        List<String> paps = Arrays.asList(succeeded.split(","));
+        PAPServices.setPaps(paps);
+        PAPServices.setJunit(true);
+        oldProperty = System.getProperty(SYSTEM_KEY);
+    }
 
-	@AfterClass
-	public static void tearDownAfterClass() {
-		PAPServices.setPaps(null);
-		PAPServices.setJunit(false);
-		// Restore the original system property
-		if (oldProperty != null) {
-			System.setProperty(SYSTEM_KEY, oldProperty);
-		} else {
-			System.clearProperty(SYSTEM_KEY);
-		}
-	}
+    @AfterClass
+    public static void tearDownAfterClass() {
+        PAPServices.setPaps(null);
+        PAPServices.setJunit(false);
+        // Restore the original system property
+        if (oldProperty != null) {
+            System.setProperty(SYSTEM_KEY, oldProperty);
+        } else {
+            System.clearProperty(SYSTEM_KEY);
+        }
+    }
 
-	@Test
-	public void testRaw() throws FileNotFoundException, IOException {
+    @Test
+    public void testRaw() throws FileNotFoundException, IOException {
 
-		String testVal = "testVal";
-		PolicyParameters testParams = new PolicyParameters();
+        String testVal = "testVal";
+        PolicyParameters testParams = new PolicyParameters();
 
-		// Set the system property temporarily
-		System.setProperty(SYSTEM_KEY, "xacml.pdp.properties");
+        // Set the system property temporarily
+        System.setProperty(SYSTEM_KEY, "xacml.pdp.properties");
 
-		ConfigPolicyService service = new ConfigPolicyService(testVal, testVal, testParams, testVal);
-		assertEquals(service.getValidation(), false);
-		assertEquals(service.getMessage(), "PE300 - Data Issue: No Config Body given.");
-	}
+        ConfigPolicyService service = new ConfigPolicyService(testVal, testVal, testParams, testVal);
+        assertEquals(service.getValidation(), false);
+        assertEquals(service.getMessage(), "PE300 - Data Issue: No Config Body given.");
+    }
 }

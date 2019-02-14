@@ -37,59 +37,58 @@ import org.onap.policy.api.PolicyParameters;
 public class FirewallPolicyServiceTest {
 
     FirewallPolicyService firewallPolicyService = null;
-   
-    
-	@Before
-	public void setUp() throws Exception {
-		Properties prop = new Properties();
-		prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
-		String succeeded = prop.getProperty("xacml.rest.pap.url");
-		List<String> paps = Arrays.asList(succeeded.split(","));
-		PAPServices.setPaps(paps);
-		PAPServices.setJunit(true);
-		
-		PolicyParameters policyParameters = new PolicyParameters();
-        policyParameters.setPolicyConfigType(PolicyConfigType.Firewall); //required
-        policyParameters.setPolicyName("Test.testFWPolicy"); //required
+
+    @Before
+    public void setUp() throws Exception {
+        Properties prop = new Properties();
+        prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
+        String succeeded = prop.getProperty("xacml.rest.pap.url");
+        List<String> paps = Arrays.asList(succeeded.split(","));
+        PAPServices.setPaps(paps);
+        PAPServices.setJunit(true);
+
+        PolicyParameters policyParameters = new PolicyParameters();
+        policyParameters.setPolicyConfigType(PolicyConfigType.Firewall); // required
+        policyParameters.setPolicyName("Test.testFWPolicy"); // required
         policyParameters.setRequestID(UUID.randomUUID());
-      	SimpleDateFormat dateformat3 = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = dateformat3.parse("15/10/2016");
-		policyParameters.setTtlDate(date);
-		policyParameters.setGuard(true);
-		policyParameters.setRiskLevel("5");
-		policyParameters.setRiskType("TEST");
-		policyParameters.setConfigBody("{\"configName\":\"test\"}");
-		String policyName = "testFWPolicy";
-		String policyScope = "Test";
+        SimpleDateFormat dateformat3 = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = dateformat3.parse("15/10/2016");
+        policyParameters.setTtlDate(date);
+        policyParameters.setGuard(true);
+        policyParameters.setRiskLevel("5");
+        policyParameters.setRiskType("TEST");
+        policyParameters.setConfigBody("{\"configName\":\"test\"}");
+        String policyName = "testFWPolicy";
+        String policyScope = "Test";
         firewallPolicyService = new FirewallPolicyService(policyName, policyScope, policyParameters, date.toString());
-	}
+    }
 
-	@After
-	public void tearDown() throws Exception {
-		PAPServices.setPaps(null);
-		PAPServices.setJunit(false);
-	}
+    @After
+    public void tearDown() throws Exception {
+        PAPServices.setPaps(null);
+        PAPServices.setJunit(false);
+    }
 
-	@Test
-	public final void testFirewallPolicyService() {
-		assertNotNull(firewallPolicyService);
-	}
+    @Test
+    public final void testFirewallPolicyService() {
+        assertNotNull(firewallPolicyService);
+    }
 
-	@Test
-	public final void testGetValidation() {
-		assertTrue(firewallPolicyService.getValidation());
-	}
+    @Test
+    public final void testGetValidation() {
+        assertTrue(firewallPolicyService.getValidation());
+    }
 
-	@Test
-	public final void testGetMessage() {
-		String message = firewallPolicyService.getMessage();
-		assertNull(message);
-	}
+    @Test
+    public final void testGetMessage() {
+        String message = firewallPolicyService.getMessage();
+        assertNull(message);
+    }
 
-	@Test
-	public final void testGetResult() throws PolicyException {
-		firewallPolicyService.getValidation();
-		String result = firewallPolicyService.getResult(false);
-		assertEquals("success",result);
-	}
+    @Test
+    public final void testGetResult() throws PolicyException {
+        firewallPolicyService.getValidation();
+        String result = firewallPolicyService.getResult(false);
+        assertEquals("success", result);
+    }
 }

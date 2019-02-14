@@ -46,10 +46,7 @@ public class PdpRestMBeanListenerTest {
 			assertTrue(true);
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured"+e);
-			fail();
-			
-		}
-		
+			fail();	
+		}		
 	}
-
 }
