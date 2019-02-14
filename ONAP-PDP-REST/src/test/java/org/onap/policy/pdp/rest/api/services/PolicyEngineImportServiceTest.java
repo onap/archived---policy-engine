@@ -1,8 +1,10 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-PAP-REST
+ * ONAP-PDP-REST
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,30 +27,30 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 public class PolicyEngineImportServiceTest {
-	@Test
-	public final void negativeTestService1() {
-		// Negative test constructor
-		String json = "testJson";
-		MultipartFile file = null;
-		String id = "testID";
-		PolicyEngineImportService service = new PolicyEngineImportService(json, file, id);
-		
-		// Test gets
-		assertNotNull(service.getResult());
-		assertEquals(service.getResponseCode().value(), 400);
-	}
+    @Test
+    public final void negativeTestService1() {
+        // Negative test constructor
+        String json = "testJson";
+        MultipartFile file = null;
+        String id = "testID";
+        PolicyEngineImportService service = new PolicyEngineImportService(json, file, id);
 
-	@Test
-	public final void negativeTestService2() {
-		// Negative test constructor
-		String json = "{\n\"serviceName\": \"testVal\"\n}\n";
-		byte[] content = "bar".getBytes();
-		MultipartFile file = new MockMultipartFile("foo", content);
-		String id = "testID";
-		PolicyEngineImportService service = new PolicyEngineImportService(json, file, id);
-		
-		// Test gets
-		assertNotNull(service.getResult());
-		assertEquals(service.getResponseCode().value(), 400);
-	}
+        // Test gets
+        assertNotNull(service.getResult());
+        assertEquals(service.getResponseCode().value(), 400);
+    }
+
+    @Test
+    public final void negativeTestService2() {
+        // Negative test constructor
+        String json = "{\n\"serviceName\": \"testVal\"\n}\n";
+        byte[] content = "bar".getBytes();
+        MultipartFile file = new MockMultipartFile("foo", content);
+        String id = "testID";
+        PolicyEngineImportService service = new PolicyEngineImportService(json, file, id);
+
+        // Test gets
+        assertNotNull(service.getResult());
+        assertEquals(service.getResponseCode().value(), 400);
+    }
 }
