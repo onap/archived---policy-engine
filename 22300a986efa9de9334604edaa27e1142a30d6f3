@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74386063_191b4680",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/PapUrlResolverTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-14T10:38:52Z",
+      "side": 1,
+      "message": "Please change/add the 2019 the date on all modified files.\n\nAlso check if you need to add Samsung Copyright notice to all modified files.",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "22300a986efa9de9334604edaa27e1142a30d6f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30839e77_bc5ed50b",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/PapUrlResolverTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-14T10:38:52Z",
+      "side": 1,
+      "message": "\u003e 120 characters",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 121
+      },
+      "revId": "22300a986efa9de9334604edaa27e1142a30d6f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46423dad_77a97bec",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ClosedLoopFaultPolicyServiceTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-14T10:38:52Z",
+      "side": 1,
+      "message": "\u003e 120 characters",
+      "range": {
+        "startLine": 61,
+        "startChar": 20,
+        "endLine": 61,
+        "endChar": 27
+      },
+      "revId": "22300a986efa9de9334604edaa27e1142a30d6f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f31f344_3a7f3d95",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ClosedLoopPMPolicyServiceTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-14T10:38:52Z",
+      "side": 1,
+      "message": "\u003e 120 characters",
+      "revId": "22300a986efa9de9334604edaa27e1142a30d6f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2102b0c_04d00523",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/test/GetDictionaryServiceTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-14T10:38:52Z",
+      "side": 1,
+      "message": "\u003e 120 characters",
+      "revId": "22300a986efa9de9334604edaa27e1142a30d6f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
