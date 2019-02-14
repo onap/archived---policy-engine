@@ -4,6 +4,8 @@
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,19 +31,19 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 public class JPAUtilsTest {
-  @Test(expected = IllegalAccessException.class)
-  public void testJPAUtils() throws IllegalAccessException {
-    // Setup test data
-    EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
-    EntityManager em = Mockito.mock(EntityManager.class);
-    Query query = Mockito.mock(Query.class);
-    Mockito.when(emf.createEntityManager()).thenReturn(em);
-    Mockito.when(em.createNamedQuery(Mockito.any())).thenReturn(query);
+    @Test(expected = IllegalAccessException.class)
+    public void testJPAUtils() throws IllegalAccessException {
+        // Setup test data
+        EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
+        EntityManager em = Mockito.mock(EntityManager.class);
+        Query query = Mockito.mock(Query.class);
+        Mockito.when(emf.createEntityManager()).thenReturn(em);
+        Mockito.when(em.createNamedQuery(Mockito.any())).thenReturn(query);
 
-    // Test lockdown
-    JPAUtils utils = JPAUtils.getJPAUtilsInstance(emf);
-    assertEquals(utils.dbLockdownIgnoreErrors(), false);
-    utils.dbLockdown();
-    fail("Expecting an exception");
-  }
+        // Test lockdown
+        JPAUtils utils = JPAUtils.getJPAUtilsInstance(emf);
+        assertEquals(utils.dbLockdownIgnoreErrors(), false);
+        utils.dbLockdown();
+        fail("Expecting an exception");
+    }
 }
