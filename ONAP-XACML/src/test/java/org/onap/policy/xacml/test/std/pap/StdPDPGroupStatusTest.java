@@ -4,12 +4,14 @@
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -223,35 +225,35 @@ public class StdPDPGroupStatusTest {
         stdPDPGroupStatus.addFailedPipConfig(new StdPDPPIPConfig());
         assertFalse(stdPDPGroupStatus.pipConfigOK());
     }
-    
+
     @Test
     public void testPdpsOKOutOfSyncPdp() {
         assertTrue(stdPDPGroupStatus.pdpsOK());
         stdPDPGroupStatus.addOutOfSynchPDP(new StdPDP());
         assertFalse(stdPDPGroupStatus.pdpsOK());
     }
-    
+
     @Test
     public void testPdpsOKFailedPdp() {
         assertTrue(stdPDPGroupStatus.pdpsOK());
         stdPDPGroupStatus.addFailedPDP(new StdPDP());
         assertFalse(stdPDPGroupStatus.pdpsOK());
     }
-    
+
     @Test
     public void testPdpsOKLastUpdateFailedPdp() {
         assertTrue(stdPDPGroupStatus.pdpsOK());
         stdPDPGroupStatus.addLastUpdateFailedPDP(new StdPDP());
         assertFalse(stdPDPGroupStatus.pdpsOK());
     }
-    
+
     @Test
     public void testPdpsOKUnknownPdp() {
         assertTrue(stdPDPGroupStatus.pdpsOK());
         stdPDPGroupStatus.addUnknownPDP(new StdPDP());
         assertFalse(stdPDPGroupStatus.pdpsOK());
     }
-    
+
     @Test
     public void testIsGroupOkFailedPolicy() {
         stdPDPGroupStatus.setStatus(Status.OK);
@@ -259,7 +261,7 @@ public class StdPDPGroupStatusTest {
         stdPDPGroupStatus.addFailedPolicy(new StdPDPPolicy());
         assertFalse(stdPDPGroupStatus.isGroupOk());
     }
-    
+
     @Test
     public void testIsGroupOkFailedPipConfig() {
         stdPDPGroupStatus.setStatus(Status.OK);
@@ -267,30 +269,30 @@ public class StdPDPGroupStatusTest {
         stdPDPGroupStatus.addFailedPipConfig(new StdPDPPIPConfig());
         assertFalse(stdPDPGroupStatus.isGroupOk());
     }
-    
+
     @Test
     public void testIsGroupOkFailedPdp() {
         stdPDPGroupStatus.setStatus(Status.OK);
         assertTrue(stdPDPGroupStatus.isGroupOk());
         stdPDPGroupStatus.addLastUpdateFailedPDP(new StdPDP());
         assertFalse(stdPDPGroupStatus.isGroupOk());
-    }  
-    
+    }
+
     @Test
     public void testIsGroupOkLoadErrors() {
         stdPDPGroupStatus.setStatus(Status.OK);
         assertTrue(stdPDPGroupStatus.isGroupOk());
         stdPDPGroupStatus.addLoadError("A load error");
         assertFalse(stdPDPGroupStatus.isGroupOk());
-    }  
-    
+    }
+
     @Test
     public void testIsGroupOkStatusOutOfSynch() {
         stdPDPGroupStatus.setStatus(Status.OK);
         assertTrue(stdPDPGroupStatus.isGroupOk());
         stdPDPGroupStatus.setStatus(Status.OUT_OF_SYNCH);
         assertFalse(stdPDPGroupStatus.isGroupOk());
-    }  
+    }
 
     @Test
     public void testConstructor() {
@@ -477,5 +479,4 @@ public class StdPDPGroupStatusTest {
     public void testEqualsInstanceOfDiffClass() {
         assertFalse(stdPDPGroupStatus.equals(""));
     }
-
 }

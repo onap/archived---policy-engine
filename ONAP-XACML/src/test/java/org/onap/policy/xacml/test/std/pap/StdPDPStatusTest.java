@@ -2,12 +2,14 @@
  * ============LICENSE_START=======================================================
  * Copyright (C) 2018 Ericsson. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -132,33 +134,33 @@ public class StdPDPStatusTest {
         stdPDPStatus.setStatus(Status.OUT_OF_SYNCH);
         assertFalse(stdPDPStatus.isOk());
     }
-    
+
     @Test
     public void testAddLoadError() {
         stdPDPStatus.addLoadError("An error");
         assertEquals("An error", stdPDPStatus.getLoadErrors().iterator().next());
     }
-    
+
     @Test
     public void testAddLoadWarning() {
         stdPDPStatus.addLoadWarning("A warning");
         assertEquals("A warning", stdPDPStatus.getLoadWarnings().iterator().next());
     }
-    
+
     @Test
     public void testAddLoadedPolicy() {
         PDPPolicy policy = new StdPDPPolicy();
         stdPDPStatus.addLoadedPolicy(policy);
         assertEquals(policy, stdPDPStatus.getLoadedPolicies().iterator().next());
     }
-    
+
     @Test
     public void testAddRootPolicy() {
         PDPPolicy policy = new StdPDPPolicy();
         stdPDPStatus.addRootPolicy(policy);
         assertEquals(policy, stdPDPStatus.getLoadedRootPolicies().iterator().next());
     }
-    
+
     @Test
     public void testAddAllLoadedRootPolicy() {
         Set<PDPPolicy> policies = new HashSet<>();
@@ -167,9 +169,9 @@ public class StdPDPStatusTest {
         stdPDPStatus.addAllLoadedRootPolicies(policies);
         assertEquals(policies, stdPDPStatus.getLoadedRootPolicies());
     }
-    
+
     @Test
-    public void testAddLoadedPipConfig(){
+    public void testAddLoadedPipConfig() {
         PDPPIPConfig pipConfig = new StdPDPPIPConfig();
         stdPDPStatus.addLoadedPipConfig(pipConfig);
         assertEquals(pipConfig, stdPDPStatus.getLoadedPipConfigs().iterator().next());
@@ -214,12 +216,16 @@ public class StdPDPStatusTest {
         assertEquals(loadedPIPConfigs, stdPDPStatus1.getLoadedPipConfigs());
         assertEquals(failedPIPConfigs, stdPDPStatus1.getFailedPipConfigs());
 
-        assertEquals("StdPDPStatus [status=UP_TO_DATE, loadErrors=[An error], loadWarnings=[An error], loadedPolicies=[StdPDPPolicy " 
-                        + "[id=null, name=null, policyId=null, description=null, version=, isRoot=false, isValid=false, location=null]], "
-                        + "loadedRootPolicies=[StdPDPPolicy [id=null, name=null, policyId=null, description=null, version=, isRoot=false, "
-                        + "isValid=false, location=null]], failedPolicies=[StdPDPPolicy [id=null, name=null, policyId=null, description=null, "
-                        + "version=, isRoot=false, isValid=false, location=null]], loadedPIPConfigs=[StdPDPPIPConfig [id=null, name=null, "
-                        + "description=null, classname=null, config={}]], failedPIPConfigs=[StdPDPPIPConfig [id=null, name=null, description=null, classname=null, config={}]]]",
+        assertEquals(
+                "StdPDPStatus [status=UP_TO_DATE, loadErrors=[An error], loadWarnings=[An error],"
+                        + " loadedPolicies=[StdPDPPolicy [id=null, name=null, policyId=null, description=null,"
+                        + " version=, isRoot=false, isValid=false, location=null]],"
+                        + " loadedRootPolicies=[StdPDPPolicy [id=null, name=null, policyId=null, description=null,"
+                        + " version=, isRoot=false, isValid=false, location=null]],"
+                        + " failedPolicies=[StdPDPPolicy [id=null, name=null, policyId=null, description=null,"
+                        + " version=, isRoot=false, isValid=false, location=null]], loadedPIPConfigs=[StdPDPPIPConfig"
+                        + " [id=null, name=null, description=null, classname=null, config={}]], failedPIPConfigs="
+                        + "[StdPDPPIPConfig [id=null, name=null, description=null, classname=null, config={}]]]",
                 stdPDPStatus1.toString());
     }
 
