@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6383ef69_7f92c54d",
+        "filename": "PolicyEngineAPI/src/test/java/org/onap/policy/test/GetConfigStringTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-15T13:35:27Z",
+      "side": 1,
+      "message": "should these be deleted?  If not, they should probably be left unformatted.",
+      "revId": "1a9972ef480916f42abe8f27e63204ecae512d0b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89d9e215_39d32af2",
+        "filename": "PolicyEngineAPI/src/test/java/org/onap/policy/test/SendEventTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-15T13:35:27Z",
+      "side": 1,
+      "message": "should delete this, or leave it unformatted",
+      "revId": "1a9972ef480916f42abe8f27e63204ecae512d0b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
