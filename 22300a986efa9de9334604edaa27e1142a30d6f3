@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "332a0e62_13a914ff",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/PapUrlResolverTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-15T10:52:33Z",
+      "side": 1,
+      "message": "Yes, the original should be left unchanged. The modifications message format is of course whatever Samsung wish.",
+      "parentUuid": "c8fe452c_e313a065",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "22300a986efa9de9334604edaa27e1142a30d6f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30839e77_bc5ed50b",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/PapUrlResolverTest.java",
         "patchSetId": 2
@@ -120,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "1240b748_9b0a07a5",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/PapUrlResolverTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-15T10:52:33Z",
+      "side": 1,
+      "message": "Thanks",
+      "parentUuid": "c46f37d1_5afd0c9a",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 121
+      },
+      "revId": "22300a986efa9de9334604edaa27e1142a30d6f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "46423dad_77a97bec",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ClosedLoopFaultPolicyServiceTest.java",
         "patchSetId": 2
@@ -131,6 +179,30 @@
       "writtenOn": "2019-02-14T10:38:52Z",
       "side": 1,
       "message": "\u003e 120 characters",
+      "range": {
+        "startLine": 61,
+        "startChar": 20,
+        "endLine": 61,
+        "endChar": 27
+      },
+      "revId": "22300a986efa9de9334604edaa27e1142a30d6f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37c59cb2_c70611f0",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ClosedLoopFaultPolicyServiceTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-15T10:52:33Z",
+      "side": 1,
+      "message": "Can you do something with this line, maybe split it into a number of strings?\nIt might be more readable to put each JSON attribute on a separate line if it\u0027s not too much trouble.",
+      "parentUuid": "46423dad_77a97bec",
       "range": {
         "startLine": 61,
         "startChar": 20,
