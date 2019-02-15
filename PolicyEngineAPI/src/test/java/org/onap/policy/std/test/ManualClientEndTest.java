@@ -1,15 +1,17 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +25,6 @@ package org.onap.policy.std.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
@@ -73,11 +74,12 @@ public class ManualClientEndTest {
                 recvMsg = message;
 
                 conn.send("{\"removedPolicies\": [],\"loadedPolicies\":"
-                                + "[{\"policyName\": \"Test.Config_BRMS_Param_BrmsParamTestPa.1.xml\","
-                                + "\"versionNo\": \"1\",\"matches\": {\"ECOMPName\": \"DROOLS\","
-                                + "\"ONAPName\": \"DROOLS\",\"ConfigName\": \"BRMS_PARAM_RULE\","
-                                + "\"guard\": \"false\",\"TTLDate\": \"NA\",\"RiskLevel\": \"5\","
-                                + "\"RiskType\": \"default\"},\"updateType\": \"NEW\"}],\"notificationType\": \"UPDATE\"}");
+                        + "[{\"policyName\": \"Test.Config_BRMS_Param_BrmsParamTestPa.1.xml\","
+                        + "\"versionNo\": \"1\",\"matches\": {\"ECOMPName\": \"DROOLS\","
+                        + "\"ONAPName\": \"DROOLS\",\"ConfigName\": \"BRMS_PARAM_RULE\","
+                        + "\"guard\": \"false\",\"TTLDate\": \"NA\",\"RiskLevel\": \"5\","
+                        + "\"RiskType\": \"default\"},\"updateType\": \"NEW\"}],"
+                        + "\"notificationType\": \"UPDATE\"}");
             }
 
             @Override
