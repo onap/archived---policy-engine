@@ -4,12 +4,14 @@
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,162 +24,155 @@ package org.onap.policy.test;
 
 import org.junit.*;
 import org.onap.policy.api.PolicyEventException;
-
 import static org.junit.Assert.*;
 
 /**
- * The class <code>PolicyEventExceptionTest</code> contains tests for the class <code>{@link PolicyEventException}</code>.
+ * The class <code>PolicyEventExceptionTest</code> contains tests for the class
+ * <code>{@link PolicyEventException}</code>.
  *
  * @generatedBy CodePro at 6/1/16 1:40 PM
  * @version $Revision: 1.0 $
  */
 public class PolicyEventExceptionTest {
-	/**
-	 * Run the PolicyEventException() constructor test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testPolicyEventException_1()
-		throws Exception {
+    /**
+     * Run the PolicyEventException() constructor test.
+     *
+     * @throws Exception
+     *
+     * @generatedBy CodePro at 6/1/16 1:40 PM
+     */
+    @Test
+    public void testPolicyEventException_1() throws Exception {
 
-		PolicyEventException result = new PolicyEventException();
+        PolicyEventException result = new PolicyEventException();
 
-		// add additional test code here
-		assertNotNull(result);
-		assertEquals(null, result.getCause());
-		assertEquals("org.onap.policy.api.PolicyEventException", result.toString());
-		assertEquals(null, result.getLocalizedMessage());
-		assertEquals(null, result.getMessage());
-	}
+        // add additional test code here
+        assertNotNull(result);
+        assertEquals(null, result.getCause());
+        assertEquals("org.onap.policy.api.PolicyEventException", result.toString());
+        assertEquals(null, result.getLocalizedMessage());
+        assertEquals(null, result.getMessage());
+    }
 
-	/**
-	 * Run the PolicyEventException(String) constructor test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testPolicyEventException_2()
-		throws Exception {
-		String message = "";
+    /**
+     * Run the PolicyEventException(String) constructor test.
+     *
+     * @throws Exception
+     *
+     * @generatedBy CodePro at 6/1/16 1:40 PM
+     */
+    @Test
+    public void testPolicyEventException_2() throws Exception {
+        String message = "";
 
-		PolicyEventException result = new PolicyEventException(message);
+        PolicyEventException result = new PolicyEventException(message);
 
-		// add additional test code here
-		assertNotNull(result);
-		assertEquals(null, result.getCause());
-		assertEquals("org.onap.policy.api.PolicyEventException: ", result.toString());
-		assertEquals("", result.getLocalizedMessage());
-		assertEquals("", result.getMessage());
-	}
+        // add additional test code here
+        assertNotNull(result);
+        assertEquals(null, result.getCause());
+        assertEquals("org.onap.policy.api.PolicyEventException: ", result.toString());
+        assertEquals("", result.getLocalizedMessage());
+        assertEquals("", result.getMessage());
+    }
 
-	/**
-	 * Run the PolicyEventException(Throwable) constructor test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testPolicyEventException_3()
-		throws Exception {
-		Throwable cause = new Throwable();
+    /**
+     * Run the PolicyEventException(Throwable) constructor test.
+     *
+     * @throws Exception
+     *
+     * @generatedBy CodePro at 6/1/16 1:40 PM
+     */
+    @Test
+    public void testPolicyEventException_3() throws Exception {
+        Throwable cause = new Throwable();
 
-		PolicyEventException result = new PolicyEventException(cause);
+        PolicyEventException result = new PolicyEventException(cause);
 
-		// add additional test code here
-		assertNotNull(result);
-		assertEquals("org.onap.policy.api.PolicyEventException: java.lang.Throwable", result.toString());
-		assertEquals("java.lang.Throwable", result.getLocalizedMessage());
-		assertEquals("java.lang.Throwable", result.getMessage());
-	}
+        // add additional test code here
+        assertNotNull(result);
+        assertEquals("org.onap.policy.api.PolicyEventException: java.lang.Throwable",
+                result.toString());
+        assertEquals("java.lang.Throwable", result.getLocalizedMessage());
+        assertEquals("java.lang.Throwable", result.getMessage());
+    }
 
-	/**
-	 * Run the PolicyEventException(String,Throwable) constructor test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testPolicyEventException_4()
-		throws Exception {
-		String message = "";
-		Throwable cause = new Throwable();
+    /**
+     * Run the PolicyEventException(String,Throwable) constructor test.
+     *
+     * @throws Exception
+     *
+     * @generatedBy CodePro at 6/1/16 1:40 PM
+     */
+    @Test
+    public void testPolicyEventException_4() throws Exception {
+        String message = "";
+        Throwable cause = new Throwable();
 
-		PolicyEventException result = new PolicyEventException(message, cause);
+        PolicyEventException result = new PolicyEventException(message, cause);
 
-		// add additional test code here
-		assertNotNull(result);
-		assertEquals("org.onap.policy.api.PolicyEventException: ", result.toString());
-		assertEquals("", result.getLocalizedMessage());
-		assertEquals("", result.getMessage());
-	}
+        // add additional test code here
+        assertNotNull(result);
+        assertEquals("org.onap.policy.api.PolicyEventException: ", result.toString());
+        assertEquals("", result.getLocalizedMessage());
+        assertEquals("", result.getMessage());
+    }
 
-	/**
-	 * Run the PolicyEventException(String,Throwable,boolean,boolean) constructor test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testPolicyEventException_5()
-		throws Exception {
-		String message = "";
-		Throwable cause = new Throwable();
-		boolean enableSuppression = true;
-		boolean writableStackTrace = true;
+    /**
+     * Run the PolicyEventException(String,Throwable,boolean,boolean) constructor test.
+     *
+     * @throws Exception
+     *
+     * @generatedBy CodePro at 6/1/16 1:40 PM
+     */
+    @Test
+    public void testPolicyEventException_5() throws Exception {
+        String message = "";
+        Throwable cause = new Throwable();
+        boolean enableSuppression = true;
+        boolean writableStackTrace = true;
 
-		PolicyEventException result = new PolicyEventException(message, cause, enableSuppression, writableStackTrace);
+        PolicyEventException result =
+                new PolicyEventException(message, cause, enableSuppression, writableStackTrace);
 
-		// add additional test code here
-		assertNotNull(result);
-		assertEquals("org.onap.policy.api.PolicyEventException: ", result.toString());
-		assertEquals("", result.getLocalizedMessage());
-		assertEquals("", result.getMessage());
-	}
+        // add additional test code here
+        assertNotNull(result);
+        assertEquals("org.onap.policy.api.PolicyEventException: ", result.toString());
+        assertEquals("", result.getLocalizedMessage());
+        assertEquals("", result.getMessage());
+    }
 
-	/**
-	 * Perform pre-test initialization.
-	 *
-	 * @throws Exception
-	 *         if the initialization fails for some reason
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Before
-	public void setUp()
-		throws Exception {
-		// add additional set up code here
-	}
+    /**
+     * Perform pre-test initialization.
+     *
+     * @throws Exception if the initialization fails for some reason
+     *
+     * @generatedBy CodePro at 6/1/16 1:40 PM
+     */
+    @Before
+    public void setUp() throws Exception {
+        // add additional set up code here
+    }
 
-	/**
-	 * Perform post-test clean-up.
-	 *
-	 * @throws Exception
-	 *         if the clean-up fails for some reason
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@After
-	public void tearDown()
-		throws Exception {
-		// Add additional tear down code here
-	}
+    /**
+     * Perform post-test clean-up.
+     *
+     * @throws Exception if the clean-up fails for some reason
+     *
+     * @generatedBy CodePro at 6/1/16 1:40 PM
+     */
+    @After
+    public void tearDown() throws Exception {
+        // Add additional tear down code here
+    }
 
-	/**
-	 * Launch the test.
-	 *
-	 * @param args the command line arguments
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	public static void main(String[] args) {
-		new org.junit.runner.JUnitCore().run(PolicyEventExceptionTest.class);
-	}
+    /**
+     * Launch the test.
+     *
+     * @param args the command line arguments
+     *
+     * @generatedBy CodePro at 6/1/16 1:40 PM
+     */
+    public static void main(String[] args) {
+        new org.junit.runner.JUnitCore().run(PolicyEventExceptionTest.class);
+    }
 }
