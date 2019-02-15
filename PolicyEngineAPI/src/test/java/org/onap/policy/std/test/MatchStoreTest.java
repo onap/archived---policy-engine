@@ -4,12 +4,14 @@
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,14 +27,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,8 +71,7 @@ public class MatchStoreTest {
     /**
      * Perform pre-test initialization.
      *
-     * @throws Exception
-     *             if the initialization fails for some reason
+     * @throws Exception if the initialization fails for some reason
      */
     @Before
     public void setUp() throws Exception {
@@ -113,7 +112,8 @@ public class MatchStoreTest {
     }
 
     @Test
-    public void testStoreMatch_ShouldRetrunEmptyLoadedRemovedPolicesIfNotMatchFoundInMatchStore() throws Exception {
+    public void testStoreMatch_ShouldRetrunEmptyLoadedRemovedPolicesIfNotMatchFoundInMatchStore()
+            throws Exception {
         final Matches newMatch = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL);
 
         MatchStore.storeMatch(newMatch);
@@ -129,11 +129,12 @@ public class MatchStoreTest {
     }
 
     @Test
-    public void testStoreMatch_NotificationTypeRemoved_IfRemovedPolicyExistInOldNotification() throws Exception {
+    public void testStoreMatch_NotificationTypeRemoved_IfRemovedPolicyExistInOldNotification()
+            throws Exception {
         final Matches newMatch = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL);
         final StdRemovedPolicy removedPolicy = getRemovedPolicy(POLICY_VERSION, POLICY_NAME);
-        final PDPNotification oldNotification = getPDPNotification(Arrays.asList(removedPolicy),
-                Collections.emptySet());
+        final PDPNotification oldNotification =
+                getPDPNotification(Arrays.asList(removedPolicy), Collections.emptySet());
 
         MatchStore.storeMatch(newMatch);
 
@@ -147,11 +148,13 @@ public class MatchStoreTest {
     }
 
     @Test
-    public void testStoreMatch_NoticficationTypeUpdate_IfStdLoadPolicyExistsWithEmptyMatches() throws Exception {
+    public void testStoreMatch_NoticficationTypeUpdate_IfStdLoadPolicyExistsWithEmptyMatches()
+            throws Exception {
         final Matches newMatch = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL);
-        final StdLoadedPolicy stdLoadedPolicy = getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, Collections.emptyMap());
-        final PDPNotification oldNotification = getPDPNotification(Collections.emptySet(),
-                Arrays.asList(stdLoadedPolicy));
+        final StdLoadedPolicy stdLoadedPolicy =
+                getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, Collections.emptyMap());
+        final PDPNotification oldNotification =
+                getPDPNotification(Collections.emptySet(), Arrays.asList(stdLoadedPolicy));
 
         MatchStore.storeMatch(newMatch);
 
@@ -164,16 +167,18 @@ public class MatchStoreTest {
     }
 
     @Test
-    public void testStoreMatch_NoticficationTypeUpdate_IfStdLoadPolicyExistsWithMatches() throws Exception {
+    public void testStoreMatch_NoticficationTypeUpdate_IfStdLoadPolicyExistsWithMatches()
+            throws Exception {
         final Map<String, String> attribute = getAttributesMap();
 
         final Matches newMatch = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, attribute);
         final Map<String, String> matches = getPolicyMatches(ONAP_NAME_VAL, CONFIG_NAME_VAL);
         matches.putAll(attribute);
 
-        final StdLoadedPolicy stdLoadedPolicy = getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, matches);
-        final PDPNotification oldNotification = getPDPNotification(Collections.emptySet(),
-                Arrays.asList(stdLoadedPolicy));
+        final StdLoadedPolicy stdLoadedPolicy =
+                getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, matches);
+        final PDPNotification oldNotification =
+                getPDPNotification(Collections.emptySet(), Arrays.asList(stdLoadedPolicy));
 
         MatchStore.storeMatch(newMatch);
 
@@ -183,7 +188,8 @@ public class MatchStoreTest {
 
         assertEquals(NotificationType.UPDATE, actualPDPNotification.getNotificationType());
 
-        final Collection<LoadedPolicy> actualLoadPolicies = actualPDPNotification.getLoadedPolicies();
+        final Collection<LoadedPolicy> actualLoadPolicies =
+                actualPDPNotification.getLoadedPolicies();
         assertFalse(actualLoadPolicies.isEmpty());
 
         final LoadedPolicy loadedPolicy = actualLoadPolicies.iterator().next();
@@ -192,14 +198,16 @@ public class MatchStoreTest {
     }
 
     @Test
-    public void testStoreMatch_NoticficationTypeUpdate_IfStdLoadPolicyExistsWithNullMatches() throws Exception {
+    public void testStoreMatch_NoticficationTypeUpdate_IfStdLoadPolicyExistsWithNullMatches()
+            throws Exception {
         final Map<String, String> attribute = getAttributesMap();
 
         final Matches newMatch = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, attribute);
 
-        final StdLoadedPolicy stdLoadedPolicy = getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, null);
-        final PDPNotification oldNotification = getPDPNotification(Collections.emptySet(),
-                Arrays.asList(stdLoadedPolicy));
+        final StdLoadedPolicy stdLoadedPolicy =
+                getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, null);
+        final PDPNotification oldNotification =
+                getPDPNotification(Collections.emptySet(), Arrays.asList(stdLoadedPolicy));
 
         MatchStore.storeMatch(newMatch);
 
@@ -209,7 +217,8 @@ public class MatchStoreTest {
 
         assertEquals(NotificationType.UPDATE, actualPDPNotification.getNotificationType());
 
-        final Collection<LoadedPolicy> actualLoadPolicies = actualPDPNotification.getLoadedPolicies();
+        final Collection<LoadedPolicy> actualLoadPolicies =
+                actualPDPNotification.getLoadedPolicies();
         assertFalse(actualLoadPolicies.isEmpty());
 
         final LoadedPolicy loadedPolicy = actualLoadPolicies.iterator().next();
@@ -220,12 +229,14 @@ public class MatchStoreTest {
     @Test
     public void testStoreMatch_NoticficationTypeNull_IfStdLoadPolicyExistsWithMatchesWithOutMatchingConfigAttribute()
             throws Exception {
-        final Matches newMatch = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, getAttributesMap());
+        final Matches newMatch =
+                getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, getAttributesMap());
         final Map<String, String> matches = getPolicyMatches(ONAP_NAME_VAL, CONFIG_NAME_VAL);
 
-        final StdLoadedPolicy stdLoadedPolicy = getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, matches);
-        final PDPNotification oldNotification = getPDPNotification(Collections.emptySet(),
-                Arrays.asList(stdLoadedPolicy));
+        final StdLoadedPolicy stdLoadedPolicy =
+                getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, matches);
+        final PDPNotification oldNotification =
+                getPDPNotification(Collections.emptySet(), Arrays.asList(stdLoadedPolicy));
 
         MatchStore.storeMatch(newMatch);
 
@@ -235,7 +246,8 @@ public class MatchStoreTest {
 
         assertNull(actualPDPNotification.getNotificationType());
 
-        final Collection<LoadedPolicy> actualLoadPolicies = actualPDPNotification.getLoadedPolicies();
+        final Collection<LoadedPolicy> actualLoadPolicies =
+                actualPDPNotification.getLoadedPolicies();
         assertTrue(actualLoadPolicies.isEmpty());
 
     }
@@ -248,9 +260,10 @@ public class MatchStoreTest {
         final Map<String, String> matches = new HashMap<>();
         matches.put(ONAP_NAME_VAL, ONAP_NAME_VAL);
 
-        final StdLoadedPolicy stdLoadedPolicy = getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, matches);
-        final PDPNotification oldNotification = getPDPNotification(Collections.emptySet(),
-                Arrays.asList(stdLoadedPolicy));
+        final StdLoadedPolicy stdLoadedPolicy =
+                getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, matches);
+        final PDPNotification oldNotification =
+                getPDPNotification(Collections.emptySet(), Arrays.asList(stdLoadedPolicy));
 
         MatchStore.storeMatch(newMatch);
 
@@ -260,20 +273,24 @@ public class MatchStoreTest {
 
         assertEquals(NotificationType.UPDATE, actualPDPNotification.getNotificationType());
 
-        final Collection<LoadedPolicy> actualLoadPolicies = actualPDPNotification.getLoadedPolicies();
+        final Collection<LoadedPolicy> actualLoadPolicies =
+                actualPDPNotification.getLoadedPolicies();
         assertFalse(actualLoadPolicies.isEmpty());
 
     }
 
     @Test
-    public void testStoreMatch_NoticficationTypeUpdate_IfMatchStoreContainMatchingMatches() throws Exception {
+    public void testStoreMatch_NoticficationTypeUpdate_IfMatchStoreContainMatchingMatches()
+            throws Exception {
 
-        final Matches newMatch = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, Collections.emptyMap());
+        final Matches newMatch =
+                getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, Collections.emptyMap());
         final Map<String, String> matches = getPolicyMatches(ONAP_NAME_VAL, CONFIG_NAME_VAL);
 
-        final StdLoadedPolicy stdLoadedPolicy = getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, matches);
-        final PDPNotification oldNotification = getPDPNotification(Collections.emptySet(),
-                Arrays.asList(stdLoadedPolicy));
+        final StdLoadedPolicy stdLoadedPolicy =
+                getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, matches);
+        final PDPNotification oldNotification =
+                getPDPNotification(Collections.emptySet(), Arrays.asList(stdLoadedPolicy));
 
         MatchStore.storeMatch(newMatch);
 
@@ -283,7 +300,8 @@ public class MatchStoreTest {
 
         assertEquals(NotificationType.UPDATE, actualPDPNotification.getNotificationType());
 
-        final Collection<LoadedPolicy> actualLoadPolicies = actualPDPNotification.getLoadedPolicies();
+        final Collection<LoadedPolicy> actualLoadPolicies =
+                actualPDPNotification.getLoadedPolicies();
         assertFalse(actualLoadPolicies.isEmpty());
 
         final LoadedPolicy loadedPolicy = actualLoadPolicies.iterator().next();
@@ -292,18 +310,23 @@ public class MatchStoreTest {
     }
 
     @Test
-    public void testStoreMatch_NoticficationTypeUpdate_IfMatchStoreContainMatchingMatches2() throws Exception {
+    public void testStoreMatch_NoticficationTypeUpdate_IfMatchStoreContainMatchingMatches2()
+            throws Exception {
 
-        final Matches firstObj = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, Collections.emptyMap());
+        final Matches firstObj =
+                getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, Collections.emptyMap());
         final Map<String, String> firstPolicyObj = getPolicyMatches(ONAP_NAME_VAL, CONFIG_NAME_VAL);
         final Map<String, String> attributesMap = getAttributesMap();
 
         final Matches secondObj = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, attributesMap);
-        final Map<String, String> secondPolicyObj = getPolicyMatches(ONAP_NAME_VAL, CONFIG_NAME_VAL);
+        final Map<String, String> secondPolicyObj =
+                getPolicyMatches(ONAP_NAME_VAL, CONFIG_NAME_VAL);
         secondPolicyObj.putAll(attributesMap);
 
-        final StdLoadedPolicy stdLoadedPolicy = getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, firstPolicyObj);
-        final StdLoadedPolicy secondStdLoadedPolicy = getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, secondPolicyObj);
+        final StdLoadedPolicy stdLoadedPolicy =
+                getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, firstPolicyObj);
+        final StdLoadedPolicy secondStdLoadedPolicy =
+                getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, secondPolicyObj);
         final PDPNotification oldNotification = getPDPNotification(Collections.emptySet(),
                 Arrays.asList(stdLoadedPolicy, secondStdLoadedPolicy));
 
@@ -316,7 +339,8 @@ public class MatchStoreTest {
 
         assertEquals(NotificationType.UPDATE, actualPDPNotification.getNotificationType());
 
-        final Collection<LoadedPolicy> actualLoadPolicies = actualPDPNotification.getLoadedPolicies();
+        final Collection<LoadedPolicy> actualLoadPolicies =
+                actualPDPNotification.getLoadedPolicies();
         assertFalse(actualLoadPolicies.isEmpty());
         assertEquals(1, actualLoadPolicies.size());
     }
@@ -325,13 +349,15 @@ public class MatchStoreTest {
     public void testStoreMatch_NoticficationTypeBoth_IfOldNotificationContainRemovedAndLoadedPolicies()
             throws Exception {
 
-        final Matches newMatch = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, Collections.emptyMap());
+        final Matches newMatch =
+                getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, Collections.emptyMap());
         final Map<String, String> matches = getPolicyMatches(ONAP_NAME_VAL, CONFIG_NAME_VAL);
 
         final StdRemovedPolicy removedPolicy = getRemovedPolicy(POLICY_VERSION, POLICY_NAME);
-        final StdLoadedPolicy stdLoadedPolicy = getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, matches);
-        final PDPNotification oldNotification = getPDPNotification(Arrays.asList(removedPolicy),
-                Arrays.asList(stdLoadedPolicy));
+        final StdLoadedPolicy stdLoadedPolicy =
+                getStdLoadedPolicy(POLICY_VERSION, POLICY_NAME, matches);
+        final PDPNotification oldNotification =
+                getPDPNotification(Arrays.asList(removedPolicy), Arrays.asList(stdLoadedPolicy));
 
         MatchStore.storeMatch(newMatch);
 
@@ -352,15 +378,17 @@ public class MatchStoreTest {
     }
 
     @Test
-    public void testStoreMatch_MatchesObjectShouldbeAddOnceToMatchStoreAndNoDuplication() throws Exception {
-        final String[] configNames = new String[] { CONFIG_NAME_VAL, CONFIG_NAME_VAL, "ConfigName1", CONFIG_NAME_VAL,
-                "ConfigName1", null };
-        final String[] onapNames = new String[] { ONAP_NAME_VAL, ONAP_NAME_VAL, "ONAPName1", "ONAPName1", ONAP_NAME_VAL,
-                ONAP_NAME_VAL };
+    public void testStoreMatch_MatchesObjectShouldbeAddOnceToMatchStoreAndNoDuplication()
+            throws Exception {
+        final String[] configNames = new String[] {CONFIG_NAME_VAL, CONFIG_NAME_VAL, "ConfigName1",
+                CONFIG_NAME_VAL, "ConfigName1", null};
+        final String[] onapNames = new String[] {ONAP_NAME_VAL, ONAP_NAME_VAL, "ONAPName1",
+                "ONAPName1", ONAP_NAME_VAL, ONAP_NAME_VAL};
 
         for (int i = 0; i < configNames.length; i++) {
 
-            final Matches matches = getMatchesInstance(configNames[i], onapNames[i], getAttributesMap());
+            final Matches matches =
+                    getMatchesInstance(configNames[i], onapNames[i], getAttributesMap());
             MatchStore.storeMatch(matches);
             MatchStore.storeMatch(matches);
         }
@@ -372,8 +400,10 @@ public class MatchStoreTest {
     @Test
     public void testStoreMatch_MatchesObjectShouldBeAddedToMatchStore_ConfigAttrValuesAreDifferentThenExistingOne()
             throws Exception {
-        final Matches firstObj = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, getAttributesMap());
-        final Matches secondObj = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, Collections.emptyMap());
+        final Matches firstObj =
+                getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, getAttributesMap());
+        final Matches secondObj =
+                getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, Collections.emptyMap());
 
         MatchStore.storeMatch(firstObj);
         MatchStore.storeMatch(secondObj);
@@ -384,7 +414,8 @@ public class MatchStoreTest {
     }
 
     @Test
-    public void testStoreMatch_MatchesObjectShouldBeAddedToMatchStore_ConfigAttrValuesNull() throws Exception {
+    public void testStoreMatch_MatchesObjectShouldBeAddedToMatchStore_ConfigAttrValuesNull()
+            throws Exception {
         final Matches firstObj = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, null);
         final Matches secondObj = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, null);
 
@@ -399,8 +430,10 @@ public class MatchStoreTest {
     @Test
     public void testStoreMatch_MatchesObjectShouldBeAddedToMatchStore_OnapNameIsDifferentThenExistingOne()
             throws Exception {
-        final Matches firstObj = getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, getAttributesMap());
-        final Matches secondObj = getMatchesInstance(CONFIG_NAME_VAL, "ONAPName1", getAttributesMap());
+        final Matches firstObj =
+                getMatchesInstance(CONFIG_NAME_VAL, ONAP_NAME_VAL, getAttributesMap());
+        final Matches secondObj =
+                getMatchesInstance(CONFIG_NAME_VAL, "ONAPName1", getAttributesMap());
 
         MatchStore.storeMatch(firstObj);
         MatchStore.storeMatch(secondObj);
@@ -476,8 +509,7 @@ public class MatchStoreTest {
     /**
      * Perform post-test clean-up.
      *
-     * @throws Exception
-     *             if the clean-up fails for some reason
+     * @throws Exception if the clean-up fails for some reason
      */
     @After
     public void tearDown() throws Exception {
@@ -487,8 +519,7 @@ public class MatchStoreTest {
     /**
      * Launch the test.
      *
-     * @param args
-     *            the command line arguments
+     * @param args the command line arguments
      */
     public static void main(final String[] args) {
         new org.junit.runner.JUnitCore().run(MatchStoreTest.class);
