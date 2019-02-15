@@ -4,6 +4,8 @@
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,7 +29,6 @@ import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterRegistration;
 import javax.servlet.RequestDispatcher;
@@ -259,8 +260,8 @@ public class DummyServerContextImpl implements ServletContext {
     }
 
     @Override
-    public javax.servlet.FilterRegistration.Dynamic addFilter(
-            String filterName, Class<? extends Filter> filterClass) {
+    public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName,
+            Class<? extends Filter> filterClass) {
         // TODO Auto-generated method stub
         return null;
     }

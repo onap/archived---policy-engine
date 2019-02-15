@@ -22,14 +22,12 @@
 package org.onap.policy.pdp.rest.api.services;
 
 import static org.junit.Assert.assertEquals;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -72,8 +70,7 @@ public class BRMSRawPolicyServiceTest {
         // Set the system property temporarily
         System.setProperty(SYSTEM_KEY, "xacml.pdp.properties");
 
-        BRMSRawPolicyService service =
-                new BRMSRawPolicyService(testVal, testVal, testParams, testVal);
+        BRMSRawPolicyService service = new BRMSRawPolicyService(testVal, testVal, testParams, testVal);
         assertEquals(false, service.getValidation());
         assertEquals("PE300 - Data Issue:  No Rule Body given", service.getMessage());
     }

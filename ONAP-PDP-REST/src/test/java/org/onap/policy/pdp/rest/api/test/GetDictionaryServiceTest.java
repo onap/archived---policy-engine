@@ -29,202 +29,207 @@ import org.onap.policy.pdp.rest.api.services.GetDictionaryService;
 
 public class GetDictionaryServiceTest {
 
-	@Test
-	public void dictionaryJsonTest() throws Exception{
-		Method formatDictionary = GetDictionaryService.class.getDeclaredMethod("formatDictionaryJson", String.class);
-		formatDictionary.setAccessible(true);
-		String input="{\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
-				+ "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
-				+ "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\"}";
-		DictionaryParameters dp = new DictionaryParameters();
-		dp.setDictionary("test");
-		GetDictionaryService gds = new GetDictionaryService(dp, null);
-		String result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("OnapName");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("Attribute");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("Action");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("BRMSParamTemplate");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("VSCLAction");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("VNFType");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("PEPOptions");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("Varbind");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("Service");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("Site");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("Settings");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("DescriptiveScope");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("Enforcer");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("ActionList");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("ProtocolList");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("Zone");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("SecurityZone");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("PrefixList");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("AddressGroup");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("ServiceGroup");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("ServiceList");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("TermList");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("RuleList");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("FirewallRuleList");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("Term");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("MicroServiceLocation");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("MicroServiceConfigName");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("DCAEUUID");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("MicroServiceModels");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("PolicyScopeService");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("PolicyScopeResource");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("PolicyScopeType");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("PolicyScopeClosedLoop");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("GroupPolicyScopeList");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("RiskType");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("SafePolicyWarning");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-		//
-		dp.setDictionary("MicroServiceDictionary");
-		gds = new GetDictionaryService(dp, null);
-		result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
-	}
+    @Test
+    public void dictionaryJsonTest() throws Exception {
+        Method formatDictionary =
+                GetDictionaryService.class.getDeclaredMethod("formatDictionaryJson", String.class);
+        formatDictionary.setAccessible(true);
+        String input =
+                "{\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
+                        + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
+                        + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
+                        + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
+                        + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
+                        + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\"}";
+        DictionaryParameters dp = new DictionaryParameters();
+        dp.setDictionary("test");
+        GetDictionaryService gds = new GetDictionaryService(dp, null);
+        String result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("OnapName");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("Attribute");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("Action");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("BRMSParamTemplate");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("VSCLAction");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("VNFType");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("PEPOptions");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("Varbind");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("Service");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("Site");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("Settings");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("DescriptiveScope");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("Enforcer");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("ActionList");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("ProtocolList");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("Zone");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("SecurityZone");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("PrefixList");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("AddressGroup");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("ServiceGroup");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("ServiceList");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("TermList");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("RuleList");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("FirewallRuleList");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("Term");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("MicroServiceLocation");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("MicroServiceConfigName");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("DCAEUUID");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("MicroServiceModels");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("PolicyScopeService");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("PolicyScopeResource");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("PolicyScopeType");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("PolicyScopeClosedLoop");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("GroupPolicyScopeList");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("RiskType");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("SafePolicyWarning");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("MicroServiceDictionary");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+    }
 }
