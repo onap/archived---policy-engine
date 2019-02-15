@@ -69,6 +69,24 @@
       "revId": "1a9972ef480916f42abe8f27e63204ecae512d0b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9788ccf8_74e7c2c9",
+        "filename": "PolicyEngineAPI/src/test/java/org/onap/policy/test/SendEventTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-15T14:21:45Z",
+      "side": 1,
+      "message": "I did though. Fixed now.",
+      "parentUuid": "9626c3ed_b804d05b",
+      "revId": "1a9972ef480916f42abe8f27e63204ecae512d0b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
