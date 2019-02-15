@@ -4,12 +4,14 @@
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,12 +25,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.script.SimpleBindings;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,30 +40,33 @@ import org.onap.policy.rest.jpa.PolicyEntity;
 
 public class PolicyControllerTest {
 
-	private static Logger logger = FlexLogger.getLogger(PolicyControllerTest.class);
-	private static CommonClassDao commonClassDao;
-	
-	@Before
-	public void setUp() throws Exception{
-		logger.info("setUp: Entering");
+    private static Logger logger = FlexLogger.getLogger(PolicyControllerTest.class);
+    private static CommonClassDao commonClassDao;
+
+    @Before
+    public void setUp() throws Exception {
+        logger.info("setUp: Entering");
         commonClassDao = mock(CommonClassDao.class);
         PolicyController.setCommonClassDao(commonClassDao);
         List<Object> data = new ArrayList<>();
         String policyData = "";
         try {
-			ClassLoader classLoader = getClass().getClassLoader();
-			policyData = IOUtils.toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml"));
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
+            ClassLoader classLoader = getClass().getClassLoader();
+            policyData = IOUtils
+                    .toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml"));
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
         PolicyEntity entity = new PolicyEntity();
         entity.setPolicyName("Config_SampleTest.1.xml");
         entity.setPolicyData(policyData);
         entity.setScope("com");
         data.add(entity);
-   
-        when(commonClassDao.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(data);
-        
+
+        when(commonClassDao.getDataByQuery(
+                "FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'",
+                new SimpleBindings())).thenReturn(data);
+
         FunctionDefinition fnDefinition = new FunctionDefinition();
         fnDefinition.setXacmlid("Test");
         fnDefinition.setShortname("Test");
@@ -74,18 +76,18 @@ public class PolicyControllerTest {
         List<Object> fnObjects = new ArrayList<>();
         fnObjects.add(fnDefinition);
         when(commonClassDao.getData(FunctionDefinition.class)).thenReturn(fnObjects);
-	}
-	
-	@Test
-	public void testInit(){
-		PolicyController controller = new PolicyController();
-		PolicyController.setjUnit(true);
-		controller.init();
-		try{
-			assertTrue(PolicyController.dropDownMap.size() > 0);
-		}catch(Exception e){
-			logger.error("Exception Occured"+e);
-			fail();
-		}
-	}
+    }
+
+    @Test
+    public void testInit() {
+        PolicyController controller = new PolicyController();
+        PolicyController.setjUnit(true);
+        controller.init();
+        try {
+            assertTrue(PolicyController.dropDownMap.size() > 0);
+        } catch (Exception e) {
+            logger.error("Exception Occured" + e);
+            fail();
+        }
+    }
 }
