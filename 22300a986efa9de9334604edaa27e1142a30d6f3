@@ -215,6 +215,30 @@
     },
     {
       "key": {
+        "uuid": "6993dcf4_5bc1155d",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ClosedLoopFaultPolicyServiceTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2019-02-15T13:58:55Z",
+      "side": 1,
+      "message": "Right, missed this one. Fixed now.",
+      "parentUuid": "37c59cb2_c70611f0",
+      "range": {
+        "startLine": 61,
+        "startChar": 20,
+        "endLine": 61,
+        "endChar": 27
+      },
+      "revId": "22300a986efa9de9334604edaa27e1142a30d6f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f31f344_3a7f3d95",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/ClosedLoopPMPolicyServiceTest.java",
         "patchSetId": 2
