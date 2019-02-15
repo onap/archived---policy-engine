@@ -4,12 +4,14 @@
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,16 +54,20 @@ public class StdEngineTest {
     private Path repository;
     Properties properties = new Properties();
     StdEngine stdEngine = null;
-    
+
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
-    
+
     @BeforeClass
-    public static void setUpClass() throws IOException{
+    public static void setUpClass() throws IOException {
         new File("target/test/resources/pdps").mkdirs();
         new File("target/test/resources/emptyPapGroupsDefault").mkdirs();
-        Files.copy(Paths.get("src/test/resources/pdps/xacml.properties"), Paths.get("target/test/resources/pdps/xacml.properties"), StandardCopyOption.REPLACE_EXISTING);
-        Files.copy(Paths.get("src/test/resources/emptyPapGroupsDefault/xacml.properties"), Paths.get("target/test/resources/emptyPapGroupsDefault/xacml.properties"), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(Paths.get("src/test/resources/pdps/xacml.properties"),
+                Paths.get("target/test/resources/pdps/xacml.properties"),
+                StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(Paths.get("src/test/resources/emptyPapGroupsDefault/xacml.properties"),
+                Paths.get("target/test/resources/emptyPapGroupsDefault/xacml.properties"),
+                StandardCopyOption.REPLACE_EXISTING);
     }
 
     @Before
@@ -100,47 +106,53 @@ public class StdEngineTest {
     public void testNoRepository() throws PAPException, IOException {
         expectedException.expect(PAPException.class);
         expectedException.expectMessage("No repository specified.");
-        new StdEngine((Path)null);
+        new StdEngine((Path) null);
     }
-    
+
     @Test
     public void testRepositoryDoesNotExist() throws PAPException, IOException {
         repository = Paths.get("target/test/resources/nonExisting");
         new StdEngine(repository);
-        
-        assertTrue(Files.exists(Paths.get("target/test/resources/nonExisting/default/xacml.pip.properties")));
-        assertTrue(Files.exists(Paths.get("target/test/resources/nonExisting/default/xacml.policy.properties")));
+
+        assertTrue(Files.exists(
+                Paths.get("target/test/resources/nonExisting/default/xacml.pip.properties")));
+        assertTrue(Files.exists(
+                Paths.get("target/test/resources/nonExisting/default/xacml.policy.properties")));
         assertTrue(Files.exists(Paths.get("target/test/resources/nonExisting/xacml.properties")));
         FileUtils.deleteDirectory(repository.toFile());
     }
-    
+
     @Test
     public void testEmptyPapGroupsDefault() throws PAPException, IOException {
         System.setProperty("xacml.pap.groups.default", "");
         repository = Paths.get("target/test/resources/emptyPapGroupsDefault");
         new StdEngine(repository);
-        
-        assertTrue(Files.exists(Paths.get("target/test/resources/emptyPapGroupsDefault/default/xacml.pip.properties")));
-        assertTrue(Files.exists(Paths.get("target/test/resources/emptyPapGroupsDefault/default/xacml.policy.properties")));
-        assertTrue(Files.exists(Paths.get("target/test/resources/emptyPapGroupsDefault/xacml.properties")));
+
+        assertTrue(Files.exists(Paths
+                .get("target/test/resources/emptyPapGroupsDefault/default/xacml.pip.properties")));
+        assertTrue(Files.exists(Paths.get(
+                "target/test/resources/emptyPapGroupsDefault/default/xacml.policy.properties")));
+        assertTrue(Files
+                .exists(Paths.get("target/test/resources/emptyPapGroupsDefault/xacml.properties")));
     }
-    
+
     @Test
-    public void testNewGroupAndRemoveGroup() throws NullPointerException, PAPException, IOException {
+    public void testNewGroupAndRemoveGroup()
+            throws NullPointerException, PAPException, IOException {
         OnapPDPGroup newGroup = createGroup("newGroup", "Description of new group");
         assertNotNull(newGroup);
 
         stdEngine.removeGroup(stdEngine.getGroup("newGroup"), null);
         assertNull(stdEngine.getGroup("newGroup"));
     }
-    
+
     @Test
     public void testRemoveGroupNull() throws NullPointerException, PAPException, IOException {
         expectedException.expect(NullPointerException.class);
         stdEngine.removeGroup(null, null);
         assertNull(stdEngine.getGroup("newGroup"));
     }
-    
+
     @Test
     public void testRemoveGroupUnknown() throws NullPointerException, PAPException, IOException {
         OnapPDPGroup unknownGroup = new StdPDPGroup("unknownId", null);
@@ -149,7 +161,7 @@ public class StdEngineTest {
         expectedException.expectMessage("The group 'unknownId' does not exist");
         stdEngine.removeGroup(unknownGroup, null);
     }
-    
+
     @Test
     public void testRemoveGroupDefault() throws NullPointerException, PAPException, IOException {
         OnapPDPGroup defaultGroup = stdEngine.getDefaultGroup();
@@ -158,141 +170,145 @@ public class StdEngineTest {
         expectedException.expectMessage("You cannot delete the default group.");
         stdEngine.removeGroup(defaultGroup, null);
     }
-    
+
     @Test
     public void testSetDefaultGroup() throws NullPointerException, PAPException, IOException {
         OnapPDPGroup newGroup = createGroup("newGroup", "Description of new group");
         assertNotNull(newGroup);
-        
+
         OnapPDPGroup defaultGroup = stdEngine.getDefaultGroup();
         assertEquals("default", defaultGroup.getName());
         stdEngine.setDefaultGroup(newGroup);
         assertEquals(newGroup, stdEngine.getDefaultGroup());
-        
+
         stdEngine.setDefaultGroup(defaultGroup);
         stdEngine.removeGroup(stdEngine.getGroup("newGroup"), null);
     }
-    
+
     @Test
-    public void testPdps() throws NullPointerException, PAPException{
+    public void testPdps() throws NullPointerException, PAPException {
         OnapPDPGroup group1 = createGroup("newGroup", "Description of new group");
         assertEquals(0, group1.getPdps().size());
-        
+
         stdEngine.newPDP("newPdp", group1, "newPdpName", "A new pdp", 1);
         assertEquals(1, group1.getPdps().size());
         assertEquals("newPdp", group1.getPdps().iterator().next().getId());
         assertEquals("newPdpName", group1.getPdps().iterator().next().getName());
         assertEquals("A new pdp", group1.getPdps().iterator().next().getDescription());
-        
+
         OnapPDPGroup group2 = createGroup("anotherNewGroup", "Description of new group");
         assertEquals(0, group2.getPdps().size());
-        
+
         stdEngine.movePDP(group1.getOnapPdps().iterator().next(), group2);
         assertEquals(0, group1.getPdps().size());
         assertEquals(1, group2.getPdps().size());
-        
+
         OnapPDP pdp = group2.getOnapPdps().iterator().next();
         pdp.setName("AnUpdatedName");;
         pdp.setDescription("An updated description");
         stdEngine.updatePDP(pdp);
         assertEquals("AnUpdatedName", group2.getPdps().iterator().next().getName());
         assertEquals("An updated description", group2.getPdps().iterator().next().getDescription());
-        
+
         stdEngine.removePDP(group2.getOnapPdps().iterator().next());
         assertEquals(0, group1.getPdps().size());
         assertEquals(0, group2.getPdps().size());
     }
-    
+
     @Test
-    public void testNewPdpNullGroup() throws NullPointerException, PAPException{
+    public void testNewPdpNullGroup() throws NullPointerException, PAPException {
         expectedException.expect(PAPException.class);
         expectedException.expectMessage("You must specify which group the PDP will belong to.");
         stdEngine.newPDP("newPdp", null, "newPdpName", "A new pdp", 1);
     }
-    
+
     @Test
-    public void testNewPdpUnknownGroup() throws NullPointerException, PAPException{
+    public void testNewPdpUnknownGroup() throws NullPointerException, PAPException {
         OnapPDPGroup unknownGroup = new StdPDPGroup("unknownId", null);
 
         expectedException.expect(PAPException.class);
         expectedException.expectMessage("Unknown group, not in our list.");
         stdEngine.newPDP("newPdp", unknownGroup, "newPdpName", "A new pdp", 1);
     }
-    
+
     @Test
-    public void testNewPdpAlreadyExistingPdp() throws NullPointerException, PAPException{
+    public void testNewPdpAlreadyExistingPdp() throws NullPointerException, PAPException {
         OnapPDPGroup group1 = createGroup("newGroup", "Description of new group");
         assertEquals(0, group1.getPdps().size());
-        
+
         stdEngine.newPDP("newPdp", group1, "newPdpName", "A new pdp", 1);
         assertEquals(1, group1.getPdps().size());
-        
+
         expectedException.expect(PAPException.class);
         expectedException.expectMessage("A PDP with this ID exists.");
         stdEngine.newPDP("newPdp", group1, "newPdpName", "A new pdp", 1);
     }
-    
+
     @Test
-    public void testRemoveGroupWithPdps() throws NullPointerException, PAPException{
+    public void testRemoveGroupWithPdps() throws NullPointerException, PAPException {
         OnapPDPGroup group1 = createGroup("newGroup", "Description of new group");
-        
+
         stdEngine.newPDP("newPdp", group1, "newPdpName", "A new pdp", 1);
         assertEquals(1, group1.getPdps().size());
-        
+
         OnapPDPGroup group2 = createGroup("anotherNewGroup", "Description of new group");
         assertEquals(0, group2.getPdps().size());
-        
+
         stdEngine.removeGroup(group1, group2);
         assertNull(stdEngine.getGroup("newGroup"));
         assertEquals(1, group2.getPdps().size());
     }
-    
+
     @Test
-    public void testRemoveGroupWithPdpsNoTarget() throws NullPointerException, PAPException{
+    public void testRemoveGroupWithPdpsNoTarget() throws NullPointerException, PAPException {
         OnapPDPGroup group1 = createGroup("newGroup", "Description of new group");
-        
+
         stdEngine.newPDP("newPdp", group1, "newPdpName", "A new pdp", 1);
         assertEquals(1, group1.getPdps().size());
-        
+
         OnapPDPGroup group2 = createGroup("anotherNewGroup", "Description of new group");
         assertEquals(0, group2.getPdps().size());
-        
+
         expectedException.expect(NullPointerException.class);
-        expectedException.expectMessage("Group targeted for deletion has PDPs, you must provide a new group for them.");
+        expectedException.expectMessage(
+                "Group targeted for deletion has PDPs, you must provide a new group for them.");
         stdEngine.removeGroup(group1, null);
     }
-    
+
     @Test
     public void testUpdateGroupName() throws NullPointerException, PAPException, IOException {
         OnapPDPGroup newGroup = createGroup("newGroup", "Description of new group");
-        
+
         OnapPDPGroup updatedGroup = new StdPDPGroup(newGroup);
         updatedGroup.setName("AnUpdatedName");
         stdEngine.updateGroup(updatedGroup);
         assertNull(stdEngine.getGroup("newGroup"));
         assertNotNull(stdEngine.getGroup("AnUpdatedName"));
         assertEquals("AnUpdatedName", stdEngine.getGroup("AnUpdatedName").getName());
-        assertEquals("Description of new group", stdEngine.getGroup("AnUpdatedName").getDescription());
+        assertEquals("Description of new group",
+                stdEngine.getGroup("AnUpdatedName").getDescription());
     }
-    
+
     @Test
-    public void testUpdateGroupDescription() throws NullPointerException, PAPException, IOException {
+    public void testUpdateGroupDescription()
+            throws NullPointerException, PAPException, IOException {
         OnapPDPGroup newGroup = createGroup("newGroup", "Description of new group");
-                
-        OnapPDPGroup updatedGroup = new StdPDPGroup(newGroup.getId(), newGroup.getName(), "An updated description", Paths.get("target/test/resources/pdps/newGroup"));
+
+        OnapPDPGroup updatedGroup = new StdPDPGroup(newGroup.getId(), newGroup.getName(),
+                "An updated description", Paths.get("target/test/resources/pdps/newGroup"));
         updatedGroup.setDescription("An updated description");
         stdEngine.updateGroup(updatedGroup);
         assertEquals("newGroup", stdEngine.getGroup("newGroup").getName());
         assertEquals("An updated description", stdEngine.getGroup("newGroup").getDescription());
     }
-    
+
     @Test
     public void testUpdateGroupNull() throws NullPointerException, PAPException, IOException {
         expectedException.expect(PAPException.class);
         expectedException.expectMessage("Group or id is null");
         stdEngine.updateGroup(null);
     }
-    
+
     @Test
     public void testUpdateGroupIdNull() throws NullPointerException, PAPException, IOException {
         StdPDPGroup group = new StdPDPGroup(null, null);
@@ -300,7 +316,7 @@ public class StdEngineTest {
         expectedException.expectMessage("Group or id is null");
         stdEngine.updateGroup(group);
     }
-    
+
     @Test
     public void testUpdateGroupNameNull() throws NullPointerException, PAPException, IOException {
         StdPDPGroup group = new StdPDPGroup("groupId", null);
@@ -308,15 +324,16 @@ public class StdEngineTest {
         expectedException.expectMessage("New name for group cannot be null or blank");
         stdEngine.updateGroup(group);
     }
-    
+
     @Test
-    public void testUpdateGroupNameEmptyString() throws NullPointerException, PAPException, IOException {
+    public void testUpdateGroupNameEmptyString()
+            throws NullPointerException, PAPException, IOException {
         StdPDPGroup group = new StdPDPGroup("groupId", "", "description", null);
         expectedException.expect(PAPException.class);
         expectedException.expectMessage("New name for group cannot be null or blank");
         stdEngine.updateGroup(group);
     }
-    
+
     @Test
     public void testUpdateGroupUnknown() throws NullPointerException, PAPException, IOException {
         StdPDPGroup group = new StdPDPGroup("groupId", "groupName", "description", null);
@@ -324,69 +341,77 @@ public class StdEngineTest {
         expectedException.expectMessage("Update found no existing group with id 'groupId'");
         stdEngine.updateGroup(group);
     }
-    
+
     @Test
-    public void testPublishAndRemovePolicy() throws NullPointerException, PAPException, FileNotFoundException{
+    public void testPublishAndRemovePolicy()
+            throws NullPointerException, PAPException, FileNotFoundException {
         OnapPDPGroup newGroup = createGroup("newGroup", "Description of new group");
-        InputStream inputStream = new FileInputStream("src/test/resources/pdps/default/com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml");
-        stdEngine.publishPolicy("com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml", "Config_BRMS_Param_BRMSParamvFWDemoPolicy", true, inputStream, newGroup);
+        InputStream inputStream = new FileInputStream(
+                "src/test/resources/pdps/default/com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml");
+        stdEngine.publishPolicy("com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml",
+                "Config_BRMS_Param_BRMSParamvFWDemoPolicy", true, inputStream, newGroup);
         PDPPolicy policy = newGroup.getPolicy("com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml");
         assertNotNull(policy);
-        
+
         stdEngine.removePolicy(policy, newGroup);
         assertNull(newGroup.getPolicy("com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml"));
     }
-    
+
     @Test
-    public void testPublishPolicyNull() throws NullPointerException, PAPException, FileNotFoundException{
+    public void testPublishPolicyNull()
+            throws NullPointerException, PAPException, FileNotFoundException {
         expectedException.expect(NullPointerException.class);
         stdEngine.publishPolicy(null, null, true, null, null);
     }
-    
+
     @Test
-    public void testPublishPolicyUnknownGroup() throws NullPointerException, PAPException, FileNotFoundException{
+    public void testPublishPolicyUnknownGroup()
+            throws NullPointerException, PAPException, FileNotFoundException {
         OnapPDPGroup unknownGroup = new StdPDPGroup("unknownId", null);
 
         expectedException.expect(PAPException.class);
         expectedException.expectMessage("Unknown PDP Group: unknownId");
         stdEngine.publishPolicy(null, null, true, null, unknownGroup);
     }
-    
+
     @Test
-    public void testRemovePolicyNull() throws NullPointerException, PAPException, FileNotFoundException{
+    public void testRemovePolicyNull()
+            throws NullPointerException, PAPException, FileNotFoundException {
         expectedException.expect(NullPointerException.class);
         stdEngine.removePolicy(null, null);
     }
-    
+
     @Test
-    public void testRemovePolicyUnknownGroup() throws NullPointerException, PAPException, FileNotFoundException{
+    public void testRemovePolicyUnknownGroup()
+            throws NullPointerException, PAPException, FileNotFoundException {
         OnapPDPGroup unknownGroup = new StdPDPGroup("unknownId", null);
 
         expectedException.expect(PAPException.class);
         expectedException.expectMessage("Unknown PDP Group: unknownId");
         stdEngine.removePolicy(null, unknownGroup);
     }
-    
-    private OnapPDPGroup createGroup(final String name, final String description) throws NullPointerException, PAPException{
+
+    private OnapPDPGroup createGroup(final String name, final String description)
+            throws NullPointerException, PAPException {
         ensureGroupDoesntExist(name);
         stdEngine.newGroup(name, description);
         return stdEngine.getGroup(name);
     }
-    
+
     @After
-    public void tearDown() throws PAPException{
+    public void tearDown() throws PAPException {
         ensureGroupDoesntExist("newGroup");
         ensureGroupDoesntExist("anotherNewGroup");
         ensureGroupDoesntExist("AnUpdatedName");
     }
-    
-    private void ensureGroupDoesntExist(final String groupName) throws PAPException{
+
+    private void ensureGroupDoesntExist(final String groupName) throws PAPException {
         OnapPDPGroup group = stdEngine.getGroup(groupName);
-        if (group != null){
-            for (OnapPDP pdp: group.getOnapPdps()){
+        if (group != null) {
+            for (OnapPDP pdp : group.getOnapPdps()) {
                 stdEngine.removePDP(pdp);
             }
-            stdEngine.removeGroup(group, null);       
-       }
+            stdEngine.removeGroup(group, null);
+        }
     }
 }
