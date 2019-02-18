@@ -4,12 +4,14 @@
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,70 +40,70 @@ import com.mockrunner.mock.web.MockHttpServletResponse;
 
 @RunWith(PowerMockRunner.class)
 public class AutoPushControllerTest {
-  private PolicyController controller = new PolicyController();;
-  private AutoPushController apController = new AutoPushController();
+    private PolicyController controller = new PolicyController();;
+    private AutoPushController apController = new AutoPushController();
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
-  @Test
-  public void testAutoPushSetGet() throws IOException {
-    // Get and set tests
-    apController.setPolicyController(controller);
-    assertEquals(apController.getPolicyController(), controller);
-  }
-
-  @Test
-  public void testNegativeCase1() {
-    try {
-      apController.getPolicyGroupContainerData(null, null);
-    } catch (Exception ex) {
-      fail("No exceptions expected, received: " + ex);
+    @Test
+    public void testAutoPushSetGet() throws IOException {
+        // Get and set tests
+        apController.setPolicyController(controller);
+        assertEquals(apController.getPolicyController(), controller);
     }
-  }
 
-  @Test
-  public void testNegativeCase2() throws IOException {
-    thrown.expect(NullPointerException.class);
-    apController.pushPolicyToPDPGroup(null, null);
-  }
+    @Test
+    public void testNegativeCase1() {
+        try {
+            apController.getPolicyGroupContainerData(null, null);
+        } catch (Exception ex) {
+            fail("No exceptions expected, received: " + ex);
+        }
+    }
 
-  @Test
-  public void testNegativeCase3() throws IOException {
-    thrown.expect(NullPointerException.class);
-    apController.removePDPGroup(null, null);
-  }
+    @Test
+    public void testNegativeCase2() throws IOException {
+        thrown.expect(NullPointerException.class);
+        apController.pushPolicyToPDPGroup(null, null);
+    }
 
-  @Test(expected = NullPointerException.class)
-  public void testRefresh() throws IOException {
-    apController.refreshGroups();
-  }
+    @Test
+    public void testNegativeCase3() throws IOException {
+        thrown.expect(NullPointerException.class);
+        apController.removePDPGroup(null, null);
+    }
 
-  @PrepareForTest({UserUtils.class})
-  @Test
-  public void testRequests() throws Exception {
-    // Mock user utilities
-    PowerMockito.mockStatic(UserUtils.class);
-    User user = new User();
-    Mockito.when(UserUtils.getUserSession(Mockito.any())).thenReturn(user);
+    @Test(expected = NullPointerException.class)
+    public void testRefresh() throws IOException {
+        apController.refreshGroups();
+    }
 
-    // Mock policy controller
-    PolicyController pController = Mockito.mock(PolicyController.class);
-    PowerMockito.whenNew(PolicyController.class).withNoArguments().thenReturn(pController);
-    Mockito.when(pController.getRoles(Mockito.any())).thenReturn(null);
+    @PrepareForTest({UserUtils.class})
+    @Test
+    public void testRequests() throws Exception {
+        // Mock user utilities
+        PowerMockito.mockStatic(UserUtils.class);
+        User user = new User();
+        Mockito.when(UserUtils.getUserSession(Mockito.any())).thenReturn(user);
 
-    // Test group container
-    MockHttpServletRequest request = new MockHttpServletRequest();
-    MockHttpServletResponse response = new MockHttpServletResponse();
-    apController.getPolicyGroupContainerData(request, response);
-    assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+        // Mock policy controller
+        PolicyController pController = Mockito.mock(PolicyController.class);
+        PowerMockito.whenNew(PolicyController.class).withNoArguments().thenReturn(pController);
+        Mockito.when(pController.getRoles(Mockito.any())).thenReturn(null);
 
-    // Test push
-    apController.pushPolicyToPDPGroup(request, response);
-    assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+        // Test group container
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        apController.getPolicyGroupContainerData(request, response);
+        assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
 
-    // Test remove
-    apController.removePDPGroup(request, response);
-    assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
-  }
+        // Test push
+        apController.pushPolicyToPDPGroup(request, response);
+        assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+
+        // Test remove
+        apController.removePDPGroup(request, response);
+        assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+    }
 }

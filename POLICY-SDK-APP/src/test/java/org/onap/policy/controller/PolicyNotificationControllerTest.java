@@ -4,12 +4,14 @@
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,34 +43,36 @@ import com.mockrunner.mock.web.MockHttpServletResponse;
 
 @RunWith(PowerMockRunner.class)
 public class PolicyNotificationControllerTest {
-	@PrepareForTest({UserUtils.class})
-	@Test
-	public void testWatch() throws IOException{
-		// Mock user utilities
-		PowerMockito.mockStatic(UserUtils.class);
-		User user = new User();
-		user.setOrgUserId("testID");
-		when(UserUtils.getUserSession(any())).thenReturn(user);
-		
-		// Mock database
-		CommonClassDao dao = Mockito.mock(CommonClassDao.class);
-		Mockito.when(dao.getDataByQuery(any(), any())).thenReturn(Collections.emptyList());
+    @PrepareForTest({UserUtils.class})
+    @Test
+    public void testWatch() throws IOException {
+        // Mock user utilities
+        PowerMockito.mockStatic(UserUtils.class);
+        User user = new User();
+        user.setOrgUserId("testID");
+        when(UserUtils.getUserSession(any())).thenReturn(user);
 
-		// Test watch
-		PolicyNotificationController controller = new PolicyNotificationController();
-		controller.commonClassDao = dao;
-		MockHttpServletRequest request = new MockHttpServletRequest();
-		request.setBodyContent("{\n\"watchData\": {\"name\": \"testVal\",\"path\": \"testPath\"\n}}\n");
-		MockHttpServletResponse response = new MockHttpServletResponse();
-		ModelAndView model = controller.watchPolicy(request, response);
-		assertNull(model);
-		assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+        // Mock database
+        CommonClassDao dao = Mockito.mock(CommonClassDao.class);
+        Mockito.when(dao.getDataByQuery(any(), any())).thenReturn(Collections.emptyList());
 
-		// Negative test watch
-		request.setBodyContent("{\n\"watchData\": {\"name\": \"testVal\",\"nopath\": \"testPath\"\n}}\n");
-		response = new MockHttpServletResponse();
-		model = controller.watchPolicy(request, response);
-		assertNull(model);
-		assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
-	}
+        // Test watch
+        PolicyNotificationController controller = new PolicyNotificationController();
+        controller.commonClassDao = dao;
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setBodyContent(
+                "{\n\"watchData\": {\"name\": \"testVal\",\"path\": \"testPath\"\n}}\n");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        ModelAndView model = controller.watchPolicy(request, response);
+        assertNull(model);
+        assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+
+        // Negative test watch
+        request.setBodyContent(
+                "{\n\"watchData\": {\"name\": \"testVal\",\"nopath\": \"testPath\"\n}}\n");
+        response = new MockHttpServletResponse();
+        model = controller.watchPolicy(request, response);
+        assertNull(model);
+        assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+    }
 }
