@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,18 +17,18 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.components;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-
+import com.att.research.xacml.util.XACMLProperties;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -36,8 +36,6 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.adapter.RainyDayParams;
-
-import com.att.research.xacml.util.XACMLProperties;
 
 public class DecisionPolicyTest {
 
@@ -99,7 +97,7 @@ public class DecisionPolicyTest {
         policyAdapter.setRainydayMap(treatmentMap);
         policyAdapter.setRainyday(rainyday);
 
-        component = new DecisionPolicy(policyAdapter, null);
+        component = new DecisionPolicy(policyAdapter);
 
         logger.info("setUp: exit");
     }
@@ -131,7 +129,7 @@ public class DecisionPolicyTest {
     public void testPrepareToSaveRainyDay() {
         logger.debug("test PrepareToSave Policy: enter");
         policyAdapter.setRuleProvider("Rainy_Day");
-        component = new DecisionPolicy(policyAdapter, null);
+        component = new DecisionPolicy(policyAdapter);
         boolean response = false;
 
         try {
