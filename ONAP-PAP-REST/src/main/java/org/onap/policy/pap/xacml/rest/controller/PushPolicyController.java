@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,13 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.controller;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -27,12 +32,9 @@ import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -47,11 +49,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import com.att.research.xacml.api.pap.PAPException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class PushPolicyController {
@@ -144,13 +141,15 @@ public class PushPolicyController {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        //Get PolicyEntity from DB;
-        EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
-        Query createPolicyQuery =
-                em.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName");
-        createPolicyQuery.setParameter("scope", policyScope);
-        createPolicyQuery.setParameter(policyNames, policyName.substring(policyScope.length() + 1));
-        List<?> createPolicyQueryList = createPolicyQuery.getResultList();
+        // Get PolicyEntity from DB;
+        String createPolicyQuery = "SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName";
+        SimpleBindings params = new SimpleBindings();
+        params.put("scope", policyScope);
+        params.put(policyNames, policyName.substring(policyScope.length() + 1));
+        List<?> createPolicyQueryList = commonClassDao.getDataByQuery(createPolicyQuery, params);
+        LOGGER.info("addPolicyToGroup:Total execution time to retrieve " + policyNames
+                + " from PolicyEntity");
+
         PolicyEntity policyEntity = null;
         if (!createPolicyQueryList.isEmpty()) {
             policyEntity = (PolicyEntity) createPolicyQueryList.get(0);
