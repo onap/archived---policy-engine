@@ -2,16 +2,16 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,24 +24,23 @@ package org.onap.policy.pap.xacml.rest.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTest;
+import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 
 public class JPAUtilsTest {
+    @BeforeClass
+    public static void beforeClassSetup() {
+        PolicyDBDaoTest.setupH2DbDaoImpl("jpautilstest");
+        new JPAUtils(new CommonClassDaoImpl());
+    }
+
     @Test(expected = IllegalAccessException.class)
-    public void testJPAUtils() throws IllegalAccessException {
-        // Setup test data
-        EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
-        EntityManager em = Mockito.mock(EntityManager.class);
-        Query query = Mockito.mock(Query.class);
-        Mockito.when(emf.createEntityManager()).thenReturn(em);
-        Mockito.when(em.createNamedQuery(Mockito.any())).thenReturn(query);
+    public void testJpaUtils() throws IllegalAccessException {
 
         // Test lockdown
-        JPAUtils utils = JPAUtils.getJPAUtilsInstance(emf);
+        JPAUtils utils = JPAUtils.getJPAUtilsInstance();
         assertEquals(utils.dbLockdownIgnoreErrors(), false);
         utils.dbLockdown();
         fail("Expecting an exception");
