@@ -29,7 +29,7 @@ host=$1
 port=$2
 
 echo "Waiting for $host port $port open"
-until telnet $host $port </dev/null 2>/dev/null | grep -q '^Connected'; do
+until nc -vz $host $port 2> /dev/null; do
 	sleep 1
 done
 

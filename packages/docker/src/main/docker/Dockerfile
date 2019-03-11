@@ -12,8 +12,9 @@ ENV POLICY_LOGS ${POLICY_LOGS}
 ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
 
 RUN apk --update add --no-cache busybox-extras \
-                                bash zip unzip curl \
-                                wget openssh  maven jq \
+                                bash coreutils grep findutils \
+                                zip unzip curl \
+                                wget openssh maven jq \
                                 httpie py-pip openjdk8
 
 RUN adduser -S policy -s /bin/bash
