@@ -2,15 +2,15 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.util;
 
 import java.io.ByteArrayInputStream;
@@ -29,17 +30,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
-
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -57,7 +54,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 /**
  * Helper static class for policy writing.
- * 
+ *
  *
  */
 public class XACMLPolicyWriter {
@@ -140,15 +137,15 @@ public class XACMLPolicyWriter {
     public static InputStream getXmlAsInputStream(Object policy) {
         JAXBElement<?> policyElement;
         if (policy instanceof PolicyType) {
-            policyElement = new ObjectFactory().createPolicy((PolicyType) policy); 
+            policyElement = new ObjectFactory().createPolicy((PolicyType) policy);
             return getByteArrayInputStream(policyElement, PolicyType.class);
         } else if (policy instanceof PolicySetType) {
-            policyElement = new ObjectFactory().createPolicySet((PolicySetType) policy); 
+            policyElement = new ObjectFactory().createPolicySet((PolicySetType) policy);
             return getByteArrayInputStream(policyElement, PolicySetType.class);
-        } 
+        }
         return null;
     }
-    
+
     /**
      * Helper static class that reads the JAXB element and return policy input stream.
      * @param policyElement
@@ -166,8 +163,29 @@ public class XACMLPolicyWriter {
         } catch (JAXBException e) {
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyWriter", "writePolicyFile failed");
             throw new IllegalArgumentException("XACMLPolicyWriter writePolicyFile failed", e);
-        }  
+        }
     }
+
+    /**
+     * Helper static class that does the work to write a policy set.
+     *
+     *
+     */
+    public static InputStream getPolicySetXmlAsInputStream(PolicySetType policy) {
+        JAXBElement<PolicySetType> policyElement = new ObjectFactory().createPolicySet(policy);
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            JAXBContext context = JAXBContext.newInstance(PolicySetType.class);
+            Marshaller m = context.createMarshaller();
+            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            m.marshal(policyElement, byteArrayOutputStream);
+            return new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        } catch (JAXBException e) {
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyWriter", "writePolicyFile failed");
+            throw new IllegalArgumentException("XACMLPolicyWriter writePolicyFile failed", e);
+        }
+    }
+
     /**
      * Helper static class that does the work to write a policy set to an output stream.
      *
