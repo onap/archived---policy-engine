@@ -19,6 +19,9 @@
  */
 package org.onap.policy.pap.xacml.rest.handler;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.api.pap.PDPPolicy;
+import com.att.research.xacml.util.XACMLProperties;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -27,12 +30,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.onap.policy.common.logging.ONAPLoggingContext;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
@@ -52,10 +53,6 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
-
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.api.pap.PDPPolicy;
-import com.att.research.xacml.util.XACMLProperties;
 
 public class DeleteHandler {
 
@@ -458,7 +455,7 @@ public class DeleteHandler {
         // so we need to fill that in before submitting the group for update
         ((StdPDPGroup) group).setDirectory(((StdPDPGroup) existingGroup).getDirectory());
         try {
-            acPutTransaction.updateGroup(group, "XACMLPapServlet.doDelete");
+            acPutTransaction.updateGroup(group, "XACMLPapServlet.doDelete", null);
         } catch (Exception e) {
             PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet",
                     " Error while updating group in the database: "

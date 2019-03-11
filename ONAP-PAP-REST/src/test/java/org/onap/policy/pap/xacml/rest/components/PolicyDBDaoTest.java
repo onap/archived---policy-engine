@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,20 +21,19 @@
 package org.onap.policy.pap.xacml.rest.components;
 
 import static org.junit.Assert.fail;
-
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.util.XACMLProperties;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
@@ -56,10 +55,6 @@ import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdEngine;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
-
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.util.XACMLProperties;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
@@ -88,18 +83,12 @@ public class PolicyDBDaoTest extends Mockito{
             em.createQuery("DELETE FROM PdpEntity").executeUpdate();
             em.createQuery("DELETE FROM GroupEntity").executeUpdate();
 
-            em.getTransaction().commit();
-        } catch(Exception e){
-            logger.error("Exception Occured"+e);
-            em.getTransaction().rollback();
-        }
-        em.close();
-        try {
-            dbd = PolicyDBDao.getPolicyDBDaoInstance(emf);
-            dbd2 = PolicyDBDao.getPolicyDBDaoInstance(emf);
-        } catch (Exception e) {
-            Assert.fail();
-        }
+			em.getTransaction().commit();
+		} catch(Exception e){
+			logger.error("Exception Occured"+e);
+			em.getTransaction().rollback();
+		}
+		em.close();
 
         d = PolicyDBDao.getPolicyDBDaoTestClass();
         PolicyDBDao.setJunit(true);
@@ -133,75 +122,33 @@ public class PolicyDBDaoTest extends Mockito{
         }
     }
 
-    @Test
-    public void getConfigFileTest(){
-        PolicyRestAdapter pra = new PolicyRestAdapter();
-        pra.setConfigType(ConfigPolicy.JSON_CONFIG);
-        String configFile = d.getConfigFile("Config_mypolicy.xml", "org.onap", pra);
-        Assert.assertEquals("org.onap.Config_mypolicy.json", configFile);
-        //yes, we can do action files too even though they don't have configs
-        configFile = d.getConfigFile("Action_mypolicy.xml", "org.onap", pra);
-        Assert.assertEquals("org.onap.Action_mypolicy.json", configFile);
-    }
-    
-    @Test
-    public void getPolicyNameAndVersionFromPolicyFileNameTest() throws PolicyDBException {
-        String policyName = "com.Decision_testname.1.xml";
-        String[] expectedNameAndVersion = new String[2];
-        expectedNameAndVersion[0] = "com.Decision_testname";
-        expectedNameAndVersion[1] = "1";
-        String[] actualNameAndVersion = d.getPolicyNameAndVersionFromPolicyFileName(policyName);
-        Assert.assertArrayEquals(expectedNameAndVersion, actualNameAndVersion);
-    }
-    
-    @Test
-    public void getNameScopeAndVersionFromPdpPolicyTest() {
-        String fileName = "com.Decision_testname.1.xml";
-        String[] expectedArray = new String[3];
-        expectedArray[0] = "Decision_testname.1.xml";
-        expectedArray[2] = "1";
-        expectedArray[1] = "com";
- 
-        String[] returnArray = d.getNameScopeAndVersionFromPdpPolicy(fileName);
-        Assert.assertArrayEquals(expectedArray, returnArray);
-    }
-    
-    @Test
-    public void getPdpPolicyNameTest() {
-        String name = "Decision_testname.1.json";
-        String scope = "com";
-        String expectedFinalname = "com.Decision_testname.1.xml";
-        
-        String finalname = d.getPdpPolicyName(name, scope);
-        Assert.assertEquals(expectedFinalname, finalname);
-    }
-    
-    @Test
-    public void getPolicySubFileTest() {
-        String name = "Config_testname.1.json";
-        String subFileType = "Config";
-        
-        Path path = d.getPolicySubFile(name, subFileType);
-        Assert.assertNull(path);
-    }
+	@Test
+	public void getConfigFileTest(){
+		PolicyRestAdapter pra = new PolicyRestAdapter();
+		pra.setConfigType(ConfigPolicy.JSON_CONFIG);
+		String configFile = d.getConfigFile("Config_mypolicy.xml", "org.onap", pra);
+		Assert.assertEquals("org.onap.Config_mypolicy.json", configFile);
+		//yes, we can do action files too even though they don't have configs
+		configFile = d.getConfigFile("Action_mypolicy.xml", "org.onap", pra);
+		Assert.assertEquals("org.onap.Action_mypolicy.json", configFile);
+	}
 
-    @Test
-    public void createFromPolicyObject(){
-        Policy policyObject = new ConfigPolicy();
-        policyObject.policyAdapter = new PolicyRestAdapter();
-        policyObject.policyAdapter.setConfigName("testpolicy1");
-        policyObject.policyAdapter.setPolicyDescription("my description");
-        policyObject.policyAdapter.setConfigBodyData("this is my test config file");
-        policyObject.policyAdapter.setPolicyName("SampleTest1206");
-        policyObject.policyAdapter.setConfigType(ConfigPolicy.OTHER_CONFIG);
-        policyObject.policyAdapter.setPolicyType("Config");
-        policyObject.policyAdapter.setDomainDir("com");
-        policyObject.policyAdapter.setVersion("1");
-        policyObject.policyAdapter.setHighestVersion(1);
-        PolicyType policyTypeObject = new PolicyType();
-        policyObject.policyAdapter.setPolicyData(policyTypeObject);
-        ClassLoader classLoader = getClass().getClassLoader();
-        PolicyType policyConfig = new PolicyType();
+	@Test
+	public void createFromPolicyObject(){
+		Policy policyObject = new ConfigPolicy();
+		policyObject.policyAdapter = new PolicyRestAdapter();
+		policyObject.policyAdapter.setConfigName("testpolicy1");
+		policyObject.policyAdapter.setPolicyDescription("my description");
+		policyObject.policyAdapter.setConfigBodyData("this is my test config file");
+		policyObject.policyAdapter.setPolicyName("SampleTest1206");
+		policyObject.policyAdapter.setConfigType(ConfigPolicy.OTHER_CONFIG);
+		policyObject.policyAdapter.setPolicyType("Config");
+		policyObject.policyAdapter.setDomainDir("com");
+		policyObject.policyAdapter.setVersion("1");
+		PolicyType policyTypeObject = new PolicyType();
+		policyObject.policyAdapter.setPolicyData(policyTypeObject);
+		ClassLoader classLoader = getClass().getClassLoader();
+		PolicyType policyConfig = new PolicyType();
         policyConfig.setVersion(Integer.toString(1));
         policyConfig.setPolicyId("");
         policyConfig.setTarget(new TargetType());
@@ -441,7 +388,7 @@ public class PolicyDBDaoTest extends Mockito{
         OnapPDPGroup pdpGroup = new StdPDPGroup("testgroup2", false, "newtestgroup2", "this is my new description", Paths.get("/"));
         group = dbd.getNewTransaction();
         try{
-            group.updateGroup(pdpGroup, "testuser");
+            group.updateGroup(pdpGroup, "testuser", null);
             group.commitTransaction();
         }catch (Exception e){
             logger.error("Exception Occured"+e);
