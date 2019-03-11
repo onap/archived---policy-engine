@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,15 +18,16 @@
  * ============LICENSE_END=========================================================
  */
 package org.onap.policy.rest.jpa;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 /*
  */
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,8 +42,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /*
  * The Entity class to persist a policy object and its configuration data
@@ -78,7 +77,7 @@ public class GroupEntity implements Serializable {
     @Column(name="version")
     private int version;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name="PolicyGroupEntity",joinColumns={@JoinColumn(name="groupKey")}, inverseJoinColumns={@JoinColumn(name="policyId")})
     @JsonManagedReference
     private List<PolicyEntity> policies;

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,11 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.std.IdentifierImpl;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonpatch.diff.JsonDiff;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -40,17 +45,15 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
+import javax.script.SimpleBindings;
 import org.apache.commons.io.FilenameUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionList;
 import org.onap.policy.rest.jpa.AddressGroup;
 import org.onap.policy.rest.jpa.GroupServiceList;
@@ -61,13 +64,8 @@ import org.onap.policy.rest.jpa.ProtocolList;
 import org.onap.policy.rest.jpa.ServiceList;
 import org.onap.policy.rest.jpa.TermList;
 import org.onap.policy.rest.jpa.UserInfo;
-
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.std.IdentifierImpl;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jackson.JsonLoader;
-import com.github.fge.jsonpatch.diff.JsonDiff;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -82,12 +80,20 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
+@Component
 public class FirewallConfigPolicy extends Policy {
 
     private static final Logger LOGGER = FlexLogger.getLogger(FirewallConfigPolicy.class);
 
     public FirewallConfigPolicy() {
         super();
+    }
+
+    private static CommonClassDao commonClassDao;
+
+    @Autowired
+    public FirewallConfigPolicy(CommonClassDao commonClassDao) {
+        FirewallConfigPolicy.commonClassDao = commonClassDao;
     }
 
     public FirewallConfigPolicy(PolicyRestAdapter policyAdapter) {
@@ -98,11 +104,11 @@ public class FirewallConfigPolicy extends Policy {
     // Saving the Configurations file at server location for config policy.
     protected void saveConfigurations(String policyName, String jsonBody) {
         String configurationName = policyName;
-        if(configurationName.endsWith(".xml")){
+        if (configurationName.endsWith(".xml")) {
             configurationName = configurationName.replace(".xml", "");
         }
         String fileName = CONFIG_HOME + File.separator + configurationName + ".json";
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))){
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
             bw.write(jsonBody);
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Configuration is succesfully saved");
@@ -200,16 +206,15 @@ public class FirewallConfigPolicy extends Policy {
             oldversion = oldversion - 1;
             dbPolicyName = dbPolicyName + oldversion + ".xml";
         }
-        EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
-        Query createPolicyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName");
-        createPolicyQuery.setParameter("scope", scope);
-        createPolicyQuery.setParameter("policyName", dbPolicyName);
-        List<?> createPolicyQueryList = createPolicyQuery.getResultList();
-        if(!createPolicyQueryList.isEmpty()){
+        String createPolicyQuery = "SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName";
+        SimpleBindings params = new SimpleBindings();
+        params.put("scope", scope);
+        params.put("policyName", dbPolicyName);
+        List<?> createPolicyQueryList = commonClassDao.getDataByQuery(createPolicyQuery, params);
+        if (!createPolicyQueryList.isEmpty()) {
             PolicyEntity entitydata = (PolicyEntity) createPolicyQueryList.get(0);
             policyAdapter.setPrevJsonBody(entitydata.getConfigurationData().getConfigBody());
         }
-        em.close();
         if (policyAdapter.getData() != null) {
             String jsonBody = policyAdapter.getJsonBody();
             saveConfigurations(policyName, jsonBody);
