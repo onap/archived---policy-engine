@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,10 +20,9 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import com.att.research.xacml.api.pap.PAPException;
 import java.util.List;
-
 import javax.persistence.PersistenceException;
-
 import org.onap.policy.rest.dao.PolicyDBException;
 import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
@@ -31,13 +30,14 @@ import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 
-import com.att.research.xacml.api.pap.PAPException;
-
 public interface PolicyDBDaoTransaction {
 
     /**
-     * Commits (makes permanent) the current transaction. Also, notifies other PolicyDBDao instances on other PAP servers of the update.
-     * @throws IllegalStateException if the PolicyDBDao transaction has not been used or has been committed already.
+     * Commits (makes permanent) the current transaction. Also, notifies other PolicyDBDao instances
+     * on other PAP servers of the update.
+     *
+     * @throws IllegalStateException if the PolicyDBDao transaction has not been used or has been
+     *         committed already.
      * @throws PersistenceException if the commit fails for some reason
      */
     public void commitTransaction();
@@ -54,7 +54,9 @@ public interface PolicyDBDaoTransaction {
 
     /**
      * Check if the PolicyDBDaoTransaction is currently open
-     * @return False if the PolicyDBDao transaction has not been used or has been committed already, true if it is open.
+     *
+     * @return False if the PolicyDBDao transaction has not been used or has been committed already,
+     *         true if it is open.
      */
     public boolean isTransactionOpen();
 
@@ -64,7 +66,8 @@ public interface PolicyDBDaoTransaction {
     public void rollbackTransaction();
 
     /**
-     * Close the PolicyDBDaoTransaction without rolling back or doing anything. Just used to close the EntityManager
+     * Close the PolicyDBDaoTransaction without rolling back or doing anything. Just used to close
+     * the Hibernate session.
      */
     public void close();
 
@@ -79,7 +82,8 @@ public interface PolicyDBDaoTransaction {
      * @throws IllegalStateException If a transaction is already open
      * @throws PersistenceException If a database error occurs
      */
-    public void createGroup(String groupID, String groupName, String groupDescription, String username) throws PolicyDBException;
+    public void createGroup(String groupID, String groupName, String groupDescription, String username)
+            throws PolicyDBException;
 
     /**
      * Updates a group in the database with a new name of description
@@ -89,7 +93,7 @@ public interface PolicyDBDaoTransaction {
      * @throws IllegalStateException If a transaction is already open
      * @throws PersistenceException If a database error occurs or if the group can not be found
      */
-    public void updateGroup(OnapPDPGroup group, String username) throws PolicyDBException;
+    public void updateGroup(OnapPDPGroup group, String requestType, String username) throws PolicyDBException;
 
     /**
      * Updates a PDP in the database with new information
@@ -146,7 +150,8 @@ public interface PolicyDBDaoTransaction {
      * @throws PersistenceException If a database error occurs
      * @throws PolicyDBException
      */
-    public StdPDPGroup addPolicyToGroup(String group, String policyID, String username) throws PolicyDBException;
+    public StdPDPGroup addPolicyToGroup(String group, String policyID, String requestType, String username)
+            throws PolicyDBException;
 
 
     /**
@@ -158,7 +163,7 @@ public interface PolicyDBDaoTransaction {
      * @throws PersistenceException If a database error occurs
      * @throws PAPException If an error relating to how groups are handled occurs
      */
-    public void deleteGroup(OnapPDPGroup group, OnapPDPGroup moveToGroup, String username)throws PolicyDBException;
+    public void deleteGroup(OnapPDPGroup group, OnapPDPGroup moveToGroup, String username) throws PolicyDBException;
 
     /**
      * Removes an existing PDP from its group and deletes it.
