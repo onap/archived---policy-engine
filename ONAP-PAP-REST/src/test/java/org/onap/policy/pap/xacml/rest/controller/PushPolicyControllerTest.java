@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,11 +17,12 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.controller;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-
+import com.att.research.xacml.api.pap.PAPException;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -31,32 +32,32 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javax.servlet.ReadListener;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
+import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTest;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.springframework.mock.web.MockServletConfig;
-
-import com.att.research.xacml.api.pap.PAPException;
 
 
 public class PushPolicyControllerTest {
 
     private static Logger logger = FlexLogger.getLogger(PushPolicyControllerTest.class);
     private static CommonClassDao commonClassDao;
+    private static SessionFactory sessionFactory;
     private String jsonString = null;
     private HttpServletRequest request = null;
     private PushPolicyController controller = null;
@@ -64,6 +65,11 @@ public class PushPolicyControllerTest {
     private List<String> headers = new ArrayList<>();
     private ServletConfig servletConfig;
     private XACMLPapServlet pap;
+
+    @BeforeClass
+    public static void beforeClassSetup() throws ServletException {
+        sessionFactory =  PolicyDBDaoTest.setupH2DbDaoImpl("pushcontrollertest");
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -77,7 +83,7 @@ public class PushPolicyControllerTest {
         System.setProperty("com.sun.management.jmxremote.port", "9993");
         Mockito.when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
         Mockito.when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("src/test/resources/xacml.pap.properties");
-       
+
         commonClassDao = Mockito.mock(CommonClassDao.class);
         controller = new PushPolicyController();
         controller.setCommonClassDao(commonClassDao);
@@ -118,10 +124,11 @@ public class PushPolicyControllerTest {
     }
 
     public ServletInputStream getInputStream(byte[] body) throws IOException {
-        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body); 
-        ServletInputStream servletInputStream = new ServletInputStream() { 
-            public int read() throws IOException { 
-                return byteArrayInputStream.read(); 
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body);
+        ServletInputStream servletInputStream = new ServletInputStream() {
+            @Override
+            public int read() throws IOException {
+                return byteArrayInputStream.read();
             }
 
             @Override
@@ -137,9 +144,9 @@ public class PushPolicyControllerTest {
             @Override
             public void setReadListener(ReadListener readListener) {
             }
-        }; 
-        return servletInputStream; 
-    } 
+        };
+        return servletInputStream;
+    }
 
      @After
      public void destroy(){

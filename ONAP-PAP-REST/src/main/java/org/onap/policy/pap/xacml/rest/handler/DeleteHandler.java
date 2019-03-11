@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,16 @@
  */
 package org.onap.policy.pap.xacml.rest.handler;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.api.pap.PDPPolicy;
+import com.att.research.xacml.util.XACMLProperties;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.onap.policy.common.logging.ONAPLoggingContext;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
@@ -43,8 +39,8 @@ import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTransaction;
 import org.onap.policy.pap.xacml.rest.elk.client.PolicyElasticSearchController;
 import org.onap.policy.pap.xacml.rest.model.RemoveGroupPolicy;
 import org.onap.policy.pap.xacml.rest.util.JPAUtils;
-import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.utils.PolicyUtils;
@@ -52,12 +48,22 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.api.pap.PDPPolicy;
-import com.att.research.xacml.util.XACMLProperties;
-
+@Component
 public class DeleteHandler {
+
+    private static CommonClassDao commonClassDao;
+
+    @Autowired
+    public DeleteHandler(CommonClassDao commonClassDao) {
+        DeleteHandler.commonClassDao = commonClassDao;
+    }
+
+    public DeleteHandler() {
+        // Default Constructor
+    }
 
     private OnapPDPGroup newgroup;
     private static Logger logger = FlexLogger.getLogger(DeleteHandler.class);
@@ -88,14 +94,8 @@ public class DeleteHandler {
         PolicyEntity policyEntity = null;
         JPAUtils jpaUtils = null;
 
-        String papDbDriver = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_DRIVER);
-        String papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
-        String papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
-        String papDbPassword = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD);
-        Connection con = null;
-
         try {
-            jpaUtils = JPAUtils.getJPAUtilsInstance(XACMLPapServlet.getEmf());
+            jpaUtils = JPAUtils.getJPAUtilsInstance();
         } catch (Exception e) {
             PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "XACMLPapServlet",
                     " Could not create JPAUtils instance on the PAP");
@@ -111,8 +111,7 @@ public class DeleteHandler {
             response.setStatus(HttpServletResponse.SC_ACCEPTED);
             return;
         }
-        EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
-        Query policyEntityQuery = null;
+        String policyEntityQuery = null;
         try {
             if (policyName.endsWith(".xml")) {
                 removeXMLExtension = policyName.replace(".xml", "");
@@ -137,8 +136,8 @@ public class DeleteHandler {
                         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                         return;
                     }
-                    policyEntityQuery = em.createQuery(
-                            "SELECT p FROM PolicyEntity p WHERE p.policyName LIKE :pName and p.scope=:pScope");
+                    policyEntityQuery =
+                            "SELECT p FROM PolicyEntity p WHERE p.policyName LIKE :pName and p.scope=:pScope";
                 } else if (policy.getDeleteCondition().equalsIgnoreCase("Current Version")) {
                     if (policyName.contains("Config_")) {
                         splitPolicyName = policyName.replace(".Config_", ":Config_");
@@ -149,34 +148,30 @@ public class DeleteHandler {
                     }
                     split = splitPolicyName.split(":");
                     queryCheck = false;
-                    policyEntityQuery = em.createQuery(
-                            "SELECT p FROM PolicyEntity p WHERE p.policyName=:pName and p.scope=:pScope");
+                    policyEntityQuery = "SELECT p FROM PolicyEntity p WHERE p.policyName=:pName and p.scope=:pScope";
                 }
-
+                SimpleBindings params = new SimpleBindings();
                 if (queryCheck) {
-                    policyEntityQuery.setParameter("pName", "%" + split[1] + "%");
+                    params.put("pName", "%" + split[1] + "%");
                 } else {
-                    policyEntityQuery.setParameter("pName", split[1]);
+                    params.put("pName", split[1]);
                 }
 
-                policyEntityQuery.setParameter("pScope", split[0]);
-                List<?> peResult = policyEntityQuery.getResultList();
+                params.put("pScope", split[0]);
+                List<?> peResult = commonClassDao.getDataByQuery(policyEntityQuery, params);
                 if (!peResult.isEmpty()) {
-                    Query getPolicyVersion = em.createQuery("Select p from PolicyVersion p where p.policyName=:pname");
-                    getPolicyVersion.setParameter("pname", removeVersionExtension.replace(".", File.separator));
-                    List<?> pvResult = getPolicyVersion.getResultList();
+                    String getPolicyVersion = "Select p from PolicyVersion p where p.policyName=:pname";
+                    SimpleBindings pvParams = new SimpleBindings();
+                    pvParams.put("pname", removeVersionExtension.replace(".", File.separator));
+                    List<?> pvResult = commonClassDao.getDataByQuery(getPolicyVersion, pvParams);
                     PolicyVersion pVersion = (PolicyVersion) pvResult.get(0);
                     int newVersion = 0;
-                    em.getTransaction().begin();
-                    Class.forName(papDbDriver);
-                    con = DriverManager.getConnection(papDbUrl, papDbUser, papDbPassword);
-
                     if (policy.getDeleteCondition().equalsIgnoreCase("All Versions")) {
-                        boolean groupCheck = checkPolicyGroupEntity(con, peResult);
+                        boolean groupCheck = checkPolicyGroupEntity(peResult);
                         if (!groupCheck) {
                             for (Object peData : peResult) {
                                 policyEntity = (PolicyEntity) peData;
-                                status = deletePolicyEntityData(em, policyEntity);
+                                status = deletePolicyEntityData(policyEntity);
                             }
                         } else {
                             status = POLICY_IN_PDP;
@@ -197,7 +192,7 @@ public class DeleteHandler {
                             default:
                                 try {
                                     policyVersionDeleted = true;
-                                    em.remove(pVersion);
+                                    commonClassDao.delete(pVersion);
                                 } catch (Exception e) {
                                     logger.error(e.getMessage(), e);
                                     policyVersionDeleted = false;
@@ -205,10 +200,10 @@ public class DeleteHandler {
                                 break;
                         }
                     } else if (policy.getDeleteCondition().equalsIgnoreCase("Current Version")) {
-                        boolean groupCheck = checkPolicyGroupEntity(con, peResult);
+                        boolean groupCheck = checkPolicyGroupEntity(peResult);
                         if (!groupCheck) {
                             policyEntity = (PolicyEntity) peResult.get(0);
-                            status = deletePolicyEntityData(em, policyEntity);
+                            status = deletePolicyEntityData(policyEntity);
                         } else {
                             status = POLICY_IN_PDP;
                         }
@@ -242,7 +237,7 @@ public class DeleteHandler {
                                 pVersion.setHigherVersion(newVersion);
                                 try {
                                     policyVersionDeleted = true;
-                                    em.persist(pVersion);
+                                    commonClassDao.save(pVersion);
                                 } catch (Exception e) {
                                     logger.error(e.getMessage(), e);
                                     policyVersionDeleted = false;
@@ -250,7 +245,7 @@ public class DeleteHandler {
                             } else {
                                 try {
                                     policyVersionDeleted = true;
-                                    em.remove(pVersion);
+                                    commonClassDao.delete(pVersion);
                                 } catch (Exception e) {
                                     logger.error(e.getMessage(), e);
                                     policyVersionDeleted = false;
@@ -267,18 +262,11 @@ public class DeleteHandler {
                     return;
                 }
             }
-            em.getTransaction().commit();
         } catch (Exception e) {
-            em.getTransaction().rollback();
             PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "XACMLPapServlet", " ERROR");
             response.addHeader(ERROR, "deleteDB");
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
-        } finally {
-            em.close();
-            if (con != null) {
-                con.close();
-            }
         }
 
         if (policyVersionDeleted) {
@@ -294,20 +282,20 @@ public class DeleteHandler {
         }
     }
 
-    public static String deletePolicyEntityData(EntityManager em, PolicyEntity policyEntity) {
+    public static String deletePolicyEntityData(PolicyEntity policyEntity) {
         PolicyElasticSearchController controller = new PolicyElasticSearchController();
         PolicyRestAdapter policyData = new PolicyRestAdapter();
         String policyName = policyEntity.getPolicyName();
         try {
-            if (policyName.contains("Config_")) {
-                em.remove(policyEntity.getConfigurationData());
+            if (policyName.contains("Config_") || policyName.contains("Decision_MS_")) {
+                commonClassDao.delete(policyEntity.getConfigurationData());
             } else if (policyName.contains("Action_")) {
-                em.remove(policyEntity.getActionBodyEntity());
+                commonClassDao.delete(policyEntity.getActionBodyEntity());
             }
             String searchPolicyName = policyEntity.getScope() + "." + policyEntity.getPolicyName();
             policyData.setNewFileName(searchPolicyName);
             controller.deleteElk(policyData);
-            em.remove(policyEntity);
+            commonClassDao.delete(policyEntity);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return ERROR;
@@ -315,16 +303,15 @@ public class DeleteHandler {
         return "success";
     }
 
-    public static boolean checkPolicyGroupEntity(Connection con, List<?> peResult) throws SQLException {
+    public static boolean checkPolicyGroupEntity(List<?> peResult) {
+        String groupEntityquery = "from PolicyGroupEntity where policyid = :policyEntityId";
         for (Object peData : peResult) {
             PolicyEntity policyEntity = (PolicyEntity) peData;
-            try (Statement st = con.createStatement();
-                 ResultSet rs = st.executeQuery(
-                         "Select * from PolicyGroupEntity where policyid = '" + policyEntity.getPolicyId() + "'")) {
-                boolean gEntityList = rs.next();
-                if (gEntityList) {
-                    return true;
-                }
+            SimpleBindings geParams = new SimpleBindings();
+            geParams.put("policyEntityId", policyEntity.getPolicyId());
+            List<Object> groupobject = commonClassDao.getDataByQuery(groupEntityquery, geParams);
+            if (!groupobject.isEmpty()) {
+                return true;
             }
         }
         return false;
@@ -458,7 +445,7 @@ public class DeleteHandler {
         // so we need to fill that in before submitting the group for update
         ((StdPDPGroup) group).setDirectory(((StdPDPGroup) existingGroup).getDirectory());
         try {
-            acPutTransaction.updateGroup(group, "XACMLPapServlet.doDelete");
+            acPutTransaction.updateGroup(group, "XACMLPapServlet.doDelete", null);
         } catch (Exception e) {
             PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet",
                     " Error while updating group in the database: "
