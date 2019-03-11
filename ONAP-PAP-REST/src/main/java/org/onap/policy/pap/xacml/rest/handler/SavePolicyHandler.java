@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,25 +19,21 @@
  */
 package org.onap.policy.pap.xacml.rest.handler;
 
+import com.att.research.xacml.util.XACMLProperties;
 import java.io.IOException;
 import java.util.HashMap;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.policycontroller.PolicyCreation;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 import org.xml.sax.SAXException;
-
-import com.att.research.xacml.util.XACMLProperties;
 
 public class SavePolicyHandler {
     private static final Logger logger = FlexLogger.getLogger(SavePolicyHandler.class);
@@ -76,7 +72,7 @@ public class SavePolicyHandler {
             try {
                 PolicyLogger.info("SavePolicyHandler: Setting parameter values to PolicyAdapter");
                 policyAdapter = setDataToPolicyAdapter(policy, policyType, apiflag);
-                
+
                 if(!extendedPolicyOptions(policyAdapter, response)){
                     creation.savePolicy(policyAdapter, response);
                 }
@@ -106,7 +102,6 @@ public class SavePolicyHandler {
         policyAdapter.setPolicyType(policyType);
         policyAdapter.setDynamicFieldConfigAttributes(policy.getDynamicFieldConfigAttributes());
         policyAdapter.setEditPolicy(policy.isEditPolicy());
-        policyAdapter.setEntityManagerFactory(XACMLPapServlet.getEmf());
         //Config Specific
         policyAdapter.setConfigName(policy.getConfigName());  //Base and Firewall
         policyAdapter.setConfigBodyData(policy.getConfigBodyData()); //Base
@@ -139,7 +134,7 @@ public class SavePolicyHandler {
         policyAdapter.setDomainDir(policyAdapter.getPolicyScope());
         policyAdapter.setRainydayMap(policy.getTreatments());
         policyAdapter.setRawXacmlPolicy(policy.getRawXacmlPolicy());
-        
+
         return policyAdapter;
     }
 
