@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,50 +20,52 @@
 
 package org.onap.policy.pap.xacml.rest.util;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
-
-import org.onap.policy.rest.XacmlAdminAuthorization;
-import org.onap.policy.rest.jpa.GlobalRoleSettings;
-
-import org.onap.policy.common.logging.flexlogger.FlexLogger; 
+import java.util.List;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.XacmlAdminAuthorization;
+import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.GlobalRoleSettings;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JPAUtils {
-    private static final Logger LOGGER	= FlexLogger.getLogger(JPAUtils.class);
+    private static final Logger LOGGER = FlexLogger.getLogger(JPAUtils.class);
 
-    private static EntityManagerFactory emf;
+    private static CommonClassDao commonClassDao;
     private static JPAUtils currentInstance = null;
+
+    @Autowired
+    public JPAUtils(CommonClassDao commonClassDao) {
+        JPAUtils.commonClassDao = commonClassDao;
+    }
 
 
     /**
-     * Get an instance of a JPAUtils. It creates one if it does not exist.
-     * Only one instance is allowed to be created per server.
+     * Get an instance of a JPAUtils. It creates one if it does not exist. Only one instance is allowed
+     * to be created per server.
+     *
      * @param emf The EntityFactoryManager to be used for database connections
      * @return The new instance of JPAUtils or throw exception if the given emf is null.
-     * @throws IllegalStateException if a JPAUtils has already been constructed. Call getJPAUtilsInstance() to get this.
+     * @throws IllegalStateException if a JPAUtils has already been constructed. Call
+     *         getJPAUtilsInstance() to get this.
      */
-    public static JPAUtils getJPAUtilsInstance(EntityManagerFactory emf){
-        LOGGER.debug("getJPAUtilsInstance(EntityManagerFactory emf) as getJPAUtilsInstance("+emf+") called");
-        if(currentInstance == null){
-            if(emf != null){
-                currentInstance = new JPAUtils(emf);
-                return currentInstance;
-            }
-            throw new IllegalStateException("The EntityManagerFactory is Null");
+    public static JPAUtils getJPAUtilsInstance() {
+        if (currentInstance == null) {
+            currentInstance = new JPAUtils();
+            return currentInstance;
         }
         return currentInstance;
     }
 
-    private JPAUtils(EntityManagerFactory emf){
-        LOGGER.debug("JPAUtils(EntityManagerFactory emf) as JPAUtils("+emf+") called");
-        JPAUtils.emf = emf;
+    private JPAUtils() {
+        // Default Constructor
     }
 
     /**
-     * Returns the lockdown value, in case of exception it is assumed that lockdown functionality
-     * is not supported and returns false.
+     * Returns the lockdown value, in case of exception it is assumed that lockdown functionality is not
+     * supported and returns false.
      *
      *
      * @throws ReadOnlyException
@@ -88,15 +90,16 @@ public class JPAUtils {
      * @throws ReadOnlyException
      * @throws ConversionException
      */
-    public boolean dbLockdown()
-            throws  IllegalAccessException {
+    public boolean dbLockdown() throws IllegalAccessException {
         if (LOGGER.isTraceEnabled())
             LOGGER.trace("ENTER");
+        List<Object> data = commonClassDao.getData(GlobalRoleSettings.class);
 
-        EntityManager em = emf.createEntityManager();
-        Query globalRoleSettingsJPA = em.createNamedQuery("GlobalRoleSettings.findAll");
+        GlobalRoleSettings globalRoleSettings = null;
 
-        GlobalRoleSettings globalRoleSettings = (GlobalRoleSettings) globalRoleSettingsJPA.getSingleResult();
+        if (!data.isEmpty()) {
+            globalRoleSettings = (GlobalRoleSettings) data.get(0);
+        }
 
         if (globalRoleSettings == null) {
             // this should not happen
