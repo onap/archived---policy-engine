@@ -58,6 +58,7 @@ public class ConfigFirewallPolicyTest extends TestCase {
      *
      * @see TestCase#setUp()
      */
+    @Override
     public void setUp() throws Exception {
         try {
             policyEngine = new PolicyEngine("Test/config_pass.properties");
@@ -119,6 +120,7 @@ public class ConfigFirewallPolicyTest extends TestCase {
      *
      * @see TestCase#tearDown()
      */
+    @Override
     public void tearDown() throws Exception {
         super.tearDown();
         // Add additional tear down code here
@@ -204,7 +206,7 @@ public class ConfigFirewallPolicyTest extends TestCase {
 
     @Test
     public final void testCreatePolicyNullPolicyName() {
-        response.setResponseMessage("PE500 - Process Flow Issue: :500:");
+        response.setResponseMessage("PE500 - Process Flow Issue: :500 INTERNAL_SERVER_ERROR:");
         policyParameters.setPolicyName(null);
         try {
             result = policyEngine.createPolicy(policyParameters);
@@ -216,7 +218,7 @@ public class ConfigFirewallPolicyTest extends TestCase {
 
     @Test
     public final void testCreatePolicyNullPolicyScope() {
-        response.setResponseMessage("PE500 - Process Flow Issue: :500:");
+        response.setResponseMessage("PE500 - Process Flow Issue: :500 INTERNAL_SERVER_ERROR:");
         policyParameters.setPolicyName("test");
         try {
             result = policyEngine.createPolicy(policyParameters);
@@ -228,7 +230,7 @@ public class ConfigFirewallPolicyTest extends TestCase {
 
     @Test
     public final void testCreatePolicyNullPolicyConfigBody() {
-        response.setResponseMessage("PE500 - Process Flow Issue: :500:");
+        response.setResponseMessage("PE500 - Process Flow Issue: :500 INTERNAL_SERVER_ERROR:");
         policyParameters.setConfigBody(null);
         try {
             result = policyEngine.createPolicy(policyParameters);
@@ -240,7 +242,7 @@ public class ConfigFirewallPolicyTest extends TestCase {
 
     @Test
     public final void testUpdatePolicyNullPolicyName() {
-        response.setResponseMessage("PE500 - Process Flow Issue: :500:");
+        response.setResponseMessage("PE500 - Process Flow Issue: :500 INTERNAL_SERVER_ERROR:");
         policyParameters.setPolicyName(null);
         try {
             result = policyEngine.updatePolicy(policyParameters);
@@ -252,7 +254,7 @@ public class ConfigFirewallPolicyTest extends TestCase {
 
     @Test
     public final void testUpdatePolicyNullPolicyScope() {
-        response.setResponseMessage("PE500 - Process Flow Issue: :500:");
+        response.setResponseMessage("PE500 - Process Flow Issue: :500 INTERNAL_SERVER_ERROR:");
         policyParameters.setPolicyName("test");
         try {
             result = policyEngine.updatePolicy(policyParameters);
@@ -264,7 +266,7 @@ public class ConfigFirewallPolicyTest extends TestCase {
 
     @Test
     public final void testUpdatePolicyNullPolicyConfigBody() {
-        response.setResponseMessage("PE500 - Process Flow Issue: :500:");
+        response.setResponseMessage("PE500 - Process Flow Issue: :500 INTERNAL_SERVER_ERROR:");
         policyParameters.setConfigBody(null);
         try {
             result = policyEngine.createPolicy(policyParameters);
