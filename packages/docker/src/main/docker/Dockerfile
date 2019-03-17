@@ -13,7 +13,7 @@ ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
 
 RUN apk --update add --no-cache busybox-extras \
                                 bash coreutils grep findutils \
-                                zip unzip curl \
+                                nss procps zip unzip curl \
                                 wget openssh maven jq \
                                 httpie py-pip openjdk8
 
