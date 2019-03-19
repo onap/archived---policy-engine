@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,8 @@ app.controller('policyRolesController', function ($scope, PolicyAppService, moda
         data : 'rolesDatas',
         enableFiltering: true,
         columnDefs: [{
-            field: 'id', enableFiltering: false, 
+            field: 'id', enableFiltering: false, headerCellTemplate: '' +
+            '<button id=\'New\' ng-click="grid.appScope.editRolesWindow(null)" class="btn btn-success">' + 'Create</button>',
             cellTemplate:
             '<button  type="button"  class="btn btn-primary"  ng-click="grid.appScope.editRolesWindow(row.entity)"><i class="fa fa-pencil-square-o"></i></button>' ,  width: '4%'
         },
@@ -84,9 +85,9 @@ app.controller('policyRolesController', function ($scope, PolicyAppService, moda
     		});
     		modalInstance.result.then(function(response){
     			console.log('response', response);
+                $scope.rolesDatas = response.rolesDatas;
     		});
     	}
-       
     };
 
 });

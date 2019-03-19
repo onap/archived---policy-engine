@@ -17,7 +17,7 @@
   limitations under the License.
   ============LICENSE_END====================================================
   -->
-<table class="table mb0 table-files">
+  <table class="table mb0 table-files">
     <thead>
         <tr>
             <th>
@@ -26,7 +26,7 @@
                     <span class="sortorder" ng-show="predicate[1] === 'model.name'" ng-class="{reverse:reverse}"></span>
                 </a>
             </th>
-              <th class="hidden-sm hidden-xs">
+            <th class="hidden-sm hidden-xs">
                 <a href="" ng-click="order('model.version')">
                     Version
                     <span class="sortorder" ng-show="predicate[1] === 'model.version'" ng-class="{reverse:reverse}"></span>
@@ -38,18 +38,24 @@
                     <span class="sortorder" ng-show="predicate[1] === 'model.date'" ng-class="{reverse:reverse}"></span>
                 </a>
             </th>
-              <th class="hidden-sm hidden-xs">
+            <th class="hidden-sm hidden-xs">
                 <a href="" ng-click="order('model.createdBy')">
                     Created By
                     <span class="sortorder" ng-show="predicate[1] === 'model.createdBy'" ng-class="{reverse:reverse}"></span>
                 </a>
             </th>
-              <th class="hidden-sm hidden-xs">
+            <th class="hidden-sm hidden-xs">
                 <a href="" ng-click="order('model.modifiedBy')">
                    Modified By
                     <span class="sortorder" ng-show="predicate[1] === 'model.modifiedBy'" ng-class="{reverse:reverse}"></span>
                 </a>
             </th>
+            <th class="hidden-sm hidden-xs">
+                <a href="" ng-click="order('model.roleType')">
+                   Role Type
+                    <span class="sortorder" ng-show="predicate[1] === 'model.roleType'" ng-class="{reverse:reverse}"></span>
+                </a>
+             </th>
              <th class="hidden-sm hidden-xs">
                 <a href="">
                    Watch Policy
@@ -88,13 +94,16 @@
                 {{item.model.version}}
             </td>
             <td class="hidden-sm hidden-xs">
-                {{item.model.date | formatDate }}
+                {{item.model.date | formatDate}}
             </td>
             <td class="hidden-sm hidden-xs">
                 {{item.model.createdBy}}
             </td>
             <td class="hidden-sm hidden-xs">
                 {{item.model.modifiedBy}}
+            </td>
+            <td class="hidden-sm hidden-xs">
+                {{item.model.roleType}}
             </td>
             <td  class="text-right">
                 <div ng-include="config.tplPath + '/item-toolbar.html'"></div>

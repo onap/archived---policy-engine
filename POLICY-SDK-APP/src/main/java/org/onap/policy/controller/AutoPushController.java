@@ -138,11 +138,11 @@ public class AutoPushController extends RestrictedBaseController{
 					if(userRole.getScope().contains(",")){
 						String[] multipleScopes = userRole.getScope().split(",");
 						for(int i =0; i < multipleScopes.length; i++){
-							scopes.add(multipleScopes[i]);
+                            scopes.add(multipleScopes[i].replace("[", "").replace("]", "").replace("\"", "").trim());
 						}
 					}else{
 						if(!"".equals(userRole.getScope())){
-							scopes.add(userRole.getScope());
+                            scopes.add(userRole.getScope().replace("[", "").replace("]", "").replace("\"", "").trim());
 						}
 					}		
 				}

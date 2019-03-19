@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ package org.onap.policy.controller;
 
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,7 +35,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.TreeMap;
+import java.nio.charset.StandardCharsets;
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.script.SimpleBindings;
@@ -43,6 +44,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 import org.onap.policy.admin.PolicyNotificationMail;
 import org.onap.policy.admin.RESTfulPAPEngine;
+import org.onap.policy.common.logging.eelf.MessageCodes;
+import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.model.PDPGroupContainer;
@@ -57,6 +60,7 @@ import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
+import org.onap.policy.xacml.util.XACMLPolicyScanner;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.onap.portalsdk.core.domain.UserApp;
 import org.onap.portalsdk.core.web.support.JsonMessage;
@@ -67,6 +71,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 
 @Controller
@@ -105,6 +111,10 @@ public class PolicyController extends RestrictedBaseController {
     private static final String characterEncoding = "UTF-8";
     private static final String contentType = "application/json";
     private static final String file = "file";
+    private static final String SUPERADMIN = "super-admin";
+    private static final String POLICYGUEST = "Policy Guest";
+    private static final String LOGINID = "loginId";
+
 
     // Smtp Java Mail Properties
     private static String smtpHost = null;
@@ -338,7 +348,7 @@ public class PolicyController extends RestrictedBaseController {
      */
     public List<String> getRolesOfUser(String userId) {
         List<String> rolesList = new ArrayList<>();
-        List<Object> roles = commonClassDao.getDataById(Roles.class, "loginId", userId);
+        List<Object> roles = commonClassDao.getDataById(Roles.class, LOGINID, userId);
         for (Object role : roles) {
             rolesList.add(((Roles) role).getRole());
         }
@@ -346,7 +356,7 @@ public class PolicyController extends RestrictedBaseController {
     }
 
     public List<Object> getRoles(String userId) {
-        return commonClassDao.getDataById(Roles.class, "loginId", userId);
+        return commonClassDao.getDataById(Roles.class, LOGINID, userId);
     }
 
     /**
@@ -386,8 +396,8 @@ public class PolicyController extends RestrictedBaseController {
             //
             // Set the URL for the RESTful PAP Engine
             //
-            setPapEngine((PAPPolicyEngine) new RESTfulPAPEngine(myRequestUrl));
-            new PDPGroupContainer((PAPPolicyEngine) new RESTfulPAPEngine(myRequestUrl));
+            setPapEngine(new RESTfulPAPEngine(myRequestUrl));
+            new PDPGroupContainer(new RESTfulPAPEngine(myRequestUrl));
         } catch (Exception e) {
             policyLogger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Exception Occured while loading PAP" + e);
         }
@@ -396,9 +406,9 @@ public class PolicyController extends RestrictedBaseController {
     }
 
     /**
-     * Read the role from session.
+     * Read the role from session for inserting into the database.
      * 
-     * @param request Request input.
+     * @param request Request input for Role.
      */
     public void getUserRoleFromSession(HttpServletRequest request) {
         // While user landing on Policy page, fetch the userId and Role from
@@ -415,19 +425,43 @@ public class PolicyController extends RestrictedBaseController {
             newRoles.add(userApp.getRole().getName());
         }
         List<Object> userRoles = getRoles(userId);
-        String filteredRole = filterRole(newRoles);
-        if (userRoles == null || userRoles.isEmpty()) {
-            savePolicyRoles(name, filteredRole, userId);
-        } else {
-            Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
-            roles = pair.u;
-            if (!roles.contains(filteredRole)) {
-                String query = "delete from Roles where loginid='" + userId + "'";
-                commonClassDao.updateQuery(query);
-                savePolicyRoles(name, filteredRole, userId);
-            }
-        }
+        List<String> filteredRoles = filterRole(newRoles);
+		if (!filteredRoles.isEmpty()) {
+			cleanUpRoles(filteredRoles, userId);
+		}
+		for (String filteredRole : filteredRoles) {
+			if (userRoles == null || userRoles.isEmpty()) {
+				savePolicyRoles(name, filteredRole, userId);
+			} else {
+				userRoles = getRoles(userId);
+				Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
+				roles = pair.u;
+				if (!roles.contains(filteredRole)) {
+					savePolicyRoles(name, filteredRole, userId);
+				}
+			}
+		}
     }
+    
+    /**
+     * Build a delete query for cleaning up roles and execute it.
+     * 
+     * @param filteredRoles Filtered roles list.
+     * @param userId UserID.
+     */
+    private void cleanUpRoles(List<String> filteredRoles, String userId) {
+		StringBuilder query = new StringBuilder();
+		query.append("delete from Roles where loginid = '"+userId+"'");
+		if (filteredRoles.contains(SUPERADMIN)) {
+            query.append("and not role = '"+SUPERADMIN+"'");
+		} else {
+			for (String filteredRole : filteredRoles) {
+				query.append("and not role = '"+filteredRole+"'");
+			}
+		}
+		query.append("and id > 0");	
+		commonClassDao.updateQuery(query.toString());
+	}
 
     /**
      * Save the Role to DB.
@@ -454,25 +488,35 @@ public class PolicyController extends RestrictedBaseController {
      * @param newRoles list of roles from request.
      * @return
      */
-    private String filterRole(List<String> newRoles) {
-        Map<Integer, String> roleMap = new TreeMap<>();
-        roleMap.put(6, "guest");
-        for (String role : newRoles) {
-            if ("Policy Super Admin".equalsIgnoreCase(role.trim())
-                    || "System Administrator".equalsIgnoreCase(role.trim())
-                    || "Standard User".equalsIgnoreCase(role.trim())) {
-                roleMap.put(1, "super-admin");
-            } else if ("Policy Super Editor".equalsIgnoreCase(role.trim())) {
-                roleMap.put(2, "super-editor");
-            } else if ("Policy Super Guest".equalsIgnoreCase(role.trim())) {
-                roleMap.put(3, "super-guest");
-            } else if ("Policy Admin".equalsIgnoreCase(role.trim())) {
-                roleMap.put(4, "admin");
-            } else if ("Policy Editor".equalsIgnoreCase(role.trim())) {
-                roleMap.put(5, "editor");
-            }
-        }
-        return roleMap.entrySet().iterator().next().getValue();
+    private List<String> filterRole(List<String> newRoles) {
+    	List<String> roles = new ArrayList<>();
+		boolean superCheck = false;
+		for (String role : newRoles) {
+			if ("Policy Super Guest".equalsIgnoreCase(role.trim())) {
+				superCheck = true;
+				roles.add("super-guest");
+			} else if ("Policy Super Editor".equalsIgnoreCase(role.trim())) {
+				superCheck = true;
+				roles.clear();
+				roles.add("super-editor");
+			} else if ("Policy Super Admin".equalsIgnoreCase(role.trim())
+					|| "System Administrator".equalsIgnoreCase(role.trim())
+					|| "Standard User".equalsIgnoreCase(role.trim())) {
+				superCheck = true;
+				roles.clear();
+				roles.add(SUPERADMIN);
+			}
+            if (!roles.contains(SUPERADMIN) || (POLICYGUEST.equalsIgnoreCase(role) && !superCheck)) {
+				if ("Policy Admin".equalsIgnoreCase(role.trim())) {
+					roles.add("admin");
+				} else if ("Policy Editor".equalsIgnoreCase(role.trim())) {
+					roles.add("editor");
+                } else if (POLICYGUEST.equalsIgnoreCase(role.trim())) {
+					roles.add("guest");
+				}
+			}
+		}
+		return roles;
     }
 
     public PAPPolicyEngine getPapEngine() {
@@ -491,7 +535,7 @@ public class PolicyController extends RestrictedBaseController {
      */
     public String getUserName(String createdBy) {
         String loginId = createdBy;
-        List<Object> data = commonClassDao.getDataById(UserInfo.class, "loginId", loginId);
+        List<Object> data = commonClassDao.getDataById(UserInfo.class, LOGINID, loginId);
         return data.get(0).toString();
     }
 
@@ -569,6 +613,8 @@ public class PolicyController extends RestrictedBaseController {
             dbCheckName = dbCheckName.replace(".Config_", ":Config_");
         } else if (dbCheckName.contains("Action_")) {
             dbCheckName = dbCheckName.replace(".Action_", ":Action_");
+        } else if (dbCheckName.contains("Decision_MS_")) {
+            dbCheckName = dbCheckName.replace(".Decision_MS_", ":Decision_MS_");
         } else if (dbCheckName.contains("Decision_")) {
             dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
         }
@@ -583,7 +629,8 @@ public class PolicyController extends RestrictedBaseController {
             PolicyEntity pEntity = (PolicyEntity) entity;
             String removeExtension = pEntity.getPolicyName().replace(".xml", "");
             String version = removeExtension.substring(removeExtension.lastIndexOf('.') + 1);
-            av.add(version);
+            String userName = getUserId(pEntity, "@ModifiedBy:");
+            av.add(version + " | " + pEntity.getModifiedDate() + " | " + userName);
         }
         if (policyName.contains("/")) {
             policyName = policyName.replace("/", File.separator);
@@ -595,6 +642,48 @@ public class PolicyController extends RestrictedBaseController {
         el.put("availableVersions", av);
         el.put("highestVersion", entity.getHigherVersion());
         return el;
+    }
+    
+    public String getUserId(PolicyEntity data, String value) {
+        String userId = "";
+        String uValue = value;
+        String description = getDescription(data);
+        if (description.contains(uValue)) {
+            userId = description.substring(description.indexOf(uValue) + uValue.length(),
+                    description.lastIndexOf(uValue));
+        }
+        UserInfo userInfo = (UserInfo) getEntityItem(UserInfo.class, "userLoginId", userId);
+        if (userInfo == null) {
+            return SUPERADMIN;
+        }
+        return userInfo.getUserName();
+    }
+ 
+    public String getDescription(PolicyEntity data) {
+        InputStream stream = new ByteArrayInputStream(data.getPolicyData().getBytes(StandardCharsets.UTF_8));
+        Object policy = XACMLPolicyScanner.readPolicy(stream);
+        if (policy instanceof PolicySetType) {
+            return ((PolicySetType) policy).getDescription();
+        } else if (policy instanceof PolicyType) {
+            return ((PolicyType) policy).getDescription();
+        } else {
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Expecting a PolicySet/Policy/Rule object. Got: "
+                    + policy.getClass().getCanonicalName());
+            return null;
+        }
+    }
+    
+    public String[] getUserInfo(PolicyEntity data, List<PolicyVersion> activePolicies) {
+        String policyName = data.getScope().replace(".", File.separator) + File.separator + data.getPolicyName().substring(0, data.getPolicyName().indexOf('.'));
+        PolicyVersion pVersion = activePolicies.stream().filter(a -> policyName.equals(a.getPolicyName())).findAny().orElse(null);
+        String[] result= new String[2];
+
+        UserInfo userCreate = (UserInfo) getEntityItem(UserInfo.class, "userLoginId", pVersion.getCreatedBy());
+        UserInfo userModify = (UserInfo) getEntityItem(UserInfo.class, "userLoginId", pVersion.getModifiedBy());
+        result[0] = userCreate != null ? userCreate.getUserName(): "super-admin";
+        result[1] = userModify != null ? userModify.getUserName(): "super-admin";
+
+        return result;
     }
 
     public static String getLogTableLimit() {

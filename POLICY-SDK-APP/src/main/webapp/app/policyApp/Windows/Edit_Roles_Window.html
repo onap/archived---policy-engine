@@ -17,38 +17,88 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */-->
-<script type="text/ng-template" id="edit_Role_popup.html">
-<div class="modal" tabindex="-1">
-<div class="modal-dialog modal-lg">
-	<div class="modal-content">
-		<div class="modal-header">
-			<h2 class="font-showcase-font-name" style="color : #157bb2">{{label}}</h2>
-		</div>
-		<div class="modal-body">
-			<div class="form-group row">
-			<div class="form-group col-sm-6">
-				<label><sup><b>*</b></sup>Name:</label><br>
-				<input type="text" class="form-control" ng-readonly="true" ng-model="editRole.loginId.userName" maxlength="30" />
-			</div>
-			</div>
-			<div class="form-group row">
-			<div class="form-group col-sm-6" >
-				<label><sup><b>*</b></sup>Role:</label><br>
-				<input type="text" class="form-control" ng-readonly="true" ng-model="editRole.role" maxlength="30" />
-			</div>
-			</div>
-			<div class="form-group row">
-			<div class="form-group col-sm-6" >
-				<label><sup><b>*</b></sup>Scope:</label><br>
-				<select class="form-control" multiple  ng-model="editRole.scope" ng-options="option for option in scopeDatas" title="Select the Scopes from the dropdown."></select>
-			</div>
-			</div>
-		</div>
-		<div class="modal-footer">
-			<button class="btn btn-success" herf="javascript:void(0)" ng-click="saveRole(editRole);" title="OnClick Policy Role is saved.">Save</button>
-			<button class="btn btn-default" herf="javascript:void(0)" ng-click="close()" title="OnClick Policy Role Window is closed.">Close</button>
-		</div>
-	</div>
-</div>
-</div>
-</script>
+ <style>
+	@import "bourbon";
+   
+   $melon: #F97D75;
+   $black: #2E3641;
+   
+   roleul {
+	 list-style: none;
+	 padding-left: 0;
+	 margin-top: 25px;
+   }
+   
+   roleli {
+	 border: 1px solid black;
+	 display: inline-block;
+	 padding: 5px 10px;
+	 margin-right: 5px;
+	 margin-bottom: 5px;
+	 text-transform: capitalize;
+   }
+   
+   .fa-close {
+	 cursor: pointer;
+   }
+   
+   [contenteditable] {
+	 &:focus, &:active {
+	   outline:0;
+	 }
+   }
+	</style>
+	
+	
+   <script type="text/ng-template" id="edit_Role_popup.html">
+   <div class="modal" tabindex="-1">
+   <div class="modal-dialog modal-lg">
+	   <div class="modal-content">
+		   <div class="modal-header">
+			   <h2 class="font-showcase-font-name" style="color : #157bb2">{{label}}</h2>
+		   </div>
+		   <div class="modal-body">
+			   <div class="form-group row">
+			   <div class="form-group col-sm-6">
+				   <label><sup><b>*</b></sup>Name:</label><br>
+				   <input type="text" class="form-control" ng-readonly="disableCd" ng-model="editRole.loginId.userName" maxlength="256" />
+			   </div>
+			   </div>
+			   <div class="form-group row">
+			   <div class="form-group col-sm-6" >
+				   <label><sup><b>*</b></sup>Role:</label><br>
+				   <input type="text" class="form-control" ng-readonly="true" ng-model="editRole.role" maxlength="30" />
+			   </div>
+			   </div>
+			   <div class="form-group row">
+			   <div class="form-group col-sm-12" >
+				   <label><sup><b>*</b></sup>Assigned Scopes:</label><br>
+				   <roleul>
+					   <roleli ng-model="editRole.scope" ng-repeat="option in activeScopes" class="{'fadeOut' : option}">
+							 <span class="fa fa-close" ng-click="deleteScope($index)"></span>
+							 <span>{{option}}</span>
+					   </roleli>
+					 </roleul>
+			   </div>
+			   </div>
+			   <div class="form-group row">
+			   <div class="form-group col-sm-12" >
+				   <label><sup><b>*</b></sup>Scope: To Multi Select Scopes press ctrl (Windows) and cmd (Mac) and then select.</label><br>
+				   <input type="text" class="form-control" ng-model="searchKey" placeholder="Filter Scopes.." title="Enter Scope name."><br>
+				   <select class="form-control" multiple style="height: 400px;" ng-model="editRole.scopeList" ng-options="option for option in scopeDatas | filter: searchKey" title="Select the Scopes from the dropdown."></select>
+			   </div>
+			   </div>
+			   <div class="form-group row">
+			   <div class="form-group col-sm-12" >
+				   <button class="btn btn-primary" ng-click="addScope(editRole.scopeList);" title="On Click Scopes added to Active Scope List">Add Scopes</button>
+			   </div>
+			   </div>
+		   </div>
+		   <div class="modal-footer">
+			   <button class="btn btn-success" herf="javascript:void(0)" ng-click="saveRole(editRole);" title="OnClick Policy Role is saved.">Save</button>
+			   <button class="btn btn-default" herf="javascript:void(0)" ng-click="$close()" title="OnClick Policy Role Window is closed.">Close</button>
+		   </div>
+	   </div>
+   </div>
+   </div>
+   </script>
