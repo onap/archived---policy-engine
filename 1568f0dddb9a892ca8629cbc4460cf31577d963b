@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "efd85907_e69eb939",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/PolicyVersion.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-03-19T15:26:35Z",
+      "side": 1,
+      "message": "This one seems to have had changes in 2018. I\u0027ll fix the other two and check the rest. Thanks.",
+      "parentUuid": "b59f78a8_039091b2",
+      "range": {
+        "startLine": 5,
+        "startChar": 21,
+        "endLine": 5,
+        "endChar": 26
+      },
+      "revId": "1568f0dddb9a892ca8629cbc4460cf31577d963b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5fdedf6_a1d88559",
         "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/util/XACMLPolicyWriter.java",
         "patchSetId": 7
