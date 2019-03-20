@@ -1,0 +1,344 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "815837a5_b3872fa7",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "can reach line 197 to rollbackTransaction for an exception, let\u0027s say from line 194, perhaps from others, but the transaction has been committed already.  What would be the behavior to rollback a committed transaction?",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "850fcc6f_b4c87192",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "loggingContext.transactionEnded before returning?",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f715100_c375fff4",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "Need to close transaction somehow here from 226 or would be garbagge collected somehow if no updateGroup operation took place?",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "225a21ba_4c4b6c90",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "similar question, can line 251 throw exception and try here to rollback a transaction already committed?   Questioning to avoid leaks.",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "539dcb67_5b907ffd",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "Wondering if you can reach this code without all transactions properly closed ?   Due to its size is difficult to track scopes of transactions in this method.",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0dca9a14_b64d1b40",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "is there a reason why in this method, the response stream is closed explicitly but in the previous is not?  It is also repeated in several places, the code below, is a good candidate to its own method to reuse.",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d669ecdf_cd8af49c",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "I see all these transactionEnded but I am not able to match them where they are started, I was expecting to see some loggingContext.transactionStarted(), how does it work?",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2be89218_427aafef",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "couldn\u0027t json be null here?  As exception above prints an error but continues.",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a826295_f2990bcd",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "acPutTransaction ended?\nrollback transaction?\nlog transactionEnded?",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2c022249_8c5414d9",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "same Qs as before ..",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aa82ba2_f7d7753f",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 698,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "transaction ended loggging?",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "675a7fc2_5f232aa5",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "this code repeats many times ..",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a50c2a0e_7fa6472d",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiService.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "rollback transaction? transaction ended?",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37f6029d_5fc0f6fe",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/Heartbeat.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "better to mark it private since you have a isHeartbeatRunning() ..",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b1a66c9_66b2a451",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/UpdatePdpThread.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "transactionEnded since it was started in line 107 ?\ndoes something need to be done here with the connection?",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7a99238_c4c7fff7",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "I think marking them public will give sonars .. although not recall 100% sure.",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92ae8fb3_072f5ed4",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 768,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "not needed",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc8d5e77_1e08c849",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/HandleIncomingNotifications.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "a lot of repeated code ..",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7794a385_50765f65",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "why the change to public?   Don\u0027t think it is recommended if only used within the class ..",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b84963b3_38bfa14f",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/util/XACMLPolicyWriter.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-20T04:48:53Z",
+      "side": 1,
+      "message": "Recommended practice is try-with-resources here.   It is also recommended to close the string (which the try-with-resources will do for you) even though this is a byte array and you could get by without causing a memory leak.",
+      "revId": "80ee46e4367989f6740d49c5e0b303e4e084660c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
