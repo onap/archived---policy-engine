@@ -17,6 +17,25 @@ Policy Release Notes
 ..      * * *   CASABLANCA   * * *
 ..      ==========================
 
+Version: 3.0.2
+--------------
+
+:Release Date: 2019-03-31 (Casablanca Maintenance Release #2)
+
+The following items were deployed with the Casablanca Maintenance Release:
+
+**Bug Fixes**
+
+    * [POLICY-1522] - Policy doesn't send "payload" field to APPC
+
+**Security Fixes**
+
+    * [POLICY-1538] - Upgrade Elasticsearch to 6.4.x to clear security issue
+    
+**License Issues**
+
+    * [POLICY-1433] - Remove proprietary licenses in PSSD test CSAR
+
 
 Version: 3.0.1
 --------------
