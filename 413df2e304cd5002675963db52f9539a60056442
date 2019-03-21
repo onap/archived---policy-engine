@@ -1,0 +1,187 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69f51973_3a476709",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-21T16:52:58Z",
+      "side": 1,
+      "message": "Please use spaces instead of tabs per ONAP Developer Best Practices",
+      "range": {
+        "startLine": 697,
+        "startChar": 0,
+        "endLine": 700,
+        "endChar": 6
+      },
+      "revId": "413df2e304cd5002675963db52f9539a60056442",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8992a385_717e1e88",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 819,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-21T16:52:58Z",
+      "side": 1,
+      "message": "Please use spaces instead of tabs per ONAP Developer Best Practices",
+      "range": {
+        "startLine": 816,
+        "startChar": 2,
+        "endLine": 819,
+        "endChar": 18
+      },
+      "revId": "413df2e304cd5002675963db52f9539a60056442",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c2856f6_14fc0269",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/AutoPushController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-21T16:52:58Z",
+      "side": 1,
+      "message": "Please use spaces instead of tabs per ONAP Developer Best Practices",
+      "range": {
+        "startLine": 131,
+        "startChar": 0,
+        "endLine": 131,
+        "endChar": 56
+      },
+      "revId": "413df2e304cd5002675963db52f9539a60056442",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "160691aa_cdcdf0b7",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-21T16:52:58Z",
+      "side": 1,
+      "message": "Please use spaces instead of tabs per ONAP Developer Best Practices",
+      "range": {
+        "startLine": 429,
+        "startChar": 0,
+        "endLine": 443,
+        "endChar": 3
+      },
+      "revId": "413df2e304cd5002675963db52f9539a60056442",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3556924e_72b40a9b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-21T16:52:58Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 492,
+        "startChar": 0,
+        "endLine": 519,
+        "endChar": 1
+      },
+      "revId": "413df2e304cd5002675963db52f9539a60056442",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86989adc_e32d1929",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyRolesController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-21T16:52:58Z",
+      "side": 1,
+      "message": "Please use spaces instead of tabs per ONAP Developer Best Practices",
+      "revId": "413df2e304cd5002675963db52f9539a60056442",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12e4ca67_958a0714",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/utils/UserUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-21T16:52:58Z",
+      "side": 1,
+      "message": "Please use spaces instead of tabs per ONAP Developer Best Practices",
+      "revId": "413df2e304cd5002675963db52f9539a60056442",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4eb78aef_a8c1abb0",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/Windows/Edit_Roles_Window.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-21T16:52:58Z",
+      "side": 1,
+      "message": "Please use spaces instead of tabs per ONAP Developer Best Practices",
+      "revId": "413df2e304cd5002675963db52f9539a60056442",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50155b23_41f0bf4b",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/PolicyRolesController.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-21T16:52:58Z",
+      "side": 1,
+      "message": "Please use spaces instead of tabs per ONAP Developer Best Practices",
+      "revId": "413df2e304cd5002675963db52f9539a60056442",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
