@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,8 +17,10 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.policycontroller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,15 +28,12 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringUtils;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.components.ActionPolicy;
 import org.onap.policy.pap.xacml.rest.components.ClosedLoopPolicy;
 import org.onap.policy.pap.xacml.rest.components.ConfigPolicy;
@@ -68,8 +67,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @RestController
@@ -470,7 +467,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
                     policyData.setErrorCodeList(errorCodeList);
                     policyData.setTreatmentList(treatmentList);
                 }
-                newPolicy = new DecisionPolicy(policyData, commonClassDao);
+                newPolicy = new DecisionPolicy(policyData);
             }
 
             if(newPolicy != null){
@@ -485,7 +482,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 
             PolicyDBDaoTransaction policyDBDaoTransaction = null;
             try{
-                policyDBDao = PolicyDBDao.getPolicyDBDaoInstance(XACMLPapServlet.getEmf());
+                policyDBDao = PolicyDBDao.getPolicyDBDaoInstance();
                 policyDBDaoTransaction = policyDBDao.getNewTransaction();
                 policyDBDaoTransaction.createPolicy(newPolicy, policyData.getUserId());
                 successMap = newPolicy.savePolicies();
@@ -521,7 +518,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
                     } else {
                         PolicyLogger.info("SafetyCheckerResponse was empty or null.");
                     }
-                    
+
                 }else if (successMap.containsKey("invalidAttribute")) {
                     String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Action Attribute";
                     LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Could not fine " + policyData.getActionAttribute() + " in the ActionPolicyDict table.");
@@ -551,7 +548,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     response.addHeader("error", message);
                     response.addHeader("policyName", policyData.getPolicyName());
-                }else {						
+                }else {
                     policyDBDaoTransaction.rollbackTransaction();
                     body = "error";
                     status = HttpStatus.INTERNAL_SERVER_ERROR;

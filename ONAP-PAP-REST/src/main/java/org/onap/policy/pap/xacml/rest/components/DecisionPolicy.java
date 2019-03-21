@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,13 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import com.att.research.xacml.api.XACML3;
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.std.IdentifierImpl;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -36,9 +40,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.script.SimpleBindings;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -51,7 +55,6 @@ import org.onap.policy.controlloop.policy.guard.Guard;
 import org.onap.policy.controlloop.policy.guard.GuardPolicy;
 import org.onap.policy.controlloop.policy.guard.MatchParameters;
 import org.onap.policy.controlloop.policy.guard.builder.ControlLoopGuardBuilder;
-import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.DecisionSettings;
@@ -60,9 +63,8 @@ import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pip.engines.aaf.AAFEngine;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
-import com.att.research.xacml.api.XACML3;
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.std.IdentifierImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -82,6 +84,8 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableDefinitionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 
+
+@Component
 public class DecisionPolicy extends Policy {
 
     private static final Logger LOGGER = FlexLogger.getLogger(DecisionPolicy.class);
@@ -92,6 +96,7 @@ public class DecisionPolicy extends Policy {
     public static final String GUARD_BL_YAML = "GUARD_BL_YAML";
     public static final String GUARD_MIN_MAX = "GUARD_MIN_MAX";
     public static final String RAINY_DAY = "Rainy_Day";
+    public static final String MS_MODEL = "MicroService_Model";
     private static final String XACML_GUARD_TEMPLATE = "Decision_GuardPolicyTemplate.xml";
     private static final String XACML_BLGUARD_TEMPLATE = "Decision_GuardBLPolicyTemplate.xml";
     private static final String XACML_GUARD_MIN_MAX_TEMPLATE = "Decision_GuardMinMaxPolicyTemplate.xml";
@@ -107,13 +112,18 @@ public class DecisionPolicy extends Policy {
     List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<>();
     List<String> dataTypeList = new LinkedList<>();
 
-    private CommonClassDao commonClassDao;
+    private static CommonClassDao commonClassDao;
 
     public DecisionPolicy() {
         super();
     }
 
-    public DecisionPolicy(PolicyRestAdapter policyAdapter, CommonClassDao commonClassDao) {
+    @Autowired
+    public DecisionPolicy(CommonClassDao commonClassDao) {
+        DecisionPolicy.commonClassDao = commonClassDao;
+    }
+
+    public DecisionPolicy(PolicyRestAdapter policyAdapter) {
         this.policyAdapter = policyAdapter;
         this.commonClassDao = commonClassDao;
     }
@@ -447,19 +457,7 @@ public class DecisionPolicy extends Policy {
     }
 
     private DecisionSettings findDecisionSettingsBySettingId(String settingId) {
-        DecisionSettings decisionSetting = null;
-
-        EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
-        Query getDecisionSettings = em.createNamedQuery("DecisionSettings.findAll");
-        List<?> decisionSettingsList = getDecisionSettings.getResultList();
-
-        for (Object id : decisionSettingsList) {
-            decisionSetting = (DecisionSettings) id;
-            if (decisionSetting.getXacmlId().equals(settingId)) {
-                break;
-            }
-        }
-        return decisionSetting;
+        return (DecisionSettings) commonClassDao.getEntityItem(DecisionSettings.class, "xacmlId", settingId);
     }
 
     private void createRule(PolicyType decisionPolicy, boolean permitRule) {
@@ -875,7 +873,7 @@ public class DecisionPolicy extends Policy {
 
     public String getFunctionDefinitionId(String key) {
         FunctionDefinition object =
-                (FunctionDefinition) commonClassDao.getDataById(FunctionDefinition.class, "shortname", key);
+                (FunctionDefinition) commonClassDao.getEntityItem(FunctionDefinition.class, "shortname", key);
         if (object != null) {
             return object.getXacmlid();
         }
