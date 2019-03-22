@@ -125,6 +125,7 @@ import org.onap.policy.models.APIDictionaryResponse;
 import org.onap.policy.models.APIPolicyConfigResponse;
 import org.onap.policy.std.utils.PolicyCommonConfigConstants;
 import org.onap.policy.utils.AAFEnvironment;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.core.io.FileSystemResource;
@@ -989,7 +990,7 @@ public class StdPolicyEngine {
     }
 
     private String getClientKeyFromProperties(final Properties prop) {
-        final String clientKeyValue = prop.getProperty(CLIENT_KEY_PROP_NAME);
+        final String clientKeyValue = PeCryptoUtils.decrypt(prop.getProperty(CLIENT_KEY_PROP_NAME));
         try {
             return PolicyUtils.decode(clientKeyValue);
         } catch (UnsupportedEncodingException | IllegalArgumentException e) {
@@ -1095,7 +1096,7 @@ public class StdPolicyEngine {
                 pdps.add(pdpValues.get(0));
                 // 1:2 will be UserID:Password
                 final String userID = pdpValues.get(1);
-                final String userPas = pdpValues.get(2);
+                final String userPas = PeCryptoUtils.decrypt(pdpValues.get(2));
                 final Base64.Encoder encoder = Base64.getEncoder();
                 encoding.add(encoder.encodeToString((userID + ":" + userPas).getBytes(StandardCharsets.UTF_8)));
             } else {

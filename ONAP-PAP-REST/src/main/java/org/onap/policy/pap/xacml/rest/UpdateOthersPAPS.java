@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,8 +17,11 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest;
 
+import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -30,10 +33,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -45,7 +46,7 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
 import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
-import org.onap.policy.utils.CryptoUtils;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -60,12 +61,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Controller
 public class UpdateOthersPAPS {
 
-    private static final Logger	policyLogger	= FlexLogger.getLogger(UpdateOthersPAPS.class);
+    private static final Logger policyLogger = FlexLogger.getLogger(UpdateOthersPAPS.class);
 
     private static CommonClassDao commonClassDao;
 
@@ -82,7 +81,7 @@ public class UpdateOthersPAPS {
     }
 
     @Autowired
-    private UpdateOthersPAPS(CommonClassDao commonClassDao){
+    private UpdateOthersPAPS(CommonClassDao commonClassDao) {
         UpdateOthersPAPS.commonClassDao = commonClassDao;
     }
 
@@ -110,14 +109,15 @@ public class UpdateOthersPAPS {
                     String password = papId.getPassword();
                     Base64.Encoder encoder = Base64.getEncoder();
                     String txt;
-                    try{
-                        txt = new String(CryptoUtils.decryptTxt(password), StandardCharsets.UTF_8);
-                    } catch(Exception e){
+                    try {
+                        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY));
+                        txt = PeCryptoUtils.decrypt(password);
+                    } catch (Exception e) {
                         policyLogger.debug(e);
                         //if we can't decrypt, might as well try it anyway
                         txt = password;
                     }
-                    String encoding = encoder.encodeToString((userName+":"+txt).getBytes(StandardCharsets.UTF_8));
+                    String encoding = encoder.encodeToString((userName + ":" + txt).getBytes(StandardCharsets.UTF_8));
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Basic " + encoding);
                     headers.set("Content-Type", contentType);

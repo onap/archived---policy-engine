@@ -2,15 +2,15 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,21 +18,20 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.utils.CryptoUtils;
+import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -64,7 +63,8 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
             setDbDriver(prop.getProperty("javax.persistence.jdbc.driver"));
             setDbUrl(prop.getProperty("javax.persistence.jdbc.url"));
             setDbUserName(prop.getProperty("javax.persistence.jdbc.user"));
-            setDbPassword( CryptoUtils.decryptTxtNoExStr(prop.getProperty("javax.persistence.jdbc.password", "")));
+            PeCryptoUtils.initAesKey(prop.getProperty(XACMLRestProperties.PROP_AES_KEY));
+            setDbPassword(PeCryptoUtils.decrypt(prop.getProperty("javax.persistence.jdbc.password")));
         }catch(Exception e){
             LOGGER.error("Exception Occured while loading properties file"+e);
         }
@@ -131,7 +131,7 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
     }
 
     public static void setDbPassword(String dbPassword) {
-        PAPRestConfig.dbPassword = CryptoUtils.decryptTxtNoExStr(dbPassword);
+        PAPRestConfig.dbPassword = dbPassword;
     }
 
 }

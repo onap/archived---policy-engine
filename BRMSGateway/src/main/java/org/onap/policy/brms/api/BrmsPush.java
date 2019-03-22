@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,6 @@ import com.att.nsa.cambria.client.CambriaBatchingPublisher;
 import com.att.nsa.cambria.client.CambriaClientBuilders;
 import com.att.nsa.cambria.client.CambriaClientBuilders.PublisherBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -53,14 +52,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.ProcessingException;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.maven.model.Dependency;
@@ -93,6 +90,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.utils.BackUpHandler;
 import org.onap.policy.utils.BackUpMonitor;
 import org.onap.policy.utils.BusPublisher;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
@@ -120,6 +118,7 @@ public class BrmsPush {
     private static final String[] GOALS = { "clean", "deploy" };
     private static final String DEFAULT_VERSION = "1.4.0-SNAPSHOT";
     private static final String DEPENDENCY_FILE = "dependency.json";
+    private static final String PROP_AES_KEY = "org.onap.policy.encryption.aes.key";
     public static final String BRMSPERSISTENCE = "brmsEclipselink.persistencexml";
 
     private static Map<String, String> modifiedGroups = new HashMap<>();
@@ -187,6 +186,9 @@ public class BrmsPush {
             throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE
                     + "Data/File Read Error while reading from the property file.");
         }
+        // init the aes key from prop or env
+        PeCryptoUtils.initAesKey(config.getProperty(PROP_AES_KEY));
+
         LOGGER.info("Trying to set up IntegrityMonitor");
         String resourceName = null;
         try {
@@ -254,7 +256,7 @@ public class BrmsPush {
             repUrlList.add(repUrl);
         }
         repUserName = config.getProperty("repositoryUsername");
-        repPassword = config.getProperty("repositoryPassword");
+        repPassword = PeCryptoUtils.decrypt(config.getProperty("repositoryPassword"));
         if (repUserName == null || repPassword == null) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE
                     + "repostoryUserName and respositoryPassword properties are required.");
@@ -521,8 +523,10 @@ public class BrmsPush {
             LOGGER.info("Updated Local Memory values with values from database.");
         } catch (final Exception exception) {
             LOGGER.error("Unable to sync group info", exception);
-            et.rollback();
-            throw exception;
+            if (et.isActive()) {
+                et.rollback();
+            }
+
         }
     }
 
@@ -581,7 +585,6 @@ public class BrmsPush {
         } catch (final Exception exception) {
             LOGGER.error("Unable add policy to database", exception);
             et.rollback();
-            throw exception;
         }
     }
 
@@ -1147,7 +1150,6 @@ public class BrmsPush {
         } catch (final Exception exception) {
             LOGGER.error("Unable add/update policy group to database for controller name: " + name, exception);
             et.rollback();
-            throw exception;
         }
     }
 
@@ -1203,7 +1205,6 @@ public class BrmsPush {
         } catch (final Exception exception) {
             LOGGER.error("Unable remove policy from group to database for policy name: " + policyName, exception);
             et.rollback();
-            throw exception;
         }
     }
 
