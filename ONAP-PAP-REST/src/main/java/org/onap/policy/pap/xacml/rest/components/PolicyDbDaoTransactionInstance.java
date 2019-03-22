@@ -42,6 +42,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Query;
@@ -58,6 +60,7 @@ import org.onap.policy.rest.jpa.ActionBodyEntity;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
 import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
+import org.onap.policy.rest.jpa.PolicyAuditlog;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
@@ -67,8 +70,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 
 @Component
@@ -118,10 +119,8 @@ public class PolicyDbDaoTransactionInstance implements PolicyDBDaoTransaction {
     /**
      * Instantiates a new policy DB dao transaction instance.
      *
-     * @param transactionTimeout the transaction timeout is how long the transaction can sit before
-     *        rolling back
-     * @param transactionWaitTime the transaction wait time is how long to wait for the transaction
-     *        to start before
+     * @param transactionTimeout the transaction timeout is how long the transaction can sit before rolling back
+     * @param transactionWaitTime the transaction wait time is how long to wait for the transaction to start before
      */
     public PolicyDbDaoTransactionInstance(int transactionTimeout, int transactionWaitTime) {
         logger.info("\n\nPolicyDBDaoTransactionInstance() as PolicyDBDaoTransactionInstance() called:"
@@ -976,6 +975,8 @@ public class PolicyDbDaoTransactionInstance implements PolicyDBDaoTransaction {
                                                     && policyDbDaoVar.getPolicyNameAndVersionFromPolicyFileName(
                                                             dbpolicy.getPolicyName())[0].equals(policyName)) {
                                                 dbPolicyIt.remove();
+                                                auditPdpOperations(username,
+                                                        dbpolicy.getScope() + "." + dbpolicy.getPolicyName(), "Delete");
                                                 logger.info("PolicyDBDao: deleting policy from the existing group:\n "
                                                         + "policyName is " + policyToDelete.getScope() + "."
                                                         + policyToDelete.getPolicyName() + "\n" + "group is "
@@ -1456,6 +1457,7 @@ public class PolicyDbDaoTransactionInstance implements PolicyDBDaoTransaction {
                         + policy.getPolicyId());
             }
             group.addPolicyToGroup(policy);
+            auditPdpOperations(username, policy.getScope() + "." + policy.getPolicyName(), "Push");
             session.flush();
 
             // After adding policy to the db group we need to make sure the
@@ -1534,5 +1536,14 @@ public class PolicyDbDaoTransactionInstance implements PolicyDBDaoTransaction {
             logger.error("Exception Occured while evaluating path" + e);
         }
         return description;
+    }
+
+    public void auditPdpOperations(String username, String policyID, String action) {
+        PolicyAuditlog log = new PolicyAuditlog();
+        log.setUserName(username);
+        log.setActions(action);
+        log.setPolicyName(policyID);
+        log.setDateAndTime(new Date());
+        session.save(log);
     }
 }
