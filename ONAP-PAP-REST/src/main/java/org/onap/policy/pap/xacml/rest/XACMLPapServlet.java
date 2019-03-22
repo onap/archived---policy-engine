@@ -114,16 +114,16 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     /*
      * List of Admin Console URLs. Used to send notifications when configuration changes.
      *
-     * The CopyOnWriteArrayList *should* protect from concurrency errors. This list is seldom changed
-     * but often read, so the costs of this approach make sense.
+     * The CopyOnWriteArrayList *should* protect from concurrency errors. This list is seldom changed but often read, so
+     * the costs of this approach make sense.
      */
     private static final CopyOnWriteArrayList<String> adminConsoleURLStringList = new CopyOnWriteArrayList<>();
 
     private static String configHome;
     private static String actionHome;
     /*
-     * This PAP instance's own URL. Need this when creating URLs to send to the PDPs so they can GET the
-     * Policy files from this process.
+     * This PAP instance's own URL. Need this when creating URLs to send to the PDPs so they can GET the Policy files
+     * from this process.
      */
     public static String papURL = null;
     // The heartbeat thread.
@@ -155,8 +155,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     private static String msOnapName;
     private static String msPolicyName;
     /*
-     * This thread may be invoked upon startup to initiate sending PDP policy/pip configuration when
-     * this servlet starts. Its configurable by the admin.
+     * This thread may be invoked upon startup to initiate sending PDP policy/pip configuration when this servlet
+     * starts. Its configurable by the admin.
      */
     private static transient Thread initiateThread = null;
     private transient ONAPLoggingContext baseLoggingContext = null;
@@ -470,8 +470,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     }
 
     /**
-     * Thread used only during PAP startup to initiate change messages to all known PDPs. This must be
-     * on a separate thread so that any GET requests from the PDPs during this update can be serviced.
+     * Thread used only during PAP startup to initiate change messages to all known PDPs. This must be on a separate
+     * thread so that any GET requests from the PDPs during this update can be serviced.
      */
     @Override
     public void run() {
@@ -482,8 +482,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     /**
      * @see Servlet#destroy()
      *      <p>
-     *      Depending on how this servlet is run, we may or may not care about cleaning up the
-     *      resources. For now we assume that we do care.
+     *      Depending on how this servlet is run, we may or may not care about cleaning up the resources. For now we
+     *      assume that we do care.
      */
     @Override
     public void destroy() {
@@ -517,8 +517,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     }
 
     /**
-     * Called by: - PDP nodes to register themselves with the PAP, and - Admin Console to make changes
-     * in the PDP Groups.
+     * Called by: - PDP nodes to register themselves with the PAP, and - Admin Console to make changes in the PDP
+     * Groups.
      *
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
@@ -1091,9 +1091,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             return;
         }
         /*
-         * This is to update the PDP Group with the policy/policies being pushed Part of a 2 step process to
-         * push policies to the PDP that can now be done From both the Admin Console and the PolicyEngine
-         * API
+         * This is to update the PDP Group with the policy/policies being pushed Part of a 2 step process to push
+         * policies to the PDP that can now be done From both the Admin Console and the PolicyEngine API
          */
         String groupId = request.getParameter(GROUPID);
         if (groupId != null) {
@@ -1390,7 +1389,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             // Assume that this is an update of an existing PDP Group
             loggingContext.setServiceName("PolicyEngineAPI:PAP.updateGroup");
             try {
-                acPutTransaction.updateGroup(group, "XACMLPapServlet.doACPut", null);
+                acPutTransaction.updateGroup(group, "XACMLPapServlet.doACPut", userId);
             } catch (Exception e) {
                 PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet",
                         " Error while updating group in the database: " + "group=" + group.getId());
@@ -1452,8 +1451,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     }
 
     /*
-     * HELPER to change Group status when PDP status is changed (Must NOT be called from a method that
-     * is synchronized on the papEngine or it may deadlock)
+     * HELPER to change Group status when PDP status is changed (Must NOT be called from a method that is synchronized
+     * on the papEngine or it may deadlock)
      */
     public void setPDPSummaryStatus(OnapPDP pdp, PDPStatus.Status newStatus) throws PAPException {
         setPDPSummaryStatus(pdp, newStatus.toString());
@@ -1475,8 +1474,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     }
 
     /*
-     * Callback methods telling this servlet to notify PDPs of changes made by the PAP StdEngine in the
-     * PDP group directories
+     * Callback methods telling this servlet to notify PDPs of changes made by the PAP StdEngine in the PDP group
+     * directories
      */
     @Override
     public void changed() {
