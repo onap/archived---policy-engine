@@ -130,8 +130,8 @@ public class DeleteHandler {
                     if (splitPolicyName != null) {
                         split = splitPolicyName.split(":");
                     } else {
-                        PolicyLogger.error(MessageCodes.ERROR_UNKNOWN +
-                                "Failed to delete the policy. Please, provide the valid policyname.");
+                        PolicyLogger.error(MessageCodes.ERROR_UNKNOWN
+                                + "Failed to delete the policy. Please, provide the valid policyname.");
                         response.addHeader(ERROR, UNKNOWN);
                         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                         return;
@@ -178,14 +178,14 @@ public class DeleteHandler {
                         }
                         switch (status) {
                             case ERROR:
-                                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE +
-                                        "Exception Occured while deleting the Entity from Database.");
+                                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE
+                                        + "Exception Occured while deleting the Entity from Database.");
                                 response.addHeader(ERROR, UNKNOWN);
                                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                                 return;
                             case POLICY_IN_PDP:
-                                PolicyLogger.error(MessageCodes.GENERAL_WARNING +
-                                        "Policy can't be deleted, it is active in PDP Groups.");
+                                PolicyLogger.error(MessageCodes.GENERAL_WARNING
+                                        + "Policy can't be deleted, it is active in PDP Groups.");
                                 response.addHeader(ERROR, POLICY_IN_PDP);
                                 response.setStatus(HttpServletResponse.SC_CONFLICT);
                                 return;
@@ -209,14 +209,14 @@ public class DeleteHandler {
                         }
 
                         if (ERROR.equals(status)) {
-                            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE +
-                                    "Exception Occured while deleting the Entity from Database.");
+                            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE
+                                    + "Exception Occured while deleting the Entity from Database.");
                             response.addHeader(ERROR, UNKNOWN);
                             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                             return;
                         } else if (POLICY_IN_PDP.equals(status)) {
-                            PolicyLogger.error(MessageCodes.GENERAL_WARNING +
-                                    "Policy can't be deleted, it is active in PDP Groups.");
+                            PolicyLogger.error(MessageCodes.GENERAL_WARNING
+                                    + "Policy can't be deleted, it is active in PDP Groups.");
                             response.addHeader(ERROR, POLICY_IN_PDP);
                             response.setStatus(HttpServletResponse.SC_CONFLICT);
                             return;
@@ -254,9 +254,9 @@ public class DeleteHandler {
                         }
                     }
                 } else {
-                    PolicyLogger.error(MessageCodes.ERROR_UNKNOWN +
-                            "Failed to delete the policy for an unknown reason.  Check the file system and other logs" +
-                            " for further information.");
+                    PolicyLogger.error(MessageCodes.ERROR_UNKNOWN
+                            + "Failed to delete the policy for an unknown reason.  Check the file system and other logs"
+                            + " for further information.");
                     response.addHeader(ERROR, UNKNOWN);
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                     return;
@@ -274,9 +274,9 @@ public class DeleteHandler {
             response.addHeader("successMapKey", "success");
             response.addHeader("operation", "delete");
         } else {
-            PolicyLogger.error(MessageCodes.ERROR_UNKNOWN +
-                    "Failed to delete the policy for an unknown reason.  Check the file system and other logs for " +
-                    "further information.");
+            PolicyLogger.error(MessageCodes.ERROR_UNKNOWN
+                    + "Failed to delete the policy for an unknown reason.  Check the file system and other logs for "
+                    + "further information.");
             response.addHeader(ERROR, UNKNOWN);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
@@ -318,8 +318,8 @@ public class DeleteHandler {
     }
 
     public void doAPIDeleteFromPDP(HttpServletRequest request, HttpServletResponse response,
-                                   ONAPLoggingContext loggingContext) throws IOException {
-
+            ONAPLoggingContext loggingContext) throws IOException {
+        String userId = request.getParameter("userId");
         String policyName = request.getParameter("policyName");
         String groupId = request.getParameter("groupId");
         String responseString = null;
@@ -375,7 +375,7 @@ public class DeleteHandler {
                 PolicyLogger.info("Preparing to remove policy from group: " + group.getId());
                 removePolicy.prepareToRemove(policy);
                 OnapPDPGroup updatedGroup = removePolicy.getUpdatedObject();
-                responseString = deletePolicyFromPDPGroup(updatedGroup, loggingContext);
+                responseString = deletePolicyFromPDPGroup(updatedGroup, loggingContext, userId);
             } else {
                 String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Policy does not exist on the PDP.";
                 PolicyLogger.error(message);
@@ -407,17 +407,16 @@ public class DeleteHandler {
                 response.addHeader(ERROR, "deleteDB");
                 break;
             default:
-                PolicyLogger.error(MessageCodes.ERROR_UNKNOWN +
-                        " Failed to delete the policy for an unknown reason.  Check the file system and other logs " +
-                        "for " +
-                        "further information.");
+                PolicyLogger.error(MessageCodes.ERROR_UNKNOWN
+                        + " Failed to delete the policy for an unknown reason.  Check the file system and other logs "
+                        + "for " + "further information.");
                 response.addHeader(ERROR, UNKNOWN);
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 break;
         }
     }
 
-    private String deletePolicyFromPDPGroup(OnapPDPGroup group, ONAPLoggingContext loggingContext) {
+    private String deletePolicyFromPDPGroup(OnapPDPGroup group, ONAPLoggingContext loggingContext, String userId) {
         PolicyDBDaoTransaction acPutTransaction = XACMLPapServlet.getDbDaoTransaction();
         String response = null;
         loggingContext.setServiceName("API:PAP.DeleteHandler");
@@ -427,14 +426,14 @@ public class DeleteHandler {
         } catch (PAPException e1) {
             PolicyLogger.error("Exception occured While Deleting Policy From PDP Group" + e1);
         }
-        if (!(group instanceof StdPDPGroup) || existingGroup == null ||
-                !(group.getId().equals(existingGroup.getId()))) {
+        if (!(group instanceof StdPDPGroup) || existingGroup == null
+                || !(group.getId().equals(existingGroup.getId()))) {
             String existingID = null;
             if (existingGroup != null) {
                 existingID = existingGroup.getId();
             }
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Group update had bad input. id=" + existingID +
-                    " objectFromJSON=" + group);
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Group update had bad input. id=" + existingID
+                    + " objectFromJSON=" + group);
             loggingContext.transactionEnded();
             PolicyLogger.audit("Transaction Failed - See Error.log");
             response = "No Group";
@@ -445,11 +444,10 @@ public class DeleteHandler {
         // so we need to fill that in before submitting the group for update
         ((StdPDPGroup) group).setDirectory(((StdPDPGroup) existingGroup).getDirectory());
         try {
-            acPutTransaction.updateGroup(group, "XACMLPapServlet.doDelete", null);
+            acPutTransaction.updateGroup(group, "XACMLPapServlet.doDelete", userId);
         } catch (Exception e) {
             PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet",
-                    " Error while updating group in the database: "
-                            + "group=" + existingGroup.getId());
+                    " Error while updating group in the database: " + "group=" + existingGroup.getId());
             response = "DB Error";
             return response;
         }
@@ -488,8 +486,8 @@ public class DeleteHandler {
 
     public static DeleteHandler getInstance() {
         try {
-            Class<?> deleteHandler = Class.forName(
-                    XACMLProperties.getProperty("deletePolicy.impl.className", DeleteHandler.class.getName()));
+            Class<?> deleteHandler = Class
+                    .forName(XACMLProperties.getProperty("deletePolicy.impl.className", DeleteHandler.class.getName()));
             return (DeleteHandler) deleteHandler.newInstance();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

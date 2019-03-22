@@ -2,15 +2,15 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,6 @@ package org.onap.policy.pdp.rest.api.services;
 
 import java.io.File;
 import java.util.UUID;
-
 import org.onap.policy.api.DeletePolicyParameters;
 import org.onap.policy.api.PolicyException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -166,10 +165,8 @@ public class DeletePolicyService {
             }
             // for deleting policies from the API
             final StdPAPPolicy deletePapPolicy =
-                    new StdPAPPolicy(StdPAPPolicyParams.builder()
-                            .policyName(fullPolicyName)
-                            .deleteCondition(deletePolicyParameters.getDeleteCondition().toString())
-                            .build());
+                    new StdPAPPolicy(StdPAPPolicyParams.builder().policyName(fullPolicyName)
+                            .deleteCondition(deletePolicyParameters.getDeleteCondition().toString()).build());
             // send JSON object to PAP
             response = (String) papServices.callPAP(deletePapPolicy,
                     new String[] {"groupId=" + pdpGroup, "apiflag=deletePapApi", "operation=delete"},
@@ -182,9 +179,9 @@ public class DeletePolicyService {
             }
             // send JSON object to PAP
             response =
-                    (String) papServices.callPAP(
-                            null, new String[] {"policyName=" + fullPolicyName, "groupId=" + pdpGroup,
-                                "apiflag=deletePdpApi", "operation=delete"},
+                    (String) papServices.callPAP(null,
+                            new String[] {"policyName=" + fullPolicyName, "groupId=" + pdpGroup, "apiflag=deletePdpApi",
+                                    "operation=delete", "userId=API"},
                             deletePolicyParameters.getRequestID(), clientScope);
         } else {
             message = XACMLErrorConstants.ERROR_DATA_ISSUE
