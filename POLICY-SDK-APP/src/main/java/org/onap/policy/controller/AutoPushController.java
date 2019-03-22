@@ -8,9 +8,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,11 @@
 
 package org.onap.policy.controller;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.api.pap.PDPPolicy;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,14 +42,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -70,14 +73,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.api.pap.PDPPolicy;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Controller
-@RequestMapping({ "/" })
+@RequestMapping({"/"})
 public class AutoPushController extends RestrictedBaseController {
 
     private static final Logger logger = FlexLogger.getLogger(AutoPushController.class);
@@ -117,8 +114,8 @@ public class AutoPushController extends RestrictedBaseController {
         return policyController != null ? getPolicyController() : new PolicyController();
     }
 
-    @RequestMapping(value = {"/get_AutoPushPoliciesContainerData"}, method = {
-        RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {"/get_AutoPushPoliciesContainerData"}, method = {RequestMethod.GET},
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPolicyGroupContainerData(HttpServletRequest request, HttpServletResponse response) {
         try {
             Set<String> scopes = new HashSet<>();
@@ -133,10 +130,7 @@ public class AutoPushController extends RestrictedBaseController {
             for (Object role : userRoles) {
                 Roles userRole = (Roles) role;
                 roles.add(userRole.getRole());
-                scopes.addAll(Stream.of(userRole.getScope().split(","))
-                    .map(String::new)
-                    .collect(Collectors.toSet())
-                );
+                scopes.addAll(Stream.of(userRole.getScope().split(",")).collect(Collectors.toSet()));
             }
             if (roles.contains("super-admin") || roles.contains("super-editor") || roles.contains("super-guest")) {
                 data = commonClassDao.getData(PolicyVersion.class);
@@ -155,7 +149,7 @@ public class AutoPushController extends RestrictedBaseController {
                 } else {
                     PolicyVersion emptyPolicyName = new PolicyVersion();
                     emptyPolicyName
-                        .setPolicyName("Please Contact Policy Super Admin, There are no scopes assigned to you");
+                            .setPolicyName("Please Contact Policy Super Admin, There are no scopes assigned to you");
                     data.add(emptyPolicyName);
                 }
             }
@@ -169,7 +163,7 @@ public class AutoPushController extends RestrictedBaseController {
         }
     }
 
-    @RequestMapping(value = { "/auto_Push/PushPolicyToPDP.htm" }, method = { RequestMethod.POST })
+    @RequestMapping(value = {"/auto_Push/PushPolicyToPDP.htm"}, method = {RequestMethod.POST})
     public ModelAndView pushPolicyToPDPGroup(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         try {
@@ -201,8 +195,8 @@ public class AutoPushController extends RestrictedBaseController {
 
             for (Object policyId : adapter.getPolicyDatas()) {
                 LinkedHashMap<?, ?> selected = (LinkedHashMap<?, ?>) policyId;
-                String policyName = selected.get("policyName").toString() + "."
-                        + selected.get("activeVersion").toString() + ".xml";
+                String policyName =
+                        selected.get("policyName").toString() + "." + selected.get("activeVersion").toString() + ".xml";
                 selectedPoliciesInUI.add(policyName);
             }
 
@@ -312,7 +306,7 @@ public class AutoPushController extends RestrictedBaseController {
 
                 currentPoliciesInGroup.addAll(selectedPolicies);
                 updatedGroupObject.setPolicies(currentPoliciesInGroup);
-                this.container.updateGroup(updatedGroupObject);
+                this.container.updateGroup(updatedGroupObject, userId);
 
                 response.setCharacterEncoding(UTF8);
                 response.setContentType("application / json");
@@ -340,7 +334,7 @@ public class AutoPushController extends RestrictedBaseController {
     }
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(value = { "/auto_Push/remove_GroupPolicies.htm" }, method = { RequestMethod.POST })
+    @RequestMapping(value = {"/auto_Push/remove_GroupPolicies.htm"}, method = {RequestMethod.POST})
     public ModelAndView removePDPGroup(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             PolicyController controller = getPolicyControllerInstance();
@@ -362,9 +356,9 @@ public class AutoPushController extends RestrictedBaseController {
             policyContainer = new PDPPolicyContainer(group);
             if (removePolicyData.size() > 0) {
                 IntStream.range(0, removePolicyData.size()).mapToObj(i -> removePolicyData.get(i).toString())
-                    .forEach(polData -> this.policyContainer.removeItem(polData));
-                Set<PDPPolicy> changedPolicies = new HashSet<>(
-                    (Collection<PDPPolicy>) this.policyContainer.getItemIds());
+                        .forEach(polData -> this.policyContainer.removeItem(polData));
+                Set<PDPPolicy> changedPolicies =
+                        new HashSet<>((Collection<PDPPolicy>) this.policyContainer.getItemIds());
                 StdPDPGroup updatedGroupObject = new StdPDPGroup(group.getId(), group.isDefaultGroup(), group.getName(),
                         group.getDescription(), null);
                 updatedGroupObject.setPolicies(changedPolicies);

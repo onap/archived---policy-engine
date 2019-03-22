@@ -353,6 +353,7 @@ public class DeleteHandler {
      */
     public void doApiDeleteFromPdp(HttpServletRequest request, HttpServletResponse response,
             ONAPLoggingContext loggingContext) throws IOException {
+
         String groupId = request.getParameter("groupId");
 
         if (groupId != null && !groupId.matches(REGEX)) {
