@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,11 @@
 package org.onap.policy.controller;
 
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.api.pap.PDPPolicy;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,11 +42,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -66,12 +69,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.api.pap.PDPPolicy;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 @Controller
 @RequestMapping({"/"})
@@ -80,13 +77,13 @@ public class AutoPushController extends RestrictedBaseController{
 	private static final Logger logger = FlexLogger.getLogger(AutoPushController.class);
     private static final String UTF8 = "UTF-8";
 
-	
+
 	@Autowired
 	CommonClassDao commonClassDao;
 
 	private PDPGroupContainer container;
 	protected List<OnapPDPGroup> groups = Collections.synchronizedList(new ArrayList<OnapPDPGroup>());
-	
+
 	private PDPPolicyContainer policyContainer;
 
 	private PolicyController policyController;
@@ -101,7 +98,7 @@ public class AutoPushController extends RestrictedBaseController{
 	private List<Object> data;
 
 	public synchronized void refreshGroups() {
-		synchronized(this.groups) { 
+		synchronized(this.groups) {
 			this.groups.clear();
 			try {
 				PolicyController controller = getPolicyControllerInstance();
@@ -117,7 +114,7 @@ public class AutoPushController extends RestrictedBaseController{
 	private PolicyController getPolicyControllerInstance(){
 		return policyController != null ? getPolicyController() : new PolicyController();
 	}
-	
+
 	@RequestMapping(value={"/get_AutoPushPoliciesContainerData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPolicyGroupContainerData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -144,7 +141,7 @@ public class AutoPushController extends RestrictedBaseController{
 						if(!"".equals(userRole.getScope())){
 							scopes.add(userRole.getScope());
 						}
-					}		
+					}
 				}
 			}
 			if (roles.contains("super-admin") || roles.contains("super-editor")  || roles.contains("super-guest")) {
@@ -160,7 +157,7 @@ public class AutoPushController extends RestrictedBaseController{
 						if(filterdatas != null){
 							for(int i =0; i < filterdatas.size(); i++){
 								data.add(filterdatas.get(i));
-							}	
+							}
 						}
 					}
 				}else{
@@ -190,12 +187,12 @@ public class AutoPushController extends RestrictedBaseController{
 			this.container = new PDPGroupContainer(controller.getPapEngine());
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			
+
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			logger.info("****************************************Logging UserID while Pushing  Policy to PDP Group*****************************************");
 			logger.info("UserId:  " + userId + "Push Policy Data:  "+ root.get("pushTabData").toString());
 			logger.info("***********************************************************************************************************************************");
-			
+
 			AutoPushTabAdapter adapter = mapper.readValue(root.get("pushTabData").toString(), AutoPushTabAdapter.class);
 			for (Object pdpGroupId :  adapter.getPdpDatas()) {
 				LinkedHashMap<?, ?> selectedPDP = (LinkedHashMap<?, ?>)pdpGroupId;
@@ -217,7 +214,7 @@ public class AutoPushController extends RestrictedBaseController{
 				Set<PDPPolicy> selectedPolicies = new HashSet<>();
 				for (String policyId : selectedPoliciesInUI) {
 					logger.debug("Handlepolicies..." + pdpDestinationGroupId + policyId);
-					
+
 					//
 					// Get the current selection
 					String selectedItem = policyId;
@@ -235,10 +232,10 @@ public class AutoPushController extends RestrictedBaseController{
 						id = id.replace(".xml", "");
 						id = id.substring(0, id.lastIndexOf('.'));
 					}
-					
+
 					// Default policy to be Root policy; user can change to deferred
 					// later
-					
+
 					StdPDPPolicy selectedPolicy = null;
 					String dbCheckName = name;
 					if(dbCheckName.contains("Config_")){
@@ -319,7 +316,7 @@ public class AutoPushController extends RestrictedBaseController{
 
 				currentPoliciesInGroup.addAll(selectedPolicies);
 				updatedGroupObject.setPolicies(currentPoliciesInGroup);
-				this.container.updateGroup(updatedGroupObject);
+				this.container.updateGroup(updatedGroupObject, userId);
 
 				response.setCharacterEncoding(UTF8);
 				response.setContentType("application / json");
@@ -355,15 +352,15 @@ public class AutoPushController extends RestrictedBaseController{
 			this.container = new PDPGroupContainer(controller.getPapEngine());
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());  
+			JsonNode root = mapper.readTree(request.getReader());
 			StdPDPGroup group = mapper.readValue(root.get("activePdpGroup").toString(), StdPDPGroup.class);
 			JsonNode removePolicyData = root.get("data");
-			
+
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			logger.info("****************************************Logging UserID while Removing Policy from PDP Group*****************************************");
 			logger.info("UserId:  " + userId + "PDP Group Data:  "+ root.get("activePdpGroup").toString() + "Remove Policy Data: "+root.get("data"));
 			logger.info("***********************************************************************************************************************************");
-			
+
 			policyContainer = new PDPPolicyContainer(group);
 			if(removePolicyData.size() > 0){
 				for(int i = 0 ; i < removePolicyData.size(); i++){
@@ -380,7 +377,7 @@ public class AutoPushController extends RestrictedBaseController{
 				updatedGroupObject.setOperation("delete");
 				this.container.updateGroup(updatedGroupObject);
 			}
-			
+
 			response.setCharacterEncoding(UTF8);
 			response.setContentType("application / json");
 			request.setCharacterEncoding(UTF8);

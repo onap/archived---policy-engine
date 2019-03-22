@@ -89,11 +89,12 @@ public interface PolicyDBDaoTransaction {
      * Updates a group in the database with a new name of description
      * @param group The group with updated information. The id must match an existing group, but the name and description can be changed.
      * @param username Username of the user performing the operation
+     * @param userId
      * @throws IllegalArgumentException If non-optional parameters are null or empty strings
      * @throws IllegalStateException If a transaction is already open
      * @throws PersistenceException If a database error occurs or if the group can not be found
      */
-    public void updateGroup(OnapPDPGroup group, String requestType, String username) throws PolicyDBException;
+    public void updateGroup(OnapPDPGroup group, String requestType, String userId) throws PolicyDBException;
 
     /**
      * Updates a PDP in the database with new information

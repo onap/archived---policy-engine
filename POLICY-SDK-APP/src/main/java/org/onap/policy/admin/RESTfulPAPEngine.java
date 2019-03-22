@@ -2,15 +2,15 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,13 @@ package org.onap.policy.admin;
 
 
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.api.pap.PDPPolicy;
+import com.att.research.xacml.api.pap.PDPStatus;
+import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -38,8 +45,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.commons.io.IOUtils;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.utils.CryptoUtils;
@@ -54,21 +62,10 @@ import org.onap.policy.xacml.std.pap.StdPDPItemSetChangeNotifier;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
 
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.api.pap.PDPPolicy;
-import com.att.research.xacml.api.pap.PDPStatus;
-import com.att.research.xacml.util.XACMLProperties;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
-
-import org.onap.policy.common.logging.flexlogger.FlexLogger; 
-import org.onap.policy.common.logging.flexlogger.Logger;
-
 /**
  * Implementation of the PAPEngine interface that communicates with a PAP engine in a remote servlet
  * through a RESTful interface
- * 
+ *
  *
  */
 public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyEngine {
@@ -191,6 +188,21 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
         }
     }
 
+    /*
+     * Passing UserName to PAP Rest for Audit Logging.
+     *
+     * @see org.onap.policy.xacml.api.pap.PAPPolicyEngine#updateGroup(org.onap.policy.xacml.api.pap.OnapPDPGroup, java.lang.String)
+     */
+    @Override
+    public void updateGroup(OnapPDPGroup group, String userName) throws PAPException {
+        try {
+            sendToPAP("PUT", group, null, null, groupID + group.getId(), "userId=" +userName);
+        } catch (Exception e) {
+            String message = "Unable to PUT policy '" + group.getId() + "', e:" + e;
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + message, e);
+            throw new PAPException(message);
+        }
+    }
 
     @Override
     public void removeGroup(OnapPDPGroup group, OnapPDPGroup newGroup)

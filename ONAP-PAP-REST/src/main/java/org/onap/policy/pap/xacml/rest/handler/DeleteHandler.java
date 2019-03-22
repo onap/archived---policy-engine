@@ -319,7 +319,7 @@ public class DeleteHandler {
 
     public void doAPIDeleteFromPDP(HttpServletRequest request, HttpServletResponse response,
                                    ONAPLoggingContext loggingContext) throws IOException {
-
+        String userId = request.getParameter("userId");
         String policyName = request.getParameter("policyName");
         String groupId = request.getParameter("groupId");
         String responseString = null;
@@ -375,7 +375,7 @@ public class DeleteHandler {
                 PolicyLogger.info("Preparing to remove policy from group: " + group.getId());
                 removePolicy.prepareToRemove(policy);
                 OnapPDPGroup updatedGroup = removePolicy.getUpdatedObject();
-                responseString = deletePolicyFromPDPGroup(updatedGroup, loggingContext);
+                responseString = deletePolicyFromPDPGroup(updatedGroup, loggingContext, userId);
             } else {
                 String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Policy does not exist on the PDP.";
                 PolicyLogger.error(message);
@@ -417,7 +417,7 @@ public class DeleteHandler {
         }
     }
 
-    private String deletePolicyFromPDPGroup(OnapPDPGroup group, ONAPLoggingContext loggingContext) {
+    private String deletePolicyFromPDPGroup(OnapPDPGroup group, ONAPLoggingContext loggingContext, String userId) {
         PolicyDBDaoTransaction acPutTransaction = XACMLPapServlet.getDbDaoTransaction();
         String response = null;
         loggingContext.setServiceName("API:PAP.DeleteHandler");
@@ -445,7 +445,7 @@ public class DeleteHandler {
         // so we need to fill that in before submitting the group for update
         ((StdPDPGroup) group).setDirectory(((StdPDPGroup) existingGroup).getDirectory());
         try {
-            acPutTransaction.updateGroup(group, "XACMLPapServlet.doDelete", null);
+            acPutTransaction.updateGroup(group, "XACMLPapServlet.doDelete", userId);
         } catch (Exception e) {
             PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet",
                     " Error while updating group in the database: "
