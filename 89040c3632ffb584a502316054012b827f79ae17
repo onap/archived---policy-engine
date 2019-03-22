@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b74fbd74_ef5cadcf",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-22T16:46:56Z",
+      "side": 1,
+      "message": "why are we mixing JSONObject and Jackson?  Why not stick with Jackson?",
+      "revId": "89040c3632ffb584a502316054012b827f79ae17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "deacf20a_ecefeeb8",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-22T16:46:56Z",
+      "side": 1,
+      "message": "suggestion: this seems like a lot of code to save \u0026 restore a node.  Why not just serialize the node to be saved and then de-seralize the saved string to restore the it?",
+      "revId": "89040c3632ffb584a502316054012b827f79ae17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
