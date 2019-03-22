@@ -173,7 +173,7 @@ public class DeletePolicyService extends PdpApiService {
      */
     private boolean populateFullPolicyName(final PAPServices papServices) {
         for (PolicyNameType policyData : policyList) {
-            if (policyData.getPolicyName().contains("xml")) {
+        	if (policyData.getPolicyName().endsWith("xml")) {
                 policyData.setFullPolicyName(policyData.getPolicyName());
                 continue;
             }
