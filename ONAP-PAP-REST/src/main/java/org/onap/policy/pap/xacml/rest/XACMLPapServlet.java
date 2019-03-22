@@ -1453,7 +1453,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             // Assume that this is an update of an existing PDP Group
             loggingContext.setServiceName("PolicyEngineAPI:PAP.updateGroup");
             try {
-                acPutTransaction.updateGroup(group, "XACMLPapServlet.doACPut", null);
+                acPutTransaction.updateGroup(group, "XACMLPapServlet.doACPut", userId);
             } catch (Exception e) {
                 PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet",
                         " Error while updating group in the database: " + "group=" + group.getId());
