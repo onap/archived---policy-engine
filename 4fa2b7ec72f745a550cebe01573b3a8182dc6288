@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27d5a740_513ce0f3",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-22T23:16:40Z",
+      "side": 1,
+      "message": "suggestion: use a constant",
+      "revId": "4fa2b7ec72f745a550cebe01573b3a8182dc6288",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5916d17e_997491e3",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 889,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-22T23:16:40Z",
+      "side": 1,
+      "message": "suggestion: use a constant",
+      "revId": "4fa2b7ec72f745a550cebe01573b3a8182dc6288",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b254faf9_c774ca16",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-22T23:16:40Z",
+      "side": 1,
+      "message": "is this thread safe?  Is it possible for another thread to change the AES key before decrypt is invoked?",
+      "revId": "4fa2b7ec72f745a550cebe01573b3a8182dc6288",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d29fc55d_61ba3561",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/NotifyOtherPaps.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-22T23:16:40Z",
+      "side": 1,
+      "message": "need to set the AES key?\n\nsame question in other files.  Or set it once and use it everywhere.  (That would also solve the potential thread-safety issue.)",
+      "revId": "4fa2b7ec72f745a550cebe01573b3a8182dc6288",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34757808_6b1e13f8",
+        "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/PeCryptoUtilsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-22T23:16:40Z",
+      "side": 1,
+      "message": "could use powermock Whitebox.setInternalState()",
+      "revId": "4fa2b7ec72f745a550cebe01573b3a8182dc6288",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13cb043e_05854a87",
+        "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/PeCryptoUtilsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-22T23:16:40Z",
+      "side": 1,
+      "message": "invoke fail() after this",
+      "revId": "4fa2b7ec72f745a550cebe01573b3a8182dc6288",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
