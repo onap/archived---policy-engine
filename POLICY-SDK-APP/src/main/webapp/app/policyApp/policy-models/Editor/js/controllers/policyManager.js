@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 app.controller('PolicyManagerController', [
         '$scope', '$q', '$window', '$cookies', 'policyManagerConfig', 'item', 'policyNavigator', 'policyUploader', 'Notification','PolicyAppService',
         function($scope, $q, $Window, $cookies, policyManagerConfig, Item, PolicyNavigator, PolicyUploader, Notification, PolicyAppService ) {
-        	
+
         $scope.isDisabled = true;
         $scope.superAdminId = false;
         $scope.exportPolicyId = false;
@@ -35,109 +35,75 @@ app.controller('PolicyManagerController', [
         $scope.describePolicyId = false;
         $scope.viewPolicyId = false;
         $scope.deletePolicyId = false;
-        PolicyAppService.getData('get_LockDownData').then(function(data){
-        	var j = data;
-        	$scope.data = JSON.parse(j.data);
-        	$scope.lockdowndata = JSON.parse($scope.data.lockdowndata);
-        	if($scope.lockdowndata[0].lockdown == true){
-        		$scope.isDisabled = true;
-        	}else{
-        		$scope.isDisabled = false;
-        	}
-        	console.log($scope.data);
-        },function(error){
-        	console.log("failed");
+        PolicyAppService.getData('get_LockDownData').then(function(data) {
+            var j = data;
+            $scope.data = JSON.parse(j.data);
+            $scope.lockdowndata = JSON.parse($scope.data.lockdowndata);
+            if ($scope.lockdowndata[0].lockdown == true) {
+                $scope.isDisabled = true;
+            } else {
+                $scope.isDisabled = false;
+            }
+            console.log($scope.data);
+        }, function(error) {
+            console.log("failed");
         });
-        
-        PolicyAppService.getData('getDictionary/get_DescriptiveScopeByName').then(function(data){
-        	var j = data;
-        	$scope.data = JSON.parse(j.data);
-        	console.log($scope.data);
-        	$scope.descriptiveScopeDictionaryDatas = JSON.parse($scope.data.descriptiveScopeDictionaryDatas);	
+
+        PolicyAppService.getData('getDictionary/get_DescriptiveScopeByName').then(function(data) {
+            var j = data;
+            $scope.data = JSON.parse(j.data);
+            console.log($scope.data);
+            $scope.descriptiveScopeDictionaryDatas = JSON.parse($scope.data.descriptiveScopeDictionaryDatas);
+        }, function (error) {
+            console.log("failed");
+        });
+
+        PolicyAppService.getData('getDictionary/get_OnapNameDataByName').then(function(data) {
+            var j = data;
+            $scope.data = JSON.parse(j.data);
+            console.log($scope.data);
+            $scope.onapNameDictionaryDatas = JSON.parse($scope.data.onapNameDictionaryDatas);
         }, function (error) {
         	console.log("failed");
         });
 
-        PolicyAppService.getData('getDictionary/get_OnapNameDataByName').then(function(data){
-        	var j = data;
-        	$scope.data = JSON.parse(j.data);
-        	console.log($scope.data);
-        	$scope.onapNameDictionaryDatas = JSON.parse($scope.data.onapNameDictionaryDatas);	
+        PolicyAppService.getData('getDictionary/get_VSCLActionDataByName').then(function(data) {
+            var j = data;
+            $scope.data = JSON.parse(j.data);
+            console.log($scope.data);
+            $scope.vsclActionDictionaryDatas = JSON.parse($scope.data.vsclActionDictionaryDatas);
         }, function (error) {
-        	console.log("failed");
+            console.log("failed");
         });
 
-        PolicyAppService.getData('getDictionary/get_VSCLActionDataByName').then(function(data){
-        	var j = data;
-        	$scope.data = JSON.parse(j.data);
-        	console.log($scope.data);
-        	$scope.vsclActionDictionaryDatas = JSON.parse($scope.data.vsclActionDictionaryDatas);	
+        PolicyAppService.getData('getDictionary/get_VNFTypeDataByName').then(function(data) {
+            var j = data;
+            $scope.data = JSON.parse(j.data);
+            console.log($scope.data);
+            $scope.vnfTypeDictionaryDatas = JSON.parse($scope.data.vnfTypeDictionaryDatas);	
         }, function (error) {
-        	console.log("failed");
+            console.log("failed");
         });
 
-        PolicyAppService.getData('getDictionary/get_VNFTypeDataByName').then(function(data){
-        	var j = data;
-        	$scope.data = JSON.parse(j.data);
-        	console.log($scope.data);
-        	$scope.vnfTypeDictionaryDatas = JSON.parse($scope.data.vnfTypeDictionaryDatas);	
-        }, function (error) {
-        	console.log("failed");
-        });
 
-        
         PolicyAppService.getData('get_UserRolesData').then(function (data) {
-     	   var j = data;
-     	   $scope.data = JSON.parse(j.data);
-     	   console.log($scope.data);
-     	   $scope.userRolesDatas = JSON.parse($scope.data.userRolesDatas);
-     	   console.log($scope.userRolesDatas);
-     	   if($scope.userRolesDatas[0] == 'super-admin'){
-     		  $scope.superAdminId = true;
-     		  $scope.exportPolicyId = true;
-              $scope.importPolicyId = true;
-     		  $scope.createScopeId = true;
-     	      $scope.deleteScopeId = true;
-     	      $scope.renameId = true;
-     	      $scope.createPolicyId = true;
-     	      $scope.cloneId = true;
-     	      $scope.editPolicyId = true;
-     	      $scope.switchVersionId = true;
-     	      $scope.describePolicyId = true;
-     	      $scope.viewPolicyId = true;
-     	      $scope.deletePolicyId = true; 
-     	   }else if($scope.userRolesDatas[0] == 'super-editor' || $scope.userRolesDatas[0] == 'editor'){
-     		  $scope.exportPolicyId = true;
-              $scope.importPolicyId = true; 
-   	          $scope.cloneId = true;
-   	          $scope.editPolicyId = true;
-   	          $scope.createPolicyId = true;
-	          $scope.cloneId = true;
-	          $scope.editPolicyId = true;
-	          $scope.switchVersionId = true;
-	          $scope.describePolicyId = true;
-	          $scope.viewPolicyId = true;
-	          $scope.deletePolicyId = true; 
-     	   }else if($scope.userRolesDatas[0] == 'super-guest' || $scope.userRolesDatas[0] == 'guest'){
-     		  $scope.describePolicyId = true;
-	          $scope.viewPolicyId = true;
-     	   }else if($scope.userRolesDatas[0] == 'admin'){
-     		  $scope.exportPolicyId = true;
-              $scope.importPolicyId = true;
-     		  $scope.createScopeId = true;
-   	          $scope.renameId = true;
-   	          $scope.createPolicyId = true;
-   	          $scope.cloneId = true;
-   	          $scope.editPolicyId = true;
-   	          $scope.switchVersionId = true;
-   	          $scope.describePolicyId = true;
-   	          $scope.viewPolicyId = true;
-   	          $scope.deletePolicyId = true;  
-     	   }
-     	   }, function (error) {
-     	      console.log("failed");
-     	});
-        
+            var j = data;
+            $scope.data = JSON.parse(j.data);
+            console.log($scope.data);
+            $scope.userRolesDatas = JSON.parse($scope.data.userRolesDatas);
+            console.log($scope.userRolesDatas);
+            if ($scope.userRolesDatas[0] == 'super-admin') {
+                $scope.superAdminId = true;
+                $scope.exportPolicyId = true;
+                $scope.importPolicyId = true;
+           } else if ($scope.userRolesDatas[0] == 'super-editor' || $scope.userRolesDatas[0] == 'editor' || $scope.userRolesDatas[0] == 'admin') {
+               $scope.exportPolicyId = true;
+               $scope.importPolicyId = true; 
+           }
+        }, function (error) {
+            console.log("failed");
+        });
+
         $scope.config = policyManagerConfig;
         $scope.reverse = false;
         $scope.predicate = ['model.type', 'model.name'];
@@ -160,6 +126,49 @@ app.controller('PolicyManagerController', [
             item = item instanceof Item ? item : new Item();
             item.revert();
             $scope.temp = item;
+            $scope.createScopeId = false;
+            $scope.deleteScopeId = false;
+            $scope.renameId = false;
+            $scope.createPolicyId = false;
+            $scope.cloneId = false;
+            $scope.editPolicyId = false;
+            $scope.switchVersionId = false;
+            $scope.describePolicyId = false;
+            $scope.viewPolicyId = false;
+            $scope.deletePolicyId = false;
+            if ($scope.temp.model.roleType == 'super-admin') {
+                $scope.createScopeId = true;
+                $scope.deleteScopeId = true;
+                $scope.renameId = true;
+                $scope.createPolicyId = true;
+                $scope.cloneId = true;
+                $scope.editPolicyId = true;
+                $scope.switchVersionId = true;
+                $scope.describePolicyId = true;
+                $scope.viewPolicyId = true;
+                $scope.deletePolicyId = true; 
+            } else if ($scope.temp.model.roleType == 'super-editor' || $scope.temp.model.roleType == 'editor') {
+                $scope.cloneId = true;
+                $scope.editPolicyId = true;
+                $scope.createPolicyId = true;
+                $scope.switchVersionId = true;
+                $scope.describePolicyId = true;
+                $scope.viewPolicyId = true;
+                $scope.deletePolicyId = true; 
+            } else if ($scope.temp.model.roleType == 'super-guest' || $scope.temp.model.roleType == 'guest') {
+                $scope.describePolicyId = true;
+                $scope.viewPolicyId = true;
+            } else if ($scope.temp.model.roleType == 'admin') {
+                $scope.createScopeId = true;
+                $scope.renameId = true;
+                $scope.createPolicyId = true;
+                $scope.cloneId = true;
+                $scope.editPolicyId = true;
+                $scope.switchVersionId = true;
+                $scope.describePolicyId = true;
+                $scope.viewPolicyId = true;
+                $scope.deletePolicyId = true;  
+            }
         };
 
         $scope.smartClick = function(item) {
@@ -186,10 +195,10 @@ app.controller('PolicyManagerController', [
             return currentPath.indexOf(path) !== -1;
         };
          
-       $scope.watchPolicy = function(item){
+       $scope.watchPolicy = function(item) {
            var uuu = "watchPolicy";
            var data = {name : item.model.name,
-        		   path : item.model.path};
+                   path : item.model.path};
            var postData={watchData: data};
            $.ajax({
                type : 'POST',
@@ -197,32 +206,31 @@ app.controller('PolicyManagerController', [
                dataType: 'json',
                contentType: 'application/json',
                data: JSON.stringify(postData),
-               success : function(data){
-                   $scope.$apply(function(){
+               success : function(data) {
+                   $scope.$apply(function() {
                        $scope.watchData=data.watchData;});
                    Notification.success($scope.watchData);
                    console.log($scope.watchData);
                },
-               error : function(data){
+               error : function(data) {
                    alert("Error while saving.");
                }
            });
        };
-     
-         
-       $scope.refresh = function(){
-    	   $scope.policyNavigator.refresh();
+
+       $scope.refresh = function() {
+           $scope.policyNavigator.refresh();
        };
-       
-         $scope.switchVersion = function(item){
-        	 if ($scope.policyNavigator.fileNameExists(item.tempModel.content.activeVersion)) {
+
+         $scope.switchVersion = function(item) {
+             if ($scope.policyNavigator.fileNameExists(item.tempModel.content.activeVersion)) {
                  item.error = 'Invalid filename or already exists, specify another name';
                  return false;
              }
-        	 item.getSwitchVersionContent().then(function(){
-        		 $scope.policyNavigator.refresh();
-        		 $scope.modal('switchVersion', true);
-        	 });
+             item.getSwitchVersionContent().then(function(){
+                 $scope.policyNavigator.refresh();
+                 $scope.modal('switchVersion', true);
+             });
          };
 
         $scope.copy = function(item) {
@@ -250,7 +258,7 @@ app.controller('PolicyManagerController', [
                 $scope.modal('deletePolicy', true);
             });
         };
-        
+
         $scope.rename = function(item) {
             var samePath = item.tempModel.path.join() === item.model.path.join();
             if (samePath && $scope.policyNavigator.fileNameExists(item.tempModel.name)) {
@@ -262,7 +270,7 @@ app.controller('PolicyManagerController', [
                 $scope.modal('rename', true);
             });
         };
-        
+
         $scope.move = function(item) {
             var samePath = item.tempModel.path.join() === item.model.path.join();
             if (samePath && $scope.policyNavigator.fileNameExists(item.tempModel.name)) {
@@ -291,22 +299,22 @@ app.controller('PolicyManagerController', [
         };
 
         $scope.subScopeFolder = function(item) {
-        	var name = item.tempModel.name +"\\" + item.tempModel.subScopename && item.tempModel.name.trim() + "\\"+item.tempModel.subScopename.trim() ;
-        	item.tempModel.type = 'dir';
-        	item.tempModel.path = $scope.policyNavigator.currentPath;
-        	if (name && !$scope.policyNavigator.fileNameExists(name)) {
-        		item.getScopeContent().then(function() {
-        			$scope.policyNavigator.refresh();
-        			$scope.modal('addSubScope', true);
-        		});
-        	} else {
-        		item.error = 'Invalid filename or already exists, specify another name';
-        		return false;
-        	}
+            var name = item.tempModel.name +"\\" + item.tempModel.subScopename && item.tempModel.name.trim() + "\\"+item.tempModel.subScopename.trim() ;
+            item.tempModel.type = 'dir';
+            item.tempModel.path = $scope.policyNavigator.currentPath;
+            if (name && !$scope.policyNavigator.fileNameExists(name)) {
+                item.getScopeContent().then(function() {
+                    $scope.policyNavigator.refresh();
+                    $scope.modal('addSubScope', true);
+                });
+            } else {
+                item.error = 'Invalid filename or already exists, specify another name';
+                return false;
+            }
         };
-        
-        $scope.closefunction = function(fianlPath){
-        	$scope.policyNavigator.policyrefresh(fianlPath);
+
+        $scope.closefunction = function(fianlPath) {
+            $scope.policyNavigator.policyrefresh(fianlPath);
         };
 
         $scope.uploadFiles = function() {

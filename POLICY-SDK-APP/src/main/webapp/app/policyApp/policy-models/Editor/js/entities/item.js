@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
                 version: model && model.version || '',
                 createdBy: model && model.createdBy || '',
                 modifiedBy: model && model.modifiedBy || '',
+                roleType: model && model.roleType || '',
                 content: model && model.content || '',
                 recursive: false,
                 sizeKb: function() {
@@ -84,7 +85,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             this.update();
             return deferred.resolve(data);
         };
-		
+
         Item.prototype.createFolder = function() {
             var self = this;
             var deferred = $q.defer();
@@ -139,11 +140,11 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             self.inprocess = true;
             self.error = '';
             $http.post(policyManagerConfig.renameUrl, data).success(function(data) {
-            	if(data.result.error != undefined){
-            		var value = data.result.error;
-            		value = value.replace("rename" , "move");
-            		data.result.error = value;
-            	}
+                if(data.result.error != undefined){
+                    var value = data.result.error;
+                    value = value.replace("rename" , "move");
+                    data.result.error = value;
+                }
                 self.deferredHandler(data, deferred);
             }).error(function(data) {
                 self.deferredHandler(data, deferred, 'Error Occured While Moving');
@@ -152,7 +153,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             });
             return deferred.promise;
         };
-        
+
         Item.prototype.copy = function() {
             var self = this;
             var deferred = $q.defer();
@@ -249,7 +250,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             });
             return deferred.promise;
         };
-        
+
         Item.prototype.getDescribePolicyContent = function() {
             var self = this;
             var deferred = $q.defer();
@@ -263,7 +264,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             $http.post(policyManagerConfig.describePolicyUrl, data).success(function(data) {
                 self.tempModel.content =  self.model.content = data.html;
                 var describeTemplate =  self.tempModel.content;
-             
+
                 self.deferredHandler(data, deferred);
             }).error(function(data) {
                 self.deferredHandler(data, deferred, 'Error Occured While retrieving the Policy Data to Describe');
@@ -315,7 +316,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             });
             return deferred.promise;
         };
-        
+
         Item.prototype.removePolicy = function() {
             var self = this;
             var deferred = $q.defer();
