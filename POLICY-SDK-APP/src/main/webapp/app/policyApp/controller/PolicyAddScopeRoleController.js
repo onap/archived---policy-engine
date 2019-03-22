@@ -18,11 +18,27 @@
  * ============LICENSE_END=========================================================
  */
 app.controller('editRoleController' ,  function ($scope, PolicyAppService, $modalInstance, message){
-    if(message.editRoleData!=null){
+    if (message.editRoleData != null) {
         $scope.label='Edit Role'
         $scope.disableCd=true;
+    } else {
+        $scope.label='Add Role'
+        $scope.disableCd=false;
+        message.editRoleData = {
+            role : "mechid"
+        }
     }
+
     $scope.editRole = message.editRoleData;
+
+    $scope.activeScopes = [];
+    if (message.editRoleData != null && message.editRoleData.scope != null) {
+        if (message.editRoleData.scope.constructor === Array) {
+            $scope.activeScopes = message.editRoleData.scope;
+        } else {
+            $scope.activeScopes = message.editRoleData.scope.split(',');
+        }
+    }
 
     PolicyAppService.getData('get_PolicyRolesScopeData').then(function (data) {
         var j = data;
@@ -36,6 +52,7 @@ app.controller('editRoleController' ,  function ($scope, PolicyAppService, $moda
 
     $scope.saveRole = function(editRoleData) {
         var uuu = "save_NonSuperRolesData.htm";
+        editRoleData.scope = $scope.activeScopes;
         var postData={editRoleData: editRoleData};
         $.ajax({
             type : 'POST',
@@ -55,7 +72,39 @@ app.controller('editRoleController' ,  function ($scope, PolicyAppService, $moda
         });
     };
 
-    $scope.close = function() {
-        $modalInstance.close();
+
+    $scope.createMechidScope = function(editRoleData) {
+        var uuu = "save_NewMechidScopesData";
+        editRoleData.scope = $scope.activeScopes;
+        var postData={editRoleData: editRoleData};
+        $.ajax({
+            type : 'POST',
+            url : uuu,
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(postData),
+            success : function(data){
+                $scope.$apply(function(){
+                    $scope.rolesDatas=data.rolesDatas;});
+                console.log($scope.rolesDatas);
+                $modalInstance.close({rolesDatas:$scope.rolesDatas});
+            },
+            error : function(data) {
+                alert("Error while Creating Mechid scopes.");
+            }
+        });
+    };
+
+
+
+    $scope.addScope = function(scopes) {
+        for (var i = 0; i < scopes.length; i++) {
+            if ($.inArray(scopes[i], $scope.activeScopes) === -1) {
+                $scope.activeScopes.push(scopes[i]);
+            }
+        }
+    };
+    $scope.deleteScope = function(index) {
+        $scope.activeScopes.splice(index, 1);
     };
 });

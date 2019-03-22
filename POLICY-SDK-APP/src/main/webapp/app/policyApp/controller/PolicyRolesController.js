@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,23 +19,23 @@
  */
 app.controller('policyRolesController', function ($scope, PolicyAppService, modalService, $modal, Notification){
     $( "#dialog" ).hide();
-    
+
     $scope.isDisabled = true;
+
+    PolicyAppService.getData('get_LockDownData').then(function(data) {
+        var j = data;
+        $scope.data = JSON.parse(j.data);
+        $scope.lockdowndata = JSON.parse($scope.data.lockdowndata);
+        if ($scope.lockdowndata[0].lockdown == true) {
+            $scope.isDisabled = true;
+        } else {
+            $scope.isDisabled = false;
+        }
+        console.log($scope.data);
+    }, function(error) {
+        console.log("failed");
+    });
     
-    PolicyAppService.getData('get_LockDownData').then(function(data){
-		 var j = data;
-		 $scope.data = JSON.parse(j.data);
-		 $scope.lockdowndata = JSON.parse($scope.data.lockdowndata);
-		 if($scope.lockdowndata[0].lockdown == true){
-			 $scope.isDisabled = true;
-		 }else{
-			 $scope.isDisabled = false;
-		 }
-		 console.log($scope.data);
-	 },function(error){
-		 console.log("failed");
-	 });
-	 
     $scope.scopeDatas = [];
     PolicyAppService.getData('get_RolesData').then(function (data) {
         var j = data;
@@ -51,7 +51,8 @@ app.controller('policyRolesController', function ($scope, PolicyAppService, moda
         data : 'rolesDatas',
         enableFiltering: true,
         columnDefs: [{
-            field: 'id', enableFiltering: false, 
+            field: 'id', enableFiltering: false, headerCellTemplate: '' +
+            '<button id=\'New\' ng-click="grid.appScope.editRolesWindow(null)" class="btn btn-success">' + 'Create</button>',
             cellTemplate:
             '<button  type="button"  class="btn btn-primary"  ng-click="grid.appScope.editRolesWindow(row.entity)"><i class="fa fa-pencil-square-o"></i></button>' ,  width: '4%'
         },
@@ -63,30 +64,30 @@ app.controller('policyRolesController', function ($scope, PolicyAppService, moda
 
 
     $scope.editRoleName = null;
-   
+
     $scope.editRolesWindow = function(editRoleData) {
-    	if($scope.lockdowndata[0].lockdown == true){
-    		Notification.error("Policy Application has been Locked")
-    	}else{
-    		$scope.editRoleName = editRoleData;
-    		var modalInstance = $modal.open({
-    			backdrop: 'static', keyboard: false,
-    			templateUrl : 'edit_Role_popup.html',
-    			controller: 'editRoleController',
-    			resolve: {
-    				message: function () {
-    					var message = {
-    							editRoleData: $scope.editRoleName
-    					};
-    					return message;
-    				}
-    			}
-    		});
-    		modalInstance.result.then(function(response){
-    			console.log('response', response);
-    		});
-    	}
-       
+        if ($scope.lockdowndata[0].lockdown == true) {
+            Notification.error("Policy Application has been Locked")
+        } else {
+            $scope.editRoleName = editRoleData;
+            var modalInstance = $modal.open({
+                backdrop: 'static', keyboard: false,
+                templateUrl : 'edit_Role_popup.html',
+                controller: 'editRoleController',
+                resolve: {
+                    message: function () {
+                        var message = {
+                            editRoleData: $scope.editRoleName
+                        };
+                        return message;
+                    }
+                }
+            });
+            modalInstance.result.then(function(response) {
+                console.log('response', response);
+                $scope.rolesDatas = response.rolesDatas;
+            });
+        }
     };
 
 });
