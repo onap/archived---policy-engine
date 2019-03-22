@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017,2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.pap.xacml.restAuth;
 
+import com.att.research.xacml.api.pap.PAPException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,15 +37,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
-
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
-
-import com.att.research.xacml.api.pap.PAPException;
 
 public class CheckPDP {
 
@@ -148,7 +147,7 @@ public class CheckPDP {
             if(pdpValues.size()==3){
                 // 1:2 will be UserID:Password
                 String userID = pdpValues.get(1);
-                String pass = pdpValues.get(2);
+                String pass = PeCryptoUtils.decrypt(pdpValues.get(2));
                 Base64.Encoder encoder = Base64.getEncoder();
                 // 0 - PDPURL
                 pdpMap.put(pdpValues.get(0), encoder.encodeToString((userID+":"+pass).getBytes(StandardCharsets.UTF_8)));

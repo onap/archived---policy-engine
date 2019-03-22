@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@
 package org.onap.policy.admin;
 
 
+import com.att.research.xacml.util.XACMLProperties;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,13 +38,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
-
-import com.att.research.xacml.util.XACMLProperties;
 
 /**
  * What is not good about this class is that once a value has been set for pdpProperties path
@@ -171,7 +170,7 @@ public class CheckPDP {
             if(pdpValues.size()==3){
                 // 1:2 will be UserID:Password
                 String userID = pdpValues.get(1);
-                String pass = pdpValues.get(2);
+                String pass = PeCryptoUtils.decrypt(pdpValues.get(2));
                 Base64.Encoder encoder = Base64.getEncoder();
                 // 0 - PDPURL
                 pdpMap.put(pdpValues.get(0), encoder.encodeToString((userID+":"+pass).getBytes(StandardCharsets.UTF_8)));
