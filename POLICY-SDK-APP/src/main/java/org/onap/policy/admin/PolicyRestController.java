@@ -2,15 +2,15 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,8 +18,14 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.admin;
 
+import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -32,11 +38,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -53,6 +57,7 @@ import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyVersion;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
@@ -69,12 +74,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-import org.onap.policy.utils.CryptoUtils;
-import com.att.research.xacml.util.XACMLProperties;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 @RestController
 @RequestMapping("/")
@@ -228,8 +227,7 @@ public class PolicyRestController extends RestrictedBaseController{
     private ResponseEntity<?> sendToPAP(String body, String requestURI, HttpMethod method){
         String papUrl = PolicyController.getPapUrl();
         String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-        String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
-
+        String papPass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
         Base64.Encoder encoder = Base64.getEncoder();
         String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
         HttpHeaders headers = new HttpHeaders();
@@ -277,7 +275,8 @@ public class PolicyRestController extends RestrictedBaseController{
         String uri = uriValue;
         String papUrl = PolicyController.getPapUrl();
         String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-        String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
+        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY));
+        String papPass = PeCryptoUtils.decrypt((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)));
 
         Base64.Encoder encoder = Base64.getEncoder();
         String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
@@ -369,14 +368,14 @@ public class PolicyRestController extends RestrictedBaseController{
             if(uri.endsWith("set_BRMSParamData")){
                 connection.setRequestProperty(CONTENT_TYPE,PolicyController.getContenttype());
                 try (OutputStream os = connection.getOutputStream()) {
-                    IOUtils.copy((InputStream) request.getInputStream(), os);
+                    IOUtils.copy(request.getInputStream(), os);
                 }
             }else{
                 boundary = "===" + System.currentTimeMillis() + "===";
                 connection.setRequestProperty(CONTENT_TYPE,"multipart/form-data; boundary=" + boundary);
                 try (OutputStream os = connection.getOutputStream()) {
                     if(item != null){
-                        IOUtils.copy((InputStream) item.getInputStream(), os);
+                        IOUtils.copy(item.getInputStream(), os);
                     }
                 }
             }
