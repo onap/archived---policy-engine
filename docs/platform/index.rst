@@ -48,6 +48,8 @@ PDP-D Features
    feature_activestdbymgmt.rst
    feature_locking.rst
    feature_pooling.rst
+   feature_controllerlogging.rst
+   feature_mdcfilters.rst
 
 
 Policy Platform Tutorials
