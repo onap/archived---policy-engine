@@ -59,6 +59,8 @@ The current extensions supported are:
 - `Feature Active/Standby Management <feature_activestdbymgmt.html>`_ (disabled by default)
 - `Feature Distributed Locking <feature_locking.html>`_ (enabled in OOM installation by default)
 - `Feature Pooling <feature_pooling.html>`_ (enabled in OOM installation by default)
+- `Feature Controller Logging <feature_controllerlogging.html>`_ (disabled by default)
+- `Feature MDC Filters <feature_mdcfilters.html>`_ (disabled by default)
 
 .. seealso:: Click on the individual feature links for more information 
 
