@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "d772f7e3_e0285e60",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-03-24T16:04:40Z",
+      "side": 1,
+      "message": "I\u0027ll change it to synchronized.",
+      "parentUuid": "b254faf9_c774ca16",
+      "revId": "4fa2b7ec72f745a550cebe01573b3a8182dc6288",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d29fc55d_61ba3561",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/NotifyOtherPaps.java",
         "patchSetId": 1
@@ -70,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "da35dfaf_81af82e9",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/NotifyOtherPaps.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-03-24T16:04:40Z",
+      "side": 1,
+      "message": "The intent is to set once on init.",
+      "parentUuid": "d29fc55d_61ba3561",
+      "revId": "4fa2b7ec72f745a550cebe01573b3a8182dc6288",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "34757808_6b1e13f8",
         "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/PeCryptoUtilsTest.java",
         "patchSetId": 1
@@ -81,6 +117,24 @@
       "writtenOn": "2019-03-22T23:16:40Z",
       "side": 1,
       "message": "could use powermock Whitebox.setInternalState()",
+      "revId": "4fa2b7ec72f745a550cebe01573b3a8182dc6288",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a51a8da_901c3e52",
+        "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/PeCryptoUtilsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-03-24T16:04:40Z",
+      "side": 1,
+      "message": "I\u0027ll change it to use whitebox.",
+      "parentUuid": "34757808_6b1e13f8",
       "revId": "4fa2b7ec72f745a550cebe01573b3a8182dc6288",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
