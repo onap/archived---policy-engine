@@ -1,29 +1,15 @@
-FROM alpine:3.9
+FROM onap/policy-common-alpine
 
-ARG HTTP_PROXY=${HTTP_PROXY}
-ARG HTTPS_PROXY=${HTTPS_PROXY}
-ARG BUILD_VERSION=${BUILD_VERSION}
+LABEL maintainer="Policy Team"
+
 ARG POLICY_LOGS=/var/log/onap
 
-ENV http_proxy $HTTP_PROXY
-ENV https_proxy $HTTPS_PROXY
-ENV BUILD_VERSION ${BUILD_VERSION}
 ENV POLICY_LOGS ${POLICY_LOGS}
-ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
+    
+RUN apk add --no-cache mariadb-client
 
-RUN apk --update add --no-cache busybox-extras \
-                                bash coreutils grep findutils \
-                                nss procps zip unzip curl \
-                                wget openssh maven jq \
-                                httpie py-pip openjdk8
-
-RUN adduser -S policy -s /bin/bash
-
-# install MariaDB client
-RUN apk --update add --no-cache mariadb-client
-
-RUN mkdir -p /opt/app/policy /tmp/policy-install ${POLICY_LOGS} && \
-    chown policy /opt/app/policy /tmp/policy-install ${POLICY_LOGS}
+RUN mkdir -p /tmp/policy-install ${POLICY_LOGS} && \
+    chown policy:policy /tmp/policy-install ${POLICY_LOGS}
 
 WORKDIR /tmp/policy-install
 
