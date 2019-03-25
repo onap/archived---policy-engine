@@ -333,7 +333,7 @@ public class CreateNewMicroServiceModel {
         Map<String, String> successMap = new HashMap<>();
         CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
         List<Object> result = dbConnection.getDataById(MicroServiceModels.class, "modelName:version", modelName+":"+version);
-        if(result.isEmpty()){
+        if(result == null || result.isEmpty()){
             MicroServiceModels model = new MicroServiceModels();
             model.setModelName(modelName);
             model.setVersion(version);

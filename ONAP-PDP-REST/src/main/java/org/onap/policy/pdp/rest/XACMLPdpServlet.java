@@ -276,6 +276,13 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to create IntegrityMonitor" + e);
             throw new ServletException(e);
         }
+        
+        try {
+            System.setProperty("msToscaModel.home", properties.getProperty("msToscaModel.home"));
+        } catch (Exception e) {
+           logger.error("ERROR: Unable to set msToscaModel.home- Please check the configuration");
+        }
+
         startThreads(baseLoggingContext, new Thread(this));
     }
 
