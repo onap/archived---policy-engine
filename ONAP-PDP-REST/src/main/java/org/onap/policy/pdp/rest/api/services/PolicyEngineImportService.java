@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 package org.onap.policy.pdp.rest.api.services;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -77,6 +78,25 @@ public class PolicyEngineImportService {
             importResponse = XACMLErrorConstants.ERROR_DATA_ISSUE + e;
             status = HttpStatus.BAD_REQUEST;
         }
+        
+        // Save the imported file
+        if (!file.isEmpty() && status.equals(HttpStatus.OK) ) {
+            String filePath = null;
+            try {
+                 String uploadsDir = System.getProperty("msToscaModel.home");
+                 if(uploadsDir != null) {
+                     if(! new File(uploadsDir).exists()){
+                         new File(uploadsDir).mkdir();
+                     }
+                     String orgName = file.getOriginalFilename();
+                     filePath = uploadsDir + orgName;
+                     File dest = new File(filePath);
+                     file.transferTo(dest);
+                 }
+             }catch(Exception e){
+                 LOGGER.error("Operation: policyEngineImport : " + e.getMessage() + ". " + filePath + " is not a valid file path.");
+             } 
+         }      
     }
 
     private void specialCheck() {
