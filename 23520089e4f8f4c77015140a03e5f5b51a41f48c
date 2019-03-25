@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d460bbbb_d6069f15",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1677
+      },
+      "writtenOn": "2019-03-25T15:24:00Z",
+      "side": 1,
+      "message": "Just double checking but is \"..xml\" intended or should it be \".xml\"?",
+      "revId": "23520089e4f8f4c77015140a03e5f5b51a41f48c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88474e19_7f71edd3",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1368,
+      "author": {
+        "id": 1677
+      },
+      "writtenOn": "2019-03-25T15:24:00Z",
+      "side": 1,
+      "message": "Is there a possibility for an sql injection with some of the fields being concatenated? Same comment throughout the file where these kind of strings are being constructed.",
+      "revId": "23520089e4f8f4c77015140a03e5f5b51a41f48c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "decd4a95_689376a0",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1644,
+      "author": {
+        "id": 1677
+      },
+      "writtenOn": "2019-03-25T15:24:00Z",
+      "side": 1,
+      "message": "doesn\u0027t the if above this one already validate that name is not empty?",
+      "revId": "23520089e4f8f4c77015140a03e5f5b51a41f48c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5371c4d_78cf64d3",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/AutoPushController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1677
+      },
+      "writtenOn": "2019-03-25T15:24:00Z",
+      "side": 1,
+      "message": "General comment: Some of the files license dates were not updated.",
+      "revId": "23520089e4f8f4c77015140a03e5f5b51a41f48c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
