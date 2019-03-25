@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e0750f84_606c01d6",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/PolicyAuditlog.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-03-25T13:27:10Z",
+      "side": 1,
+      "message": "PLease change to just 2019.",
+      "revId": "5d2558ce13095c5d689dbb5066bc25e6fdfa0530",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
