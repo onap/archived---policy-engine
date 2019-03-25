@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5aea5346_7bbb7ca3",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-25T15:36:40Z",
+      "side": 1,
+      "message": "Should this also go into the packages?",
+      "revId": "3a10a26c3e9ac5615df4c7f88c077eb83d597ec0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47b7db63_7937f17d",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-25T15:36:40Z",
+      "side": 1,
+      "message": "Does this property need to be sit in a configuration file?\nWhat happens if it\u0027s not?\n\nSame question for all properties referenced here.\n\nDoes something need to be done for this contribution to work out of the box?",
+      "revId": "3a10a26c3e9ac5615df4c7f88c077eb83d597ec0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
