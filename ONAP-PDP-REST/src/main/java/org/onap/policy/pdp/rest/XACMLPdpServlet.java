@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -276,6 +276,13 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to create IntegrityMonitor" + e);
             throw new ServletException(e);
         }
+        
+        try {
+            System.setProperty("msToscaModel.home", properties.getProperty("msToscaModel.home"));
+        } catch (Exception e) {
+           logger.error("ERROR: Unable to set msToscaModel.home- Please check the configuration");
+        }
+
         startThreads(baseLoggingContext, new Thread(this));
     }
 

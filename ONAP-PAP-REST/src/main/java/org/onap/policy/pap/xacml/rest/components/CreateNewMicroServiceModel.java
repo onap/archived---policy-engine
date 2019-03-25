@@ -3,7 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
- * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
+ * Modified Copyright (C) 2019 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -333,7 +333,7 @@ public class CreateNewMicroServiceModel {
         Map<String, String> successMap = new HashMap<>();
         CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
         List<Object> result = dbConnection.getDataById(MicroServiceModels.class, "modelName:version", modelName+":"+version);
-        if(result.isEmpty()){
+        if(result == null || result.isEmpty()){
             MicroServiceModels model = new MicroServiceModels();
             model.setModelName(modelName);
             model.setVersion(version);
