@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79782cca_25d263a4",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PeCryptoUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-26T20:22:49Z",
+      "side": 1,
+      "message": "adding \"synchronized\" here just prevents two threads from invoking initAesKey() at the same time; it does not prevent one thread from changing the key while another decrypts().  Seems like the whole problem would be solved by changing the \"static\" methods to regular methods, and passing the AES key to the constructor.",
+      "revId": "6c756d873227b1c0f46a29dacbfd77e14c669004",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
