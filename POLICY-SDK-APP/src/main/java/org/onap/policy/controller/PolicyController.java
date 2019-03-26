@@ -59,6 +59,7 @@ import org.onap.policy.rest.jpa.FunctionDefinition;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
@@ -209,12 +210,12 @@ public class PolicyController extends RestrictedBaseController {
             setLogdbDriver(prop.getProperty("xacml.log.db.driver"));
             setLogdbUrl(prop.getProperty("xacml.log.db.url"));
             setLogdbUserName(prop.getProperty("xacml.log.db.user"));
-            setLogdbPassword(prop.getProperty("xacml.log.db.password"));
+            setLogdbPassword(PeCryptoUtils.decrypt(prop.getProperty("xacml.log.db.password")));
             setLogdbDialect(prop.getProperty("onap.dialect"));
             // Xacml Database Properties
             setXacmldbUrl(prop.getProperty("javax.persistence.jdbc.url"));
             setXacmldbUserName(prop.getProperty("javax.persistence.jdbc.user"));
-            setXacmldbPassword(prop.getProperty("javax.persistence.jdbc.password"));
+            setXacmldbPassword(PeCryptoUtils.decrypt(prop.getProperty("javax.persistence.jdbc.password")));
             // AutoPuh
             setAutoPushAvailable(prop.getProperty("xacml.automatic.push"));
             setAutoPushDSClosedLoop(prop.getProperty("xacml.autopush.closedloop"));

@@ -75,7 +75,7 @@ import org.onap.policy.pap.xacml.restAuth.CheckPDP;
 import org.onap.policy.rest.XACMLRest;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.dao.PolicyDBException;
-import org.onap.policy.utils.CryptoUtils;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.ONAPPapEngineFactory;
@@ -89,7 +89,7 @@ import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
 
 /**
- * Servlet implementation class XacmlPapServlet
+ * Servlet implementation class XacmlPapServlet.
  */
 @WebServlet(description = "Implements the XACML PAP RESTful API.", urlPatterns = {"/"},
         loadOnStartup = 1,
@@ -264,14 +264,13 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             }
             // Create an IntegrityMonitor
             if (properties.getProperty(PERSISTENCE_JDBC_PWD) != null) {
-                properties.setProperty(PERSISTENCE_JDBC_PWD, CryptoUtils
-                        .decryptTxtNoExStr(properties.getProperty(PERSISTENCE_JDBC_PWD, "")));
+                properties.setProperty(PERSISTENCE_JDBC_PWD,
+                        PeCryptoUtils.decrypt(properties.getProperty(PERSISTENCE_JDBC_PWD, "")));
             }
             im = IntegrityMonitor.getInstance(papResourceName, properties);
             // Create an IntegrityAudit
             ia = new IntegrityAudit(papResourceName, AUDIT_PAP_PERSISTENCE_UNIT, properties);
             ia.startAuditThread();
-
             // we are about to call the PDPs and give them their configuration.
             // To do that we need to have the URL of this PAP so we can
             // construct the Policy file URLs
@@ -298,7 +297,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 
                 LOGGER.info("PapServlet: calling auditLocalFileSystem for PDP group audit");
                 LOGGER.info("PapServlet: old group is " + papEngine.getDefaultGroup().toString());
-                // get the current filesystem group and update from the database if needed
+                // get the current filesystem group and update from the database
+                // if needed
                 StdPDPGroup group = (StdPDPGroup) papEngine.getDefaultGroup();
                 StdPDPGroup updatedGroup = policyDbDao.auditLocalFileSystem(group);
                 if (updatedGroup != null) {
@@ -456,8 +456,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             throw new PAPException("papDbUser is null");
         }
         setPapDbUser(papDbUser);
-        papDbPd = CryptoUtils.decryptTxtNoExStr(
-                XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD, ""));
+        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY));
+        papDbPd = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD));
         if (papDbPd == null) {
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "XACMLPapServlet",
                     " ERROR: Bad papDbPassword property entry");
