@@ -16,6 +16,24 @@
       "revId": "ac83e16021a6c9726f9d148a4ed9b66884fed586",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a841363_01920fa2",
+        "filename": "ONAP-PDP-REST/xacml.pdp.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-03-26T01:47:23Z",
+      "side": 1,
+      "message": "The one in packages proj gets deployed. This is for only developer local env.",
+      "parentUuid": "83a5717d_9682b25f",
+      "revId": "ac83e16021a6c9726f9d148a4ed9b66884fed586",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
