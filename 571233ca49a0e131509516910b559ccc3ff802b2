@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0af469c7_93d933cc",
+        "filename": "docs/platform/offeredapis.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 674,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-26T12:12:44Z",
+      "side": 1,
+      "message": "Since we cannot guarantee this wiki page will always exist, please remove reference to it. readthedocs should have ALL the information required.",
+      "range": {
+        "startLine": 666,
+        "startChar": 0,
+        "endLine": 674,
+        "endChar": 0
+      },
+      "revId": "571233ca49a0e131509516910b559ccc3ff802b2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
