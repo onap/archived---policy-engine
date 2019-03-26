@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83a5717d_9682b25f",
+        "filename": "ONAP-PDP-REST/xacml.pdp.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-26T01:19:53Z",
+      "side": 1,
+      "message": "is this path correct?  Seems like it\u0027s typically /home/policy instead of /home/users/PolicyEngine.  Or, in fact, when installed, it\u0027s /opt/app/policy.",
+      "revId": "ac83e16021a6c9726f9d148a4ed9b66884fed586",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
