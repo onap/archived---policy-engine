@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44fa4fbe_b76fcb86",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyRolesController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-26T15:22:31Z",
+      "side": 1,
+      "message": "use comma as this wasn\u0027t modified in 2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 21,
+        "endLine": 5,
+        "endChar": 22
+      },
+      "revId": "0e61193a9187cb9a58a00b591d7de3c4677ad0b4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06cf89e9_f1b923aa",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/utils/UserUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-26T15:22:31Z",
+      "side": 1,
+      "message": "2018-2019 - it didn\u0027t exist in 2017",
+      "range": {
+        "startLine": 5,
+        "startChar": 20,
+        "endLine": 5,
+        "endChar": 22
+      },
+      "revId": "0e61193a9187cb9a58a00b591d7de3c4677ad0b4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02d3715d_a65d41c7",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/Windows/Edit_Roles_Window.html",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-26T15:22:31Z",
+      "side": 1,
+      "message": "comma",
+      "range": {
+        "startLine": 5,
+        "startChar": 21,
+        "endLine": 5,
+        "endChar": 22
+      },
+      "revId": "0e61193a9187cb9a58a00b591d7de3c4677ad0b4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
