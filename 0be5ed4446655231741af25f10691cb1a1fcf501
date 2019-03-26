@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "40522e79_8bf0a5d5",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1677
+      },
+      "writtenOn": "2019-03-26T14:48:52Z",
+      "side": 1,
+      "message": "License should be 2017-2019. Same comment for each file.",
+      "revId": "0be5ed4446655231741af25f10691cb1a1fcf501",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
