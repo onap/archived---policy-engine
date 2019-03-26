@@ -34,6 +34,24 @@
       "revId": "ac83e16021a6c9726f9d148a4ed9b66884fed586",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb08f5fd_b9bb506e",
+        "filename": "ONAP-PDP-REST/xacml.pdp.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-26T03:47:06Z",
+      "side": 1,
+      "message": "better to make it consistent with how it is done in the packages directory that uses the same value as the xacml.pdp.rest.webapps property in this same file: (/home/users/PolicyEngine/webapps/ConfigPAP/.",
+      "parentUuid": "7a841363_01920fa2",
+      "revId": "ac83e16021a6c9726f9d148a4ed9b66884fed586",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
