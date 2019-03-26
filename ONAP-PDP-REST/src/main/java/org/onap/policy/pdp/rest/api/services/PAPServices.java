@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,8 +17,11 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pdp.rest.api.services;
 
+import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,19 +36,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.api.PolicyException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.config.PDPApiAuth;
 import org.onap.policy.rest.XACMLRestProperties;
-import org.onap.policy.utils.CryptoUtils;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
-
-import com.att.research.xacml.util.XACMLProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class PAPServices {
     private static final String SUCCESS = "success";
@@ -79,10 +78,9 @@ public class PAPServices {
 
     private String getPAPEncoding() {
         if (encoding == null) {
-            final String userID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-            final String pass =
-                    CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
-            final Base64.Encoder encoder = Base64.getEncoder();
+            String userID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
+            String pass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
+            Base64.Encoder encoder = Base64.getEncoder();
             encoding = encoder.encodeToString((userID + ":" + pass).getBytes(StandardCharsets.UTF_8));
         }
         return encoding;
@@ -131,7 +129,7 @@ public class PAPServices {
                 String fullURL = getPAP();
                 fullURL = checkParameter(parameters, fullURL);
                 final URL url = new URL(fullURL);
-                LOGGER.debug("--- Sending Request to PAP : " + url.toString() + " ---");
+                LOGGER.info("--- Sending Request to PAP : " + url.toString() + " ---" + " RequestId:" + requestID);
                 // Open the connection
                 connection = (HttpURLConnection) url.openConnection();
                 // Setting Content-Type
@@ -149,9 +147,9 @@ public class PAPServices {
                 // Adding RequestID
                 if (requestID == null) {
                     requestID = UUID.randomUUID();
-                    LOGGER.info("No request ID provided, sending generated ID: " + requestID.toString());
+                    LOGGER.debug("No request ID provided, sending generated ID: " + requestID.toString());
                 } else {
-                    LOGGER.info("Using provided request ID: " + requestID.toString());
+                    LOGGER.debug("Using provided request ID: " + requestID.toString());
                 }
                 connection.setRequestProperty("X-ECOMP-RequestID", requestID.toString());
                 if (content != null && (content instanceof InputStream)) {
@@ -168,6 +166,9 @@ public class PAPServices {
                     if (!isJunit) {
                         mapper.writeValue(connection.getOutputStream(), content);
                     }
+                } else {
+                    LOGGER.info(XACMLErrorConstants.ERROR_DATA_ISSUE + "content is null for calling: " + url.getHost()
+                            + requestID.toString());
                 }
                 // DO the connect
                 connection.connect();
@@ -215,10 +216,12 @@ public class PAPServices {
                 }
             } else {
                 response = XACMLErrorConstants.ERROR_SYSTEM_ERROR + "connection is null";
+                LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "connection is null - RequestId: " + requestID);
             }
             return response;
         } else {
             response = XACMLErrorConstants.ERROR_DATA_ISSUE + "Unable to get valid response from PAP(s) " + paps;
+            LOGGER.error("For RequestId: " + requestID + ", " + response);
             return response;
         }
     }
@@ -228,7 +231,7 @@ public class PAPServices {
         String version = null;
         HttpURLConnection connection = null;
         final String[] parameters = {"apiflag=version", "policyScope=" + policyScope, "filePrefix=" + filePrefix,
-            "policyName=" + policyName};
+                "policyName=" + policyName};
         if (paps == null || paps.isEmpty()) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "PAPs List is Empty.");
         } else {
@@ -311,7 +314,8 @@ public class PAPServices {
                         version = "pe300";
                     } else {
                         LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE
-                                + "BAD REQUEST:  Error occured while getting the version from the PAP. The request may be incorrect. The response code of the URL is '"
+                                + "BAD REQUEST:  Error occured while getting the version from the PAP. "
+                                + "The request may be incorrect. The response code of the URL is '"
                                 + connection.getResponseCode() + "'");
                     }
                 } catch (final IOException e) {
@@ -436,14 +440,16 @@ public class PAPServices {
                         + "Please create a new Dictionary Item or use the update API to modify the existing one.";
             } else if ("duplicateGroup".equals(connection.getHeaderField("error"))) {
                 response = XACMLErrorConstants.ERROR_DATA_ISSUE
-                        + "Group Policy Scope List Exist Error:  The Group Policy Scope List for this Dictionary Item already exist in the database. "
+                        + "Group Policy Scope List Exist Error:  "
+                        + "The Group Policy Scope List for this Dictionary Item already exist in the database. "
                         + "Duplicate Group Policy Scope Lists for multiple groupNames is not allowed. "
-                        + "Please review the request and verify that the groupPolicyScopeListData1 is unique compared to existing groups.";
+                        + "Please review the request and "
+                        + "verify that the groupPolicyScopeListData1 is unique compared to existing groups.";
             } else if ("PolicyInPDP".equals(connection.getHeaderField("error"))) {
                 response = XACMLErrorConstants.ERROR_DATA_ISSUE
                         + "Policy Exist Error:  The Policy trying to be deleted is active in PDP. "
                         + "Active PDP Polcies are not allowed to be deleted from PAP. "
-                        + "Please First remove the policy from PDP in order to successfully delete the Policy from PAP.";
+                        + "Please First remove the policy from PDP in order to successfully delete the Policy from PAP";
             }
             LOGGER.error(response);
         } else if (connection.getResponseCode() == 500 && connection.getHeaderField("error") != null) {
@@ -457,7 +463,8 @@ public class PAPServices {
                 response = connection.getHeaderField("message");
             } else if ("unknown".equals(connection.getHeaderField("error"))) {
                 response = XACMLErrorConstants.ERROR_UNKNOWN
-                        + "Failed to delete the policy for an unknown reason.  Check the file system and other logs for further information.";
+                        + "Failed to delete the policy for an unknown reason.  "
+                        + "Check the file system and other logs for further information.";
             } else if ("deleteConfig".equals(connection.getHeaderField("error"))) {
                 response = XACMLErrorConstants.ERROR_DATA_ISSUE
                         + "Cannot delete the configuration or action body file in specified location.";
