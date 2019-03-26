@@ -34,6 +34,24 @@
       "revId": "6c756d873227b1c0f46a29dacbfd77e14c669004",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dd05b7d4_130b9290",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PeCryptoUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-26T22:03:00Z",
+      "side": 1,
+      "message": "That\u0027s what I thought, but then I saw a number of places where the code does init \u0026 decrypt, so left me skeptical.  (In addition, I tend to dislike static methods, as a general rule, because they\u0027re generally not object-oriented.)",
+      "parentUuid": "1794fd0b_f1df03d6",
+      "revId": "6c756d873227b1c0f46a29dacbfd77e14c669004",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
