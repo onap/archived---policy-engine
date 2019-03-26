@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c96abdd_cf17b8b8",
+        "filename": "docs/platform/feature_mdcfilters.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-26T12:11:23Z",
+      "side": 1,
+      "message": "Remove this - we do not keep documentation in duplicate places. The wiki is for collaboration only, once done the readthedocs is the source of truth.",
+      "range": {
+        "startLine": 122,
+        "startChar": 0,
+        "endLine": 122,
+        "endChar": 78
+      },
+      "revId": "5110ced7dc6d333ee0fcb7027377b03f31624441",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
