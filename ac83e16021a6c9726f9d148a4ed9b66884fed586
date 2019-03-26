@@ -52,6 +52,24 @@
       "revId": "ac83e16021a6c9726f9d148a4ed9b66884fed586",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8c3600c_fde8bc42",
+        "filename": "ONAP-PDP-REST/xacml.pdp.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-03-26T14:25:40Z",
+      "side": 1,
+      "message": "Done, thank you",
+      "parentUuid": "eb08f5fd_b9bb506e",
+      "revId": "ac83e16021a6c9726f9d148a4ed9b66884fed586",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
