@@ -663,16 +663,5 @@ Examples
         }
 
 
-Additional Information
-^^^^^^^^^^^^^^^^^^^^^^
-
-Additional information, including examples, can be found at `PolicyApi link`_.
-
-.. _PolicyApi link: https://wiki.onap.org/display/DW/Policy+API
-
-
-
-
-
 End of Document
 
