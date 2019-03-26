@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fefb1e55_74f6dcba",
+        "filename": "ONAP-PDP-REST/config/xacml.pip.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-26T18:08:35Z",
+      "side": 1,
+      "message": "restore license, unless this file is generated\n\nsame comment for other files",
+      "revId": "53892d112bfd4a1566fce0ce585ead35ad0d43b0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
