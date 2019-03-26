@@ -16,6 +16,24 @@
       "revId": "6c756d873227b1c0f46a29dacbfd77e14c669004",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1794fd0b_f1df03d6",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PeCryptoUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-03-26T21:59:21Z",
+      "side": 1,
+      "message": "Maybe im missing something but the key is only used to init CryptoUtils once. A change to key later will not reinit CryptoUtils. Assumption is one key per app. If different keys are needed later, we can instantiate CryptoUtils directly.\nIf the apps were modified to decrypt all the reqd passwords once at init and make it accessible throughout the app, there would be no need for this class and caching.",
+      "parentUuid": "79782cca_25d263a4",
+      "revId": "6c756d873227b1c0f46a29dacbfd77e14c669004",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
