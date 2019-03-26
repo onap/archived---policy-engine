@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,8 +17,17 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.elk.client;
 
+import com.google.gson.Gson;
+import io.searchbox.client.JestClientFactory;
+import io.searchbox.client.config.HttpClientConfig;
+import io.searchbox.client.http.JestHttpClient;
+import io.searchbox.core.Bulk;
+import io.searchbox.core.Bulk.Builder;
+import io.searchbox.core.BulkResult;
+import io.searchbox.core.Index;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -34,21 +43,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.utils.CryptoUtils;
-import org.onap.policy.xacml.util.XACMLPolicyScanner;
-
-import com.google.gson.Gson;
-
-import io.searchbox.client.JestClientFactory;
-import io.searchbox.client.config.HttpClientConfig;
-import io.searchbox.client.http.JestHttpClient;
-import io.searchbox.core.Bulk;
-import io.searchbox.core.Bulk.Builder;
-import io.searchbox.core.BulkResult;
-import io.searchbox.core.Index;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
@@ -56,24 +50,28 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.utils.PeCryptoUtils;
+import org.onap.policy.xacml.util.XACMLPolicyScanner;
 
 
 
 /**
- * This code will deals with parsing the XACML content on reading from 
+ * This code will deals with parsing the XACML content on reading from
  * database(PolicyEntity, ConfigurationDataEntity and ActionBodyEntity tables)
  * and convert the data into json to do bulk operation on putting to elastic search database.
  * Which is used to support Elastic Search in Policy Application GUI to search policies.
- * 
- * 
- * 
+ *
+ *
+ *
  * properties should be configured in policyelk.properties
  *
  */
 public class ElasticSearchPolicyUpdate {
 
     private static final Logger LOGGER = FlexLogger.getLogger(ElasticSearchPolicyUpdate.class);
-    protected final static JestClientFactory jestFactory = new JestClientFactory();
+    protected static final JestClientFactory jestFactory = new JestClientFactory();
 
     public static void main(String[] args) {
 
@@ -86,23 +84,24 @@ public class ElasticSearchPolicyUpdate {
         String propertyFile = System.getProperty("PROPERTY_FILE");
         Properties config = new Properties();
         Path file = Paths.get(propertyFile);
-        if(!file.toFile().exists()){
+        if (!file.toFile().exists()) {
             LOGGER.error("Config File doesn't Exist in the specified Path " + file.toString());
-        }else{
-            if(file.toString().endsWith(".properties")){
+        } else {
+            if (file.toString().endsWith(".properties")) {
                 try {
                     InputStream in = new FileInputStream(file.toFile());
                     config.load(in);
                     elkURL = config.getProperty("policy.elk.url");
                     databseUrl = config.getProperty("policy.database.url");
                     userName = config.getProperty("policy.database.username");
-                    txt = CryptoUtils.decryptTxtNoExStr(config.getProperty("policy.database.password"));
+                    txt = PeCryptoUtils.decrypt(config.getProperty("policy.database.password"));
                     databaseDriver = config.getProperty("policy.database.driver");
-                    if(elkURL == null || databseUrl == null || userName == null || txt == null || databaseDriver == null){
+                    if (elkURL == null || databseUrl == null || userName == null || txt == null
+                            || databaseDriver == null) {
                         LOGGER.error("please check the elk configuration");
                     }
                 } catch (Exception e) {
-                    LOGGER.error("Config File doesn't Exist in the specified Path " + file.toString(),e);
+                    LOGGER.error("Config File doesn't Exist in the specified Path " + file.toString(), e);
                 }
             }
         }

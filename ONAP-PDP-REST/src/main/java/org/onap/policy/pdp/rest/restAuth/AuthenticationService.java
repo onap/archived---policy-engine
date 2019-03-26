@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017,2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,25 +20,23 @@
 
 package org.onap.policy.pdp.rest.restAuth;
 
+import com.att.research.xacml.util.XACMLProperties;
 import java.util.Base64;
 import java.util.StringTokenizer;
-
-import org.onap.policy.rest.XACMLRestProperties;
-
-import com.att.research.xacml.util.XACMLProperties;
-
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.utils.PeCryptoUtils;
 
 public class AuthenticationService {
 	private String pdpID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_USERID);
-	private String pdpPass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_PASS);
-	
+	private String pdpPass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_PASS));
+
 	public boolean authenticate(String authCredentials) {
 
 		if (null == authCredentials)
 			return false;
-		// header value format will be "Basic encodedstring" for Basic authentication. 
+		// header value format will be "Basic encodedstring" for Basic authentication.
 		final String encodedUserPassword = authCredentials.replaceFirst("Basic"	+ " ", "");
 		String usernameAndPassword = null;
 		try {
@@ -58,5 +56,5 @@ public class AuthenticationService {
 			return false;
 		}
 	}
-	
+
 }
