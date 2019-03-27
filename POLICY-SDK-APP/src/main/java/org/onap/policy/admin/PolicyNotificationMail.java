@@ -24,6 +24,7 @@ package org.onap.policy.admin;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -82,9 +83,8 @@ public class PolicyNotificationMail{
      * @param policyName Name of the policy for which notification is to be sent
      * @param mode kind of operation done on the policy
      * @param policyNotificationDao database access object for policy
-     * @throws MessagingException
      */
-    public void sendMail(PolicyVersion entityItem, String policyName, String mode, CommonClassDao policyNotificationDao) throws MessagingException {
+    public void sendMail(PolicyVersion entityItem, String policyName, String mode, CommonClassDao policyNotificationDao) {
 
         String subject = "";
         String message = "";
@@ -130,26 +130,25 @@ public class PolicyNotificationMail{
         String policyFileName = findPolicyFileName(entityItem);
         String query = "from WatchPolicyNotificationTable where policyName like:policyFileName";
         List<Object> watchList = findWatchList(policyNotificationDao, policyFileName, query);
-        if (watchList == null) {
-            return;
+        if (!watchList.isEmpty()) {
+            composeAndSendMail(mode, policyNotificationDao, subject, message, checkPolicyName, watchList);
         }
-
-        composeAndSendMail(mode, policyNotificationDao, subject, message, checkPolicyName, watchList);
     }
 
     private List<Object> findWatchList(CommonClassDao policyNotificationDao, String policyFileName, String query) {
         SimpleBindings params = new SimpleBindings();
         params.put("policyFileName", policyFileName);
         List<Object> watchList;
-        if(PolicyController.isjUnit()){
+        if (PolicyController.isjUnit()) {
             watchList = policyNotificationDao.getDataByQuery(query, null);
-        }else{
+        } else {
             watchList = policyNotificationDao.getDataByQuery(query, params);
         }
 
-        if(watchList == null || watchList.isEmpty()) {
-            policyLogger.debug("List of policy being watched is either null or empty, hence return without sending mail");
-            return null;
+        if (watchList == null || watchList.isEmpty()) {
+            policyLogger
+                .debug("List of policy being watched is either null or empty, hence return without sending mail");
+            watchList = new ArrayList<>();
         }
         return watchList;
     }
