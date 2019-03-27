@@ -218,8 +218,7 @@ class HtmlProcessor extends SimpleCallback {
             throw new IllegalArgumentException(msg);
         }
 
-        if (policyObject == null
-                || (!(policyObject instanceof PolicySetType) && !(policyObject instanceof PolicyType))) {
+        if ((!(policyObject instanceof PolicySetType) && !(policyObject instanceof PolicyType))) {
             String msg = "Invalid unmarshalled object: " + policyObject;
             LOGGER.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID + msg);
             throw new IllegalArgumentException(msg);

@@ -586,12 +586,7 @@ public class PolicyController extends RestrictedBaseController {
      */
     public void watchPolicyFunction(PolicyVersion entity, String policyName, String mode) {
         PolicyNotificationMail email = new PolicyNotificationMail();
-        try {
-            email.sendMail(entity, policyName, mode, commonClassDao);
-        } catch (MessagingException e) {
-            policyLogger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR
-                    + "Excepton Occured while Renaming/Deleting a Policy or Scope" + e);
-        }
+        email.sendMail(entity, policyName, mode, commonClassDao);
     }
 
     /**
