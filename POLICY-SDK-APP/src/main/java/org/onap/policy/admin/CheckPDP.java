@@ -8,9 +8,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,24 +46,23 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import com.att.research.xacml.util.XACMLProperties;
 
 /**
- * What is not good about this class is that once a value has been set for pdpProperties path
- * you cannot change it. That may be ok for a highly controlled production environment in which
- * nothing changes, but not a very good implementation.
- * 
- * The reset() method has been added to assist with the above problem in order to 
- * acquire >80% JUnit code coverage.
- * 
- * This static class doesn't really check a PDP, it simply loads a properties file and tried
- * to ensure that a valid URL exists for a PDP along with user/password.
+ * What is not good about this class is that once a value has been set for pdpProperties path you cannot change it. That
+ * may be ok for a highly controlled production environment in which nothing changes, but not a very good
+ * implementation.
  *
+ * The reset() method has been added to assist with the above problem in order to acquire >80% JUnit code coverage.
+ *
+ * This static class doesn't really check a PDP, it simply loads a properties file and tried to ensure that a valid URL
+ * exists for a PDP along with user/password.
  */
 public class CheckPDP {
+
     private static Path pdpPath = null;
     private static Long oldModified = null;
     private static HashMap<String, String> pdpMap = null;
     private static final Logger LOGGER = FlexLogger.getLogger(CheckPDP.class);
 
-    private CheckPDP(){
+    private CheckPDP() {
         //default constructor
     }
 
@@ -92,28 +91,27 @@ public class CheckPDP {
         return pdpMap.containsKey(id);
     }
 
-    private static void readFile(){
-        String pdpFile = null;
-        try{
+    private static void readFile() {
+        String pdpFile;
+        try {
             pdpFile = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_IDFILE);
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot read the PDP ID File" + e);
             return;
         }
         if (pdpFile == null) {
             LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PDP File name not Valid : " + pdpFile);
-        }
-        if (pdpPath == null) {
+        } else if (pdpPath == null) {
             pdpPath = Paths.get(pdpFile);
             if (!pdpPath.toString().endsWith(".properties") || !pdpPath.toFile().exists()) {
-                LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "File doesn't exist in the specified Path : "	+ pdpPath.toString());
+                LOGGER.error(
+                    XACMLErrorConstants.ERROR_SYSTEM_ERROR + "File doesn't exist in the specified Path : " + pdpPath
+                        .toString());
                 CheckPDP.reset();
                 return;
             }
             readProps();
-        }
-        // Check if File is updated recently
-        else {
+        } else { // Check if File is updated recently
             Long newModified = pdpPath.toFile().lastModified();
             if (!newModified.equals(oldModified)) {
                 // File has been updated.
@@ -122,11 +120,11 @@ public class CheckPDP {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private static void readProps() {
         Properties pdpProp;
         pdpProp = new Properties();
-        try(InputStream in = new FileInputStream(pdpPath.toFile())) {
+        try (InputStream in = new FileInputStream(pdpPath.toFile())) {
             oldModified = pdpPath.toFile().lastModified();
             pdpProp.load(in);
             // Read the Properties and Load the PDPs and encoding.
@@ -147,7 +145,7 @@ public class CheckPDP {
         }
     }
 
-    private static void loadPDPProperties(String propKey, Properties pdpProp){
+    private static void loadPDPProperties(String propKey, Properties pdpProp) {
         if (propKey.startsWith("PDP_URL")) {
             String checkVal = pdpProp.getProperty(propKey);
             if (checkVal == null) {
@@ -165,39 +163,40 @@ public class CheckPDP {
         }
     }
 
-    private static void readPDPParam(String pdpVal){
-        if(pdpVal.contains(",")){
+    private static void readPDPParam(String pdpVal) {
+        if (pdpVal.contains(",")) {
             List<String> pdpValues = new ArrayList<>(Arrays.asList(pdpVal.split("\\s*,\\s*")));
-            if(pdpValues.size()==3){
+            if (pdpValues.size() == 3) {
                 // 1:2 will be UserID:Password
                 String userID = pdpValues.get(1);
                 String pass = pdpValues.get(2);
                 Base64.Encoder encoder = Base64.getEncoder();
                 // 0 - PDPURL
-                pdpMap.put(pdpValues.get(0), encoder.encodeToString((userID+":"+pass).getBytes(StandardCharsets.UTF_8)));
-            }else{
+                pdpMap.put(pdpValues.get(0),
+                    encoder.encodeToString((userID + ":" + pass).getBytes(StandardCharsets.UTF_8)));
+            } else {
                 LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS + "No Credentials to send Request: " + pdpValues);
             }
-        }else{
+        } else {
             LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS + "No Credentials to send Request: " + pdpVal);
         }
     }
 
-    public static String getEncoding(String pdpID){
+    public static String getEncoding(String pdpID) {
         try {
             readFile();
         } catch (Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
         }
         String encoding = null;
-        if(pdpMap!=null && (!pdpMap.isEmpty())){
-            try{
+        if (pdpMap != null && (!pdpMap.isEmpty())) {
+            try {
                 encoding = pdpMap.get(pdpID);
-            } catch(Exception e){
+            } catch (Exception e) {
                 LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
             }
             return encoding;
-        }else{
+        } else {
             return null;
         }
     }
