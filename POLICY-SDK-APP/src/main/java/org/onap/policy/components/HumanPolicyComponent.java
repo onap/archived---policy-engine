@@ -3,6 +3,7 @@
  * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Bell Canada
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,8 +65,6 @@ import org.onap.policy.controller.PolicyController;
 import org.onap.policy.rest.jpa.FunctionDefinition;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
-
-
 
 public class HumanPolicyComponent {
 
@@ -218,8 +217,7 @@ class HtmlProcessor extends SimpleCallback {
             throw new IllegalArgumentException(msg);
         }
 
-        if (policyObject == null
-                || (!(policyObject instanceof PolicySetType) && !(policyObject instanceof PolicyType))) {
+        if ((!(policyObject instanceof PolicySetType) && !(policyObject instanceof PolicyType))) {
             String msg = "Invalid unmarshalled object: " + policyObject;
             LOGGER.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID + msg);
             throw new IllegalArgumentException(msg);
