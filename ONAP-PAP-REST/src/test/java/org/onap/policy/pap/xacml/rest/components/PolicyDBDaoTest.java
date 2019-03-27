@@ -31,6 +31,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import javax.persistence.PersistenceException;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
@@ -60,8 +62,6 @@ import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdEngine;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 public class PolicyDBDaoTest {
     private static Logger logger = FlexLogger.getLogger(PolicyDBDaoTest.class);
@@ -119,7 +119,8 @@ public class PolicyDBDaoTest {
         SessionFactory sessionFac = sessionBuilder.buildSessionFactory();
 
         new PolicyDBDao(sessionFac);
-        new PolicyDbDaoTransactionInstance(sessionFac).isJunit = true;
+        PolicyDbDaoTransactionInstance.setJunit(true);
+        new PolicyDbDaoTransactionInstance(sessionFac);
         CommonClassDaoImpl.setSessionfactory(sessionFac);
         new DataToNotifyPdp(new CommonClassDaoImpl());
         PolicyCreation.setCommonClassDao(new CommonClassDaoImpl());

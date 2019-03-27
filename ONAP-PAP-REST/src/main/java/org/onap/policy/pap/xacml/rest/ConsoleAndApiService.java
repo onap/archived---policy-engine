@@ -98,7 +98,7 @@ public class ConsoleAndApiService {
                 } catch (UnsupportedEncodingException e) {
                     LOGGER.error(e);
                 }
-                PolicyDBDaoTransaction newGroupTransaction = XACMLPapServlet.policyDBDao.getNewTransaction();
+                PolicyDBDaoTransaction newGroupTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
                 try {
                     newGroupTransaction.createGroup(PolicyDBDao.createNewPDPGroupId(unescapedName), unescapedName,
                             unescapedDescription, PAPSERVLETDOACPOST);
@@ -169,7 +169,7 @@ public class ConsoleAndApiService {
                 StdPDPPolicy policyForSafetyCheck = new StdPDPPolicy();
                 for (String policyId : policyIdList) {
                     PolicyDBDaoTransaction addPolicyToGroupTransaction =
-                            XACMLPapServlet.policyDBDao.getNewTransaction();
+                            XACMLPapServlet.getPolicyDbDao().getNewTransaction();
                     try {
                         // Copying the policy to the file system and updating groups
                         // in database
@@ -223,7 +223,7 @@ public class ConsoleAndApiService {
                  */
 
                 // Get new transaction to perform updateGroup()
-                PolicyDBDaoTransaction acPutTransaction = XACMLPapServlet.policyDBDao.getNewTransaction();
+                PolicyDBDaoTransaction acPutTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
                 try {
                     // Assume that this is an update of an existing PDP
                     // Group
@@ -288,7 +288,7 @@ public class ConsoleAndApiService {
                 // It should never be the case that multiple groups are
                 // currently marked as the default, but protect against that
                 // anyway.
-                PolicyDBDaoTransaction setDefaultGroupTransaction = XACMLPapServlet.policyDBDao.getNewTransaction();
+                PolicyDBDaoTransaction setDefaultGroupTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
                 try {
                     setDefaultGroupTransaction.changeDefaultGroup(group, PAPSERVLETDOACPOST);
                     papEngine.setDefaultGroup(group);
@@ -313,7 +313,7 @@ public class ConsoleAndApiService {
                 LOGGER.info(TRANSENDED);
                 return;
             } else if (request.getParameter("pdpId") != null) {
-                doAcPostTransaction = XACMLPapServlet.policyDBDao.getNewTransaction();
+                doAcPostTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
                 // Args: group=<groupId> pdpId=<pdpId> <= move PDP to group
                 loggingContext.setServiceName("AC:PAP.movePDP");
                 String pdpId = request.getParameter("pdpId");
@@ -571,7 +571,7 @@ public class ConsoleAndApiService {
      */
     public void doAcPut(HttpServletRequest request, HttpServletResponse response, String groupId,
             ONAPLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
-        PolicyDBDaoTransaction acPutTransaction = XACMLPapServlet.policyDBDao.getNewTransaction();
+        PolicyDBDaoTransaction acPutTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
         try {
             String userId = request.getParameter("userId");
             // for PUT operations the group may or may not need to exist before
@@ -812,7 +812,7 @@ public class ConsoleAndApiService {
      */
     public void doAcDelete(HttpServletRequest request, HttpServletResponse response, String groupId,
             ONAPLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
-        PolicyDBDaoTransaction removePdpOrGroupTransaction = XACMLPapServlet.policyDBDao.getNewTransaction();
+        PolicyDBDaoTransaction removePdpOrGroupTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
         try {
             // for all DELETE operations the group must exist before the
             // operation can be done
