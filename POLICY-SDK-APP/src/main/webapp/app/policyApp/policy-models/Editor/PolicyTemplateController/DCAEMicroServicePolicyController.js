@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -272,6 +272,10 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 						if (checkValue!=undefined && checkValue!="undefined"){
 							if($scope.temp.policy.ruleData != null){
 								var checkValue = $scope.temp.policy.ruleData[selects[i].id];
+								var option = document.createElement('option');
+								option.setAttribute('value', checkValue);
+								option.appendChild(document.createTextNode(checkValue));
+								document.getElementById(selects[i].id).appendChild(option);
 								document.getElementById(selects[i].id).value = $scope.temp.policy.ruleData[selects[i].id];
 								plainAttributeKeys.push(selects[i].id);
 							}
@@ -1033,25 +1037,25 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		
 		textField.setAttribute("class" , "form-control");
 		if(dataType){
-			   if(dataType == "double"){
-				   textField.setAttribute("type" , "number");
-				   textField.setAttribute("step" , "any");
-				   
-			   }else if(dataType == "boolean"){  //gw1218 testing boolean
-					    var booleanDiv = document.createElement("div");
-						
-						booleanDiv.setAttribute("class" , "onoffswitch");
-						
-						//var checkField = document.createElement("INPUT");
-						textField.setAttribute("type" , "checkbox");
-						textField.setAttribute("name" , "onoffswitch");
-						textField.setAttribute("class" , "onoffswitch-checkbox");
-						textField.setAttribute("id" , ''+labelValue +attibuteKey+'');
-						if(defaultValue && defaultValue == "true") {
-							textField.setAttribute("checked" , "true");
-						}else{
-							textField.setAttribute("checked" , "false");
-						}
+			if(dataType == "double"){
+				textField.setAttribute("type" , "number");
+				textField.setAttribute("step" , "any");
+
+			}else if(dataType == "boolean"){  //gw1218 testing boolean
+				var booleanDiv = document.createElement("div");
+
+				booleanDiv.setAttribute("class" , "onoffswitch");
+
+				//var checkField = document.createElement("INPUT");
+				textField.setAttribute("type" , "checkbox");
+				textField.setAttribute("name" , "onoffswitch");
+				textField.setAttribute("class" , "onoffswitch-checkbox");
+				textField.setAttribute("id" , ''+labelValue +attibuteKey+'');
+				if(defaultValue.substring(0,defaultValue.indexOf(":")) == "true") {
+					textField.setAttribute("checked" , true);
+				}else{
+					textField.removeAttribute("checked");
+				}
 
 						var booleanlabel = document.createElement("Label");
 						booleanlabel.setAttribute("class" , "onoffswitch-label");
@@ -1355,31 +1359,62 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 				requiredNodeToolTip.textContent = "Conditional Required";
 				requiredNode.appendChild(requiredNodeToolTip);
 
+		}
+
+		var listField = document.createElement("SELECT");
+		listField.setAttribute("class" , "form-control");
+		listField.setAttribute("style" , "width:300px;");
+		listField.setAttribute("ng-disabled" , "temp.policy.readOnly");
+
+		if(description && description != "null"){
+			listField.setAttribute("title", description);
+		}
+
+		if(isRequired){
+			if(document.getElementById(divID).hasAttribute('data-conditional')){
+				listField.setAttribute("data-conditional", divID);
+				listField.setAttribute("ng-blur", "validContionalRequired('"+divID+"')");
+			}else{
+				listField.setAttribute("required", true);
 			}
-		
-			var listField = document.createElement("SELECT");
-			listField.setAttribute("class" , "form-control");
-			listField.setAttribute("style" , "width:300px;");
-			listField.setAttribute("ng-disabled" , "temp.policy.readOnly");
-			
-			if(description && description != "null"){
-				listField.setAttribute("title", description);
+		}
+		if( many != true || isRequired != true){ // add an empty option for not required or not multiple select element
+			var optionFirst = document.createElement('option');
+			var optionValue = "";
+			if($scope.temp.policy.ruleData != null){
+				if($scope.temp.policy.ruleData[labelLevel + attributeName] != undefined && $scope.temp.policy.ruleData[labelLevel + attributeName] != "undefined"){
+					optionValue = $scope.temp.policy.ruleData[labelLevel + attributeName];  
+				}
+			} 
+			optionFirst.setAttribute('value', optionValue);
+			optionFirst.appendChild(document.createTextNode(optionValue));
+			listField.appendChild(optionFirst);	
+		}
+		var ruleFormationCheck = false;
+		if(listemunerateValues.length !== 0 && typeof listemunerateValues[0] == "string" && listemunerateValues[0].includes("dictionary:")) {
+			var ruleCheck = listemunerateValues[0].split("&");
+			var dictParams = ruleCheck[0].split(":");
+			var dictParamsSplit = dictParams[1].split("@");
+			if (ruleCheck[1] != undefined  && ruleCheck[1] == 'Rule') {
+				ruleFormationCheck = true;
 			}
-			
-			if(isRequired){
-			    if(document.getElementById(divID).hasAttribute('data-conditional')){
-			    	listField.setAttribute("data-conditional", divID);
-			    	listField.setAttribute("ng-blur", "validContionalRequired('"+divID+"')");
-			    }else{
-					listField.setAttribute("required", true);
-			    }
-			}
-			if( many != true || isRequired != true){ // add an empty option for not required or not multiple select element
-				var optionFirst = document.createElement('option');
-				optionFirst.setAttribute('value', "");
-				listField.appendChild(optionFirst);	
-			}
-			
+			PolicyAppService.getData(dictParamsSplit[0]).then(function (data) {
+				var j = data;
+				$scope.data = JSON.parse(j.data);
+				console.log($scope.data);
+				$scope.listDictionarys = JSON.parse($scope.data[dictParamsSplit[1]]);
+				for (i=0; i < $scope.listDictionarys.length; i += 1) {
+					option = document.createElement('option');
+					option.setAttribute('value', $scope.listDictionarys[i]);
+					option.appendChild(document.createTextNode($scope.listDictionarys[i]));
+					listField.appendChild(option);
+				}
+			}, function (error) {
+				console.log("failed");
+			});
+
+		}
+		else{
 			for (i=0; i < listemunerateValues.length; i += 1) {
 				if(typeof listemunerateValues[i] == "string" && listemunerateValues[i].includes("equal-sign")){
 					listemunerateValues[i] = listemunerateValues[i].replace('equal-sign','=');
@@ -1391,95 +1426,130 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			    option.setAttribute('value', listemunerateValues[i]);
 			    listField.appendChild(option);
 			}
-			listField.setAttribute("id" , ''+ labelLevel + attributeName + '');
-			
-			enumKeyList.push(attributeName);
-			
-			document.getElementById(divID).appendChild(label);  
-			document.getElementById(divID).appendChild(br);	
-					
-			if(many == true){
-				document.getElementById(divID).appendChild(listField).multiple = true;
-				plainAttributeKeys.push(labelLevel + attributeName+'*'+true);
-			}else {
-				document.getElementById(divID).appendChild(listField).multiple = false;
-				plainAttributeKeys.push(labelLevel + attributeName+'*'+false);
-				
-				if (defaultValue){
-					if(defaultValue.includes(':')){
-					   defaultValue = defaultValue.split(':')[0];
+		}
+		listField.setAttribute("id" , ''+ labelLevel + attributeName + '');
+
+		enumKeyList.push(attributeName);
+
+		document.getElementById(divID).appendChild(label);  
+		document.getElementById(divID).appendChild(br);	
+
+		if(many == true){
+			document.getElementById(divID).appendChild(listField).multiple = true;
+			plainAttributeKeys.push(labelLevel + attributeName+'*'+true);
+		}else {
+			document.getElementById(divID).appendChild(listField).multiple = false;
+			plainAttributeKeys.push(labelLevel + attributeName+'*'+false);
+
+			if (defaultValue){
+				if(defaultValue.includes(':')){
+					defaultValue = defaultValue.split(':')[0];
+				}
+				var location = listemunerateValues.indexOf(defaultValue);
+				document.getElementById(labelLevel +attributeName).options[location+1].selected = true;
+			}
+		}
+
+		if (ruleFormationCheck) {
+			var optionInput = document.createElement("INPUT");
+			optionInput.setAttribute("type" , "text");
+			optionInput.setAttribute("id" , ''+ labelLevel + attributeName + '.input');
+			optionInput.setAttribute("name" , "ruleName");
+			optionInput.setAttribute("value" , "  ");
+			optionInput.setAttribute("style" , "width:300px;");
+			optionInput.setAttribute("ng-disabled" , "temp.policy.readOnly");
+			optionInput.removeAttribute("required");
+
+			document.getElementById(divID).appendChild(optionInput);
+
+			var optionButton = document.createElement("BUTTON");
+			optionButton.setAttribute("ng-disabled" , "temp.policy.readOnly");
+			var buttonLabel = document.createTextNode("+");       
+			optionButton.appendChild(buttonLabel); 
+			optionButton.setAttribute("class", "btn btn-add-remove");
+			optionButton.setAttribute("onclick" , 'addDynamicOptions("'+ labelLevel + attributeName + '");');
+			optionButton.removeAttribute("required");
+
+
+			document.getElementById(divID).appendChild(optionButton);
+			document.getElementById(divID).appendChild(br); 
+		}
+
+		if($scope.temp.policy.ruleData != null){
+			if (many == true){
+				document.getElementById(labelLevel +attributeName).options[0].selected = false;
+				for (i=0; i < listemunerateValues.length; i += 1) {
+					var testValue = $scope.temp.policy.ruleData[labelLevel +attributeName+'@' + i];
+					if (testValue === undefined){
+						testValue = $scope.temp.policy.ruleData[labelLevel +attributeName];
 					}
-					var location = listemunerateValues.indexOf(defaultValue);
-					document.getElementById(labelLevel +attributeName).options[location+1].selected = true;
+					var location = listemunerateValues.indexOf(testValue);
+					if (location!=-1){
+						document.getElementById(labelLevel +attributeName).options[location].selected = true;
+					}
+				}			
+			}else {
+				if($scope.temp.policy.ruleData[labelLevel + attributeName] != undefined && $scope.temp.policy.ruleData[labelLevel + attributeName] != "undefined"){
+					document.getElementById(labelLevel + attributeName).value = $scope.temp.policy.ruleData[labelLevel + attributeName];	
 				}
 			}
-		
-			if($scope.temp.policy.ruleData != null){
-				if (many == true){
-					document.getElementById(labelLevel +attributeName).options[0].selected = false;
-					for (i=0; i < listemunerateValues.length; i += 1) {
-						var testValue = $scope.temp.policy.ruleData[labelLevel +attributeName+'@' + i];
-						if (testValue === undefined){
-							testValue = $scope.temp.policy.ruleData[labelLevel +attributeName];
-							}
-						var location = listemunerateValues.indexOf(testValue);
-						if (location!=-1){
-							document.getElementById(labelLevel +attributeName).options[location].selected = true;
-							}
-						}			
-					}else {
-						    if($scope.temp.policy.ruleData[labelLevel + attributeName] != undefined && $scope.temp.policy.ruleData[labelLevel + attributeName] != "undefined"){
-			                    document.getElementById(labelLevel + attributeName).value = $scope.temp.policy.ruleData[labelLevel + attributeName];	
-						    }
-					}
+		}
+	};
+
+	addDynamicOptions = function(id) { 
+		var option = document.createElement("option");
+		var value = document.getElementById(id+".input").value;
+		option.setAttribute('value', value);
+		option.appendChild(document.createTextNode(value));
+		document.getElementById(id).options.add(option);
+		document.getElementById(id+".input").value = "";
+	};
+
+	function onlyUnique(value, index, self) { 
+		return self.indexOf(value) === index;
+	};
+
+
+	function checkDictionary(value){
+		for (i = 0; i < $scope.microServiceAttributeDictionaryDatas.length; i++) {
+			if ($scope.microServiceAttributeDictionaryDatas[i].name.localeCompare(value)){
+				return true;
+			}
+		}
+
+	}
+	$scope.savePolicy = function(policy){
+		if(policy.itemContent != undefined){
+			$scope.refreshCheck = true; 
+			$scope.policyNavigator = policy.itemContent;
+			policy.itemContent = "";
+		}
+		$scope.savebutton = false;
+		var splitAt = '*';
+		var dot ='.';
+		var jsonPolicy = {};
+		if(plainAttributeKeys != null){
+			for(a = 0; a < plainAttributeKeys.length; a++){
+				var splitPlainAttributeKey = plainAttributeKeys[a].split(splitAt);
+				console.log("splitPlainAttributeKey: " + splitPlainAttributeKey);	
+				var searchElement = document.getElementById(splitPlainAttributeKey[0]);
+				var key = splitPlainAttributeKey[0];
+				if(searchElement == null){
+					searchElement = document.getElementById(splitPlainAttributeKey[0]+'@0');
+					key = splitPlainAttributeKey[0]+'@0';
+				}else if (searchElement.nodeName == 'BUTTON'){
+					searchElement = document.getElementById(splitPlainAttributeKey[0]+'@0');
+					key = splitPlainAttributeKey[0]+'@0';
 				}
-		    };
-    
-    function onlyUnique(value, index, self) { 
-        return self.indexOf(value) === index;
-    };
-    
-    
-    function checkDictionary(value){
-    	for (i = 0; i < $scope.microServiceAttributeDictionaryDatas.length; i++) {
-    		if ($scope.microServiceAttributeDictionaryDatas[i].name.localeCompare(value)){
-    			return true;
-    		}
-    	}
-    	
-    }
-    $scope.savePolicy = function(policy){
-    	if(policy.itemContent != undefined){
-    		$scope.refreshCheck = true; 
-        	$scope.policyNavigator = policy.itemContent;
-        	policy.itemContent = "";
-    	}
-    	$scope.savebutton = false;
-    	var splitAt = '*';
-    	var dot ='.';
-    	var jsonPolicy = {};
-    	if(plainAttributeKeys != null){
-    		for(a = 0; a < plainAttributeKeys.length; a++){
-    			var splitPlainAttributeKey = plainAttributeKeys[a].split(splitAt);
-    			console.log("splitPlainAttributeKey: " + splitPlainAttributeKey);	
-    			var searchElement = document.getElementById(splitPlainAttributeKey[0]);
-    			var key = splitPlainAttributeKey[0];
-                if(searchElement == null){
-                    searchElement = document.getElementById(splitPlainAttributeKey[0]+'@0');
-                    key = splitPlainAttributeKey[0]+'@0';
-                }else if (searchElement.nodeName == 'BUTTON'){
-    				searchElement = document.getElementById(splitPlainAttributeKey[0]+'@0');
-    				key = splitPlainAttributeKey[0]+'@0';
-    			}
-    			if(searchElement != null){
-    				var keySplit = key.split(dot);
-    				var elumentLocation = keySplit.length;
-    				var enumKey = key;
-    				if (elumentLocation > 1){
-    					enumKey = keySplit[keySplit.length - 1];
-    				}
-    				//check it is undefined or not
-    				if (enumKeyList != undefined && enumKeyList.indexOf(enumKey) != -1){
+				if(searchElement != null){
+					var keySplit = key.split(dot);
+					var elumentLocation = keySplit.length;
+					var enumKey = key;
+					if (elumentLocation > 1){
+						enumKey = keySplit[keySplit.length - 1];
+					}
+					//check it is undefined or not
+					if (enumKeyList != undefined && enumKeyList.indexOf(enumKey) != -1){
 						if (splitPlainAttributeKey[1]!= undefined && splitPlainAttributeKey[1].indexOf("true") !== -1){
 							var multiSlect = [];
 							for ( var i = 0; i < searchElement.selectedOptions.length; i++) {

@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
@@ -53,7 +54,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.json.Json;
@@ -124,7 +127,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
     private LinkedHashMap<String, MSAttributeObject> classMap = new LinkedHashMap<>();
     String referenceAttributes;
     String attributeString;
-    Set<String> allManyTrueKeys = new HashSet<>();
+    Set<String> allManyTrueKeys = null;
+    private Map<String, String> sigRules = null;
 
     public static final String DATATYPE = "data_types.policy.data.";
     public static final String PROPERTIES = ".properties.";
@@ -136,7 +140,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
     public static final String REQUIRED = ".required";
     public static final String MATCHABLE = ".matchable";
     public static final String MANYFALSE = ":MANY-false";
-
+    private static final String PATTERN = "[A][0-9]";
+    private static final String POLICYJSON = "policyJSON";
 
     @Autowired
     private CreateDcaeMicroServiceController(CommonClassDao commonClassDao) {
@@ -157,12 +162,12 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
         String jsonContent = null;
         try {
-            LOGGER.info("policyJSON :" + (root.get("policyJSON")).toString());
+            LOGGER.info("policyJSON :" + (root.get(POLICYJSON)).toString());
 
-            String tempJson = root.get("policyJSON").toString();
-            JSONObject policyJSON = new JSONObject(root.get("policyJSON").toString());
+            String tempJson = root.get(POLICYJSON).toString();
+            JSONObject policyJSON = new JSONObject(root.get(POLICYJSON).toString());
             if (policyJSON != null) {
-                saveOriginalJsonObject(policyJSON, jsonStringValues);
+                tempJson = saveOriginalJsonObject(policyJSON, jsonStringValues).toString();
             }
             // ---replace empty value with the value below before calling decodeContent method.
             String dummyValue = "*empty-value*" + UUID.randomUUID().toString();
@@ -178,9 +183,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         }
 
         // ----Here is the final step to reset the original value back.
-        if(policyData.getJsonBody() != null && jsonStringValues.size() > 0){
+        if (policyData.getJsonBody() != null && jsonStringValues.size() > 0) {
             String contentBody = policyData.getJsonBody();
-            JSONObject contentJson= new JSONObject(contentBody);
+            JSONObject contentJson = new JSONObject(contentBody);
             JSONObject content = contentJson.getJSONObject("content");
             content = setOriginalJsonObject(content, jsonStringValues);
             contentJson.put("content", content);
@@ -190,52 +195,52 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         return policyData;
     }
 
-    /**
-     * To save the original JSON string from the root.
-     *
-     * @param jsonObj holds the value from the root.
-     * @param jsonStringValues value get saved.
-     */
-    private void saveOriginalJsonObject(JSONObject jsonObj, Map<String, String> jsonStringValues) {
+    private JSONObject saveOriginalJsonObject(JSONObject jsonObj, Map<String, String> jsonStringValues) {
         for (Object key : jsonObj.keySet()) {
             String keyStr = (String) key;
             Object keyvalue = jsonObj.get(keyStr);
             if (keyvalue.toString().contains("{\\\"") || keyvalue.toString().contains("\\\"")) {
                 jsonStringValues.put(keyStr, keyvalue.toString());
+                // --- set default value
+                jsonObj.put(keyStr, "JSON_STRING");
             }
 
             // for nested objects iteration if required
             if (keyvalue instanceof JSONObject) {
                 saveOriginalJsonObject((JSONObject) keyvalue, jsonStringValues);
+                // --- set default value
+                jsonObj.put(keyStr, "JSON_STRING");
+            }
+
+            if (keyvalue instanceof JSONArray) {
+                for (int i = 0; i < ((JSONArray) keyvalue).length(); i++) {
+                    JSONObject temp = ((JSONArray) keyvalue).getJSONObject(i);
+                    saveOriginalJsonObject(temp, jsonStringValues);
+                }
             }
         }
+
+        return jsonObj;
     }
 
-    /**
-     * To reset the original JSON string back associated to its key.
-     *
-     * @param jsonObj holds the original json.
-     * @param jsonStringValues value to be reset.
-     * @return
-     */
-    private JSONObject setOriginalJsonObject(JSONObject jsonObj , Map<String, String> jsonStringValues) {
+    private JSONObject setOriginalJsonObject(JSONObject jsonObj, Map<String, String> jsonStringValues) {
         for (Object key : jsonObj.keySet()) {
-            String keyStr = (String)key;
+            String keyStr = (String) key;
             Object keyvalue = jsonObj.get(keyStr);
             String originalValue = getOriginalValue(keyStr);
             if (originalValue != null) {
                 jsonObj.put(keyStr, originalValue);
             }
 
-            //for nested objects iteration if required
+            // for nested objects iteration if required
             if (keyvalue instanceof JSONObject) {
-                setOriginalJsonObject((JSONObject)keyvalue, jsonStringValues);
+                setOriginalJsonObject((JSONObject) keyvalue, jsonStringValues);
                 jsonObj.put(keyStr, originalValue);
             }
 
             if (keyvalue instanceof JSONArray) {
-                for (int i = 0; i < ((JSONArray)keyvalue).length(); i++) {
-                    JSONObject temp = ((JSONArray)keyvalue).getJSONObject(i);
+                for (int i = 0; i < ((JSONArray) keyvalue).length(); i++) {
+                    JSONObject temp = ((JSONArray) keyvalue).getJSONObject(i);
                     setOriginalJsonObject(temp, jsonStringValues);
                 }
             }
@@ -248,7 +253,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         return (GroupPolicyScopeList) commonClassDao.getEntityItem(GroupPolicyScopeList.class, "name", policyScope);
     }
 
-    private PolicyRestAdapter constructJson(PolicyRestAdapter policyAdapter, String jsonContent, String dummyValue) {
+    private PolicyRestAdapter constructJson(PolicyRestAdapter policyAdapter, String jsonContent, String dummyValue)
+            throws IOException {
         ObjectWriter om = new ObjectMapper().writer();
         String json = "";
         DCAEMicroServiceObject microServiceObject = new DCAEMicroServiceObject();
@@ -297,7 +303,23 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             microServiceObject.setGuard(policyAdapter.getGuard());
         }
         microServiceObject.setContent(jsonContent);
-
+        String modelName = policyAdapter.getServiceType();
+        String versionName = policyAdapter.getVersion();
+        List<Object> triggerData = commonClassDao.getDataById(MicroServiceModels.class, "modelName:version",
+                modelName + ":" + versionName);
+        MicroServiceModels model = null;
+        boolean ruleCheck = false;
+        boolean SymptomRuleCheck = false;
+        if (!triggerData.isEmpty()) {
+            model = (MicroServiceModels) triggerData.get(0);
+            if (model.getRuleFormation() != null) {
+                microServiceObject.setUiContent(jsonContent);
+                ruleCheck = true;
+                if (model.getRuleFormation().contains("@")) {
+                    SymptomRuleCheck = true;
+                }
+            }
+        }
         try {
             json = om.writeValueAsString(microServiceObject);
         } catch (JsonProcessingException e) {
@@ -311,8 +333,157 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
                 StringUtils.replaceEach(cleanJson, new String[] {"\"" + dummyValue + "\""}, new String[] {"\"\""});
         LOGGER.info("tempJson: " + tempJson);
         cleanJson = removeNullAttributes(tempJson);
+        if (cleanJson.contains("\\")) {
+            cleanJson = StringUtils.replaceEach(cleanJson, new String[] {"\\"}, new String[] {""});
+        }
         policyAdapter.setJsonBody(cleanJson);
+        // for Triggers
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode tempJsonNode = mapper.readTree(cleanJson);
+        if (ruleCheck) {
+            // JsonNode tempJsonNode = mapper.readTree(cleanJson);
+            ObjectNode finalJson = (ObjectNode) tempJsonNode;
+            JsonNode object = tempJsonNode.get("content");
+            String primaryKey1 = model.getRuleFormation();
+            String[] primaryKeyForSignatures = primaryKey1.split("@");
+            for (String primaryKeyForSignature : primaryKeyForSignatures) {
+                String primarykeyAlarm = primaryKeyForSignature.substring(0, primaryKeyForSignature.indexOf('.'));
+                JsonNode triggerSig = object.get(primarykeyAlarm);
+                sigRules = new HashMap<>();
+                String parseKey = primaryKeyForSignature.substring(primaryKeyForSignature.indexOf('.') + 1);
+                StringBuilder sb = null;
+                if (triggerSig instanceof ArrayNode) {
+                    for (int i = 0; i < triggerSig.size(); i++) {
+                        sb = new StringBuilder();
+                        parseData(triggerSig.get(i), parseKey);
+                        sb.append("(");
+                        List<?> keyList = new ArrayList<>(sigRules.keySet());
+                        for (int j = keyList.size() - 1; j >= 0; j--) {
+                            String key = (String) keyList.get(j);
+                            String jsonNode = sigRules.get(key);
+                            constructRule(sb, jsonNode, sigRules);
+                        }
+                        sb.append(")").toString();
+                        putRuletoJson(tempJsonNode, i, sb, parseKey, primarykeyAlarm);
+                        sigRules = new HashMap<>();
+                    }
+                } else {
+                    sb = new StringBuilder();
+                    parseData(triggerSig, parseKey);
+                }
+            }
+            policyAdapter.setJsonBody(finalJson.toString());
+        }
         return policyAdapter;
+    }
+
+    private JsonNode putRuletoJson(JsonNode tmpJsonNode, int item, StringBuilder sb, String parseKey,
+            String primaryKey) {
+        JsonNode tmp = tmpJsonNode;
+        ObjectNode objectNode = (ObjectNode) tmp;
+        JsonNode jsonNode = tmpJsonNode.get("content").get(primaryKey).get(item);
+        JsonNode tempRuleJsonNode = tmpJsonNode.get("content").get(primaryKey).get(item);
+        String[] tempSt = parseKey.split("\\.");
+        for (String value : tempSt) {
+            if (value.contains("[")) {
+                if (tempRuleJsonNode instanceof ArrayNode) {
+                    JsonNode tempRuleNode = tempRuleJsonNode.get(item);
+                    ((ArrayNode) tempRuleJsonNode).removeAll();
+                    ((ArrayNode) tempRuleJsonNode).add(tempRuleNode);
+                    objectNode = (ObjectNode) tempRuleJsonNode.get(item);
+                }
+                String key = value.substring(0, value.indexOf('['));
+                objectNode.remove(key);
+                objectNode.put(key, sb.toString());
+                return tmp;
+            } else {
+                jsonNode = jsonNode.get(value);
+                if (jsonNode instanceof ArrayNode) {
+                    tempRuleJsonNode = jsonNode;
+                    jsonNode = jsonNode.get(item);
+                }
+            }
+        }
+        return tmp;
+    }
+
+    public boolean checkPattern(String patternString) {
+        return Pattern.compile(PATTERN).matcher(patternString).find();
+    }
+
+    /**
+     * Construct rule.
+     *
+     * @param sb the sb
+     * @param jsonNode the json node
+     * @param sigRules2 the sig rules 2
+     */
+    public void constructRule(StringBuilder sb, String jsonNode, Map<String, String> sigRules2) {
+        int count = 0;
+        String cleanJsonNode = jsonNode.replace("\"\"", " ");
+        cleanJsonNode = cleanJsonNode.replaceAll("\"", "");
+        cleanJsonNode = cleanJsonNode.replaceAll("\\(", "");
+        cleanJsonNode = cleanJsonNode.replaceAll("\\)", "");
+        boolean flag = false;
+        if (cleanJsonNode.contains("OR")) {
+            sb.append("(");
+            flag = true;
+        }
+        for (String rowValue : cleanJsonNode.split(" ")) {
+            if (checkPattern(rowValue)) {
+                String value = sigRules2.get(rowValue);
+                LOGGER.info("   Value is:" + value);
+                constructRule(sb, value, sigRules2);
+            } else {
+                if ((count == 0) && (!("AND").equals(rowValue)) && (!("OR").equals(rowValue))) {
+                    sb.append("(");
+                }
+                count++;
+                LOGGER.info(" " + rowValue + " ");
+                sb.append(" " + rowValue + " ");
+                if (count % 3 == 0) {
+                    sb.append(")");
+                    count = 0;
+                }
+            }
+        }
+        if (flag) {
+            sb.append(")");
+        }
+    }
+
+    /**
+     * Parses the data.
+     *
+     * @param jsonNode the json node
+     * @param string the string
+     */
+    public void parseData(JsonNode jsonNode, String string) {
+        if (string.contains(".")) {
+            String firstIndex = string.substring(0, string.indexOf('.'));
+            JsonNode signtures = jsonNode.get(firstIndex);
+            String subIndex = string.substring(firstIndex.length() + 1);
+            if (signtures instanceof ArrayNode) {
+                for (int i = 0; i < signtures.size(); i++) {
+                    parseData(signtures.get(i), subIndex);
+                }
+            } else {
+                parseData(signtures, subIndex);
+            }
+        } else {
+            if (string.contains("[")) {
+                String ruleIndex = string.substring(0, string.indexOf('['));
+                String[] keys = string.substring(string.indexOf('[') + 1, string.lastIndexOf(']')).split(",");
+                String key = "A" + Integer.valueOf(sigRules.size() + 1);
+                JsonNode node = jsonNode.get(ruleIndex);
+                StringBuilder sb = new StringBuilder("(");
+                for (int i = 0; i < keys.length; i++) {
+                    sb.append(node.get(keys[i].trim()));
+                }
+                sb.append(")");
+                sigRules.put(key, sb.toString());
+            }
+        }
     }
 
     public String removeNullAttributes(String cleanJson) {
@@ -658,6 +829,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView getDCAEMSTemplateData(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+        // TreeSet is used to ensure that individual items appear before their containing collection.
+        allManyTrueKeys = new TreeSet<>();
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JsonNode root = mapper.readTree(request.getReader());
@@ -693,7 +866,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             JSONObject json = new JSONObject(returnModel.getSub_attributes());
             getAllKeys(json);
             allkeys = allManyTrueKeys;
-            allManyTrueKeys = new HashSet<>();
+            allManyTrueKeys = new TreeSet<>();
             LOGGER.info("allkeys : " + allkeys);
         }
 
@@ -704,9 +877,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         }
         LOGGER.info("dataOrderInfo : " + dataOrderInfo);
 
-        String allManyTrueKeys = "";
+        String allMnyTrueKeys = "";
         if (allkeys != null) {
-            allManyTrueKeys = allkeys.toString();
+            allMnyTrueKeys = allkeys.toString();
         }
 
         String jsonModel = createMicroSeriveJson(returnModel, allkeys);
@@ -719,6 +892,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             while (iter.hasNext()) {
                 // Convert to array values for MANY-true keys
                 finalJsonObject = convertToArrayElement(jsonObject, iter.next());
+                jsonObject = finalJsonObject;
             }
         }
 
@@ -735,6 +909,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
                 LOGGER.info(s);
                 // convert to array element for MANY-true properties
                 finalJsonObject = convertToArrayElement(jsonObj, s.trim());
+                jsonObj = finalJsonObject;
             }
 
             if (finalJsonObject != null) {
@@ -752,12 +927,12 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
         JSONObject j = null;
 
-        if ("".equals(allManyTrueKeys)) {
+        if ("".equals(allMnyTrueKeys)) {
             j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + ",dataOrderInfo:"
                     + dataOrderInfo + ",headDefautlsData:" + headDefautlsData + "}");
         } else {
             j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + ",allManyTrueKeys: "
-                    + allManyTrueKeys + ",dataOrderInfo:" + dataOrderInfo + ",headDefautlsData:" + headDefautlsData
+                    + allMnyTrueKeys + ",dataOrderInfo:" + dataOrderInfo + ",headDefautlsData:" + headDefautlsData
                     + "}");
         }
         list.add(j);
@@ -868,11 +1043,11 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
     }
 
 
-    public static JSONObject convertToArrayElement(JSONObject json, String keyValue) {
+    public JSONObject convertToArrayElement(JSONObject json, String keyValue) {
         return convertToArrayElement(json, new HashSet<>(), keyValue);
     }
 
-    private static JSONObject convertToArrayElement(JSONObject json, Set<String> keys, String keyValue) {
+    private JSONObject convertToArrayElement(JSONObject json, Set<String> keys, String keyValue) {
         for (String key : json.keySet()) {
             Object obj = json.get(key);
             if (key.equals(keyValue.trim())) {
@@ -890,15 +1065,20 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
                 return json;
             }
 
-            if (obj instanceof JSONObject)
+            if (obj instanceof JSONObject) {
                 convertToArrayElement(json.getJSONObject(key), keyValue);
+            }
+
+            if (obj instanceof JSONArray) {
+                convertToArrayElement(json.getJSONArray(key).getJSONObject(0), keyValue);
+            }
         }
 
         return json;
     }
 
     // call this method to get all MANY-true properties
-    public static Set<String> getManyTrueProperties(String referAttributes) {
+    public Set<String> getManyTrueProperties(String referAttributes) {
         LOGGER.info("referAttributes : " + referAttributes);
         Set<String> manyTrueProperties = new HashSet<>();
 
@@ -1125,7 +1305,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         }
     }
 
-    public static Map<String, String> convert(String str, String split) {
+    /**
+     * Convert.
+     *
+     * @param str the str
+     * @param split the split
+     * @return the map
+     */
+    public Map<String, String> convert(String str, String split) {
         Map<String, String> map = new HashMap<>();
         for (final String entry : str.split(split)) {
             String[] parts = entry.split("=");
@@ -1135,8 +1322,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
     }
 
 
+    /**
+     * Read file.
+     *
+     * @param policyAdapter the policy adapter
+     * @param entity the entity
+     */
     @SuppressWarnings("unchecked")
-    private void readFile(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
+    public void readFile(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         String policyScopeName = null;
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -1153,11 +1346,16 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             } else {
                 policyAdapter.setServiceType(msBody.getService());
             }
-            if (msBody.getContent() != null) {
-                LinkedHashMap<String, Object> data = new LinkedHashMap<>();
-                LinkedHashMap<String, ?> map = (LinkedHashMap<String, ?>) msBody.getContent();
+            //
+            Map<String, ?> content = (LinkedHashMap<String, ?>) msBody.getUiContent();
+            if (content == null) {
+                content = (LinkedHashMap<String, ?>) msBody.getContent();
+            }
+            if (content != null) {
+                Map<String, Object> data = new LinkedHashMap<>();
+                Map<String, ?> map = content;
                 readRecursivlyJSONContent(map, data);
-                policyAdapter.setRuleData(data);
+                policyAdapter.setRuleData((LinkedHashMap<?, ?>) data);
             }
 
         } catch (Exception e) {
@@ -1167,7 +1365,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public void readRecursivlyJSONContent(LinkedHashMap<String, ?> map, LinkedHashMap<String, Object> data) {
+    public void readRecursivlyJSONContent(Map<String, ?> map, Map<String, Object> data) {
         for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
             Object key = iterator.next();
             Object value = map.get(key);
@@ -1306,13 +1504,12 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         }
 
         List<File> fileList = new ArrayList<>();
-        MSModelUtils msMLUtils = new MSModelUtils();
+        MSModelUtils msMLUtils = new MSModelUtils(commonClassDao);
         this.directory = "model";
         if (zip) {
             extractFolder(this.newFile);
             fileList = listModelFiles(this.directory);
-        } else if (yml == true) {
-
+        } else if (yml) {
             errorMsg = msMLUtils.parseTosca(this.newFile);
             if (errorMsg != null) {
                 PrintWriter out = response.getWriter();
@@ -1393,6 +1590,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         j.put("modelDatas", mapper.writeValueAsString(classMap));
         j.put("modelType", modelType);
         j.put("dataOrderInfo", msMLUtils.getDataOrderInfo());
+        j.put("ruleFormation", msMLUtils.getJsonRuleFormation());
 
         out.write(j.toString());
     }
@@ -1524,6 +1722,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         return arrayTextList;
     }
 
+    public Map<String, String> getSigRules() {
+        return sigRules;
+    }
+
+    public void setSigRules(Map<String, String> sigRules) {
+        this.sigRules = sigRules;
+    }
+
 }
 
 
@@ -1542,6 +1748,7 @@ class DCAEMicroServiceObject {
     private String riskType;
     private String riskLevel;
     private String guard = null;
+    private Object uiContent;
 
     public String getGuard() {
         return guard;
@@ -1656,6 +1863,14 @@ class DCAEMicroServiceObject {
 
     public void setTemplateVersion(String templateVersion) {
         this.templateVersion = templateVersion;
+    }
+
+    public Object getUiContent() {
+        return uiContent;
+    }
+
+    public void setUiContent(Object uiContent) {
+        this.uiContent = uiContent;
     }
 
 }
