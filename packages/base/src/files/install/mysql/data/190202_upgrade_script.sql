@@ -16,7 +16,6 @@
 -- limitations under the License.
 -- ============LICENSE_END=========================================================
 
-use onap_sdk;
 CREATE TABLE policyAuditlog (
     id int auto_increment NOT NULL,
     userName varchar(100) NOT NULL,
@@ -25,3 +24,20 @@ CREATE TABLE policyAuditlog (
     dateAndTime datetime NOT NULL,
     PRIMARY KEY (id)
 );
+
+ALTER TABLE microservicemodels
+ADD ruleFormation VARCHAR(45) DEFAULT NULL;
+
+CREATE TABLE `onap_sdk`.`dictionaryData` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `dictionaryName` varchar(64) NOT NULL,
+ `dictionaryUrl` varchar(64) NOT NULL,
+ `dictionaryDataByName` varchar(64) NOT NULL,
+ PRIMARY KEY (`id`) 
+ );
+ 
+INSERT INTO dictionaryData (dictionaryName, dictionaryUrl, dictionaryDataByName)
+VALUES ('GocVNFType', 'getDictionary/get_GocVnfTypeDataByName', 'gocVnfTypeDictionaryDatas'),
+('ServerScope','getDictionary/get_ServerScopeDataByName','gocServerScopeDictionaryDatas'),
+('TraversalData', 'getDictionary/get_TraversalDataByName', 'gocTraversalDictionaryDatas'); 
+

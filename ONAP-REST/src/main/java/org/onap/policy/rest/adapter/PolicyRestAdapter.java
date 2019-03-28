@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,10 +29,10 @@ import org.onap.policy.rest.jpa.OnapName;
 public class PolicyRestAdapter {
 
     /*
-     * 
+     *
      * Note : Make Sure if any variables are added in PolicyRestAdapter.java, add them to PolicyElasticData.java file
-     * 
-     * 
+     *
+     *
      */
 
     // Common
@@ -62,6 +62,7 @@ public class PolicyRestAdapter {
     private String finalPolicyPath;
     private String version;
     private String jsonBody;
+    private String uiJsonBody;
     private String apiflag;
     private String prevJsonBody;
     private Integer highestVersion;
@@ -1137,12 +1138,20 @@ public class PolicyRestAdapter {
     public void setBlackListEntryType(String blackListEntryType) {
         this.blackListEntryType = blackListEntryType;
     }
-    
+
     public String getRawXacmlPolicy() {
         return rawXacmlPolicy;
     }
 
     public void setRawXacmlPolicy(String rawXacmlPolicy) {
         this.rawXacmlPolicy = rawXacmlPolicy;
+    }
+
+    public String getUiJsonBody() {
+        return uiJsonBody;
+    }
+
+    public void setUiJsonBody(String uiJsonBody) {
+        this.uiJsonBody = uiJsonBody;
     }
 }

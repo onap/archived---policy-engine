@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,6 +65,7 @@ app.controller('editMSModelController' ,  function ($scope, $modalInstance, mess
                 	$scope.modalDatas = data.modelDatas;
                 	$scope.modelType= data.modelType;
                 	$scope.dataOrderInfo= data.dataOrderInfo;
+                	$scope.ruleFormation = data.ruleFormation;
                 	console.log($scope.classListDatas);
                 }
             }).error( );
@@ -78,7 +79,7 @@ app.controller('editMSModelController' ,  function ($scope, $modalInstance, mess
     $scope.saveMSModel = function(microServiceModelsDictionaryData) {
     	if(valid){
     		 var uuu = "saveDictionary/ms_dictionary/save_model";
-    	        var postData={microServiceModelsDictionaryData: microServiceModelsDictionaryData, userid: userid, classMap: $scope.modalDatas,modelType:$scope.modelType, dataOrderInfo:$scope.dataOrderInfo};
+    	        var postData={microServiceModelsDictionaryData: microServiceModelsDictionaryData, userid: userid, classMap: $scope.modalDatas,modelType:$scope.modelType, dataOrderInfo:$scope.dataOrderInfo, ruleFormation:$scope.ruleFormation};
     	        $.ajax({
     	            type : 'POST',
     	            url : uuu,
