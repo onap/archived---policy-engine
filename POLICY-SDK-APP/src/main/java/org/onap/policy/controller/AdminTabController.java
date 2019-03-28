@@ -3,13 +3,14 @@
  * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Bell Canada
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +20,6 @@
  */
 
 package org.onap.policy.controller;
-
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -50,77 +50,82 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping({"/"})
-public class AdminTabController extends RestrictedBaseController{
+public class AdminTabController extends RestrictedBaseController {
 
-	private static final Logger LOGGER	= FlexLogger.getLogger(AdminTabController.class);
-	
-	private static CommonClassDao commonClassDao;
-	
-        public AdminTabController() {
-		//default constructor
-	}
+    private static final Logger LOGGER = FlexLogger.getLogger(AdminTabController.class);
+    private static final String CHARACTER_ENCODING = "UTF-8";
 
-	@Autowired
-	private AdminTabController(CommonClassDao commonClassDao){
-		AdminTabController.commonClassDao = commonClassDao;
-	}
+    private static CommonClassDao commonClassDao;
 
-        public static CommonClassDao getCommonClassDao() {
-		return commonClassDao;
-	}
+    public AdminTabController() {
+        //default constructor
+    }
 
-	public static void setCommonClassDao(CommonClassDao commonClassDao) {
-		AdminTabController.commonClassDao = commonClassDao;
-	}
-	
-	@RequestMapping(value={"/get_LockDownData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getAdminTabEntityData(HttpServletRequest request, HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("lockdowndata", mapper.writeValueAsString(commonClassDao.getData(GlobalRoleSettings.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error("Exception Occured"+e);
-		}
-	}
-	
-	@RequestMapping(value={"/adminTabController/save_LockDownValue.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveAdminTabLockdownValue(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			String userId = UserUtils.getUserSession(request).getOrgUserId();
-			LOGGER.info("****************************************Logging UserID for Application Lockdown Function*****************************************");
-			LOGGER.info("UserId:  " + userId);
-			LOGGER.info("*********************************************************************************************************************************");
-			JsonNode root = mapper.readTree(request.getReader());
-			GlobalRoleSettings globalRole = mapper.readValue(root.get("lockdowndata").toString(), GlobalRoleSettings.class);
-			globalRole.setRole("super-admin");
-			commonClassDao.update(globalRole);
-			
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
+    @Autowired
+    private AdminTabController(CommonClassDao commonClassDao) {
+        AdminTabController.commonClassDao = commonClassDao;
+    }
 
-			PrintWriter out = response.getWriter();
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(GlobalRoleSettings.class));
-			JSONObject j = new JSONObject("{descriptiveScopeDictionaryDatas: " + responseString + "}");
+    public static CommonClassDao getCommonClassDao() {
+        return commonClassDao;
+    }
 
-			out.write(j.toString());
+    public static void setCommonClassDao(CommonClassDao commonClassDao) {
+        AdminTabController.commonClassDao = commonClassDao;
+    }
 
-			return null;
-		}
-		catch (Exception e){
-			LOGGER.error("Exception Occured"+e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
-		return null;
-	}
+    @RequestMapping(value = {"/get_LockDownData"}, method = {
+        org.springframework.web.bind.annotation.RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public void getAdminTabEntityData(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Map<String, Object> model = new HashMap<>();
+            ObjectMapper mapper = new ObjectMapper();
+            model.put("lockdowndata", mapper.writeValueAsString(commonClassDao.getData(GlobalRoleSettings.class)));
+            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
+            JSONObject j = new JSONObject(msg);
+            response.getWriter().write(j.toString());
+        } catch (Exception e) {
+            LOGGER.error("Exception Occured" + e);
+        }
+    }
+
+    @RequestMapping(value = {"/adminTabController/save_LockDownValue.htm"}, method = {
+        org.springframework.web.bind.annotation.RequestMethod.POST})
+    public ModelAndView saveAdminTabLockdownValue(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            String userId = UserUtils.getUserSession(request).getOrgUserId();
+            LOGGER.info(
+                "****************************************Logging UserID for Application Lockdown Function*****************************************");
+            LOGGER.info("UserId:  " + userId);
+            LOGGER.info(
+                "*********************************************************************************************************************************");
+            JsonNode root = mapper.readTree(request.getReader());
+            GlobalRoleSettings globalRole = mapper
+                .readValue(root.get("lockdowndata").toString(), GlobalRoleSettings.class);
+            globalRole.setRole("super-admin");
+            commonClassDao.update(globalRole);
+
+            response.setCharacterEncoding(CHARACTER_ENCODING);
+            response.setContentType("application / json");
+            request.setCharacterEncoding(CHARACTER_ENCODING);
+
+            PrintWriter out = response.getWriter();
+            String responseString = mapper.writeValueAsString(commonClassDao.getData(GlobalRoleSettings.class));
+            JSONObject j = new JSONObject("{descriptiveScopeDictionaryDatas: " + responseString + "}");
+
+            out.write(j.toString());
+
+            return null;
+        } catch (Exception e) {
+            LOGGER.error("Exception Occured" + e);
+            response.setCharacterEncoding(CHARACTER_ENCODING);
+            request.setCharacterEncoding(CHARACTER_ENCODING);
+            PrintWriter out = response.getWriter();
+            out.write(PolicyUtils.CATCH_EXCEPTION);
+        }
+        return null;
+    }
 }
