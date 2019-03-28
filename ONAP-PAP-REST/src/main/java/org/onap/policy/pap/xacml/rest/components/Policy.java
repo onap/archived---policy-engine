@@ -2,15 +2,15 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,11 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.std.IdentifierImpl;
+import com.att.research.xacml.util.XACMLProperties;
+import com.att.research.xacmlatt.pdp.policy.PolicyDef;
+import com.att.research.xacmlatt.pdp.policy.dom.DOMPolicyDef;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -30,6 +35,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import org.apache.commons.io.FilenameUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
@@ -38,16 +48,6 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.std.IdentifierImpl;
-import com.att.research.xacml.util.XACMLProperties;
-import com.att.research.xacmlatt.pdp.policy.PolicyDef;
-import com.att.research.xacmlatt.pdp.policy.dom.DOMPolicyDef;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 public abstract class Policy {
 
@@ -141,7 +141,7 @@ public abstract class Policy {
     /**
      * Return the data field of the PolicyAdapter that will be used when saving this policy with the savePolicies
      * method.
-     * 
+     *
      * @return Either the PolicyAdapter.getData() or PolicyAdapter.getPolicyData()
      */
     public abstract Object getCorrectPolicyDataObject();
@@ -165,6 +165,7 @@ public abstract class Policy {
         AttributeDesignatorType attributeDesignator = new AttributeDesignatorType();
         URI uri = null;
         try {
+            key = key.replaceAll("\\s+", "");
             uri = new URI(key.replaceAll("\\s+", ""));
         } catch (URISyntaxException e) {
             LOGGER.error("Exception Occured" + e);
@@ -191,6 +192,7 @@ public abstract class Policy {
 
         URI dynamicURI = null;
         try {
+            key = key.replaceAll("\\s+", "");
             dynamicURI = new URI(key.replaceAll("\\s+", ""));
         } catch (URISyntaxException e) {
             LOGGER.error("Exception Occured" + e);// log msg

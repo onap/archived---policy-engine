@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,9 +102,9 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		console.log($scope.data);
 		console.log("$scope.data.microServiceConfigNameDictionaryDatas : " + $scope.data.microServiceConfigNameDictionaryDatas);
 		if($scope.data.microServiceConfigNameDictionaryDatas){
- 		    $scope.microServiceCongigNameDictionaryDatas = JSON.parse($scope.data.microServiceConfigNameDictionaryDatas);
+ 		    $scope.microServiceConfigNameDictionaryDatas = JSON.parse($scope.data.microServiceConfigNameDictionaryDatas);
 		}
-		console.log($scope.microServiceCongigNameDictionaryDatas);
+		console.log($scope.microServiceConfigNameDictionaryDatas);
 	}, function (error) {
 		console.log("failed");
 	});
@@ -253,6 +253,10 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 				for(var i=0; i<inputs.length; i++){
 					if ($scope.temp.policy.ruleData!=undefined){
 						var checkValue = $scope.temp.policy.ruleData[inputs[i].id];
+						var option = document.createElement('option');
+						option.setAttribute('value', checkValue);
+						option.appendChild(document.createTextNode(checkValue));
+						document.getElementById(selects[i].id).appendChild(option);
 						console.log("  checkValue.value :" +  checkValue);
 						console.log(" inputs["+i+"].id :" + inputs[i].id);
 						if (checkValue!=undefined && checkValue != "undefined"){
@@ -1376,20 +1380,52 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			}
 			if( many != true || isRequired != true){ // add an empty option for not required or not multiple select element
 				var optionFirst = document.createElement('option');
-				optionFirst.setAttribute('value', "");
+				var optionValue = "";
+				if($scope.temp.policy.ruleData != null){
+					if($scope.temp.policy.ruleData[labelLevel + attributeName] != undefined && $scope.temp.policy.ruleData[labelLevel + attributeName] != "undefined"){
+						optionValue = $scope.temp.policy.ruleData[labelLevel + attributeName];  
+					}
+				}
+				optionFirst.setAttribute('value', optionValue);
+				optionFirst.appendChild(document.createTextNode(optionValue));
 				listField.appendChild(optionFirst);	
 			}
-			
-			for (i=0; i < listemunerateValues.length; i += 1) {
-				if(typeof listemunerateValues[i] == "string" && listemunerateValues[i].includes("equal-sign")){
-					listemunerateValues[i] = listemunerateValues[i].replace('equal-sign','=');
+			var ruleFormationCheck = false;
+			if(listemunerateValues.length !== 0 && typeof listemunerateValues[0] == "string" && listemunerateValues[0].includes("dictionary:")) {
+				var ruleCheck = listemunerateValues[0].split("&");
+				var dictParams = ruleCheck[0].split(":");
+				var dictParamsSplit = dictParams[1].split("@");
+				if (ruleCheck[1] != undefined  && ruleCheck[1] == 'Rule') {
+					ruleFormationCheck = true;
 				}
-				
-			    option = document.createElement('option');
-			    option.setAttribute('value', listemunerateValues[i]);
-			    option.appendChild(document.createTextNode(listemunerateValues[i]));
-			    option.setAttribute('value', listemunerateValues[i]);
-			    listField.appendChild(option);
+				PolicyAppService.getData(dictParamsSplit[0]).then(function (data) {
+					var j = data;
+					$scope.data = JSON.parse(j.data);
+					console.log($scope.data);
+					$scope.listDictionarys = JSON.parse($scope.data[dictParamsSplit[1]]);
+					for (i=0; i < $scope.listDictionarys.length; i += 1) {
+						option = document.createElement('option');
+						option.setAttribute('value', $scope.listDictionarys[i]);
+						option.appendChild(document.createTextNode($scope.listDictionarys[i]));
+						listField.appendChild(option);
+					}
+				}, function (error) {
+					console.log("failed");
+				});
+
+			}
+			else{
+				for (i=0; i < listemunerateValues.length; i += 1) {
+					if(typeof listemunerateValues[i] == "string" && listemunerateValues[i].includes("equal-sign")){
+						listemunerateValues[i] = listemunerateValues[i].replace('equal-sign','=');
+					}
+					
+				    option = document.createElement('option');
+				    option.setAttribute('value', listemunerateValues[i]);
+				    option.appendChild(document.createTextNode(listemunerateValues[i]));
+				    option.setAttribute('value', listemunerateValues[i]);
+				    listField.appendChild(option);
+				}
 			}
 			listField.setAttribute("id" , ''+ labelLevel + attributeName + '');
 			
@@ -1413,7 +1449,32 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 					document.getElementById(labelLevel +attributeName).options[location+1].selected = true;
 				}
 			}
-		
+			
+			if (ruleFormationCheck) {
+				var optionInput = document.createElement("INPUT");
+				optionInput.setAttribute("type" , "text");
+				optionInput.setAttribute("id" , ''+ labelLevel + attributeName + '.input');
+				optionInput.setAttribute("name" , "ruleName");
+				optionInput.setAttribute("value" , "  ");
+				optionInput.setAttribute("style" , "width:300px;");
+				optionInput.setAttribute("ng-disabled" , "temp.policy.readOnly");
+				optionInput.removeAttribute("required");
+
+				document.getElementById(divID).appendChild(optionInput);
+
+				var optionButton = document.createElement("BUTTON");
+				optionButton.setAttribute("ng-disabled" , "temp.policy.readOnly");
+				var buttonLabel = document.createTextNode("+");       
+				optionButton.appendChild(buttonLabel); 
+				optionButton.setAttribute("class", "btn btn-add-remove");
+				optionButton.setAttribute("onclick" , 'addDynamicOptions("'+ labelLevel + attributeName + '");');
+				optionButton.removeAttribute("required");
+
+
+				document.getElementById(divID).appendChild(optionButton);
+				document.getElementById(divID).appendChild(br); 
+			}
+			
 			if($scope.temp.policy.ruleData != null){
 				if (many == true){
 					document.getElementById(labelLevel +attributeName).options[0].selected = false;
@@ -1434,7 +1495,16 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 					}
 				}
 		    };
-    
+   
+		    addDynamicOptions = function(id) { 
+				var option = document.createElement("option");
+				var value = document.getElementById(id+".input").value;
+				option.setAttribute('value', value);
+				option.appendChild(document.createTextNode(value));
+				document.getElementById(id).options.add(option);
+				document.getElementById(id+".input").value = "";
+			};
+			
     function onlyUnique(value, index, self) { 
         return self.indexOf(value) === index;
     };
