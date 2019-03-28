@@ -44,104 +44,93 @@ public class DictionaryService {
     /*
      * Methods that call the controller method directly to Save and Update dictionary data
      */
-    public String saveOnapDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         DictionaryController dictionary = new DictionaryController();
         ModelAndView result = dictionary.saveOnapDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         DictionaryController dictionary = new DictionaryController();
         ModelAndView result = dictionary.saveAttributeDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveActionPolicyDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         ActionPolicyDictionaryController action = new ActionPolicyDictionaryController();
         ModelAndView result = action.saveActionPolicyDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         BRMSDictionaryController dictionary = new BRMSDictionaryController();
         ModelAndView result = dictionary.saveBRMSParamDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveVSCLAction(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveVSCLAction(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
         ModelAndView result = dictionary.saveVSCLAction(request, response);
         return result.getViewName();
     }
 
-    public String saveVnfType(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveVnfType(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
         ModelAndView result = dictionary.saveVnfType(request, response);
         return result.getViewName();
     }
 
-    public String savePEPOptions(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String savePEPOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
         ModelAndView result = dictionary.savePEPOptions(request, response);
         return result.getViewName();
     }
 
-    public String saveVarbind(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveVarbind(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
         ModelAndView result = dictionary.saveVarbind(request, response);
         return result.getViewName();
     }
 
-    public String saveServiceType(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveServiceType(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
         ModelAndView result = dictionary.saveServiceType(request, response);
         return result.getViewName();
     }
 
-    public String saveSiteType(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveSiteType(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
         ModelAndView result = dictionary.saveSiteType(request, response);
         return result.getViewName();
     }
 
-    public String saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         DecisionPolicyDictionaryController dictionary = new DecisionPolicyDictionaryController();
         ModelAndView result = dictionary.saveSettingsDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveRainyDayDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         DecisionPolicyDictionaryController dictionary = new DecisionPolicyDictionaryController();
         ModelAndView result = dictionary.saveRainyDayDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveDescriptiveDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         DescriptiveDictionaryController dictionary = new DescriptiveDictionaryController();
         ModelAndView result = dictionary.saveDescriptiveDictionary(request, response);
@@ -156,24 +145,23 @@ public class DictionaryService {
         return result.getViewName();
     }
 
-    public String saveProtocolListDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveProtocolListDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         FirewallDictionaryController dictionary = new FirewallDictionaryController();
         ModelAndView result = dictionary.saveProtocolListDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveZoneDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         FirewallDictionaryController dictionary = new FirewallDictionaryController();
         ModelAndView result = dictionary.saveZoneDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveSecurityZoneDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         FirewallDictionaryController dictionary = new FirewallDictionaryController();
         ModelAndView result = dictionary.saveSecurityZoneDictionary(request, response);
@@ -188,32 +176,31 @@ public class DictionaryService {
         return result.getViewName();
     }
 
-    public String saveAddressGroupDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         FirewallDictionaryController dictionary = new FirewallDictionaryController();
         ModelAndView result = dictionary.saveAddressGroupDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveServiceGroupDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         FirewallDictionaryController dictionary = new FirewallDictionaryController();
         ModelAndView result = dictionary.saveServiceGroupDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveServiceListDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveServiceListDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         FirewallDictionaryController dictionary = new FirewallDictionaryController();
         ModelAndView result = dictionary.saveServiceListDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveTermListDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         FirewallDictionaryController dictionary = new FirewallDictionaryController();
         ModelAndView result = dictionary.saveTermListDictionary(request, response);
@@ -222,56 +209,62 @@ public class DictionaryService {
 
 
 
-    public String saveMicroServiceLocationDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
         ModelAndView result = dictionary.saveMicroServiceLocationDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveMicroServiceConfigNameDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
         ModelAndView result = dictionary.saveMicroServiceConfigNameDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response)
+    public String saveMicroServiceDictionaryData(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+
+        MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
+        ModelAndView result = dictionary.saveDictionaryData(request, response);
+        return result.getViewName();
+    }
+
+    public String saveDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
         ModelAndView result = dictionary.saveDCAEUUIDDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveMicroServiceModelsDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
         ModelAndView result = dictionary.saveMicroServiceModelsDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveMicroServiceDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveMicroServiceDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
         ModelAndView result = dictionary.saveMicroServiceAttributeDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveOptimizationModelsDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveOptimizationModelsDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         OptimizationDictionaryController dictionary = new OptimizationDictionaryController();
         ModelAndView result = dictionary.saveOptimizationModelsDictionary(request, response);
         return result.getViewName();
     }
 
-    public String savePSServiceDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String savePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
         ModelAndView result = dictionary.savePSServiceDictionary(request, response);
@@ -286,40 +279,38 @@ public class DictionaryService {
         return result.getViewName();
     }
 
-    public String savePSTypeDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String savePSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
         ModelAndView result = dictionary.savePSTypeDictionary(request, response);
         return result.getViewName();
     }
 
-    public String savePSClosedLoopDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String savePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
         ModelAndView result = dictionary.savePSClosedLoopDictionary(request, response);
         return result.getViewName();
     }
 
-    public String savePSGroupScopeDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String savePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
         ModelAndView result = dictionary.savePSGroupScopeDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public String saveRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         SafePolicyController dictionary = new SafePolicyController();
         ModelAndView result = dictionary.saveRiskTypeDictionary(request, response);
         return result.getViewName();
     }
 
-    public String saveSafePolicyWarningDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public String saveSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         SafePolicyController dictionary = new SafePolicyController();
         ModelAndView result = dictionary.saveSafePolicyWarningDictionary(request, response);
         return result.getViewName();
@@ -448,6 +439,11 @@ public class DictionaryService {
     public void getMicroServiceConfigNameDictionary(HttpServletResponse response) {
         MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
         dictionary.getMicroServiceConfigNameDictionaryEntityData(response);
+    }
+
+    public void getMicroServiceDictionaryData(HttpServletResponse response) {
+        MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
+        dictionary.getMicroServiceDictNameDictionaryEntityData(response);
     }
 
     public void getDCAEUUIDDictionary(HttpServletResponse response) {

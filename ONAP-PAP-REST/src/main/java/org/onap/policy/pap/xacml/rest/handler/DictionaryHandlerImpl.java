@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ package org.onap.policy.pap.xacml.rest.handler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.pap.xacml.rest.service.DictionaryService;
@@ -31,6 +30,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
     /*
      * Get Equivalent for Dictionary Services.
      */
+    @Override
     public void doDictionaryAPIGet(HttpServletRequest request, HttpServletResponse response) {
         String dictionaryType = request.getParameter("dictionaryType");
         try {
@@ -111,6 +111,9 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
                 case "MicroServiceConfigName":
                     dictionary.getMicroServiceConfigNameDictionary(response);
                     break;
+                case "MicroServiceDictionaryData":
+                    dictionary.getMicroServiceDictionaryData(response);
+                    break;
                 case "DCAEUUID":
                     dictionary.getDCAEUUIDDictionary(response);
                     break;
@@ -159,13 +162,13 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
     /**
      * Can be used to extend the services.
      * <p>
-     * getflag=true indicates Get Request.
-     * getflag=false indicates Put Request.
+     * getflag=true indicates Get Request. getflag=false indicates Put Request.
      *
      * @return
      */
+    @Override
     public String extendedOptions(String dictionaryType, HttpServletRequest request, HttpServletResponse response,
-                                  boolean getflag) {
+            boolean getflag) {
         // Default code
         String message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Invalid Dictionary in Request.";
         PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "DictionaryHandler", " Invalid Dictionary in Request.");
@@ -175,6 +178,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
         return null;
     }
 
+    @Override
     public void doDictionaryAPIPut(HttpServletRequest request, HttpServletResponse response) {
         String result = null;
         String dictionaryType = request.getParameter("dictionaryType");
@@ -256,6 +260,9 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
                     break;
                 case "MicroServiceConfigName":
                     result = dictionary.saveMicroServiceConfigNameDictionary(request, response);
+                    break;
+                case "MicroServiceDictionaryData":
+                    dictionary.saveMicroServiceDictionaryData(request, response);
                     break;
                 case "DCAEUUID":
                     result = dictionary.saveDCAEUUIDDictionary(request, response);
