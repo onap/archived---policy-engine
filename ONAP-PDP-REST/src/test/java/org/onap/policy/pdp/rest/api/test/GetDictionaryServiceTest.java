@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -19,6 +19,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pdp.rest.api.test;
 
 import static org.junit.Assert.assertNotNull;
@@ -31,16 +32,14 @@ public class GetDictionaryServiceTest {
 
     @Test
     public void dictionaryJsonTest() throws Exception {
-        Method formatDictionary =
-                GetDictionaryService.class.getDeclaredMethod("formatDictionaryJson", String.class);
+        Method formatDictionary = GetDictionaryService.class.getDeclaredMethod("formatDictionaryJson", String.class);
         formatDictionary.setAccessible(true);
-        String input =
-                "{\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
-                        + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
-                        + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
-                        + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
-                        + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
-                        + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\"}";
+        String input = "{\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
+                + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
+                + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
+                + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
+                + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\",\"key\":\"value\","
+                + "\"key\":\"value\",\"key\":\"value\",\"key\":\"value\"}";
         DictionaryParameters dp = new DictionaryParameters();
         dp.setDictionary("test");
         GetDictionaryService gds = new GetDictionaryService(dp, null);
@@ -178,6 +177,11 @@ public class GetDictionaryServiceTest {
         assertNotNull(result);
         //
         dp.setDictionary("MicroServiceConfigName");
+        gds = new GetDictionaryService(dp, null);
+        result = (String) formatDictionary.invoke(gds, input);
+        assertNotNull(result);
+        //
+        dp.setDictionary("MicroServiceDictionaryData");
         gds = new GetDictionaryService(dp, null);
         result = (String) formatDictionary.invoke(gds, input);
         assertNotNull(result);
