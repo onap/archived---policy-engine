@@ -156,7 +156,7 @@ public class DataToNotifyPdp {
             if (policyName != null) {
                 policyProperties.setProperty(policyName + ".name", policy.getScope() + "."
                         + policyNameWithNoScope.substring(0, policyNameWithNoScope.indexOf('.')));
-                policyLocations.put(policyName + ".url", XACMLPapServlet.papURL + "?id=" + policyName);
+                policyLocations.put(policyName + ".url", XACMLPapServlet.getPapUrl() + "?id=" + policyName);
             }
             roots.add(policyName);
         }
