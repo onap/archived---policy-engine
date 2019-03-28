@@ -52,7 +52,7 @@ public class PolicyAdapter {
             policyAdapter.setConfigPolicyType(configPolicyName);
         }
         if ("Action".equalsIgnoreCase(policyAdapter.getPolicyType())) {
-            new ActionPolicyController().prePopulateActionPolicyData(policyAdapter, entity);
+            new ActionPolicyController().prePopulateActionPolicyData(policyAdapter);
         }
         if ("Decision".equalsIgnoreCase(policyAdapter.getPolicyType())) {
             new DecisionPolicyController().prePopulateDecisionPolicyData(policyAdapter, entity);

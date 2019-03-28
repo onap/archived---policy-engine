@@ -3,6 +3,7 @@
  * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Bell Canada
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +23,6 @@ package org.onap.policy.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +33,6 @@ import javax.xml.bind.JAXBElement;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,132 +55,149 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 @RequestMapping({ "/" })
 public class ActionPolicyController extends RestrictedBaseController {
     private static final Logger LOGGER = FlexLogger.getLogger(ActionPolicyController.class);
+    private static final String PERFORMER_ATTRIBUTE_ID = "performer";
+    private static final String DYNAMIC_RULE_ALGORITHM_FIELD_1 = "dynamicRuleAlgorithmField1";
+    private static final String DYNAMIC_RULE_ALGORITHM_FIELD_2 = "dynamicRuleAlgorithmField2";
+    private LinkedList<Integer> ruleAlgorithmTracker;
+    private Map<String, String> performer = new HashMap<>();
+    private List<Object> ruleAlgorithmList;
 
     public ActionPolicyController() {
         // Default Constructor
     }
 
-    private ArrayList<Object> attributeList;
-    protected LinkedList<Integer> ruleAlgoirthmTracker;
-    public static final String PERFORMER_ATTRIBUTEID = "performer";
-    protected Map<String, String> performer = new HashMap<>();
-    private ArrayList<Object> ruleAlgorithmList;
-
-    public void prePopulateActionPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-        attributeList = new ArrayList<>();
+    public void prePopulateActionPolicyData(PolicyRestAdapter policyAdapter) {
         ruleAlgorithmList = new ArrayList<>();
         performer.put("PDP", "PDPAction");
         performer.put("PEP", "PEPAction");
 
         if (policyAdapter.getPolicyData() instanceof PolicyType) {
-            Object policyData = policyAdapter.getPolicyData();
-            PolicyType policy = (PolicyType) policyData;
-            policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
-            String policyNameValue = policyAdapter.getPolicyName()
-                    .substring(policyAdapter.getPolicyName().indexOf('_') + 1);
-            policyAdapter.setPolicyName(policyNameValue);
-            String description = "";
-            try {
-                description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
-            } catch (Exception e) {
-                LOGGER.error("Error while collecting the desciption tag in ActionPolicy " + policyNameValue, e);
-                description = policy.getDescription();
-            }
-            policyAdapter.setPolicyDescription(description);
-            // Get the target data under policy for Action.
-            TargetType target = policy.getTarget();
-            if (target != null) {
-                // under target we have AnyOFType
-                List<AnyOfType> anyOfList = target.getAnyOf();
-                if (anyOfList != null) {
-                    Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
-                    while (iterAnyOf.hasNext()) {
-                        AnyOfType anyOf = iterAnyOf.next();
-                        // Under AntOfType we have AllOfType
-                        List<AllOfType> allOfList = anyOf.getAllOf();
-                        if (allOfList != null) {
-                            Iterator<AllOfType> iterAllOf = allOfList.iterator();
-                            while (iterAllOf.hasNext()) {
-                                AllOfType allOf = iterAllOf.next();
-                                // Under AllOfType we have Mathch.
-                                List<MatchType> matchList = allOf.getMatch();
-                                if (matchList != null) {
-                                    Iterator<MatchType> iterMatch = matchList.iterator();
-                                    while (iterMatch.hasNext()) {
-                                        MatchType match = iterMatch.next();
-                                        //
-                                        // Under the match we have attributevalue and
-                                        // attributeDesignator. So,finally down to the actual attribute.
-                                        //
-                                        AttributeValueType attributeValue = match.getAttributeValue();
-                                        String value = (String) attributeValue.getContent().get(0);
-                                        AttributeDesignatorType designator = match.getAttributeDesignator();
-                                        String attributeId = designator.getAttributeId();
-                                        // Component attributes are saved under Target here we are fetching them back.
-                                        // One row is default so we are not adding dynamic component at index 0.
-                                        Map<String, String> attribute = new HashMap<>();
-                                        attribute.put("key", attributeId);
-                                        attribute.put("value", value);
-                                        attributeList.add(attribute);
-                                    }
-                                }
-                                policyAdapter.setAttributes(attributeList);
-                            }
-                        }
-                    }
-                }
+            PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
 
-                List<Object> ruleList = policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
-                // Under rule we have Condition and obligation.
-                for (Object o : ruleList) {
-                    if (o instanceof RuleType) {
-                        ConditionType condition = ((RuleType) o).getCondition();
-                        ObligationExpressionsType obligations = ((RuleType) o).getObligationExpressions();
-                        if (condition != null) {
-                            int index = 0;
-                            ApplyType actionApply = (ApplyType) condition.getExpression().getValue();
-                            ruleAlgoirthmTracker = new LinkedList<>();
-                            // Populating Rule Algorithms starting from compound.
-                            prePopulateCompoundRuleAlgorithm(index, actionApply);
-                        }
-                        policyAdapter.setRuleAlgorithmschoices(ruleAlgorithmList);
-                        // get the Obligation data under the rule for Form elements.
-                        if (obligations != null) {
-                            // Under the obligationExpressions we have obligationExpression.
-                            List<ObligationExpressionType> obligationList = obligations.getObligationExpression();
-                            if (obligationList != null) {
-                                Iterator<ObligationExpressionType> iterObligation = obligationList.iterator();
-                                while (iterObligation.hasNext()) {
-                                    ObligationExpressionType obligation = iterObligation.next();
-                                    policyAdapter.setActionAttributeValue(obligation.getObligationId());
-                                    // Under the obligationExpression we have attributeAssignmentExpression.
-                                    List<AttributeAssignmentExpressionType> attributeAssignmentExpressionList = obligation
-                                            .getAttributeAssignmentExpression();
-                                    if (attributeAssignmentExpressionList != null) {
-                                        Iterator<AttributeAssignmentExpressionType> iterAttributeAssignmentExpression = attributeAssignmentExpressionList
-                                                .iterator();
-                                        while (iterAttributeAssignmentExpression.hasNext()) {
-                                            AttributeAssignmentExpressionType attributeAssignmentExpression = iterAttributeAssignmentExpression
-                                                    .next();
-                                            String attributeID = attributeAssignmentExpression.getAttributeId();
-                                            AttributeValueType attributeValue = (AttributeValueType) attributeAssignmentExpression
-                                                    .getExpression().getValue();
-                                            if (attributeID.equals(PERFORMER_ATTRIBUTEID)) {
-                                                for ( Entry<String, String> entry: performer.entrySet()) {
-                                                	String key = entry.getKey();
-                                                    String keyValue = entry.getValue();
-                                                    if (keyValue.equals(attributeValue.getContent().get(0))) {
-                                                        policyAdapter.setActionPerformer(key);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+            // 1. Set policy-name, policy-filename and description to Policy Adapter
+            setPolicyAdapterPolicyNameAndDesc(policyAdapter, policy);
+
+            // 2a. Get the target data under policy for Action.
+            TargetType target = policy.getTarget();
+            if (target == null) {
+                return;
+            }
+
+            // 2b. Set attributes to Policy Adapter
+            setPolicyAdapterAttributes(policyAdapter, target.getAnyOf());
+
+            List<Object> ruleList = policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
+            // Under rule we have Condition and obligation.
+            for (Object o : ruleList) {
+                if (!(o instanceof RuleType)) {
+                    continue;
                 }
+                // 3. Set rule-algorithm choices to Policy Adapter
+                setPolicyAdapterRuleAlgorithmschoices(policyAdapter, (RuleType) o);
+
+                // 4a. Get the Obligation data under the rule for Form elements.
+                ObligationExpressionsType obligations = ((RuleType) o).getObligationExpressions();
+
+                // 4b. Set action attribute-value and action-performer to Policy Adapter
+                setPolicyAdapterActionData(policyAdapter, obligations);
+            }
+        }
+    }
+
+    private void setPolicyAdapterActionData(PolicyRestAdapter policyAdapter, ObligationExpressionsType obligations) {
+        if (obligations == null) {
+            return;
+        }
+        // Under the obligationExpressions we have obligationExpression.
+        List<ObligationExpressionType> obligationList = obligations.getObligationExpression();
+        if (obligationList == null) {
+            return;
+        }
+        for (ObligationExpressionType obligation : obligationList) {
+            policyAdapter.setActionAttributeValue(obligation.getObligationId());
+            // Under the obligationExpression we have attributeAssignmentExpression.
+            List<AttributeAssignmentExpressionType> attributeAssignmentExpressionList = obligation
+                .getAttributeAssignmentExpression();
+            if (attributeAssignmentExpressionList == null) {
+                continue;
+            }
+            for (AttributeAssignmentExpressionType attributeAssignmentExpression : attributeAssignmentExpressionList) {
+                String attributeID = attributeAssignmentExpression.getAttributeId();
+                AttributeValueType attributeValue = (AttributeValueType) attributeAssignmentExpression
+                    .getExpression().getValue();
+                if (!attributeID.equals(PERFORMER_ATTRIBUTE_ID)) {
+                    continue;
+                }
+                performer.forEach((key, keyValue) -> {
+                    if (keyValue.equals(attributeValue.getContent().get(0))) {
+                        policyAdapter.setActionPerformer(key);
+                    }
+                });
+            }
+        }
+    }
+
+    private void setPolicyAdapterPolicyNameAndDesc(PolicyRestAdapter policyAdapter, PolicyType policy) {
+        policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
+        String policyNameValue = policyAdapter.getPolicyName()
+                .substring(policyAdapter.getPolicyName().indexOf('_') + 1);
+        policyAdapter.setPolicyName(policyNameValue);
+        String description;
+        try {
+            description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
+        } catch (Exception e) {
+            LOGGER.error("Error while collecting the description tag in ActionPolicy " + policyNameValue, e);
+            description = policy.getDescription();
+        }
+        policyAdapter.setPolicyDescription(description);
+    }
+
+    private void setPolicyAdapterRuleAlgorithmschoices(PolicyRestAdapter policyAdapter, RuleType o) {
+        ConditionType condition = o.getCondition();
+        if (condition != null) {
+            int index = 0;
+            ApplyType actionApply = (ApplyType) condition.getExpression().getValue();
+            ruleAlgorithmTracker = new LinkedList<>();
+            // Populating Rule Algorithms starting from compound.
+            prePopulateCompoundRuleAlgorithm(index, actionApply);
+        }
+        policyAdapter.setRuleAlgorithmschoices(ruleAlgorithmList);
+    }
+
+    private void setPolicyAdapterAttributes(PolicyRestAdapter policyAdapter, List<AnyOfType> anyOfList) {
+        List<Object> attributeList = new ArrayList<>();
+        if (anyOfList == null) {
+            return;
+        }
+        // under target we have AnyOFType
+        for (AnyOfType anyOf : anyOfList) {
+            // Under AntOfType we have AllOfType
+            List<AllOfType> allOfList = anyOf.getAllOf();
+            if (allOfList == null) {
+                continue;
+            }
+            // Under AllOfType we have Match.
+            for (AllOfType allOfType : allOfList) {
+                List<MatchType> matchList = allOfType.getMatch();
+                if (matchList != null) {
+                    //
+                    // Under the match we have attributeValue and
+                    // attributeDesignator. So,finally down to the actual attribute.
+                    //
+                    // Component attributes are saved under Target here we are fetching them back.
+                    // One row is default so we are not adding dynamic component at index 0.
+                    matchList.forEach(match -> {
+                        AttributeValueType attributeValue = match.getAttributeValue();
+                        String value = (String) attributeValue.getContent().get(0);
+                        AttributeDesignatorType designator = match.getAttributeDesignator();
+                        String attributeId = designator.getAttributeId();
+                        Map<String, String> attribute = new HashMap<>();
+                        attribute.put("key", attributeId);
+                        attribute.put("value", value);
+                        attributeList.add(attribute);
+                    });
+                }
+                policyAdapter.setAttributes(attributeList);
             }
         }
     }
@@ -197,7 +213,7 @@ public class ActionPolicyController extends RestrictedBaseController {
             // Check to see if Attribute Value exists, if yes then it is not a compound rule
             if (jaxbElement.getValue() instanceof AttributeValueType) {
                 prePopulateRuleAlgorithms(index, actionApply, jaxbActionTypes);
-                ruleAlgoirthmTracker.addLast(index);
+                ruleAlgorithmTracker.addLast(index);
                 isCompoundRule = false;
                 index++;
             }
@@ -221,11 +237,11 @@ public class ActionPolicyController extends RestrictedBaseController {
             }
             rule.put("id", "A" + (index + 1));
             // Populate Key and values for Compound Rule
-            rule.put("dynamicRuleAlgorithmField1", "A" + (ruleAlgoirthmTracker.getLast() + 1));
-            ruleAlgoirthmTracker.removeLast();
-            rule.put("dynamicRuleAlgorithmField2", "A" + (ruleAlgoirthmTracker.getLast() + 1));
-            ruleAlgoirthmTracker.removeLast();
-            ruleAlgoirthmTracker.addLast(index);
+            rule.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, "A" + (ruleAlgorithmTracker.getLast() + 1));
+            ruleAlgorithmTracker.removeLast();
+            rule.put(DYNAMIC_RULE_ALGORITHM_FIELD_2, "A" + (ruleAlgorithmTracker.getLast() + 1));
+            ruleAlgorithmTracker.removeLast();
+            ruleAlgorithmTracker.addLast(index);
             ruleAlgorithmList.add(rule);
             index++;
         }
@@ -250,26 +266,25 @@ public class ActionPolicyController extends RestrictedBaseController {
             List<JAXBElement<?>> jaxbInnerActionTypes = innerActionApply.getExpression();
             AttributeDesignatorType attributeDesignator = (AttributeDesignatorType) jaxbInnerActionTypes.get(0)
                     .getValue();
-            ruleMap.put("dynamicRuleAlgorithmField1", attributeDesignator.getAttributeId());
+            ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, attributeDesignator.getAttributeId());
 
             // Get from Attribute Value
             AttributeValueType actionConditionAttributeValue = (AttributeValueType) jaxbActionTypes.get(1).getValue();
             String attributeValue = (String) actionConditionAttributeValue.getContent().get(0);
-            ruleMap.put("dynamicRuleAlgorithmField2", attributeValue);
+            ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_2, attributeValue);
         }
         // Rule Attribute added as value
         else if ((jaxbActionTypes.get(0).getValue()) instanceof AttributeValueType) {
             AttributeValueType actionConditionAttributeValue = (AttributeValueType) jaxbActionTypes.get(0).getValue();
             String attributeValue = (String) actionConditionAttributeValue.getContent().get(0);
-            ruleMap.put("dynamicRuleAlgorithmField2", attributeValue);
+            ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_2, attributeValue);
 
             ApplyType innerActionApply = (ApplyType) jaxbActionTypes.get(1).getValue();
             List<JAXBElement<?>> jaxbInnerActionTypes = innerActionApply.getExpression();
             AttributeDesignatorType attributeDesignator = (AttributeDesignatorType) jaxbInnerActionTypes.get(0)
                     .getValue();
-            ruleMap.put("dynamicRuleAlgorithmField1", attributeDesignator.getAttributeId());
+            ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, attributeDesignator.getAttributeId());
         }
         ruleAlgorithmList.add(ruleMap);
     }
-
 }
