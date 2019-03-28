@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -31,6 +31,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jackson.JsonLoader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,6 +49,13 @@ import java.util.Map;
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -56,25 +67,14 @@ import org.onap.policy.rest.jpa.MicroServiceModels;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jackson.JsonLoader;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 /**
  * The class <code>CreateDcaeMicroServiceControllerTest</code> contains tests for the class
  * {@link <code>CreateDcaeMicroServiceController</code>}*
  *
- * All JUnits are designed to run in the local development environment where they have write
- * privileges and can execute time-sensitive tasks.
- * 
+ * All JUnits are designed to run in the local development environment where they have write privileges and can execute
+ * time-sensitive tasks.
+ *
  */
 
 public class CreateDcaeMicroServiceControllerTest {
@@ -87,38 +87,94 @@ public class CreateDcaeMicroServiceControllerTest {
 
     @Before
     public void setUp() throws Exception {
-
         logger.info("setUp: Entering");
         commonClassDao = mock(CommonClassDao.class);
         List<Object> microServiceModelsData = new ArrayList<Object>();
         MicroServiceModels testData = new MicroServiceModels();
         testData.setVersion("OpenOnap-Junit");
+        testData.setModelName("modelName");
+        testData.setRuleFormation("triggerSignature.signaturesAlarm.alarmSignatures.alarmSignature[VnfType, "
+                + "Contains, FilterValue]@SymptomTriggerSignature.signaturesSymptom.symptomSignatures."
+                + "symptomSignature[symptomVnfType, symptomContains, symptomFilterValue]");
+        testData.setAttributes(
+                "ParentCorrelation Name=String:defaultValue-null:required-true:MANY-false:description-null,"
+                        + "CorrelationWindow=String:defaultValue-null:required-true:MANY-false:description-null,"
+                        + "EmailNotification=String:defaultValue-null:required-true:MANY-false:description-null,"
+                        + "CorrelationPriority=string:defaultValue-null:required-true:MANY-false:description-null,");
+        testData.setRef_attributes("SymptomTriggerSignature=resource-model-symptomEntity:MANY-true:description-null,"
+                + "triggerSignature=resource-model-entity:MANY-true:description-null,"
+                + "SelectServerScope=SELECTSERVERSCOPE:MANY-false,logicalConnector=LOGICALCONNECTOR:MANY-false,"
+                + "ParentCorrelationTraversal=PARENTCORRELATIONTRAVERSAL:MANY-false,");
+        testData.setSub_attributes(
+                "{\"symptomAlarms\":{\"symptomContains\":\"SYMPTOMCONTAINS:defaultValue-null:required-true:MANY-false:"
+                        + "description-null\",\"symptomFilterValue\":\"string:defaultValue-null:"
+                        + "required-true:MANY-false:"
+                        + "description-null\",\"symptomVnfType\":\"SYMPTOMVNFTYPE:defaultValue-null:"
+                        + "required-true:MANY-false:"
+                        + "description-null\"},\"symptomElement\":{\"symptomSignatures\":\"symptomRange:required-true:"
+                        + "MANY-true:description-null\",\"symptomTraversal\":\"SYMPTOMTRAVERSAL:defaultValue-null:"
+                        + "required-true:MANY-false:description-null\"},\"alarms\":{\"Contains\":\"CONTAINS:"
+                        + "defaultValue-null:required-true:MANY-false:description-null\",\"VnfType\":\"VNFTYPE:"
+                        + "defaultValue-null:required-true:MANY-false:description-null\",\"FilterValue\":\"string:"
+                        + "defaultValue-null:required-true:MANY-false:description-null\"},\"resource-model-entity\":"
+                        + "{\"signaturesAlarm\":\"element:required-false:MANY-false:description-null\"},\"range\":"
+                        + "{\"alarmSignature\":\"alarms:required-true:MANY-false:description-null\"},\"symptomRange\":"
+                        + "{\"symptomSignature\":\"symptomAlarms:required-true:MANY-false:description-null\"},"
+                        + "\"element\":"
+                        + "{\"alarmSignatures\":\"range:required-true:MANY-true:description-null\",\"traversal\":"
+                        + "\"TRAVERSAL:" + "defaultValue-null:required-true:MANY-false:description-null\"},"
+                        + "\"resource-model-symptomEntity\":"
+                        + "{\"signaturesSymptom\":\"symptomElement:required-false:MANY-false:description-null\"}}");
+        testData.setAnnotation(
+                "alarmSignatures=matching-true, symptomContains=matching-true, symptomSignatures=matching-true, "
+                        + "symptomTraversal=matching-true, symptomVnfType=matching-true, Contains=matching-true, "
+                        + "SelectServerScope=matching-true, VnfType=matching-true, traversal=matching-true, "
+                        + "logicalConnector=matching-true, ParentCorrelationTraversal=matching-true");
+        testData.setEnumValues("triggerSignature.signaturesAlarm.alarmSignatures.alarmSignature[VnfType, Contains, "
+                + "FilterValue]@SymptomTriggerSignature.signaturesSymptom.symptomSignatures.symptomSignature"
+                + "[symptomVnfType, symptomContains, symptomFilterValue]");
+        testData.setDataOrderInfo("triggerSignature.signaturesAlarm.alarmSignatures.alarmSignature[VnfType, Contains, "
+                + "FilterValue]@SymptomTriggerSignature.signaturesSymptom.symptomSignatures."
+                + "symptomSignature[symptomVnfType, symptomContains, symptomFilterValue]");
         microServiceModelsData.add(testData);
 
         // mock the getDataById() call
-        when(commonClassDao.getDataById(MicroServiceModels.class, "modelName", "test"))
+        when(commonClassDao.getDataById(MicroServiceModels.class, "modelName:version", "TESTMODEL" + ":" + "TODAY"))
                 .thenReturn(microServiceModelsData);
 
-        jsonString =
-                "{\"policyData\": {\"error\": \"\",\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
-                        + " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,"
-                        + "\"date\": \"2017-04-12T21:26:57.000Z\", \"version\": \"\",\"createdBy\": \"someone\","
-                        + "\"modifiedBy\": \"someone\",\"content\": \"\",\"recursive\": false},"
-                        + "\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
-                        + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
-                        + "\"policyName\": \"may1501\", \"policyDescription\": \"testing input\","
-                        + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
-                        + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
-                        + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
-                        + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
+        jsonString = "{\"policyData\":{\"error\":\"\",\"inprocess\":false,\"model\":{\"name\":\"DCAE\","
+                + "\"subScopename\":\"\",\"path\":[],\"type\":\"dir\",\"size\":0,\"createdDate\":"
+                + "\"2019-02-26 09:56:23.0\",\"modifiedDate\":\"2019-02-26 09:56:23.0\",\"version\":"
+                + "\"\",\"createdBy\":\"super-admin\",\"modifiedBy\":\"super-admin\",\"roleType\":\"super-admin\","
+                + "\"content\":\"\",\"recursive\":false},\"tempModel\":{\"name\":\"DCAE\",\"subScopename\":\"\","
+                + "\"path\":[],\"type\":\"dir\",\"size\":0,\"createdDate\":\"2019-02-26 09:56:23.0\","
+                + "\"modifiedDate\":\"2019-02-26 09:56:23.0\",\"version\":\"\",\"createdBy\":\"super-admin\","
+                + "\"modifiedBy\":\"super-admin\",\"roleType\":\"super-admin\",\"content\":\"\","
+                + "\"recursive\":false},\"$$hashKey\":\"object:354\",\"policy\":{\"policyType\":\"Config\","
+                + "\"configPolicyType\":\"Micro Service\",\"serviceType\":\"TESTMODEL\",\"version\":\"TODAY\","
+                + "\"ruleGridData\":[\"Correlation Priority\",\"Correlation Window\","
+                + "\"Email Notification for failures\",\"Select Server Scope\","
+                + "\"Parent Correlation Name\",\"Parent Correlation Traversal\","
+                + "\"traversal\",\"FilterValue\"],\"policyName\":\"testttt\",\"onapName\":"
+                + "\"asdafadf\",\"guard\":\"True\",\"riskType\":\"sfsgs\",\"riskLevel\":\"1\","
+                + "\"priority\":\"1\",\"configName\":\"Search\",\"location\":\"Search\","
+                + "\"uuid\":\"Search\",\"policyScope\":\"PolicyScope_ssaaa123\"}},"
+                + "\"policyJSON\":{\"Correlation Priority\":\"testttt\",\"Correlation Window\":"
+                + "\"testttt\",\"Email Notification for failures\":\"sds@l.com\","
+                + "\"Select Server Scope\":\"testttt\",\"Parent Correlation Name\":"
+                + "\"testttt\",\"Parent Correlation Traversal\":\"testttt\",\"logicalConnector\":"
+                + "\"OR\",\"triggerSignature@0.signatures.alarmSignatures@0.traversal\":\"testttt\","
+                + "\"triggerSignature@0.signatures.alarmSignatures@0.alarmSignature@0.VnfType\":"
+                + "\"  testttt\",\"triggerSignature@0.signatures.alarmSignatures@0."
+                + "alarmSignature@0.Contains\":\"AND\",\"triggerSignature@0.signatures."
+                + "alarmSignatures@0.alarmSignature@0.FilterValue\":\"testttt\"}}";
 
-        configBodyString =
-                "{\"service\":\"SniroPolicyEntityTest\",\"policyName\":\"someone\",\"description\":\"test\","
-                        + "\"templateVersion\":\"1607\",\"version\":\"HD\",\"priority\":\"2\","
-                        + "\"content\":{\"lastPolled\":\"1\",\"boolen-test\":\"true\",\"created\":\"test\","
-                        + "\"retiredDate\":\"test\",\"scope\":\"SNIRO_PLACEMENT_VDHV\",\"name\":\"test\","
-                        + "\"lastModified\":\"test\",\"state\":\"CREATED\",\"type\":\"CONFIG\",\"intent\":\"test\","
-                        + "\"target\":\"SNIRO\"}}";
+        configBodyString = "{\"service\":\"SniroPolicyEntityTest\",\"policyName\":\"someone\",\"description\":\"test\","
+                + "\"templateVersion\":\"1607\",\"version\":\"HD\",\"priority\":\"2\","
+                + "\"content\":{\"lastPolled\":\"1\",\"boolen-test\":\"true\",\"created\":\"test\","
+                + "\"retiredDate\":\"test\",\"scope\":\"SNIRO_PLACEMENT_VDHV\",\"name\":\"test\","
+                + "\"lastModified\":\"test\",\"state\":\"CREATED\",\"type\":\"CONFIG\",\"intent\":\"test\","
+                + "\"target\":\"SNIRO\"}}";
 
         request = mock(HttpServletRequest.class);
         BufferedReader br = new BufferedReader(new StringReader(jsonString));
@@ -129,7 +185,7 @@ public class CreateDcaeMicroServiceControllerTest {
     }
 
     /**
-     * Run the PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter, JsonNode) method test
+     * Run the PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter, JsonNode) method test.
      */
 
     @Test
@@ -137,7 +193,6 @@ public class CreateDcaeMicroServiceControllerTest {
 
         logger.debug("testSetDataToPolicyRestAdapter: enter");
 
-        CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
         CreateDcaeMicroServiceController.setCommonClassDao(commonClassDao);
 
         JsonNode root = null;
@@ -146,27 +201,24 @@ public class CreateDcaeMicroServiceControllerTest {
         PolicyRestAdapter policyData = null;
         try {
             root = JsonLoader.fromString(jsonString);
-            policyData = (PolicyRestAdapter) mapper.readValue(
-                    root.get("policyData").get("policy").toString(), PolicyRestAdapter.class);
+            policyData = mapper.readValue(root.get("policyData").get("policy").toString(), PolicyRestAdapter.class);
         } catch (Exception e) {
             logger.error("testSetDataToPolicyRestAdapter", e);
         }
-
+        CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
         PolicyRestAdapter result = controller.setDataToPolicyRestAdapter(policyData, root);
-        assertTrue(
-                result != null && result.getJsonBody() != null && !result.getJsonBody().isEmpty());
+        assertTrue(result != null && result.getJsonBody() != null && !result.getJsonBody().isEmpty());
 
         logger.debug("result.getJsonBody() : " + result.getJsonBody());
         logger.debug("testSetDataToPolicyRestAdapter: exit");
     }
 
     /**
-     * Run the ModelAndView getDCAEMSTemplateData(HttpServletRequest, HttpServletResponse) method
-     * test
+     * Run the ModelAndView getDCAEMSTemplateData(HttpServletRequest, HttpServletResponse) method test.
      */
 
     @Test
-    public void testGetDCAEMSTemplateData() {
+    public void testGetDcaeMsTemplateData() {
 
         logger.debug("testGetDCAEMSTemplateData: enter");
 
@@ -186,13 +238,13 @@ public class CreateDcaeMicroServiceControllerTest {
             testData.setVersion("1707.4.1.2-Junit");
             microServiceModelsData.add(testData);
             // mock the getDataById() call with the same MS model name
-            when(commonClassDao.getDataById(MicroServiceModels.class, "modelName",
-                    "DkatPolicyBody")).thenReturn(microServiceModelsData);
+            when(commonClassDao.getDataById(MicroServiceModels.class, "modelName", "DkatPolicyBody"))
+                    .thenReturn(microServiceModelsData);
 
             controller.getDCAEMSTemplateData(request, response);
 
-            assertTrue(response.getContentAsString() != null
-                    && response.getContentAsString().contains("dcaeModelData"));
+            assertTrue(
+                    response.getContentAsString() != null && response.getContentAsString().contains("dcaeModelData"));
 
             logger.debug("response: " + response.getContentAsString());
 
@@ -204,8 +256,7 @@ public class CreateDcaeMicroServiceControllerTest {
     }
 
     /**
-     * Run the ModelAndView getModelServiceVersionData(HttpServletRequest, HttpServletResponse)
-     * method test
+     * Run the ModelAndView getModelServiceVersionData(HttpServletRequest, HttpServletResponse) method test.
      */
 
     @Test
@@ -230,8 +281,8 @@ public class CreateDcaeMicroServiceControllerTest {
             microServiceModelsData.add(testData);
 
             // mock the getDataById() call with the same MS model name
-            when(commonClassDao.getDataById(MicroServiceModels.class, "modelName",
-                    "DkatPolicyBody")).thenReturn(microServiceModelsData);
+            when(commonClassDao.getDataById(MicroServiceModels.class, "modelName", "DkatPolicyBody"))
+                    .thenReturn(microServiceModelsData);
             controller.getModelServiceVersionData(request, response);
 
             assertTrue(response.getContentAsString() != null
@@ -248,11 +299,11 @@ public class CreateDcaeMicroServiceControllerTest {
     }
 
     /**
-     * Run the void getDCAEPriorityValuesData(HttpServletRequest, HttpServletResponse) method test
+     * Run the void getDCAEPriorityValuesData(HttpServletRequest, HttpServletResponse) method test.
      */
 
     @Test
-    public void testGetDCAEPriorityValuesData() {
+    public void testGetDcaePriorityValuesData() {
 
         logger.debug("testGetDCAEPriorityValuesData: enter");
 
@@ -262,8 +313,8 @@ public class CreateDcaeMicroServiceControllerTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         try {
             controller.getDCAEPriorityValuesData(request, response);
-            assertTrue(response.getContentAsString() != null
-                    && response.getContentAsString().contains("priorityDatas"));
+            assertTrue(
+                    response.getContentAsString() != null && response.getContentAsString().contains("priorityDatas"));
             logger.debug("response: " + response.getContentAsString());
         } catch (Exception e) {
             logger.error("testGetDCAEPriorityValuesData", e);
@@ -274,11 +325,11 @@ public class CreateDcaeMicroServiceControllerTest {
     }
 
     /**
-     * Run the void prePopulateDCAEMSPolicyData(PolicyRestAdapter, PolicyEntity) method test
+     * Run the void prePopulateDCAEMSPolicyData(PolicyRestAdapter, PolicyEntity) method test.
      */
 
     @Test
-    public void testPrePopulateDCAEMSPolicyData() {
+    public void testPrePopulateDcaeMsPolicyData() {
 
         logger.debug("testPrePopulateDCAEMSPolicyData: enter");
 
@@ -297,9 +348,7 @@ public class CreateDcaeMicroServiceControllerTest {
 
         try {
             root = JsonLoader.fromString(jsonString);
-            restAdapter = (PolicyRestAdapter) mapper.readValue(
-                    root.get("policyData").get("policy").toString(), PolicyRestAdapter.class);
-            PolicyType policyType = new PolicyType();
+            restAdapter = mapper.readValue(root.get("policyData").get("policy").toString(), PolicyRestAdapter.class);
             TargetType target = new TargetType();
 
             // create guard attribute
@@ -364,8 +413,6 @@ public class CreateDcaeMicroServiceControllerTest {
             target.getAnyOf().add(anyRiskType);
 
             // create RiskLevel attribute
-            AnyOfType anyRiskLevel = new AnyOfType();
-            AllOfType allRiskLevel = new AllOfType();
             MatchType matchRiskLevel = new MatchType();
             // set value
             AttributeValueType riskLevel = new AttributeValueType();
@@ -375,6 +422,7 @@ public class CreateDcaeMicroServiceControllerTest {
             AttributeDesignatorType designatorRiskLevel = new AttributeDesignatorType();
             designatorRiskLevel.setAttributeId("RiskLevel");
             matchRiskLevel.setAttributeDesignator(designatorRiskLevel);
+            AllOfType allRiskLevel = new AllOfType();
             allRiskLevel.getMatch().add(matchRiskLevel);
 
             // add a dummy MatchType object since while (matchList.size()>1 ...)
@@ -389,10 +437,10 @@ public class CreateDcaeMicroServiceControllerTest {
             matchDummy2.setAttributeDesignator(designatorDummy2);
 
             allRiskLevel.getMatch().add(matchDummy2);
-
+            AnyOfType anyRiskLevel = new AnyOfType();
             anyRiskLevel.getAllOf().add(allRiskLevel);
             target.getAnyOf().add(anyRiskLevel);
-
+            PolicyType policyType = new PolicyType();
             policyType.setTarget(target);
 
             restAdapter.setPolicyData(policyType);
@@ -417,7 +465,7 @@ public class CreateDcaeMicroServiceControllerTest {
     }
 
     /**
-     * Run the Map<String,String> convert(String, String) method test
+     * Run the Map<String,String> convert(String, String) method test.
      */
 
     @Test
@@ -426,39 +474,38 @@ public class CreateDcaeMicroServiceControllerTest {
 
         String str = "k1=v1,k2=v2,k3=v3";
         String split = ",";
-        Map<String, String> result = CreateDcaeMicroServiceController.convert(str, split);
+        Map<String, String> result = new CreateDcaeMicroServiceController().convert(str, split);
         assertTrue(result != null && result.size() == 3);
 
         logger.debug("testConvert: exit");
     }
 
     /**
-     * Run the Map<String,String> convertMap(Map<String,String>, Map<String,String>) method test
+     * Run the Map<String,String> convertMap(Map<String,String>, Map<String,String>) method test.
      */
 
     @Test
     public void testConvertMap() {
         logger.debug("testConvertMap: enter");
-
-        CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
         Map<String, String> attributesMap = new HashMap<String, String>();
-        Map<String, String> attributesRefMap = new HashMap<String, String>();
-        Map<String, String> attributesListRefMap = controller.getAttributesListRefMap();
-        Map<String, LinkedList<String>> arrayTextList = controller.getArrayTextList();
-        LinkedList<String> list = new LinkedList<String>();
 
         attributesMap.put("keyOne", "valueOne");
         attributesMap.put("keyTwo", "valueTwo");
         attributesMap.put("keyThree", "valueThree");
+        Map<String, String> attributesRefMap = new HashMap<String, String>();
 
         attributesRefMap.put("key4", "value4");
         attributesRefMap.put("key5", "value5");
         attributesRefMap.put("key6", "value6");
+        CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
+        Map<String, String> attributesListRefMap = controller.getAttributesListRefMap();
+        LinkedList<String> list = new LinkedList<String>();
 
         attributesListRefMap.put("key7", "value7");
 
         list.add("l1");
         list.add("l2");
+        Map<String, LinkedList<String>> arrayTextList = controller.getArrayTextList();
         arrayTextList.put("key8", list);
 
         Map<String, String> result = controller.convertMap(attributesMap, attributesRefMap);
@@ -471,12 +518,12 @@ public class CreateDcaeMicroServiceControllerTest {
     }
 
     /**
-     * Run the void SetMSModelData(HttpServletRequest, HttpServletResponse) method test
+     * Run the void SetMSModelData(HttpServletRequest, HttpServletResponse) method test.
      */
 
     // @Ignore
     @Test
-    public void testSetMSModelData() {
+    public void testSetMsModelData() {
 
         logger.debug("testSetMSModelData: enter");
 
@@ -493,9 +540,7 @@ public class CreateDcaeMicroServiceControllerTest {
             String fileName = "";
             try {
                 ClassLoader classLoader = getClass().getClassLoader();
-                fileName =
-                        new File(classLoader.getResource("schedulerPolicies-v1707.xmi").getFile())
-                                .getAbsolutePath();
+                fileName = new File(classLoader.getResource("schedulerPolicies-v1707.xmi").getFile()).getAbsolutePath();
             } catch (Exception e1) {
                 logger.error("Exception Occured while loading file" + e1);
             }
@@ -513,8 +558,7 @@ public class CreateDcaeMicroServiceControllerTest {
     }
 
     /**
-     * 
-     * @ Get File Stream
+     * @ Get File Stream.
      *
      */
     private class MockServletInputStream extends ServletInputStream {

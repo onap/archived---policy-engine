@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,10 +17,14 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.rest.util;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,25 +32,44 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.DictionaryData;
 import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
 
 public class MSModelUtilsTest {
     private static Logger logger = FlexLogger.getLogger(MSModelUtilsTest.class);
+    private static CommonClassDao commonClassDao;
+
+    @Before
+    public void setUp() throws Exception {
+        List<Object> dictionaryData = new ArrayList<Object>();
+        DictionaryData testData = new DictionaryData();
+        testData.setDictionaryName("dictionaryName");
+        testData.setDictionaryDataByName("dictionaryDataByName");
+        dictionaryData.add(testData);
+        logger.info("setUp: Entering");
+        commonClassDao = mock(CommonClassDao.class);
+        when(commonClassDao.getDataById(DictionaryData.class, "dictionaryName", "GocVNFType"))
+                .thenReturn(dictionaryData);
+    }
+
     @Test
-    public void testMSModelUtils(){
+    public void testMSModelUtils() {
         HashMap<String, MSAttributeObject> classMap = new HashMap<>();
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("DKaTVESPolicy-v1802.xmi").getFile());
         MSModelUtils utils = new MSModelUtils("http://org.onap", "http://org.onap.policy");
-        Map<String, MSAttributeObject> tempMap = utils.processEpackage(file.getAbsolutePath().toString(), MODEL_TYPE.XMI);
+        Map<String, MSAttributeObject> tempMap =
+                utils.processEpackage(file.getAbsolutePath().toString(), MODEL_TYPE.XMI);
         classMap.putAll(tempMap);
         MSAttributeObject mainClass = classMap.get("StandardDeviationThreshold");
-        String dependTemp = StringUtils.replaceEach(mainClass.getDependency(), new String[]{"[", "]", " "}, new String[]{"", "", ""});
+        String dependTemp = StringUtils.replaceEach(mainClass.getDependency(), new String[] {"[", "]", " "},
+                new String[] {"", "", ""});
         List<String> dependency = new ArrayList<String>(Arrays.asList(dependTemp.split(",")));
         dependency = utils.getFullDependencyList(dependency, classMap);
         String subAttribute = utils.createSubAttributes(dependency, classMap, "StandardDeviationThreshold");
@@ -55,25 +78,25 @@ public class MSModelUtilsTest {
 
 
     /**
-     * Run the void stringBetweenDots(String, String) method test
+     * Run the void stringBetweenDots(String, String) method test.
      */
 
-     @Test
+    @Test
     public void testStringBetweenDots() {
 
-        //expect: uniqueKeys should contain a string value
-         MSModelUtils controllerA = new MSModelUtils();
+        // expect: uniqueKeys should contain a string value
+        MSModelUtils controllerA = new MSModelUtils();
         String str = "testing\\.byCorrectWay\\.OfDATA";
         assertEquals(1, controllerA.stringBetweenDots(str));
 
-        //expect: uniqueKeys should not contain a string value
+        // expect: uniqueKeys should not contain a string value
         str = "testing\byWrongtWay.\\OfDATA";
         MSModelUtils controllerB = new MSModelUtils();
         assertEquals(0, controllerB.stringBetweenDots(str));
     }
 
     /**
-     * Run the Map<String,String> load(String) method test
+     * Run the Map<String,String> load(String) method test.
      */
 
     @Test
@@ -82,20 +105,20 @@ public class MSModelUtilsTest {
         boolean isLocalTesting = true;
         MSModelUtils controller = new MSModelUtils();
         String fileName = null;
-        Map<String,String> result = null;
+        Map<String, String> result = null;
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            fileName = new File(classLoader.getResource("policy_tosca_tca-v1707.yml").getFile()).getAbsolutePath();
+            fileName = new File(classLoader.getResource("TESTMODEL-v1806.yml").getFile()).getAbsolutePath();
         } catch (Exception e1) {
-            logger.error("Exception Occured while loading file"+e1);
+            logger.error("Exception Occured while loading file" + e1);
         }
-        if(isLocalTesting){
+        if (isLocalTesting) {
             try {
                 result = controller.load(fileName);
             } catch (IOException e) {
                 logger.error("testLoad", e);
                 result = null;
-            }catch(ParserException e){
+            } catch (ParserException e) {
                 logger.error("testLoad", e);
             }
 
@@ -107,7 +130,7 @@ public class MSModelUtilsTest {
     }
 
     /**
-     * Run the void parseTosca(String) method test
+     * Run the void parseTosca(String) method test.
      */
 
     @Test
@@ -118,16 +141,16 @@ public class MSModelUtilsTest {
         String fileName = null;
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            fileName = new File(classLoader.getResource("policy_tosca_tca-v1707.yml").getFile()).getAbsolutePath();
+            fileName = new File(classLoader.getResource("TESTMODEL-v1806.yml").getFile()).getAbsolutePath();
         } catch (Exception e1) {
-            logger.error("Exception Occured while loading file"+e1);
+            logger.error("Exception Occured while loading file" + e1);
         }
 
-        MSModelUtils controller = new MSModelUtils();
-        if(isLocalTesting){
+        MSModelUtils controller = new MSModelUtils(commonClassDao);
+        if (isLocalTesting) {
             try {
                 controller.parseTosca(fileName);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 fail("parseTosca caused error: " + e);
             }
         }

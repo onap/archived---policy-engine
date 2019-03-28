@@ -18,3 +18,5 @@
 
 use onap_sdk;
 drop table if exists policyAuditlog;
+drop table if exists dictionaryData;
+

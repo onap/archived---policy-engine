@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -51,8 +51,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
  * The class <code>MicroServiceDictionaryControllerTest</code> contains tests for the class
  * {@link <code>MicroServiceDictionaryController</code>}*
  *
- * All JUnits are designed to run in the local development environment where they have write
- * privileges and can execute time-sensitive tasks.
+ * All JUnits are designed to run in the local development environment where they have write privileges and can execute
+ * time-sensitive tasks.
  */
 
 public class MicroServiceDictionaryControllerTest {
@@ -71,8 +71,7 @@ public class MicroServiceDictionaryControllerTest {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserLoginId("testUserId");
         userInfo.setUserName("John");
-        when(commonClassDao.getEntityItem(UserInfo.class, "userLoginId", "testing"))
-                .thenReturn(userInfo);
+        when(commonClassDao.getEntityItem(UserInfo.class, "userLoginId", "testing")).thenReturn(userInfo);
 
         List<String> listIds = new ArrayList<String>();
         listIds.add("Jack");
@@ -80,8 +79,7 @@ public class MicroServiceDictionaryControllerTest {
 
         List<String> microList = new ArrayList<String>();
         microList.add("MC-Model");
-        when(commonClassDao.getDataByColumn(MicroServiceLocation.class, "name"))
-                .thenReturn(microList);
+        when(commonClassDao.getDataByColumn(MicroServiceLocation.class, "name")).thenReturn(microList);
 
         List<Object> listId = new ArrayList<Object>();
         listId.add("smith");
@@ -96,18 +94,17 @@ public class MicroServiceDictionaryControllerTest {
 
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
-        jsonString =
-                "{\"microServiceModelsDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,"
-                        + "\"model\": {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],"
-                        + "\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\","
-                        + "\"createdBy\": \"someone\",\"modifiedBy\": \"someone\",\"content\": \"\","
-                        + "\"recursive\": false},\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
-                        + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
-                        + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
-                        + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
-                        + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
-                        + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
-                        + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
+        jsonString = "{\"microServiceModelsDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,"
+                + "\"model\": {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],"
+                + "\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\","
+                + "\"createdBy\": \"someone\",\"modifiedBy\": \"someone\",\"content\": \"\","
+                + "\"recursive\": false},\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
+                + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
+                + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
+                + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
+                + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
+                + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
+                + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
 
         br = new BufferedReader(new StringReader(jsonString));
         // --- mock the getReader() call
@@ -268,19 +265,18 @@ public class MicroServiceDictionaryControllerTest {
 
         try {
             // mock the getReader() call
-            jsonString =
-                    "{\"dcaeUUIDDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,"
-                            + "\"model\": {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],"
-                            + "\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
-                            + " \"version\": \"\",\"createdBy\": \"someone\",\"modifiedBy\": \"someone\","
-                            + "\"content\": \"\",\"recursive\": false},\"tempModel\": "
-                            + "{\"name\": \"testingdata\",\"subScopename\": \"\"},"
-                            + " \"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
-                            + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
-                            + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
-                            + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
-                            + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
-                            + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
+            jsonString = "{\"dcaeUUIDDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,"
+                    + "\"model\": {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],"
+                    + "\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
+                    + " \"version\": \"\",\"createdBy\": \"someone\",\"modifiedBy\": \"someone\","
+                    + "\"content\": \"\",\"recursive\": false},\"tempModel\": "
+                    + "{\"name\": \"testingdata\",\"subScopename\": \"\"},"
+                    + " \"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
+                    + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
+                    + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
+                    + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
+                    + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
+                    + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
             BufferedReader br = new BufferedReader(new StringReader(jsonString));
             when(request.getReader()).thenReturn(br);
             controller.saveDCAEUUIDDictionary(request, response);
@@ -318,8 +314,8 @@ public class MicroServiceDictionaryControllerTest {
             when(request.getReader()).thenReturn(br);
             controller.removeMicroServiceConfigNameDictionary(request, response);
             logger.info("response.getContentAsString(): " + response.getContentAsString());
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceConfigNameDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceConfigNameDictionaryDatas"));
         } catch (Exception e) {
             fail("Exception: " + e);
         }
@@ -335,8 +331,8 @@ public class MicroServiceDictionaryControllerTest {
         controller.getMicroServiceConfigNameByNameDictionaryEntityData(response);
 
         try {
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceConfigNameDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceConfigNameDictionaryDatas"));
             logger.info("response.getContentAsString(): " + response.getContentAsString());
         } catch (UnsupportedEncodingException e) {
             fail("Exception: " + e);
@@ -354,8 +350,8 @@ public class MicroServiceDictionaryControllerTest {
         controller.getMicroServiceConfigNameDictionaryEntityData(response);
 
         try {
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceConfigNameDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceConfigNameDictionaryDatas"));
             logger.info("response.getContentAsString(): " + response.getContentAsString());
         } catch (UnsupportedEncodingException e) {
             fail("Exception: " + e);
@@ -373,25 +369,24 @@ public class MicroServiceDictionaryControllerTest {
 
         try {
             // mock the getReader() call
-            jsonString =
-                    "{\"microServiceConfigNameDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,"
-                            + "\"model\": {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],"
-                            + "\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\","
-                            + "\"createdBy\": \"someone\",\"modifiedBy\": \"someone\",\"content\": \"\","
-                            + "\"recursive\": false},\"tempModel\": {\"name\": \"testingdata\","
-                            + "\"subScopename\": \"\"},\"policy\": "
-                            + "{\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
-                            + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
-                            + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
-                            + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
-                            + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
-                            + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
+            jsonString = "{\"microServiceConfigNameDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,"
+                    + "\"model\": {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],"
+                    + "\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\","
+                    + "\"createdBy\": \"someone\",\"modifiedBy\": \"someone\",\"content\": \"\","
+                    + "\"recursive\": false},\"tempModel\": {\"name\": \"testingdata\","
+                    + "\"subScopename\": \"\"},\"policy\": "
+                    + "{\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
+                    + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
+                    + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
+                    + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
+                    + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
+                    + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
             BufferedReader br = new BufferedReader(new StringReader(jsonString));
             when(request.getReader()).thenReturn(br);
             controller.saveMicroServiceConfigNameDictionary(request, response);
             logger.info("response.getContentAsString(): " + response.getContentAsString());
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceConfigNameDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceConfigNameDictionaryDatas"));
         } catch (Exception e) {
             fail("Exception: " + e);
         }
@@ -423,8 +418,8 @@ public class MicroServiceDictionaryControllerTest {
             when(request.getReader()).thenReturn(br);
             controller.removeMicroServiceConfigNameDictionary(request, response);
             logger.info("response.getContentAsString(): " + response.getContentAsString());
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceConfigNameDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceConfigNameDictionaryDatas"));
         } catch (Exception e) {
             fail("Exception: " + e);
         }
@@ -441,8 +436,8 @@ public class MicroServiceDictionaryControllerTest {
         controller.getMicroServiceLocationByNameDictionaryEntityData(response);
 
         try {
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceLocationDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceLocationDictionaryDatas"));
             logger.info("response.getContentAsString(): " + response.getContentAsString());
         } catch (UnsupportedEncodingException e) {
             fail("Exception: " + e);
@@ -460,8 +455,8 @@ public class MicroServiceDictionaryControllerTest {
         controller.getMicroServiceLocationDictionaryEntityData(response);
 
         try {
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceLocationDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceLocationDictionaryDatas"));
             logger.info("response.getContentAsString(): " + response.getContentAsString());
         } catch (UnsupportedEncodingException e) {
             fail("Exception: " + e);
@@ -479,25 +474,24 @@ public class MicroServiceDictionaryControllerTest {
 
         try {
             // mock the getReader() call
-            jsonString =
-                    "{\"microServiceLocationDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,"
-                            + "\"model\": {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],"
-                            + "\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\","
-                            + "\"version\": \"\",\"createdBy\": \"someone\",\"modifiedBy\": \"someone\","
-                            + "\"content\": \"\",\"recursive\": false},\"tempModel\": "
-                            + "{\"name\": \"testingdata\",\"subScopename\": \"\"},"
-                            + " \"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
-                            + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
-                            + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
-                            + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
-                            + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
-                            + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
+            jsonString = "{\"microServiceLocationDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,"
+                    + "\"model\": {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],"
+                    + "\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\","
+                    + "\"version\": \"\",\"createdBy\": \"someone\",\"modifiedBy\": \"someone\","
+                    + "\"content\": \"\",\"recursive\": false},\"tempModel\": "
+                    + "{\"name\": \"testingdata\",\"subScopename\": \"\"},"
+                    + " \"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
+                    + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
+                    + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
+                    + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
+                    + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
+                    + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
             BufferedReader br = new BufferedReader(new StringReader(jsonString));
             when(request.getReader()).thenReturn(br);
             controller.saveMicroServiceLocationDictionary(request, response);
             logger.info("response.getContentAsString(): " + response.getContentAsString());
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceLocationDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceLocationDictionaryDatas"));
 
         } catch (Exception e) {
             fail("Exception: " + e);
@@ -531,8 +525,8 @@ public class MicroServiceDictionaryControllerTest {
             when(request.getReader()).thenReturn(br);
             controller.removeMicroServiceLocationDictionary(request, response);
             logger.info("response.getContentAsString(): " + response.getContentAsString());
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceLocationDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceLocationDictionaryDatas"));
         } catch (Exception e) {
             fail("Exception: " + e);
         }
@@ -548,8 +542,8 @@ public class MicroServiceDictionaryControllerTest {
         controller.getMicroServiceAttributeByNameDictionaryEntityData(response);
 
         try {
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceAttributeDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceAttributeDictionaryDatas"));
             logger.info("response.getContentAsString(): " + response.getContentAsString());
         } catch (UnsupportedEncodingException e) {
             fail("Exception: " + e);
@@ -567,8 +561,8 @@ public class MicroServiceDictionaryControllerTest {
         controller.getMicroServiceAttributeDictionaryEntityData(response);
 
         try {
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceAttributeDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceAttributeDictionaryDatas"));
             logger.info("response.getContentAsString(): " + response.getContentAsString());
         } catch (UnsupportedEncodingException e) {
             fail("Exception: " + e);
@@ -586,25 +580,23 @@ public class MicroServiceDictionaryControllerTest {
 
         try {
             // mock the getReader() call
-            jsonString =
-                    "{\"modelAttributeDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,"
-                            + "\"model\": {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],"
-                            + "\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\","
-                            + "\"createdBy\": \"someone\",\"modifiedBy\": \"someone\",\"content\": \"\","
-                            + "\"recursive\": false},\"tempModel\": "
-                            + "{\"name\": \"testingdata\",\"subScopename\": \"\"},"
-                            + " \"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
-                            + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
-                            + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
-                            + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
-                            + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
-                            + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
+            jsonString = "{\"modelAttributeDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,"
+                    + "\"model\": {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],"
+                    + "\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\","
+                    + "\"createdBy\": \"someone\",\"modifiedBy\": \"someone\",\"content\": \"\","
+                    + "\"recursive\": false},\"tempModel\": " + "{\"name\": \"testingdata\",\"subScopename\": \"\"},"
+                    + " \"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
+                    + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
+                    + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
+                    + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
+                    + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
+                    + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
             BufferedReader br = new BufferedReader(new StringReader(jsonString));
             when(request.getReader()).thenReturn(br);
             controller.saveMicroServiceAttributeDictionary(request, response);
             logger.info("response.getContentAsString(): " + response.getContentAsString());
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceAttributeDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceAttributeDictionaryDatas"));
         } catch (Exception e) {
             fail("Exception: " + e);
         }
@@ -636,8 +628,8 @@ public class MicroServiceDictionaryControllerTest {
             when(request.getReader()).thenReturn(br);
             controller.removeMicroServiceAttributeDictionary(request, response);
             logger.info("response.getContentAsString(): " + response.getContentAsString());
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceAttributeDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceAttributeDictionaryDatas"));
 
         } catch (Exception e) {
             fail("Exception: " + e);
@@ -755,8 +747,8 @@ public class MicroServiceDictionaryControllerTest {
             when(request.getReader()).thenReturn(br);
             controller.getMicroServiceModelsDictionaryClassEntityData(response);
             logger.info("response.getContentAsString(): " + response.getContentAsString());
-            assertTrue(response.getContentAsString() != null && response.getContentAsString()
-                    .contains("microServiceModelsDictionaryClassDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceModelsDictionaryClassDatas"));
 
         } catch (Exception e) {
             fail("Exception: " + e);
@@ -819,5 +811,84 @@ public class MicroServiceDictionaryControllerTest {
             fail("Exception: " + e);
         }
         logger.info("testRemoveMicroServiceModelsDictionary: exit");
+    }
+
+    @Test
+    public void testRemoveMicroServiceDictionaryData() {
+        logger.info("testRemoveMicroServiceModelsDictionary: Entering");
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        request = mock(HttpServletRequest.class);
+
+        try {
+            jsonString =
+                    "{\"data\": {\"modelName\": \"test\",\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
+                            + "\"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,"
+                            + "\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\",\"createdBy\": \"someone\","
+                            + "\"modifiedBy\": \"someone\",\"content\": \"\",\"recursive\": false},"
+                            + "\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
+                            + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
+                            + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
+                            + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
+                            + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
+                            + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
+                            + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
+
+            BufferedReader br = new BufferedReader(new StringReader(jsonString));
+            when(request.getReader()).thenReturn(br);
+            controller.removeMicroServiceDictionaryData(request, response);
+            logger.info("response.getContentAsString(): " + response.getContentAsString());
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceDictionaryData"));
+        } catch (Exception e) {
+            fail("Exception: " + e);
+        }
+        logger.info("testRemoveMicroServiceModelsDictionary: exit");
+    }
+
+    @Test
+    public void getMicroServiceDictNameDictionaryEntityData() {
+        logger.info("getMicroServiceDictNameDictionaryEntityData: Entering");
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        String msModelJson = "{\"microServiceDictionaryData\":[\"modelName\"]}";
+
+        BufferedReader br = new BufferedReader(new StringReader(msModelJson));
+        request = mock(HttpServletRequest.class);
+
+        try {
+            when(request.getReader()).thenReturn(br);
+            controller.getMicroServiceDictNameDictionaryEntityData(response);
+            logger.info("response.getContentAsString(): " + response.getContentAsString());
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceDictionaryData"));
+
+        } catch (Exception e) {
+            fail("Exception: " + e);
+        }
+
+        logger.info("getMicroServiceDictNameDictionaryEntityData: exit");
+    }
+
+    @Test
+    public void testSaveDictionaryData() {
+        logger.info("testSaveDictionaryData: Entering");
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        request = mock(HttpServletRequest.class);
+
+        try {
+            jsonString = "{\"microServiceDictionaryDatas\": {\"id\": 1,\"dictionaryName\": \"tes1t\","
+                    + "\"dictionaryUrl\": \"tes1t\",\"dictionaryDataByName\": \"test\"}}";
+            BufferedReader br = new BufferedReader(new StringReader(jsonString));
+            when(request.getReader()).thenReturn(br);
+            controller.saveDictionaryData(request, response);
+            logger.info("response.getContentAsString(): " + response.getContentAsString());
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("microServiceDictionaryDatas"));
+        } catch (Exception e) {
+            fail("Exception: " + e);
+        }
+        logger.info("testSaveDictionaryData: exit");
     }
 }
