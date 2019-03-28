@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-PDP-REST
+ * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,27 +18,27 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pap.xacml.rest.model;
+package org.onap.policy.api;
 
-import static org.junit.Assert.assertEquals;
-import com.att.research.xacml.api.pap.PDPPolicy;
-import org.junit.Test;
-import org.onap.policy.xacml.std.pap.StdPDPGroup;
-import org.onap.policy.xacml.std.pap.StdPDPPolicy;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-public class RemoveGroupPolicyTest {
-    @Test
-    public void testRemove() {
-        // Test constructor
-        StdPDPGroup group = new StdPDPGroup();
-        RemoveGroupPolicy remove = new RemoveGroupPolicy(group);
-        assertEquals(remove.isRemoved(), false);
-        assertEquals(remove.getUpdatedObject(), null);
-
-        // Test remove
-        PDPPolicy policy = new StdPDPPolicy();
-        remove.prepareToRemove();
-        remove.removePolicy(policy);
-        assertEquals(remove.isRemoved(), true);
-    }
+/**
+ * The Class PolicyNameType.
+ */
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+public class PolicyNameType {
+    private String policyName;
+    private String policyScope;
+    private String policyType;
+    private String filePrefix;
+    private String clientScope;
+    private String fullPolicyName;
 }
