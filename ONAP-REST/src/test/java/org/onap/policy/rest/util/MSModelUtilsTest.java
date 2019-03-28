@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,8 +19,11 @@
  */
 package org.onap.policy.rest.util;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,15 +31,31 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.DictionaryData;
 import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
 
 public class MSModelUtilsTest {
     private static Logger logger = FlexLogger.getLogger(MSModelUtilsTest.class);
+    private static CommonClassDao commonClassDao;
+
+    @Before
+    public void setUp() throws Exception {
+        List<Object> DictionaryData = new ArrayList<Object>();
+        DictionaryData testData = new DictionaryData();
+        testData.setDictionaryName("dictionaryName");
+        testData.setDictionaryDataByName("dictionaryDataByName");
+        DictionaryData.add(testData);
+        logger.info("setUp: Entering");
+        commonClassDao = mock(CommonClassDao.class);
+        when(commonClassDao.getDataById(DictionaryData.class, "dictionaryName","GocVNFType")).thenReturn(DictionaryData);
+    }
+
     @Test
     public void testMSModelUtils(){
         HashMap<String, MSAttributeObject> classMap = new HashMap<>();
@@ -85,7 +104,7 @@ public class MSModelUtilsTest {
         Map<String,String> result = null;
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            fileName = new File(classLoader.getResource("policy_tosca_tca-v1707.yml").getFile()).getAbsolutePath();
+            fileName = new File(classLoader.getResource("UTKFINAL-v1806.yml").getFile()).getAbsolutePath();
         } catch (Exception e1) {
             logger.error("Exception Occured while loading file"+e1);
         }
@@ -118,12 +137,12 @@ public class MSModelUtilsTest {
         String fileName = null;
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            fileName = new File(classLoader.getResource("policy_tosca_tca-v1707.yml").getFile()).getAbsolutePath();
+            fileName = new File(classLoader.getResource("UTKFINAL-v1806.yml").getFile()).getAbsolutePath();
         } catch (Exception e1) {
             logger.error("Exception Occured while loading file"+e1);
         }
 
-        MSModelUtils controller = new MSModelUtils();
+        MSModelUtils controller = new MSModelUtils(commonClassDao);
         if(isLocalTesting){
             try {
                 controller.parseTosca(fileName);

@@ -1,0 +1,107 @@
+tosca_definitions_version: tosca_simple_yaml_1_0_0
+
+node_types: 
+    
+    # policy root node
+    policy.nodes.Root:
+        derived_from: tosca.nodes.Root
+        properties:
+            policyName:
+                type: string
+                required: true
+            policyVersion:
+                type: string
+                required: true
+            policyScope:
+                type: string
+                required: true
+            policyDescription:
+                type: string
+                required: false
+
+    # virtual policy node for naming 
+    policy.nodes.naming-model:
+        derived_from: policy.nodes.Root
+        properties:
+            Correlation Priority:
+                type: string
+                required: true
+            Correlation Window:
+                type: String
+                required: true
+            Email Notification for failures:
+                type: String
+                required: true
+            Select Server Scope: # Need Dictionary
+                type: String
+                required: true
+            Parent Correlation Name:
+                type: String
+                required: true
+            Parent Correlation Traversal: # Need Dictionary
+                type: String
+                required: true
+            triggerSignature:
+                type: list
+                required: true
+                entry_schema:
+                    - type:policy.data.resource-model-entity 
+            logicalConnector: 
+                type: list
+                required: true
+                entry_schema:
+                    type: string
+                    constraints:
+                       - valid_values: ["OR", "AND"]                    
+data_types:
+    # custom data type
+    policy.data.resource-model-entity:
+        derived_from: tosca.nodes.Root
+        properties:
+            signatures:
+                    type: policy.data.element
+                    required: false        
+
+    policy.data.element:
+        derived_from: tosca.nodes.Root
+        properties:
+            alarmSignatures:
+                type: list
+                required: true
+                entry_schema:
+                    type: policy.data.range
+             
+    policy.data.range:
+        derived_from: tosca.nodes.Root
+        properties:
+            traversal:
+                type: string
+                required: true
+            alarmSignature:
+                type: list
+                required: true
+                entry_schema:
+                    type: policy.data.alarms
+
+    policy.data.alarms:
+        derived_from: tosca.nodes.Root
+        properties:
+            VnfType:
+                type: list
+                required: true
+                entry_schema:
+                    type: string
+                    constraints:
+                       - valid_values: ["dictionary:GocVNFType#Rules"]  
+            Contains:
+                type: list
+                required: true
+                entry_schema:
+                    type: string
+                    constraints:
+                       - valid_values: ["OR", "AND", "CONTAINS", "EQUALS", "NOTEQUALS", "ENDSWITH", "STARTSWITH"]
+            FilterValue:
+                type: string
+                required: true     
+
+JSON_MODEL: signatures.alarmSignatures.alarmSignature               

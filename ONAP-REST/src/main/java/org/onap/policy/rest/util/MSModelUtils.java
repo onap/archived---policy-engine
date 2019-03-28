@@ -2,15 +2,15 @@
  * ============LICENSE_START=======================================================
  * ONAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -65,6 +64,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.json.JSONObject;
 import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.DictionaryData;
 import org.yaml.snakeyaml.Yaml;
 
 
@@ -92,12 +93,14 @@ public class MSModelUtils {
     private static final String DATATYPE = "data_types.policy.data.";
     private static final String TYPE = ".type";
     private static final String REQUIRED = ".required";
+    private static final String DICTIONARYNAME = "dictionaryName";
+    private static final String DICTIONARY = "dictionary:";
     private static final String MATCHABLE = ".matchable";
-    public static final String  STRING = "string";
-    public static final String  INTEGER = "integer";
+    public static final String STRING = "string";
+    public static final String INTEGER = "integer";
     private static final String BOOLEAN = "boolean";
-    public static final String  LIST = "list";
-    public static final String  MAP = "map";
+    public static final String LIST = "list";
+    public static final String MAP = "map";
     private static final String DEFAULT = ".default";
     private static final String MANYFALSE = ":MANY-false";
     private static final String DESCRIPTION = ".description";
@@ -109,19 +112,30 @@ public class MSModelUtils {
     private static final String REQUIREDFALSE = ":required-false";
     private static final String REQUIREDTRUE = ":required-true";
     private static final String MATCHINGTRUE = "matching-true";
-    private static final String DESCRIPTION_KEY = "description";  
-    private static final String DESCRIPTION_TOKEN =":description-";
+    private static final String DESCRIPTION_KEY = "description";
+    private static final String DESCRIPTION_TOKEN = ":description-";
     private static final String PROPERTIES_KEY = "properties";
     private static final String DATA_TYPE = "data_types";
     private static final String ERROR = "error";
     private static final String NODE_TYPE = "node_types";
     private static final String TOSCA_DEFINITION_VERSION = "tosca_definitions_version";
+    private static final String TOSCA_SIMPLE_YAML_1_0_0 = "tosca_simple_yaml_1_0_0";
+    private static final String JSON_MODEL = "JSON_MODEL";
     private StringBuilder dataListBuffer = new StringBuilder();
     private List<String> dataConstraints = new ArrayList<>();
     private String attributeString = null;
     private boolean isDuplicatedAttributes = false;
+    private String jsonRuleFormation = null;
 
-    public MSModelUtils() {}
+    private static CommonClassDao commonClassDao;
+
+    public MSModelUtils() {
+        // Default Constructor
+    }
+
+    public MSModelUtils(CommonClassDao commonClassDao) {
+        MSModelUtils.commonClassDao = commonClassDao;
+    }
 
     public MSModelUtils(String onap, String policy) {
         this.onap = onap;
@@ -136,6 +150,9 @@ public class MSModelUtils {
         XMI
     };
 
+    public enum SearchType {
+        TOSCA_DEFINITION_VERSION, TOSCA_SIMPLE_YAML_1_0_0, NODE_TYPE, DATA_TYPE, JSON_MODEL
+    }
 
     public Map<String, MSAttributeObject> processEpackage(String file, MODEL_TYPE model) {
         if (model == MODEL_TYPE.XMI) {
@@ -145,13 +162,13 @@ public class MSModelUtils {
 
     }
 
-    private void processXMIEpackage(String xmiFile){
+    private void processXMIEpackage(String xmiFile) {
         EPackage root = getEpackage(xmiFile);
         TreeIterator<EObject> treeItr = root.eAllContents();
         String className;
         String returnValue;
 
-        //    Pulling out dependency from file
+        // Pulling out dependency from file
         while (treeItr.hasNext()) {
             EObject obj = treeItr.next();
             if (obj instanceof EClassifier) {
@@ -160,18 +177,18 @@ public class MSModelUtils {
 
                 if (obj instanceof EEnum) {
                     enumMap.putAll(getEEnum(obj));
-                }else if (obj instanceof EClass) {
+                } else if (obj instanceof EClass) {
                     String temp = getDependencyList(eClassifier).toString();
-                    returnValue = StringUtils.replaceEach(temp, new String[]{"[", "]"}, new String[]{"", ""});
+                    returnValue = StringUtils.replaceEach(temp, new String[] {"[", "]"}, new String[] {"", ""});
                     getAttributes(className, returnValue, root);
                 }
             }
         }
 
-        if (!enumMap.isEmpty()){
+        if (!enumMap.isEmpty()) {
             addEnumClassMap();
         }
-        if (!matchingClass.isEmpty()){
+        if (!matchingClass.isEmpty()) {
             checkForMatchingClass();
         }
     }
@@ -179,16 +196,16 @@ public class MSModelUtils {
     private void checkForMatchingClass() {
         HashMap<String, String> tempAttribute = new HashMap<>();
 
-        for (Entry<String, String> set : matchingClass.entrySet()){
+        for (Entry<String, String> set : matchingClass.entrySet()) {
             String key = set.getKey();
-            if (classMap.containsKey(key)){
+            if (classMap.containsKey(key)) {
                 Map<String, String> listAttributes = classMap.get(key).getAttribute();
                 Map<String, String> listRef = classMap.get(key).getRefAttribute();
-                for (  Entry<String, String> eSet : listAttributes.entrySet()){
+                for (Entry<String, String> eSet : listAttributes.entrySet()) {
                     String key2 = eSet.getKey();
                     tempAttribute.put(key2, MATCHINGTRUE);
                 }
-                for (  Entry<String, String> eSet : listRef.entrySet()){
+                for (Entry<String, String> eSet : listRef.entrySet()) {
                     String key3 = eSet.getKey();
                     tempAttribute.put(key3, MATCHINGTRUE);
                 }
@@ -204,10 +221,10 @@ public class MSModelUtils {
     private void updateMatching(HashMap<String, String> tempAttribute, String key) {
         Map<String, MSAttributeObject> newClass = classMap;
 
-        for (Entry<String, MSAttributeObject> updateClass :  newClass.entrySet()){
+        for (Entry<String, MSAttributeObject> updateClass : newClass.entrySet()) {
             Map<String, String> valueMap = updateClass.getValue().getMatchingSet();
             String keymap = updateClass.getKey();
-            if (valueMap.containsKey(key)){
+            if (valueMap.containsKey(key)) {
                 Map<String, String> modifyMap = classMap.get(keymap).getMatchingSet();
                 modifyMap.remove(key);
                 modifyMap.putAll(tempAttribute);
@@ -218,7 +235,7 @@ public class MSModelUtils {
     }
 
     private void addEnumClassMap() {
-        for (Entry<String, MSAttributeObject> value :classMap.entrySet()){
+        for (Entry<String, MSAttributeObject> value : classMap.entrySet()) {
             value.getValue().setEnumType(enumMap);
         }
     }
@@ -241,11 +258,10 @@ public class MSModelUtils {
     private HashMap<String, String> getEEnum(EObject obj) {
         List<String> valueList = new ArrayList<>();
         HashMap<String, String> returnMap = new HashMap<>();
-        EEnum eenum = (EEnum)obj;
+        EEnum eenum = (EEnum) obj;
 
         String name = eenum.getName();
-        for (EEnumLiteral eEnumLiteral : eenum.getELiterals())
-        {
+        for (EEnumLiteral eEnumLiteral : eenum.getELiterals()) {
             Enumerator instance = eEnumLiteral.getInstance();
             String value = instance.getLiteral();
             valueList.add(value);
@@ -256,7 +272,7 @@ public class MSModelUtils {
 
     public void getAttributes(String className, String dependency, EPackage root) {
         List<String> dpendList = new ArrayList<>();
-        if (dependency!=null){
+        if (dependency != null) {
             dpendList = new ArrayList<>(Arrays.asList(dependency.split(",")));
         }
         MSAttributeObject msAttributeObject = new MSAttributeObject();
@@ -282,15 +298,15 @@ public class MSModelUtils {
         boolean requiredMatchAttribute = false;
         HashMap<String, String> annotationSet = new HashMap<>();
 
-        //    Pulling out dependency from file
+        // Pulling out dependency from file
         while (treeItr.hasNext()) {
             EObject obj = treeItr.next();
             if (obj instanceof EClassifier) {
-                requiredAttribute = isRequiredAttribute(obj,  className );
-                requiredMatchAttribute = isRequiredAttribute(obj,  extendClass );
+                requiredAttribute = isRequiredAttribute(obj, className);
+                requiredMatchAttribute = isRequiredAttribute(obj, extendClass);
             }
 
-            if (requiredAttribute){
+            if (requiredAttribute) {
                 if (obj instanceof EStructuralFeature) {
                     checkAnnotation(annotationSet, (EStructuralFeature) obj);
                 }
@@ -306,13 +322,13 @@ public class MSModelUtils {
         if (eStrucClassifier.getEAnnotations().isEmpty()) {
             return;
         }
-        String matching  = annotationValue(eStrucClassifier, ANNOTATION_TYPE.MATCHING, policy);
-        if (matching!=null){
-            if (obj instanceof EReference){
+        String matching = annotationValue(eStrucClassifier, ANNOTATION_TYPE.MATCHING, policy);
+        if (matching != null) {
+            if (obj instanceof EReference) {
                 EClass refType = ((EReference) obj).getEReferenceType();
                 annotationSet.put(refType.getName(), matching);
                 matchingClass.put(refType.getName(), matching);
-            }else{
+            } else {
                 annotationSet.put(eStrucClassifier.getName(), matching);
             }
         }
@@ -324,37 +340,37 @@ public class MSModelUtils {
         if (eStrucClassifier.getEAnnotations().isEmpty()) {
             return;
         }
-        String matching  = annotationValue(eStrucClassifier, ANNOTATION_TYPE.MATCHING, policy);
-        if (matching!=null){
+        String matching = annotationValue(eStrucClassifier, ANNOTATION_TYPE.MATCHING, policy);
+        if (matching != null) {
             annotationSet.put(eStrucClassifier.getName(), matching);
         }
-        String range  = annotationValue(eStrucClassifier, ANNOTATION_TYPE.VALIDATION, policy);
-        if (range!=null){
+        String range = annotationValue(eStrucClassifier, ANNOTATION_TYPE.VALIDATION, policy);
+        if (range != null) {
             annotationSet.put(eStrucClassifier.getName(), range);
         }
         String annotationDict = annotationValue(eStrucClassifier, ANNOTATION_TYPE.DICTIONARY, policy);
-        if (annotationDict!=null){
+        if (annotationDict != null) {
             annotationSet.put(eStrucClassifier.getName(), annotationDict);
         }
     }
 
-    private Map<String, Object> getSubAttributeList(EPackage root, String className , String superClass) {
+    private Map<String, Object> getSubAttributeList(EPackage root, String className, String superClass) {
         TreeIterator<EObject> treeItr = root.eAllContents();
         boolean requiredAttribute = false;
         Map<String, Object> subAttribute = new HashMap<>();
         int rollingCount = 0;
         int processClass = 0;
 
-        //    Pulling out dependency from file
+        // Pulling out dependency from file
         while (treeItr.hasNext() && rollingCount < 2) {
 
             EObject obj = treeItr.next();
             if (obj instanceof EClassifier) {
-                requiredAttribute = isRequiredAttribute(obj,  className ) || isRequiredAttribute(obj,  superClass );
-                if (requiredAttribute){
+                requiredAttribute = isRequiredAttribute(obj, className) || isRequiredAttribute(obj, superClass);
+                if (requiredAttribute) {
                     processClass++;
                 }
-                rollingCount = rollingCount+processClass;
+                rollingCount = rollingCount + processClass;
             }
 
             if (requiredAttribute && (obj instanceof EStructuralFeature)) {
@@ -367,15 +383,16 @@ public class MSModelUtils {
         return subAttribute;
     }
 
-    private void updateSubAttributes(Map<String, Object> subAttribute, EObject obj, EStructuralFeature eStrucClassifier) {
+    private void updateSubAttributes(Map<String, Object> subAttribute, EObject obj,
+            EStructuralFeature eStrucClassifier) {
         if (!(obj instanceof EReference)) {
             return;
         }
         if (annotationTest(eStrucClassifier, configuration, onap)) {
             EClass refType = ((EReference) obj).getEReferenceType();
-            if(!refType.toString().contains(eProxyURI)){
+            if (!refType.toString().contains(eProxyURI)) {
                 String required = REQUIREDFALSE;
-                if(eStrucClassifier.getLowerBound() == 1){
+                if (eStrucClassifier.getLowerBound() == 1) {
                     required = REQUIREDTRUE;
                 }
                 subAttribute.put(eStrucClassifier.getName(), refType.getName() + required);
@@ -384,8 +401,8 @@ public class MSModelUtils {
     }
 
     public String checkDefultValue(String defultValue) {
-        if (defultValue!=null){
-            return DEFAULTVALUE+ defultValue;
+        if (defultValue != null) {
+            return DEFAULTVALUE + defultValue;
         }
         return ":defaultValue-NA";
 
@@ -393,17 +410,18 @@ public class MSModelUtils {
 
     public String checkRequiredPattern(int upper, int lower) {
         String pattern = XACMLProperties.getProperty(XACMLRestProperties.PROP_XCORE_REQUIRED_PATTERN);
-        if (pattern!=null && upper == Integer.parseInt(pattern.split(",")[1]) && lower==Integer.parseInt(pattern.split(",")[0])){
+        if (pattern != null && upper == Integer.parseInt(pattern.split(",")[1])
+                && lower == Integer.parseInt(pattern.split(",")[0])) {
             return REQUIREDTRUE;
         }
         return REQUIREDFALSE;
     }
 
-    public JSONObject buildJavaObject(Map<String, String> map){
-        return  new JSONObject(map);
+    public JSONObject buildJavaObject(Map<String, String> map) {
+        return new JSONObject(map);
     }
 
-    public Map<String, String> getRefAttributeList(EPackage root, String className, String superClass){
+    public Map<String, String> getRefAttributeList(EPackage root, String className, String superClass) {
 
         TreeIterator<EObject> treeItr = root.eAllContents();
         boolean requiredAttribute = false;
@@ -411,59 +429,63 @@ public class MSModelUtils {
         int rollingCount = 0;
         int processClass = 0;
         boolean annotation;
-        //    Pulling out dependency from file
+        // Pulling out dependency from file
         while (treeItr.hasNext()) {
             EObject obj = treeItr.next();
             if (obj instanceof EClassifier) {
-                requiredAttribute = isRequiredAttribute(obj,  className ) || isRequiredAttribute(obj,  superClass );
-                if (requiredAttribute){
+                requiredAttribute = isRequiredAttribute(obj, className) || isRequiredAttribute(obj, superClass);
+                if (requiredAttribute) {
                     processClass++;
                 }
-                rollingCount = rollingCount+processClass;
+                rollingCount = rollingCount + processClass;
             }
 
             if (requiredAttribute && (obj instanceof EStructuralFeature)) {
-                    EStructuralFeature eStrucClassifier = (EStructuralFeature) obj;
-                    if (!eStrucClassifier.getEAnnotations().isEmpty()) {
-                        annotation = annotationTest(eStrucClassifier, configuration, onap);
-                        if ( annotation &&  obj instanceof EReference) {
-                            updRefAttributes(refAttribute, (EStructuralFeature) obj, eStrucClassifier);
-                        } else if (annotation &&  obj instanceof EAttributeImpl) {
-                            updEnumTypeRefAttrib(refAttribute, (EStructuralFeature) obj, eStrucClassifier);
-                        }
+                EStructuralFeature eStrucClassifier = (EStructuralFeature) obj;
+                if (!eStrucClassifier.getEAnnotations().isEmpty()) {
+                    annotation = annotationTest(eStrucClassifier, configuration, onap);
+                    if (annotation && obj instanceof EReference) {
+                        updRefAttributes(refAttribute, (EStructuralFeature) obj, eStrucClassifier);
+                    } else if (annotation && obj instanceof EAttributeImpl) {
+                        updEnumTypeRefAttrib(refAttribute, (EStructuralFeature) obj, eStrucClassifier);
                     }
+                }
             }
         }
 
         return refAttribute;
     }
 
-    private void updEnumTypeRefAttrib(HashMap<String, String> refAttribute, EStructuralFeature obj, EStructuralFeature eStrucClassifier) {
+    private void updEnumTypeRefAttrib(HashMap<String, String> refAttribute, EStructuralFeature obj,
+            EStructuralFeature eStrucClassifier) {
         EClassifier refType = ((EAttributeImpl) obj).getEType();
-        if (!(refType instanceof EEnumImpl)){
+        if (!(refType instanceof EEnumImpl)) {
             return;
         }
 
         String array = arrayCheck(obj.getUpperBound());
         String required = REQUIREDFALSE;
-        if(obj.getLowerBound() == 1){
+        if (obj.getLowerBound() == 1) {
             required = REQUIREDTRUE;
         }
         refAttribute.put(eStrucClassifier.getName(), refType.getName() + array + required);
     }
 
-    private void updRefAttributes(HashMap<String, String> refAttribute, EStructuralFeature obj, EStructuralFeature eStrucClassifier) {
+    private void updRefAttributes(HashMap<String, String> refAttribute, EStructuralFeature obj,
+            EStructuralFeature eStrucClassifier) {
         EClass refType = ((EReference) obj).getEReferenceType();
-        if(refType.toString().contains(eProxyURI)){
+        if (refType.toString().contains(eProxyURI)) {
             String one = refType.toString().split(eProxyURI)[1];
-            String refValue = StringUtils.replaceEach(one.split("#")[1], new String[]{"//", ")"}, new String[]{"", ""});
+            String refValue =
+                    StringUtils.replaceEach(one.split("#")[1], new String[] {"//", ")"}, new String[] {"", ""});
             refAttribute.put(eStrucClassifier.getName(), refValue);
         } else {
             String required = REQUIREDFALSE;
-            if(obj.getLowerBound() == 1){
+            if (obj.getLowerBound() == 1) {
                 required = REQUIREDTRUE;
             }
-            refAttribute.put(eStrucClassifier.getName(), refType.getName() + arrayCheck(obj.getUpperBound()) + required);
+            refAttribute.put(eStrucClassifier.getName(),
+                    refType.getName() + arrayCheck(obj.getUpperBound()) + required);
         }
     }
 
@@ -475,17 +497,17 @@ public class MSModelUtils {
 
         EList<EAnnotation> value = eStrucClassifier.getEAnnotations();
 
-        for (int i = 0; i < value.size(); i++){
+        for (int i = 0; i < value.size(); i++) {
             annotationType = value.get(i).getSource();
             eAnnotation = eStrucClassifier.getEAnnotations().get(i);
             onapType = eAnnotation.getDetails().get(0).getValue();
             onapValue = eAnnotation.getDetails().get(0).getKey();
 
-            if (annotationType.contains(type) && onapType.contains(annotation)){
+            if (annotationType.contains(type) && onapType.contains(annotation)) {
                 return true;
             }
 
-            if (annotationType.contains(type) && onapValue.contains(annotation)){
+            if (annotationType.contains(type) && onapValue.contains(annotation)) {
                 return true;
             }
         }
@@ -502,13 +524,13 @@ public class MSModelUtils {
 
         EList<EAnnotation> value = eStrucClassifier.getEAnnotations();
 
-        for (int i = 0; i < value.size(); i++){
+        for (int i = 0; i < value.size(); i++) {
             annotationType = value.get(i).getSource();
             eAnnotation = eStrucClassifier.getEAnnotations().get(i);
             onapType = eAnnotation.getDetails().get(0).getKey();
-            if (annotationType.contains(type) && onapType.compareToIgnoreCase(annotation.toString())==0){
+            if (annotationType.contains(type) && onapType.compareToIgnoreCase(annotation.toString()) == 0) {
                 onapValue = eAnnotation.getDetails().get(0).getValue();
-                if (annotation == ANNOTATION_TYPE.VALIDATION){
+                if (annotation == ANNOTATION_TYPE.VALIDATION) {
                     return onapValue;
                 } else {
                     return onapType + "-" + onapValue;
@@ -518,21 +540,22 @@ public class MSModelUtils {
 
         return onapValue;
     }
-    public boolean isRequiredAttribute(EObject obj, String className){
+
+    public boolean isRequiredAttribute(EObject obj, String className) {
         EClassifier eClassifier = (EClassifier) obj;
         String workingClass = eClassifier.getName().trim();
-        if (workingClass.equalsIgnoreCase(className)){
-            return  true;
+        if (workingClass.equalsIgnoreCase(className)) {
+            return true;
         }
 
         return false;
     }
 
-    private boolean isPolicyTemplate(EPackage root, String className){
+    private boolean isPolicyTemplate(EPackage root, String className) {
         boolean result = false;
-        for (EClassifier classifier : root.getEClassifiers()){
+        for (EClassifier classifier : root.getEClassifiers()) {
             if (classifier instanceof EClass) {
-                EClass eClass = (EClass)classifier;
+                EClass eClass = (EClass) classifier;
                 if (eClass.getName().contentEquals(className)) {
                     result = checkPolicyTemplate(eClass);
                     break;
@@ -544,9 +567,9 @@ public class MSModelUtils {
 
     private boolean checkPolicyTemplate(EClass eClass) {
         EList<EAnnotation> value = eClass.getEAnnotations();
-        for (EAnnotation workingValue : value){
+        for (EAnnotation workingValue : value) {
             EMap<String, String> keyMap = workingValue.getDetails();
-            if (keyMap.containsKey("policyTemplate")){
+            if (keyMap.containsKey("policyTemplate")) {
                 return true;
             }
         }
@@ -555,7 +578,7 @@ public class MSModelUtils {
 
     private String getSubTypes(EPackage root, String className) {
         String returnSubTypes = null;
-        for (EClassifier classifier : root.getEClassifiers()){
+        for (EClassifier classifier : root.getEClassifiers()) {
             if (classifier instanceof EClass) {
                 returnSubTypes = findSubTypes(className, returnSubTypes, (EClass) classifier);
             }
@@ -566,26 +589,25 @@ public class MSModelUtils {
     private String findSubTypes(String className, String returnSubTypes, EClass classifier) {
         EClass eClass = classifier;
 
-        for (EClass eSuperType : eClass.getEAllSuperTypes())
-        {
-            if (eClass.getName().contentEquals(className)){
+        for (EClass eSuperType : eClass.getEAllSuperTypes()) {
+            if (eClass.getName().contentEquals(className)) {
                 returnSubTypes = eSuperType.getName();
             }
         }
         return returnSubTypes;
     }
 
-    public Map<String, String> getAttributeList(EPackage root, String className, String superClass){
+    public Map<String, String> getAttributeList(EPackage root, String className, String superClass) {
 
         TreeIterator<EObject> treeItr = root.eAllContents();
         boolean requiredAttribute = false;
         HashMap<String, String> refAttribute = new HashMap<>();
 
-        //    Pulling out dependency from file
+        // Pulling out dependency from file
         while (treeItr.hasNext()) {
             EObject obj = treeItr.next();
             if (obj instanceof EClassifier) {
-                requiredAttribute = isRequiredAttribute(obj,  className ) || isRequiredAttribute(obj,  superClass );
+                requiredAttribute = isRequiredAttribute(obj, className) || isRequiredAttribute(obj, superClass);
             }
 
             if (requiredAttribute && (obj instanceof EStructuralFeature)) {
@@ -599,7 +621,8 @@ public class MSModelUtils {
 
     }
 
-    private void checkStrucClassifier(HashMap<String, String> refAttribute, EObject obj, EStructuralFeature eStrucClassifier) {
+    private void checkStrucClassifier(HashMap<String, String> refAttribute, EObject obj,
+            EStructuralFeature eStrucClassifier) {
         EClassifier refType = ((EStructuralFeature) obj).getEType();
         boolean annotation = annotationTest(eStrucClassifier, configuration, onap);
         boolean dictionaryTest = annotationTest(eStrucClassifier, dictionary, policy);
@@ -608,12 +631,13 @@ public class MSModelUtils {
         }
     }
 
-    private void updEReferenceAttrib(HashMap<String, String> refAttribute, boolean dictionaryTest, EStructuralFeature obj, EStructuralFeature eStrucClassifier) {
+    private void updEReferenceAttrib(HashMap<String, String> refAttribute, boolean dictionaryTest,
+            EStructuralFeature obj, EStructuralFeature eStrucClassifier) {
         String eType;
         String name = eStrucClassifier.getName();
-        if (dictionaryTest){
+        if (dictionaryTest) {
             eType = annotationValue(eStrucClassifier, ANNOTATION_TYPE.DICTIONARY, policy);
-        }else {
+        } else {
             eType = eStrucClassifier.getEType().getInstanceClassName();
         }
         String defaultValue = checkDefultValue(obj.getDefaultValueLiteral());
@@ -624,23 +648,24 @@ public class MSModelUtils {
 
     public String arrayCheck(int upperBound) {
 
-        if (upperBound == -1){
+        if (upperBound == -1) {
             return MANYTRUE;
         }
 
         return MANYFALSE;
     }
 
-    public List<String> getDependencyList(EClassifier eClassifier){
+    public List<String> getDependencyList(EClassifier eClassifier) {
         List<String> returnValue = new ArrayList<>();;
         EList<EClass> somelist = ((EClass) eClassifier).getEAllSuperTypes();
-        if (somelist.isEmpty()){
+        if (somelist.isEmpty()) {
             return returnValue;
         }
-        for(EClass depend: somelist){
-            if (depend.toString().contains(eProxyURI)){
+        for (EClass depend : somelist) {
+            if (depend.toString().contains(eProxyURI)) {
                 String one = depend.toString().split(eProxyURI)[1];
-                String value = StringUtils.replaceEach(one.split("#")[1], new String[]{"//", ")"}, new String[]{"", ""});
+                String value =
+                        StringUtils.replaceEach(one.split("#")[1], new String[] {"//", ")"}, new String[] {"", ""});
                 returnValue.add(value);
             }
         }
@@ -648,21 +673,22 @@ public class MSModelUtils {
         return returnValue;
     }
 
-    public Map<String, String> buildSubList(Map<String, String> subClassAttributes, Map<String, MSAttributeObject> classMap, String className){
+    public Map<String, String> buildSubList(Map<String, String> subClassAttributes,
+            Map<String, MSAttributeObject> classMap, String className) {
         Map<String, String> missingValues = new HashMap<>();
         Map<String, String> workingMap;
         boolean enumType;
 
-        for ( Entry<String, String> map : classMap.get(className).getRefAttribute().entrySet()){
+        for (Entry<String, String> map : classMap.get(className).getRefAttribute().entrySet()) {
             String value = map.getValue().split(":")[0];
-            if (value!=null){
+            if (value != null) {
                 classMap.get(className).getEnumType();
                 enumType = classMap.get(className).getEnumType().containsKey(value);
-                if (!enumType){
-                    workingMap =  classMap.get(value).getRefAttribute();
-                    for ( Entry<String, String> subMab : workingMap.entrySet()){
+                if (!enumType) {
+                    workingMap = classMap.get(value).getRefAttribute();
+                    for (Entry<String, String> subMab : workingMap.entrySet()) {
                         String value2 = subMab.getValue().split(":")[0];
-                        if (!subClassAttributes.containsValue(value2)){
+                        if (!subClassAttributes.containsValue(value2)) {
                             missingValues.put(subMab.getKey(), subMab.getValue());
                         }
                     }
@@ -674,15 +700,16 @@ public class MSModelUtils {
         return missingValues;
     }
 
-    public Map<String, Map<String, String>> recursiveReference(Map<String, MSAttributeObject> classMap, String className){
+    public Map<String, Map<String, String>> recursiveReference(Map<String, MSAttributeObject> classMap,
+            String className) {
 
         Map<String, Map<String, String>> returnObject = new HashMap<>();
         Map<String, String> returnClass = getRefclass(classMap, className);
         returnObject.put(className, returnClass);
-        for (Entry<String, String> reAttribute :returnClass.entrySet()){
-            if (reAttribute.getValue().split(":")[1].contains("MANY") &&
-                    classMap.get(reAttribute.getValue().split(":")[0]) != null){
-                    returnObject.putAll(recursiveReference(classMap, reAttribute.getValue().split(":")[0]));
+        for (Entry<String, String> reAttribute : returnClass.entrySet()) {
+            if (reAttribute.getValue().split(":")[1].contains("MANY")
+                    && classMap.get(reAttribute.getValue().split(":")[0]) != null) {
+                returnObject.putAll(recursiveReference(classMap, reAttribute.getValue().split(":")[0]));
             }
 
         }
@@ -694,13 +721,14 @@ public class MSModelUtils {
     public String createJson(Map<String, MSAttributeObject> classMap, String className) {
         boolean enumType;
         Map<String, Map<String, String>> myObject = new HashMap<>();
-        for ( Entry<String, String> map : classMap.get(className).getRefAttribute().entrySet()){
+        for (Entry<String, String> map : classMap.get(className).getRefAttribute().entrySet()) {
             String value = map.getValue().split(":")[0];
-            if (value!=null){
+            if (value != null) {
                 enumType = classMap.get(className).getEnumType().containsKey(value);
-                if (!enumType && map.getValue().split(":")[1].contains("MANY")){
-                        Map<String, Map<String, String>> testRecursive = recursiveReference(classMap, map.getValue().split(":")[0] );
-                        myObject.putAll(testRecursive);
+                if (!enumType && map.getValue().split(":")[1].contains("MANY")) {
+                    Map<String, Map<String, String>> testRecursive =
+                            recursiveReference(classMap, map.getValue().split(":")[0]);
+                    myObject.putAll(testRecursive);
                 }
             }
         }
@@ -709,32 +737,33 @@ public class MSModelUtils {
         return gson.toJson(myObject);
     }
 
-    public Map<String, String> getRefclass(Map<String, MSAttributeObject> classMap, String className){
+    public Map<String, String> getRefclass(Map<String, MSAttributeObject> classMap, String className) {
         HashMap<String, String> missingValues = new HashMap<>();
 
-        if (classMap.get(className).getAttribute()!=null || !classMap.get(className).getAttribute().isEmpty()){
+        if (classMap.get(className).getAttribute() != null || !classMap.get(className).getAttribute().isEmpty()) {
             missingValues.putAll(classMap.get(className).getAttribute());
         }
 
-        if (classMap.get(className).getRefAttribute()!=null || !classMap.get(className).getRefAttribute().isEmpty()){
+        if (classMap.get(className).getRefAttribute() != null || !classMap.get(className).getRefAttribute().isEmpty()) {
             missingValues.putAll(classMap.get(className).getRefAttribute());
         }
 
         return missingValues;
     }
 
-    public String createSubAttributes(List<String> dependency, Map<String, MSAttributeObject> classMap, String modelName) {
+    public String createSubAttributes(List<String> dependency, Map<String, MSAttributeObject> classMap,
+            String modelName) {
 
-        HashMap <String,  Object>  workingMap = new HashMap<>();
+        HashMap<String, Object> workingMap = new HashMap<>();
         MSAttributeObject tempObject;
-        if (dependency!=null){
-            if (dependency.isEmpty()){
+        if (dependency != null) {
+            if (dependency.isEmpty()) {
                 return "{}";
             }
             dependency.add(modelName);
-            for (String element: dependency){
+            for (String element : dependency) {
                 tempObject = classMap.get(element);
-                if (tempObject!=null){
+                if (tempObject != null) {
                     workingMap.putAll(classMap.get(element).getSubClass());
                 }
             }
@@ -743,16 +772,17 @@ public class MSModelUtils {
         return createJson(classMap, modelName);
     }
 
-    public List<String> getFullDependencyList(List<String> dependency, Map<String,MSAttributeObject > classMap) {
+    public List<String> getFullDependencyList(List<String> dependency, Map<String, MSAttributeObject> classMap) {
         ArrayList<String> returnList = new ArrayList<>();
         ArrayList<String> workingList;
         returnList.addAll(dependency);
-        for (String element : dependency ){
-            if (classMap.containsKey(element)){
+        for (String element : dependency) {
+            if (classMap.containsKey(element)) {
                 MSAttributeObject value = classMap.get(element);
-                String rawValue = StringUtils.replaceEach(value.getDependency(), new String[]{"[", "]"}, new String[]{"", ""});
+                String rawValue =
+                        StringUtils.replaceEach(value.getDependency(), new String[] {"[", "]"}, new String[] {"", ""});
                 workingList = new ArrayList<>(Arrays.asList(rawValue.split(",")));
-                for(String depend : workingList) {
+                for (String depend : workingList) {
                     updDependencyList(returnList, depend);
                 }
             }
@@ -762,7 +792,7 @@ public class MSModelUtils {
     }
 
     private void updDependencyList(ArrayList<String> returnList, String depend) {
-        if (!returnList.contains(depend) && !depend.isEmpty()){
+        if (!returnList.contains(depend) && !depend.isEmpty()) {
             returnList.add(depend.trim());
         }
     }
@@ -865,30 +895,34 @@ public class MSModelUtils {
                 @SuppressWarnings("rawtypes")
                 Map.Entry me = (Map.Entry) i.next();
 
-                if (TOSCA_DEFINITION_VERSION.equals(me.getKey())) {
-                    isToscaVersionKeyFound = true;
-                    order++;
-                    m1.put(TOSCA_DEFINITION_VERSION, order);
-                }
+                switch (me.getKey().toString()) {
 
-                if ("tosca_simple_yaml_1_0_0".equals(me.getValue())) {
-                    isToscaVersionValueFound = true;
-                }
+                    case TOSCA_DEFINITION_VERSION:
+                        isToscaVersionKeyFound = true;
+                        order++;
+                        m1.put(TOSCA_DEFINITION_VERSION, order);
 
-                if (NODE_TYPE.equals(me.getKey())) {
-                    isNoteTypeFound = true;
-                    order++;
-                    m1.put(NODE_TYPE, order);
-                }
+                    case TOSCA_SIMPLE_YAML_1_0_0:
+                        isToscaVersionValueFound = true;
 
-                if (DATA_TYPE.equals(me.getKey())) {
-                    isDataTypeFound = true;
-                    order++;
-                    m1.put(DATA_TYPE, order);
-                }
+                    case NODE_TYPE:
+                        isNoteTypeFound = true;
+                        order++;
+                        m1.put(NODE_TYPE, order);
 
+                    case DATA_TYPE:
+                        isDataTypeFound = true;
+                        order++;
+                        m1.put(DATA_TYPE, order);
+
+                    case JSON_MODEL:
+                        setJsonRuleFormation(me.getValue().toString());
+
+                }
             }
-
+            if (!isDataTypeFound) {
+                return "data_types are missing or invalid.";
+            }
             if (!isToscaVersionKeyFound || !isToscaVersionValueFound) {
                 return "tosca_definitions_version is missing or invalid.";
             }
@@ -1100,15 +1134,12 @@ public class MSModelUtils {
                     dataMapForJson.put(uniqueDataKey, attributeIndividualStringBuilder.toString());
                 } else if (LIST.equalsIgnoreCase(typeValue) || MAP.equalsIgnoreCase(typeValue)) {
                     logger.info("requiredValue is:" + requiredValue);
-                    String findList =
-                            DATATYPE + uniqueDataKeySplit[0] + PROPERTIES + uniqueDataKeySplit[1]
-                                    + ".entry_schema.type";
-                    String findDefaultValue =
-                            DATATYPE + uniqueDataKeySplit[0] + PROPERTIES + uniqueDataKeySplit[1]
-                                    + ".entry_schema.default";
-                    String findDescription =
-                            DATATYPE + uniqueDataKeySplit[0] + PROPERTIES + uniqueDataKeySplit[1]
-                                    + ".entry_schema.description";
+                    String findList = DATATYPE + uniqueDataKeySplit[0] + PROPERTIES + uniqueDataKeySplit[1]
+                            + ".entry_schema.type";
+                    String findDefaultValue = DATATYPE + uniqueDataKeySplit[0] + PROPERTIES + uniqueDataKeySplit[1]
+                            + ".entry_schema.default";
+                    String findDescription = DATATYPE + uniqueDataKeySplit[0] + PROPERTIES + uniqueDataKeySplit[1]
+                            + ".entry_schema.description";
                     String listValue = map.get(findList);
                     String defaultValue = map.get(findDefaultValue);
                     String description = map.get(findDescription);
@@ -1122,27 +1153,50 @@ public class MSModelUtils {
                             referenceIndividualStringBuilder.append(requiredValue + MANYTRUE);
                             referenceIndividualStringBuilder.append(DESCRIPTION_TOKEN + description);
                             dataMapForJson.put(uniqueDataKey, referenceIndividualStringBuilder.toString());
-                        } else {  // Its string
+                        } else { // Its string
                             StringBuilder stringListItems = new StringBuilder();
                             if (LIST.equalsIgnoreCase(typeValue)) {
-                                stringListItems.append(uniqueDataKeySplit[1].toUpperCase() + DEFAULTVALUE
-                                        + defaultValue + REQUIREDVALUE + requiredValue + MANYFALSE + DESCRIPTION_TOKEN
-                                        + description);
+                                stringListItems.append(uniqueDataKeySplit[1].toUpperCase() + DEFAULTVALUE + defaultValue
+                                        + REQUIREDVALUE + requiredValue + MANYFALSE + DESCRIPTION_TOKEN + description);
                             } else if (MAP.equalsIgnoreCase(typeValue)) {
-                                stringListItems.append(uniqueDataKeySplit[1].toUpperCase() + DEFAULTVALUE
-                                        + defaultValue + REQUIREDVALUE + requiredValue + MANYTRUE + DESCRIPTION_TOKEN
-                                        + description);
+                                stringListItems.append(uniqueDataKeySplit[1].toUpperCase() + DEFAULTVALUE + defaultValue
+                                        + REQUIREDVALUE + requiredValue + MANYTRUE + DESCRIPTION_TOKEN + description);
                             }
                             dataMapForJson.put(uniqueDataKey, stringListItems.toString());
                             dataListBuffer.append(uniqueDataKeySplit[1].toUpperCase() + "=[");
                             for (int i = 0; i < 10; i++) {
-                                String findConstraints =
-                                        DATATYPE + uniqueDataKeySplit[0] + PROPERTIES + uniqueDataKeySplit[1]
-                                                + ".entry_schema.constraints.0.valid_values." + i;
+                                String findConstraints = DATATYPE + uniqueDataKeySplit[0] + PROPERTIES
+                                        + uniqueDataKeySplit[1] + ".entry_schema.constraints.0.valid_values." + i;
                                 String constraintsValue = map.get(findConstraints);
                                 logger.info(constraintsValue);
+                                boolean ruleCheck = false;
                                 if (constraintsValue == null) {
                                     break;
+                                } else if (constraintsValue.startsWith(DICTIONARY)) {
+                                    List<Object> dictFromDB = null;
+                                    String[] dictionaryNameValRule;
+                                    String[] dictionaryName = constraintsValue.split(":");
+                                    String dictionaryNameVal = dictionaryName[1];
+                                    if (dictionaryNameVal.contains("#Rules")) {
+                                        ruleCheck = true;
+                                        dictionaryNameValRule = dictionaryNameVal.split("#");
+                                        dictFromDB = commonClassDao.getDataById(DictionaryData.class, DICTIONARYNAME,
+                                                dictionaryNameValRule[0]);
+                                    } else {
+                                        dictFromDB = commonClassDao.getDataById(DictionaryData.class, DICTIONARYNAME,
+                                                dictionaryName[1]);
+                                    }
+                                    if (dictFromDB != null && !dictFromDB.isEmpty()) {
+                                        DictionaryData data = (DictionaryData) dictFromDB.get(0);
+                                        if (ruleCheck) {
+                                            constraintsValue = DICTIONARY + data.getDictionaryUrl() + "@"
+                                                    + data.getDictionaryDataByName() + "&Rule";
+                                        } else {
+                                            constraintsValue = DICTIONARY + data.getDictionaryUrl() + "@"
+                                                    + data.getDictionaryDataByName();
+                                        }
+                                    }
+                                    dataListBuffer.append(constraintsValue + ",");
                                 } else {
                                     logger.info("constraintsValue => " + constraintsValue);
                                     if (constraintsValue.contains("=")) {
@@ -1157,12 +1211,10 @@ public class MSModelUtils {
                         }
                     }
                 } else {
-                    String findUserDefined =
-                            DATATYPE + uniqueDataKeySplit[0] + "." + PROPERTIES_KEY + "." + uniqueDataKeySplit[1]
-                                    + ".type";
-                    String findDescription =
-                            DATATYPE + uniqueDataKeySplit[0] + "." + PROPERTIES_KEY + "." + uniqueDataKeySplit[1]
-                                    + ".description";
+                    String findUserDefined = DATATYPE + uniqueDataKeySplit[0] + "." + PROPERTIES_KEY + "."
+                            + uniqueDataKeySplit[1] + ".type";
+                    String findDescription = DATATYPE + uniqueDataKeySplit[0] + "." + PROPERTIES_KEY + "."
+                            + uniqueDataKeySplit[1] + ".description";
                     String userDefinedValue = map.get(findUserDefined);
                     String description = map.get(findDescription);
                     String trimValue = userDefinedValue.substring(userDefinedValue.lastIndexOf('.') + 1);
@@ -1194,11 +1246,10 @@ public class MSModelUtils {
                         hm = mapKey.get(uniqueKey);
                         String keyStr = key.substring(key.lastIndexOf('.') + 1);
                         String valueStr = map.get(key);
-                        if ("type".equalsIgnoreCase(keyStr)
-                                && key.contains("entry_schema.0.type") || key.contains("entry_schema.type")
-                                        && valueStr.contains("policy.data.")) {
+                        if ("type".equalsIgnoreCase(keyStr) && key.contains("entry_schema.0.type")
+                                || key.contains("entry_schema.type") && valueStr.contains("policy.data.")) {
                             throw new ParserException(
-                                "For user defined object type, Please make sure no space between 'type:' and object "
+                                    "For user defined object type, Please make sure no space between 'type:' and object "
                                             + valueStr);
 
                         }
@@ -1230,7 +1281,7 @@ public class MSModelUtils {
         return mapKey;
     }
 
-    void createAttributes(LinkedHashMap<String, LinkedHashMap<String, String>> mapKey) {
+    private void createAttributes(LinkedHashMap<String, LinkedHashMap<String, String>> mapKey) {
         StringBuilder attributeStringBuilder = new StringBuilder();
         StringBuilder referenceStringBuilder = new StringBuilder();
         StringBuilder listBuffer = new StringBuilder();
@@ -1282,10 +1333,9 @@ public class MSModelUtils {
 
                 }
 
-                if (!isDefinedType && LIST.equalsIgnoreCase(keyValues.get("type"))) {
-                    if (constraints == null || constraints.isEmpty()) {
-                        referenceStringBuilder.append(keySetString + "=MANY-true" + ",");
-                    }
+                if (!isDefinedType && LIST.equalsIgnoreCase(keyValues.get("type"))
+                        && (constraints == null || constraints.isEmpty())) {
+                    referenceStringBuilder.append(keySetString + "=MANY-true" + ",");
                 }
             } else {
                 // User defined Datatype.
@@ -1308,6 +1358,15 @@ public class MSModelUtils {
                 // List handling.
                 listBuffer.append(keySetString.toUpperCase() + "=[");
                 for (String str : constraints) {
+                    if (str.contains(DICTIONARY)) {
+                        String[] dictionaryName = str.split(":");
+                        List<Object> dictFromDB =
+                                commonClassDao.getDataById(DictionaryData.class, DICTIONARYNAME, dictionaryName[1]);
+                        if (dictFromDB != null && !dictFromDB.isEmpty()) {
+                            DictionaryData data = (DictionaryData) dictFromDB.get(0);
+                            str = DICTIONARY + data.getDictionaryUrl() + "@" + data.getDictionaryDataByName();
+                        }
+                    }
                     listBuffer.append(str + ",");
                 }
                 listBuffer.append("]#");
@@ -1361,7 +1420,7 @@ public class MSModelUtils {
 
         for (Entry<?, ?> entry : map.entrySet()) {
 
-            if (orderedElements.indexOf((String) entry.getKey()) >= 0) { // duplicated attribute names
+            if (orderedElements.indexOf(entry.getKey()) >= 0) { // duplicated attribute names
                 isDuplicatedAttributes = true;
                 return;
             } else {
@@ -1416,6 +1475,14 @@ public class MSModelUtils {
 
     public void setDataOrderInfo(String dataOrderInfo) {
         this.dataOrderInfo = dataOrderInfo;
+    }
+
+    public String getJsonRuleFormation() {
+        return jsonRuleFormation;
+    }
+
+    public void setJsonRuleFormation(String jsonRuleFormation) {
+        this.jsonRuleFormation = jsonRuleFormation;
     }
 
 }
