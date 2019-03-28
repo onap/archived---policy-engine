@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,46 +20,53 @@
 
 package org.onap.policy.pap.xacml.rest.model;
 
+import com.att.research.xacml.api.pap.PDPPolicy;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.onap.policy.rest.util.PDPPolicyContainer;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 
-import com.att.research.xacml.api.pap.PDPPolicy;
-
 public class RemoveGroupPolicy {
 
-
-    //Container from where we are fetching the policies
+    // Container from where we are fetching the policies
     private static PDPPolicyContainer policyContainer;
 
-    private RemoveGroupPolicy self = this;
     private StdPDPGroup updatedObject;
     private final StdPDPGroup group;
     private boolean isSaved = false;
 
+    /**
+     * Instantiates a new removes the group policy.
+     *
+     * @param group the group
+     */
     public RemoveGroupPolicy(StdPDPGroup group) {
 
         this.group = group;
 
     }
 
-    public void prepareToRemove(PDPPolicy policy) {
-
+    /**
+     * Prepare to remove.
+     */
+    public void prepareToRemove() {
         if (this.group == null) {
             return;
         }
         setRemoveGroupPolicy(new PDPPolicyContainer(group));
+    }
 
+    /**
+     * Removes the policy.
+     *
+     * @param policy the policy
+     */
+    public void removePolicy(PDPPolicy policy) {
         RemoveGroupPolicy.policyContainer.removeItem(policy);
-
-        self.doSave();
-
-        self.isSaved = true;
-
+        this.doSave();
+        this.isSaved = true;
     }
 
     private static void setRemoveGroupPolicy(PDPPolicyContainer pdpPolicyContainer) {
@@ -72,14 +79,11 @@ public class RemoveGroupPolicy {
             return;
         }
 
-        StdPDPGroup updatedGroupObject = new StdPDPGroup(
-                group.getId(),
-                group.isDefaultGroup(),
-                group.getName(),
-                group.getDescription(),
-                null);
+        StdPDPGroup updatedGroupObject =
+                new StdPDPGroup(group.getId(), group.isDefaultGroup(), group.getName(), group.getDescription(), null);
 
-        // replace the original set of Policies with the set from the container (possibly modified by the user)
+        // replace the original set of Policies with the set from the container (possibly modified
+        // by the user)
         Set<PDPPolicy> changedPolicies = new HashSet<>();
         changedPolicies.addAll((Collection<PDPPolicy>) RemoveGroupPolicy.policyContainer.getItemIds());
         updatedGroupObject.setPolicies(changedPolicies);
@@ -100,6 +104,15 @@ public class RemoveGroupPolicy {
 
     public OnapPDPGroup getUpdatedObject() {
         return this.updatedObject;
+    }
+
+    /**
+     * Gets the group.
+     *
+     * @return the group
+     */
+    public StdPDPGroup getGroup() {
+        return group;
     }
 
 }

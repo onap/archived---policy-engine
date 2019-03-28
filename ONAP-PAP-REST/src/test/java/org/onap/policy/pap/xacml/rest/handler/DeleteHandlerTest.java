@@ -96,7 +96,7 @@ public class DeleteHandlerTest {
 		// Test deletion from PAP
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		try {
-			handler.doAPIDeleteFromPAP(request, response);
+			handler.doApiDeleteFromPap(request, response);
 		} catch (Exception ex) {
 			fail("Not expecting an exception: " + ex);
 		}
@@ -104,7 +104,7 @@ public class DeleteHandlerTest {
         // Test deletion from PDP
         ONAPLoggingContext loggingContext = Mockito.mock(ONAPLoggingContext.class);
         try {
-            handler.doAPIDeleteFromPDP(request, response, loggingContext);
+            handler.doApiDeleteFromPdp(request, response, loggingContext);
         }
         catch (Exception ex) {
             fail("Not expecting an exception: " + ex);

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,12 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.handler;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.onap.policy.common.logging.ONAPLoggingContext;
 import org.onap.policy.pap.xacml.rest.service.ImportService;
 import org.onap.policy.pap.xacml.rest.service.MetricService;
@@ -34,6 +32,14 @@ public class APIRequestHandler {
 
     private OnapPDPGroup newGroup;
 
+    /**
+     * Do get.
+     *
+     * @param request the request
+     * @param response the response
+     * @param apiflag the apiflag
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void doGet(HttpServletRequest request, HttpServletResponse response, String apiflag) throws IOException {
         // Request from the API to get Dictionary Items
         if ("api".equalsIgnoreCase(apiflag)) {
@@ -58,9 +64,17 @@ public class APIRequestHandler {
         }
     }
 
+    /**
+     * Do put.
+     *
+     * @param request the request
+     * @param response the response
+     * @param service the service
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void doPut(HttpServletRequest request, HttpServletResponse response, String service) throws IOException {
-        if ("MICROSERVICE".equalsIgnoreCase(service) || "BRMSPARAM".equalsIgnoreCase(service) ||
-                "OPTIMIZATION".equalsIgnoreCase(service)) {
+        if ("MICROSERVICE".equalsIgnoreCase(service) || "BRMSPARAM".equalsIgnoreCase(service)
+                || "OPTIMIZATION".equalsIgnoreCase(service)) {
             ImportService importService = new ImportService();
             importService.doImportMicroServicePut(request, response);
             return;
@@ -74,13 +88,22 @@ public class APIRequestHandler {
         }
     }
 
+    /**
+     * Do delete.
+     *
+     * @param request the request
+     * @param response the response
+     * @param loggingContext the logging context
+     * @param apiflag the apiflag
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void doDelete(HttpServletRequest request, HttpServletResponse response, ONAPLoggingContext loggingContext,
-                         String apiflag) throws IOException, SQLException {
+            String apiflag) throws IOException {
         DeleteHandler deleteHandler = DeleteHandler.getInstance();
         if ("deletePapApi".equalsIgnoreCase(apiflag)) {
-            deleteHandler.doAPIDeleteFromPAP(request, response);
+            deleteHandler.doApiDeleteFromPap(request, response);
         } else if ("deletePdpApi".equalsIgnoreCase(apiflag)) {
-            deleteHandler.doAPIDeleteFromPDP(request, response, loggingContext);
+            deleteHandler.doApiDeleteFromPdp(request, response, loggingContext);
             setNewGroup(deleteHandler.getDeletedGroup());
         }
     }
