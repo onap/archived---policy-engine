@@ -3,13 +3,14 @@
  * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Bell Canada
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,24 +40,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/")
-public class PolicyUserInfoController extends RestrictedBaseController{
-	
-	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyUserInfoController.class);
-	
-	@RequestMapping(value="/get_PolicyUserInfo", method = RequestMethod.GET)
-	public void getPolicyUserInfo(HttpServletRequest request, HttpServletResponse response){
-		JsonMessage msg = null;
-		try {
-			String userId =  UserUtils.getUserSession(request).getOrgUserId();
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("userid", userId);
-			msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		} catch (Exception e) {
-			LOGGER.error("Exception Occured"+e);
-		}
-	}
+public class PolicyUserInfoController extends RestrictedBaseController {
 
+    private static final Logger LOGGER = FlexLogger.getLogger(PolicyUserInfoController.class);
+
+    @RequestMapping(value = "/get_PolicyUserInfo", method = RequestMethod.GET)
+    public void getPolicyUserInfo(HttpServletRequest request, HttpServletResponse response) {
+        JsonMessage msg;
+        try {
+            String userId = UserUtils.getUserSession(request).getOrgUserId();
+            Map<String, Object> model = new HashMap<>();
+            ObjectMapper mapper = new ObjectMapper();
+            model.put("userid", userId);
+            msg = new JsonMessage(mapper.writeValueAsString(model));
+            JSONObject j = new JSONObject(msg);
+            response.getWriter().write(j.toString());
+        } catch (Exception e) {
+            LOGGER.error("Exception Occurred" + e);
+        }
+    }
 }

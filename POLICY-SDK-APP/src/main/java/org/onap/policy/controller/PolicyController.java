@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
+ * Modifications Copyright (C) 2019 Bell Canada
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +38,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import javax.annotation.PostConstruct;
-import javax.mail.MessagingException;
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -597,12 +597,7 @@ public class PolicyController extends RestrictedBaseController {
      */
     public void watchPolicyFunction(PolicyVersion entity, String policyName, String mode) {
         PolicyNotificationMail email = new PolicyNotificationMail();
-        try {
-            email.sendMail(entity, policyName, mode, commonClassDao);
-        } catch (MessagingException e) {
-            policyLogger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR
-                    + "Excepton Occured while Renaming/Deleting a Policy or Scope" + e);
-        }
+        email.sendMail(entity, policyName, mode, commonClassDao);
     }
 
     /**
