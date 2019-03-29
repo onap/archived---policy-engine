@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a30c8c16_3c252909",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T23:07:47Z",
+      "side": 1,
+      "message": "looks like this whole block should use a switch statement instead",
+      "revId": "5c3bbfbb6aedc7e6611220b16759bfa8279dfcbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14c9b660_f0f08a7d",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T23:07:47Z",
+      "side": 1,
+      "message": "why is this static?  does it need to be synchronized somehow?",
+      "revId": "5c3bbfbb6aedc7e6611220b16759bfa8279dfcbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5bf8e1f_9fdaa8f6",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T23:07:47Z",
+      "side": 1,
+      "message": "this seems odd - only gets the last item so why the \"for()\" loop and the keyList?",
+      "revId": "5c3bbfbb6aedc7e6611220b16759bfa8279dfcbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86b40ca7_fc2de07b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T23:07:47Z",
+      "side": 1,
+      "message": "don\u0027t use \"int j\", use: for(value: tempSt)",
+      "revId": "5c3bbfbb6aedc7e6611220b16759bfa8279dfcbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64023858_e9e356d5",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T23:07:47Z",
+      "side": 1,
+      "message": "compile this pattern once and put it into a static final Pattern.\n\nThen change this whole method to:\n  return PATTERN.matcher(patternString).find();",
+      "revId": "5c3bbfbb6aedc7e6611220b16759bfa8279dfcbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7246791_5e1234d7",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 828,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T23:07:47Z",
+      "side": 1,
+      "message": "TreeSet makes sense if there aren\u0027t many values.  If there are many values, then use HashMap or LinkedHashMap.\n\nsame comment below",
+      "revId": "5c3bbfbb6aedc7e6611220b16759bfa8279dfcbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e9bddfb_b6d5c431",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1332,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T23:07:47Z",
+      "side": 1,
+      "message": "maybe just use plain \"Map\" in these sets of lines",
+      "revId": "5c3bbfbb6aedc7e6611220b16759bfa8279dfcbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e47f301_f4e34d75",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryGridController/MSModelDictionaryDataController.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T23:07:47Z",
+      "side": 1,
+      "message": "remove \"\u003d\u003d true\"\n\nlooks like the if/else blocks could be combined into two lines:\n  $scope.xxx.visible \u003d $scope.xxx.lockdown;\n  $scope.xxx.refresh();",
+      "revId": "5c3bbfbb6aedc7e6611220b16759bfa8279dfcbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
