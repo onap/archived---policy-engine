@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0092c8e8_02ef7395",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/DeletePolicyService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T18:02:20Z",
+      "side": 1,
+      "message": "suggestion: don\u0027t need second argument in substring()",
+      "revId": "c025d13e7b02853ba73d2e97fc356a34def66159",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8e7f5ab_324878b5",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PushPolicyService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T18:02:20Z",
+      "side": 1,
+      "message": "seems to be a lot of duplicate code with DeletePolicyService, particularly in the validation \u0026 populateRequestId methods.  Any way to extract out a common super class or a common utility class?  The amount of duplicate code is pretty significant.",
+      "revId": "c025d13e7b02853ba73d2e97fc356a34def66159",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8cb03342_5e96f529",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PushPolicyService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T18:02:20Z",
+      "side": 1,
+      "message": "sonar: add policyList.size() parameter so the list starts out the correct length",
+      "revId": "c025d13e7b02853ba73d2e97fc356a34def66159",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd36f4f6_b5984a0a",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/api/PolicyNameType.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T18:02:20Z",
+      "side": 1,
+      "message": "suggestion: use lombok @Getter \u0026 @Setter annotations - can then eliminate all of the getXxx \u0026 setXxx methods.",
+      "revId": "c025d13e7b02853ba73d2e97fc356a34def66159",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90dd2b17_2b14d1d4",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/api/PolicyNameType.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-29T18:02:20Z",
+      "side": 1,
+      "message": "use a static gson - avoids LOTS of field look-up stuff",
+      "revId": "c025d13e7b02853ba73d2e97fc356a34def66159",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
