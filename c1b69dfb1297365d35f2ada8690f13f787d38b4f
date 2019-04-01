@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fb7bf80e_dc646e4b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/CheckPDP.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-01T13:30:36Z",
+      "side": 1,
+      "message": "is this correct?\n\nsame comment for other files",
+      "revId": "c1b69dfb1297365d35f2ada8690f13f787d38b4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1c2b7cc_02178b34",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-01T13:30:36Z",
+      "side": 1,
+      "message": "create and populate \"el\" inside the \"if\" block below",
+      "revId": "c1b69dfb1297365d35f2ada8690f13f787d38b4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "148aa1b6_59165829",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-01T13:30:36Z",
+      "side": 1,
+      "message": "why bother with the \"contains()\" check?",
+      "revId": "c1b69dfb1297365d35f2ada8690f13f787d38b4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76ebcc8a_eeee02aa",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 757,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-01T13:30:36Z",
+      "side": 1,
+      "message": "looks to me like we\u0027re cloning much of this block of code over and over.  Any way to extract a common method?",
+      "revId": "c1b69dfb1297365d35f2ada8690f13f787d38b4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77a988b1_091e64af",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1593,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-01T13:30:36Z",
+      "side": 1,
+      "message": "need to check for !name.isEmpty() still?",
+      "revId": "c1b69dfb1297365d35f2ada8690f13f787d38b4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a78e0402_adc888aa",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1616,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-01T13:30:36Z",
+      "side": 1,
+      "message": "could eliminate this variable, make line 1620 a return, delete lines 1623-1624 \u0026 1627, and change line 1630 to a return.",
+      "revId": "c1b69dfb1297365d35f2ada8690f13f787d38b4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab4affde_d2159bb3",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-01T13:30:36Z",
+      "side": 1,
+      "message": "more efficient to append \"\u0026\" and \"p\" separately",
+      "revId": "c1b69dfb1297365d35f2ada8690f13f787d38b4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f36d82f_7fccf9db",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-01T13:30:36Z",
+      "side": 1,
+      "message": "more efficient to do separate appends for each item",
+      "revId": "c1b69dfb1297365d35f2ada8690f13f787d38b4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ac47741_8331c29d",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-01T13:30:36Z",
+      "side": 1,
+      "message": "use constants for these?",
+      "revId": "c1b69dfb1297365d35f2ada8690f13f787d38b4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9714af25_99e7af10",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-01T13:30:36Z",
+      "side": 1,
+      "message": "use constants for these?",
+      "revId": "c1b69dfb1297365d35f2ada8690f13f787d38b4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d931f44a_7060ba89",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-01T13:30:36Z",
+      "side": 1,
+      "message": "could uValue appear more than once?  If so, maybe replace lastIndexOf() with indexOf(indexOf(uv)+1, uv)",
+      "revId": "c1b69dfb1297365d35f2ada8690f13f787d38b4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
