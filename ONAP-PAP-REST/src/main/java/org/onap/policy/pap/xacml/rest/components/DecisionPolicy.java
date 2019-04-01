@@ -457,7 +457,7 @@ public class DecisionPolicy extends Policy {
     }
 
     private DecisionSettings findDecisionSettingsBySettingId(String settingId) {
-        return (DecisionSettings) commonClassDao.getEntityItem(DecisionSettings.class, "xacmlId", settingId);
+        return (DecisionSettings) commonClassDao.getEntityItem(DecisionSettings.class, "xacml_id", settingId);
     }
 
     private void createRule(PolicyType decisionPolicy, boolean permitRule) {
@@ -873,7 +873,7 @@ public class DecisionPolicy extends Policy {
 
     public String getFunctionDefinitionId(String key) {
         FunctionDefinition object =
-                (FunctionDefinition) commonClassDao.getEntityItem(FunctionDefinition.class, "shortname", key);
+                (FunctionDefinition) commonClassDao.getEntityItem(FunctionDefinition.class, "short_name", key);
         if (object != null) {
             return object.getXacmlid();
         }
