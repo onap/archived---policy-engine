@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43c59bb5_bc339061",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DeleteHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-02T17:51:35Z",
+      "side": 1,
+      "message": "Sonar issue - switch these fields - please apply to all in these files.",
+      "range": {
+        "startLine": 212,
+        "startChar": 58,
+        "endLine": 212,
+        "endChar": 94
+      },
+      "revId": "3a9d6d150de0f880880bd5313ca1c919fbf02f8d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
