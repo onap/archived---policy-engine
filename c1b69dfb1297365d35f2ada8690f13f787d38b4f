@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "95a017d5_dda81386",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-04-02T03:28:25Z",
+      "side": 1,
+      "message": "what happens if this property is null as in onap?",
+      "revId": "c1b69dfb1297365d35f2ada8690f13f787d38b4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb7bf80e_dc646e4b",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/CheckPDP.java",
         "patchSetId": 3
