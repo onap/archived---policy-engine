@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
+ * Modified Copyright (C) 2019 Bell Canada.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,25 +97,32 @@ public class ConfigPolicy extends Policy {
     // Here we are adding the extension for the configurations file based on the
     // config type selection for saving.
     private String getConfigFile(String filename) {
+        filename = removeExtentsion(filename);
+        String id = policyAdapter.getConfigType();
+
+        if (id == null) {
+            return filename;
+        }
+        switch (id.toUpperCase())
+        {
+            case JSON_CONFIG:
+                return filename + ".json";
+            case XML_CONFIG:
+                return filename + ".xml";
+            case PROPERTIES_CONFIG:
+                return filename + ".properties";
+            case OTHER_CONFIG:
+                return filename + ".txt";
+            default:
+                return filename;
+
+        }
+    }
+
+    private String removeExtentsion(String filename) {
         filename = FilenameUtils.removeExtension(filename);
         if (filename.endsWith(".xml")) {
             filename = filename.substring(0, filename.length() - 4);
-        }
-        String id = policyAdapter.getConfigType();
-
-        if (id != null) {
-            if (id.equalsIgnoreCase(JSON_CONFIG)) {
-                filename = filename + ".json";
-            }
-            if (id.equalsIgnoreCase(XML_CONFIG)) {
-                filename = filename + ".xml";
-            }
-            if (id.equalsIgnoreCase(PROPERTIES_CONFIG)) {
-                filename = filename + ".properties";
-            }
-            if (id.equalsIgnoreCase(OTHER_CONFIG)) {
-                filename = filename + ".txt";
-            }
         }
         return filename;
     }
@@ -134,24 +142,30 @@ public class ConfigPolicy extends Policy {
          */
         configBodyData = policyAdapter.getConfigBodyData();
         String id = policyAdapter.getConfigType();
-        if (id != null) {
-            if (id.equals(JSON_CONFIG)) {
+        if (id == null) {
+            return isValidForm;
+        }
+        switch (id) {
+            case JSON_CONFIG:
                 if (!PolicyUtils.isJSONValid(configBodyData)) {
                     isValidForm = false;
                 }
-            } else if (id.equals(XML_CONFIG)) {
+                break;
+            case XML_CONFIG:
                 if (!PolicyUtils.isXMLValid(configBodyData)) {
                     isValidForm = false;
                 }
-            } else if (id.equals(PROPERTIES_CONFIG)) {
+                break;
+            case PROPERTIES_CONFIG:
                 if (!PolicyUtils.isPropValid(configBodyData) || configBodyData.equals("")) {
                     isValidForm = false;
                 }
-            } else if (id.equals(OTHER_CONFIG)) {
+                break;
+            case OTHER_CONFIG:
                 if (configBodyData.equals("")) {
                     isValidForm = false;
                 }
-            }
+                break;
         }
         return isValidForm;
 
