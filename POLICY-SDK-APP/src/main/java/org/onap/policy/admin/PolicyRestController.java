@@ -2,16 +2,16 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * Modifications Copyright (C) 2019 Bell Canada
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,8 +19,14 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.admin;
 
+import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -33,10 +39,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -53,6 +57,7 @@ import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyVersion;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
@@ -69,16 +74,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-import org.onap.policy.utils.CryptoUtils;
-import com.att.research.xacml.util.XACMLProperties;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 @RestController
 @RequestMapping("/")
-public class PolicyRestController extends RestrictedBaseController{
+public class PolicyRestController extends RestrictedBaseController {
 
     private static final Logger policyLogger = FlexLogger.getLogger(PolicyRestController.class);
 
@@ -105,12 +104,12 @@ public class PolicyRestController extends RestrictedBaseController{
 
     private static CommonClassDao commonClassDao;
 
-    public PolicyRestController(){
-        //default constructor
+    public PolicyRestController() {
+        // default constructor
     }
 
     @Autowired
-    private PolicyRestController(CommonClassDao commonClassDao){
+    private PolicyRestController(CommonClassDao commonClassDao) {
         PolicyRestController.commonClassDao = commonClassDao;
     }
 
@@ -124,30 +123,30 @@ public class PolicyRestController extends RestrictedBaseController{
 
 
 
-    @RequestMapping(value={"/policycreation/save_policy"}, method={RequestMethod.POST})
+    @RequestMapping(value = {"/policycreation/save_policy"}, method = {RequestMethod.POST})
     public void policyCreationController(HttpServletRequest request, HttpServletResponse response) {
         String userId = UserUtils.getUserSession(request).getOrgUserId();
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        try{
+        try {
             updateAndSendToPAP(request, response, userId, mapper);
-        }catch(Exception e){
-            policyLogger.error("Exception Occured while saving policy" , e);
+        } catch (Exception e) {
+            policyLogger.error("Exception Occured while saving policy", e);
         }
     }
 
-    private void updateAndSendToPAP(HttpServletRequest request, HttpServletResponse response, String userId, ObjectMapper mapper) throws IOException {
+    private void updateAndSendToPAP(HttpServletRequest request, HttpServletResponse response, String userId,
+            ObjectMapper mapper) throws IOException {
         JsonNode root = mapper.readTree(request.getReader());
         policyLogger.info(
-            "****************************************Logging UserID while Create/Update Policy**************************************************");
+                "****************************************Logging UserID while Create/Update Policy**************************************************");
+        policyLogger.info(USER_ID + userId + "Policy Data Object:  "
+                + root.get(PolicyController.getPolicydata()).get("policy").toString());
         policyLogger.info(
-            USER_ID + userId + "Policy Data Object:  " + root.get(PolicyController.getPolicydata()).get("policy")
-                .toString());
-        policyLogger.info(
-            "***********************************************************************************************************************************");
+                "***********************************************************************************************************************************");
 
-        PolicyRestAdapter policyData = mapper
-            .readValue(root.get(PolicyController.getPolicydata()).get("policy").toString(), PolicyRestAdapter.class);
+        PolicyRestAdapter policyData = mapper.readValue(
+                root.get(PolicyController.getPolicydata()).get("policy").toString(), PolicyRestAdapter.class);
         modifyPolicyData(root, policyData);
 
         if (policyData.getConfigPolicyType() != null) {
@@ -178,8 +177,8 @@ public class PolicyRestController extends RestrictedBaseController{
                 String mode = "EditPolicy";
                 String watchPolicyName = policyName.replace(XML, "");
                 String version = watchPolicyName.substring(watchPolicyName.lastIndexOf('.') + 1);
-                watchPolicyName = watchPolicyName.substring(0, watchPolicyName.lastIndexOf('.'))
-                    .replace(".", File.separator);
+                watchPolicyName =
+                        watchPolicyName.substring(0, watchPolicyName.lastIndexOf('.')).replace(".", File.separator);
                 String policyVersionName = watchPolicyName.replace(".", File.separator);
                 watchPolicyName = watchPolicyName + "." + version + XML;
                 PolicyVersion entityItem = new PolicyVersion();
@@ -203,24 +202,24 @@ public class PolicyRestController extends RestrictedBaseController{
     }
 
     private void modifyPolicyData(JsonNode root, PolicyRestAdapter policyData) {
-        if(FILE.equals(root.get(PolicyController.getPolicydata()).get(MODEL).get(TYPE).toString().replace("\"", ""))){
+        if (FILE.equals(root.get(PolicyController.getPolicydata()).get(MODEL).get(TYPE).toString().replace("\"", ""))) {
             policyData.setEditPolicy(true);
         }
-        if(root.get(PolicyController.getPolicydata()).get(MODEL).get(PATH).size() != 0){
+        if (root.get(PolicyController.getPolicydata()).get(MODEL).get(PATH).size() != 0) {
             String dirName = "";
-            for(int i = 0; i < root.get(PolicyController.getPolicydata()).get(MODEL).get(PATH).size(); i++){
-                dirName = dirName.replace("\"", "") + root.get(PolicyController.getPolicydata()).get(
-                    MODEL).get(PATH).get(i).toString().replace("\"", "") + File.separator;
+            for (int i = 0; i < root.get(PolicyController.getPolicydata()).get(MODEL).get(PATH).size(); i++) {
+                dirName = dirName.replace("\"", "") + root.get(PolicyController.getPolicydata()).get(MODEL).get(PATH)
+                        .get(i).toString().replace("\"", "") + File.separator;
             }
-            if(policyData.isEditPolicy()){
+            if (policyData.isEditPolicy()) {
                 policyData.setDomainDir(dirName.substring(0, dirName.lastIndexOf(File.separator)));
-            }else{
-                policyData.setDomainDir(dirName + root.get(PolicyController.getPolicydata()).get(
-                    MODEL).get(NAME).toString().replace("\"", ""));
+            } else {
+                policyData.setDomainDir(dirName
+                        + root.get(PolicyController.getPolicydata()).get(MODEL).get(NAME).toString().replace("\"", ""));
             }
-        }else{
+        } else {
             String domain = root.get(PolicyController.getPolicydata()).get(MODEL).get(NAME).toString();
-            if(domain.contains("/")){
+            if (domain.contains("/")) {
                 domain = domain.substring(0, domain.lastIndexOf('/')).replace("/", File.separator);
             }
             domain = domain.replace("\"", "");
@@ -229,13 +228,12 @@ public class PolicyRestController extends RestrictedBaseController{
     }
 
 
-    private ResponseEntity<?> sendToPAP(String body, String requestURI, HttpMethod method){
+    private ResponseEntity<?> sendToPAP(String body, String requestURI, HttpMethod method) {
         String papUrl = PolicyController.getPapUrl();
         String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-        String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
-
+        String papPass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
         Base64.Encoder encoder = Base64.getEncoder();
-        String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
+        String encoding = encoder.encodeToString((papID + ":" + papPass).getBytes(StandardCharsets.UTF_8));
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTHORIZATION, BASIC + encoding);
         headers.set(CONTENT_TYPE, PolicyController.getContenttype());
@@ -245,46 +243,51 @@ public class PolicyRestController extends RestrictedBaseController{
         ResponseEntity<?> result = null;
         HttpClientErrorException exception = null;
         String uri = requestURI;
-        if(uri.startsWith("/")){
-            uri = uri.substring(uri.indexOf('/')+1);
+        if (uri.startsWith("/")) {
+            uri = uri.substring(uri.indexOf('/') + 1);
         }
         uri = "onap" + uri.substring(uri.indexOf('/'));
-        try{
+        try {
             result = restTemplate.exchange(papUrl + uri, method, requestEntity, String.class);
-        }catch(Exception e){
+        } catch (Exception e) {
             policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while connecting to " + papUrl, e);
             exception = new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-            if("409 Conflict".equals(e.getMessage())){
+            if ("409 Conflict".equals(e.getMessage())) {
                 return ResponseEntity.ok(HttpServletResponse.SC_CONFLICT);
             }
         }
-        if(exception != null && exception.getStatusCode()!=null){
-            if(exception.getStatusCode().equals(HttpStatus.UNAUTHORIZED)){
-                String message = XACMLErrorConstants.ERROR_PERMISSIONS +":"+exception.getStatusCode()+":" + "ERROR_AUTH_GET_PERM" ;
+        if (exception != null && exception.getStatusCode() != null) {
+            if (exception.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                String message = XACMLErrorConstants.ERROR_PERMISSIONS + ":" + exception.getStatusCode() + ":"
+                        + "ERROR_AUTH_GET_PERM";
                 policyLogger.error(message);
             }
-            if(exception.getStatusCode().equals(HttpStatus.BAD_REQUEST)){
-                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + ":"+exception.getStatusCode()+":" + exception.getResponseBodyAsString();
+            if (exception.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
+                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + ":" + exception.getStatusCode() + ":"
+                        + exception.getResponseBodyAsString();
                 policyLogger.error(message);
             }
-            if(exception.getStatusCode().equals(HttpStatus.NOT_FOUND)){
-                String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while connecting to " + papUrl + exception;
+            if (exception.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                String message =
+                        XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while connecting to " + papUrl + exception;
                 policyLogger.error(message);
             }
-            String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + ":"+exception.getStatusCode()+":" + exception.getResponseBodyAsString();
+            String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + ":" + exception.getStatusCode() + ":"
+                    + exception.getResponseBodyAsString();
             policyLogger.error(message);
         }
         return result;
     }
 
-    private String callPAP(HttpServletRequest request , String method, String uriValue){
+    private String callPAP(HttpServletRequest request, String method, String uriValue) {
         String uri = uriValue;
         String papUrl = PolicyController.getPapUrl();
         String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-        String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
+        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY));
+        String papPass = PeCryptoUtils.decrypt((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)));
 
         Base64.Encoder encoder = Base64.getEncoder();
-        String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
+        String encoding = encoder.encodeToString((papID + ":" + papPass).getBytes(StandardCharsets.UTF_8));
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTHORIZATION, BASIC + encoding);
         headers.set(CONTENT_TYPE, PolicyController.getContenttype());
@@ -294,21 +297,21 @@ public class PolicyRestController extends RestrictedBaseController{
         List<FileItem> items;
         FileItem item = null;
         File file = null;
-        if(uri.contains(IMPORT_DICTIONARY)){
+        if (uri.contains(IMPORT_DICTIONARY)) {
             try {
                 items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
                 item = items.get(0);
                 file = new File(item.getName());
                 String newFile = file.toString();
-                uri = uri +"&dictionaryName="+newFile;
+                uri = uri + "&dictionaryName=" + newFile;
             } catch (Exception e2) {
-                policyLogger.error("Exception Occured while calling PAP with import dictionary request"+e2);
+                policyLogger.error("Exception Occured while calling PAP with import dictionary request" + e2);
             }
         }
 
         try {
             URL url = new URL(papUrl + uri);
-            connection = (HttpURLConnection)url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(method);
             connection.setUseCaches(false);
             connection.setInstanceFollowRedirects(false);
@@ -316,8 +319,8 @@ public class PolicyRestController extends RestrictedBaseController{
             connection.setDoOutput(true);
             connection.setDoInput(true);
 
-            if(uri.contains("searchPolicy?action=delete&")){
-                //do something
+            if (uri.contains("searchPolicy?action=delete&")) {
+                // do something
                 return doConnect(connection);
             }
 
@@ -325,9 +328,9 @@ public class PolicyRestController extends RestrictedBaseController{
 
             return doConnect(connection);
         } catch (Exception e) {
-            policyLogger.error("Exception Occured"+e);
-        }finally{
-            if(file != null && file.exists() && file.delete()){
+            policyLogger.error("Exception Occured" + e);
+        } finally {
+            if (file != null && file.exists() && file.delete()) {
                 policyLogger.info("File Deleted Successfully");
             }
             if (connection != null) {
@@ -339,7 +342,8 @@ public class PolicyRestController extends RestrictedBaseController{
                         is.close();
                     }
                 } catch (IOException ex) {
-                    policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to close connection: " + ex, ex);
+                    policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to close connection: " + ex,
+                            ex);
                 }
                 connection.disconnect();
             }
@@ -348,7 +352,7 @@ public class PolicyRestController extends RestrictedBaseController{
     }
 
     private void checkURI(HttpServletRequest request, String uri, HttpURLConnection connection, FileItem item)
-        throws IOException {
+            throws IOException {
         String boundary;
         if (!(uri.endsWith("set_BRMSParamData") || uri.contains(IMPORT_DICTIONARY))) {
             connection.setRequestProperty(CONTENT_TYPE, PolicyController.getContenttype());
@@ -364,7 +368,7 @@ public class PolicyRestController extends RestrictedBaseController{
 
             // send current configuration
             try (InputStream content = new ByteArrayInputStream(json.getBytes());
-                OutputStream os = connection.getOutputStream()) {
+                    OutputStream os = connection.getOutputStream()) {
                 int count = IOUtils.copy(content, os);
                 if (policyLogger.isDebugEnabled()) {
                     policyLogger.debug("copied to output, bytes=" + count);
@@ -390,28 +394,28 @@ public class PolicyRestController extends RestrictedBaseController{
         JsonNode root = null;
         try {
             root = mapper.readTree(request.getReader());
-        }catch (Exception e1) {
-            policyLogger.error("Exception Occured while calling PAP"+e1);
+        } catch (Exception e1) {
+            policyLogger.error("Exception Occured while calling PAP" + e1);
         }
         return root;
     }
 
-    private String doConnect(final HttpURLConnection connection) throws IOException{
+    private String doConnect(final HttpURLConnection connection) throws IOException {
         connection.connect();
         int responseCode = connection.getResponseCode();
-        if(responseCode == 200){
+        if (responseCode == 200) {
             // get the response content into a String
             String responseJson = null;
             // read the inputStream into a buffer (trick found online scans entire input looking for end-of-file)
-            try(java.util.Scanner scanner = new java.util.Scanner(connection.getInputStream())) {
+            try (java.util.Scanner scanner = new java.util.Scanner(connection.getInputStream())) {
                 scanner.useDelimiter("\\A");
                 responseJson = scanner.hasNext() ? scanner.next() : "";
-            } catch (Exception e){
-                //Reason for rethrowing the exception is if any exception occurs during reading of inputsteam
-                //then the exception handling is done by the outer block without returning the response immediately
-                //Also finally block is existing only in outer block and not here so all exception handling is
-                //done in only one place
-                policyLogger.error("Exception Occured"+e);
+            } catch (Exception e) {
+                // Reason for rethrowing the exception is if any exception occurs during reading of inputsteam
+                // then the exception handling is done by the outer block without returning the response immediately
+                // Also finally block is existing only in outer block and not here so all exception handling is
+                // done in only one place
+                policyLogger.error("Exception Occured" + e);
                 throw e;
             }
 
@@ -421,14 +425,14 @@ public class PolicyRestController extends RestrictedBaseController{
         return null;
     }
 
-    @RequestMapping(value={"/getDictionary/*"}, method={RequestMethod.GET})
-    public void getDictionaryController(HttpServletRequest request, HttpServletResponse response){
+    @RequestMapping(value = {"/getDictionary/*"}, method = {RequestMethod.GET})
+    public void getDictionaryController(HttpServletRequest request, HttpServletResponse response) {
         String uri = request.getRequestURI().replace("/getDictionary", "");
         String body;
         ResponseEntity<?> responseEntity = sendToPAP(null, uri, HttpMethod.GET);
-        if(responseEntity != null){
+        if (responseEntity != null) {
             body = responseEntity.getBody().toString();
-        }else{
+        } else {
             body = "";
         }
         try {
@@ -438,72 +442,79 @@ public class PolicyRestController extends RestrictedBaseController{
         }
     }
 
-    @RequestMapping(value={"/saveDictionary/*/*"}, method={RequestMethod.POST})
-    public void saveDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    @RequestMapping(value = {"/saveDictionary/*/*"}, method = {RequestMethod.POST})
+    public void saveDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String userId = "";
         String uri = request.getRequestURI().replace("/saveDictionary", "");
-        if(uri.startsWith("/")){
-            uri = uri.substring(uri.indexOf('/')+1);
+        if (uri.startsWith("/")) {
+            uri = uri.substring(uri.indexOf('/') + 1);
         }
         uri = ONAP + uri.substring(uri.indexOf('/'));
-        if(uri.contains(IMPORT_DICTIONARY)){
+        if (uri.contains(IMPORT_DICTIONARY)) {
             userId = UserUtils.getUserSession(request).getOrgUserId();
-            uri = uri+ "?userId=" +userId;
+            uri = uri + "?userId=" + userId;
         }
 
-        policyLogger.info("****************************************Logging UserID while Saving Dictionary*****************************************************");
+        policyLogger.info(
+                "****************************************Logging UserID while Saving Dictionary*****************************************************");
         policyLogger.info(USER_ID + userId);
-        policyLogger.info("***********************************************************************************************************************************");
+        policyLogger.info(
+                "***********************************************************************************************************************************");
 
         String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
-        if(body != null && !body.isEmpty()){
+        if (body != null && !body.isEmpty()) {
             response.getWriter().write(body);
-        }else{
+        } else {
             response.getWriter().write("Failed");
         }
     }
 
-    @RequestMapping(value={"/deleteDictionary/*/*"}, method={RequestMethod.POST})
-    public void deletetDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @RequestMapping(value = {"/deleteDictionary/*/*"}, method = {RequestMethod.POST})
+    public void deletetDictionaryController(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         String uri = request.getRequestURI().replace("/deleteDictionary", "");
-        if(uri.startsWith("/")){
-            uri = uri.substring(uri.indexOf('/')+1);
+        if (uri.startsWith("/")) {
+            uri = uri.substring(uri.indexOf('/') + 1);
         }
         uri = ONAP + uri.substring(uri.indexOf('/'));
 
         String userId = UserUtils.getUserSession(request).getOrgUserId();
-        policyLogger.info("****************************************Logging UserID while Deleting Dictionary*****************************************************");
+        policyLogger.info(
+                "****************************************Logging UserID while Deleting Dictionary*****************************************************");
         policyLogger.info(USER_ID + userId);
-        policyLogger.info("*************************************************************************************************************************************");
+        policyLogger.info(
+                "*************************************************************************************************************************************");
 
         String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
-        if(body != null && !body.isEmpty()){
+        if (body != null && !body.isEmpty()) {
             response.getWriter().write(body);
-        }else{
+        } else {
             response.getWriter().write("Failed");
         }
     }
 
-    @RequestMapping(value={"/searchDictionary"}, method={RequestMethod.POST})
-    public ModelAndView searchDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @RequestMapping(value = {"/searchDictionary"}, method = {RequestMethod.POST})
+    public ModelAndView searchDictionaryController(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         Object resultList;
         String uri = request.getRequestURI();
-        if(uri.startsWith("/")){
-            uri = uri.substring(uri.indexOf('/')+1);
+        if (uri.startsWith("/")) {
+            uri = uri.substring(uri.indexOf('/') + 1);
         }
         uri = ONAP + uri.substring(uri.indexOf('/'));
-        try{
+        try {
             String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
-            if(body.contains("CouldNotConnectException")){
+            if (body.contains("CouldNotConnectException")) {
                 List<String> data = new ArrayList<>();
                 data.add("Elastic Search Server is down");
                 resultList = data;
-            }else{
+            } else {
                 JSONObject json = new JSONObject(body);
                 resultList = json.get("policyresult");
             }
-        }catch(Exception e){
-            policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Exception Occured while querying Elastic Search: " + e);
+        } catch (Exception e) {
+            policyLogger.error(
+                    XACMLErrorConstants.ERROR_PROCESS_FLOW + "Exception Occured while querying Elastic Search: " + e);
             List<String> data = new ArrayList<>();
             data.add("Elastic Search Server is down");
             resultList = data;
@@ -517,26 +528,26 @@ public class PolicyRestController extends RestrictedBaseController{
         return null;
     }
 
-    @RequestMapping(value={"/searchPolicy"}, method={RequestMethod.POST})
-    public ModelAndView searchPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    @RequestMapping(value = {"/searchPolicy"}, method = {RequestMethod.POST})
+    public ModelAndView searchPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Object resultList;
-        String uri = request.getRequestURI()+"?action=search";
-        if(uri.startsWith("/")){
-            uri = uri.substring(uri.indexOf('/')+1);
+        String uri = request.getRequestURI() + "?action=search";
+        if (uri.startsWith("/")) {
+            uri = uri.substring(uri.indexOf('/') + 1);
         }
         uri = ONAP + uri.substring(uri.indexOf('/'));
         String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
 
         JSONObject json = new JSONObject(body);
-        try{
+        try {
             resultList = json.get("policyresult");
-        }catch(Exception e){
+        } catch (Exception e) {
             List<String> data = new ArrayList<>();
             resultList = json.get(DATA);
             data.add("Exception");
             data.add(resultList.toString());
             resultList = data;
-            policyLogger.error("Exception Occured while searching for Policy in Elastic Database" +e);
+            policyLogger.error("Exception Occured while searching for Policy in Elastic Database" + e);
         }
 
         response.setCharacterEncoding(UTF_8);
@@ -549,13 +560,14 @@ public class PolicyRestController extends RestrictedBaseController{
         return null;
     }
 
-    public void deleteElasticData(String fileName){
-        String uri = "searchPolicy?action=delete&policyName='"+fileName+"'";
+    public void deleteElasticData(String fileName) {
+        String uri = "searchPolicy?action=delete&policyName='" + fileName + "'";
         callPAP(null, "POST", uri.trim());
     }
 
-    public String notifyOtherPAPSToUpdateConfigurations(String mode, String newName, String oldName){
-        String uri = "onap/notifyOtherPAPs?action="+mode+"&newPolicyName="+newName+"&oldPolicyName="+oldName+"";
+    public String notifyOtherPAPSToUpdateConfigurations(String mode, String newName, String oldName) {
+        String uri =
+                "onap/notifyOtherPAPs?action=" + mode + "&newPolicyName=" + newName + "&oldPolicyName=" + oldName + "";
         return callPAP(null, "POST", uri.trim());
     }
 

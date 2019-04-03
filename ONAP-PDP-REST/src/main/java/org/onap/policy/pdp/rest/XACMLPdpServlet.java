@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,17 @@
 
 package org.onap.policy.pdp.rest;
 
+import com.att.research.xacml.api.Request;
+import com.att.research.xacml.api.Response;
+import com.att.research.xacml.api.pap.PDPStatus.Status;
+import com.att.research.xacml.api.pdp.PDPEngine;
+import com.att.research.xacml.api.pdp.PDPException;
+import com.att.research.xacml.std.dom.DOMRequest;
+import com.att.research.xacml.std.dom.DOMResponse;
+import com.att.research.xacml.std.json.JSONRequest;
+import com.att.research.xacml.std.json.JSONResponse;
+import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -60,40 +71,30 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.pdp.rest.jmx.PdpRestMonitor;
 import org.onap.policy.rest.XACMLRest;
 import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.pdp.std.functions.PolicyList;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
-import com.att.research.xacml.api.Request;
-import com.att.research.xacml.api.Response;
-import com.att.research.xacml.api.pap.PDPStatus.Status;
-import com.att.research.xacml.api.pdp.PDPEngine;
-import com.att.research.xacml.api.pdp.PDPException;
-import com.att.research.xacml.std.dom.DOMRequest;
-import com.att.research.xacml.std.dom.DOMResponse;
-import com.att.research.xacml.std.json.JSONRequest;
-import com.att.research.xacml.std.json.JSONResponse;
-import com.att.research.xacml.util.XACMLProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Servlet implementation class XacmlPdpServlet
- * 
+ *
  * This is an implementation of the XACML 3.0 RESTful Interface with added features to support simple PAP RESTful API
  * for policy publishing and PIP configuration changes.
- * 
+ *
  * If you are running this the first time, then we recommend you look at the xacml.pdp.properties file. This properties
  * file has all the default parameter settings. If you are running the servlet as is, then we recommend setting up
  * you're container to run it on port 8080 with context "/pdp". Wherever the default working directory is set to, a
  * "config" directory will be created that holds the policy and pip cache. This setting is located in the
  * xacml.pdp.properties file.
- * 
+ *
  * When you are ready to customize, you can create a separate xacml.pdp.properties on you're local file system and setup
  * the parameters as you wish. Just set the Java VM System variable to point to that file:
- * 
+ *
  * -Dxacml.properties=/opt/app/xacml/etc/xacml.pdp.properties
- * 
+ *
  * Or if you only want to change one or two properties, simply set the Java VM System variable for that property.
- * 
+ *
  * -Dxacml.rest.pdp.register=false
  *
  *
@@ -268,9 +269,13 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
                 properties.getProperty("createUpdatePolicy.impl.className", CREATE_UPDATE_POLICY_SERVICE);
         setCreateUpdatePolicyConstructor(createUpdateResourceName);
 
+        PeCryptoUtils.initAesKey(properties.getProperty(XACMLRestProperties.PROP_AES_KEY));
+
         // Create an IntegrityMonitor
         try {
             logger.info("Creating IntegrityMonitor");
+            properties.setProperty("javax.persistence.jdbc.password",
+                    PeCryptoUtils.decrypt(properties.getProperty("javax.persistence.jdbc.password", "")));
             im = IntegrityMonitor.getInstance(pdpResourceName, properties);
         } catch (Exception e) {
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to create IntegrityMonitor" + e);
@@ -380,42 +385,42 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 
     /**
      * PUT - The PAP engine sends configuration information using HTTP PUT request.
-     * 
+     *
      * One parameter is expected:
-     * 
+     *
      * config=[policy|pip|all]
-     * 
+     *
      * policy - Expect a properties file that contains updated lists of the root and referenced policies that the PDP
      * should be using for PEP requests.
-     * 
+     *
      * Specifically should AT LEAST contain the following properties: xacml.rootPolicies xacml.referencedPolicies
-     * 
+     *
      * In addition, any relevant information needed by the PDP to load or retrieve the policies to store in its cache.
      *
      * EXAMPLE: xacml.rootPolicies=PolicyA.1, PolicyB.1
      *
      * PolicyA.1.url=http://localhost:9090/PAP?id=b2d7b86d-d8f1-4adf-ba9d-b68b2a90bee1&version=1
      * PolicyB.1.url=http://localhost:9090/PAP/id=be962404-27f6-41d8-9521-5acb7f0238be&version=1
-     * 
+     *
      * xacml.referencedPolicies=RefPolicyC.1, RefPolicyD.1
      *
      * RefPolicyC.1.url=http://localhost:9090/PAP?id=foobar&version=1
      * RefPolicyD.1.url=http://localhost:9090/PAP/id=example&version=1
-     * 
+     *
      * pip - Expect a properties file that contain PIP engine configuration properties.
-     * 
+     *
      * Specifically should AT LEAST the following property: xacml.pip.engines
-     * 
+     *
      * In addition, any relevant information needed by the PDP to load and configure the PIPs.
-     * 
+     *
      * EXAMPLE: xacml.pip.engines=foo,bar
-     * 
+     *
      * foo.classname=com.foo foo.sample=abc foo.example=xyz ......
-     * 
+     *
      * bar.classname=com.bar ......
-     * 
+     *
      * all - Expect ALL new configuration properties for the PDP
-     * 
+     *
      * @see HttpServlet#doPut(HttpServletRequest request, HttpServletResponse response)
      */
     @Override
@@ -625,13 +630,13 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 
     /**
      * Parameters: type=hb|config|Status
-     * 
+     *
      * 1. HeartBeat Status HeartBeat OK - All Policies are Loaded, All PIPs are Loaded LOADING_IN_PROGRESS - Currently
      * loading a new policy set/pip configuration LAST_UPDATE_FAILED - Need to track the items that failed during last
      * update LOAD_FAILURE - ??? Need to determine what information is sent and how 2. Configuration 3. Status return
      * the StdPDPStatus object in the Response content
-     * 
-     * 
+     *
+     *
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     @Override
@@ -812,8 +817,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
     /**
      * POST - We expect XACML requests to be posted by PEP applications. They can be in the form of XML or JSON
      * according to the XACML 3.0 Specifications for both.
-     * 
-     * 
+     *
+     *
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     @Override

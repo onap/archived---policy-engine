@@ -58,7 +58,7 @@ import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
 import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
 import org.onap.policy.rest.jpa.PolicyEntity;
-import org.onap.policy.utils.CryptoUtils;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
@@ -280,7 +280,7 @@ public class PolicyDBDao {
         }
         if (urlUserPass[2] == null || "".equals(urlUserPass[2])) {
             String passwordPropertyValue =
-                    XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
+                    PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
             if (passwordPropertyValue != null) {
                 urlUserPass[2] = passwordPropertyValue;
             }
@@ -343,14 +343,7 @@ public class PolicyDBDao {
         }
 
         // encrypt the password
-        String txt = null;
-        try {
-            txt = CryptoUtils.encryptTxt(url[2].getBytes(StandardCharsets.UTF_8));
-        } catch (Exception e) {
-            logger.debug(e);
-            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, POLICYDBDAO_VAR,
-                    "Could not encrypt PAP password");
-        }
+        String txt = PeCryptoUtils.encrypt(url[2]);
         if (foundPolicyDBDaoEntity == null) {
             PolicyDBDaoEntity newPolicyDBDaoEntity = new PolicyDBDaoEntity();
             newPolicyDBDaoEntity.setPolicyDBDaoUrl(url[0]);

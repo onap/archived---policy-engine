@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * LogParser
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,12 +45,11 @@ import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-
 import org.apache.log4j.Logger;
 import org.onap.policy.common.im.IntegrityMonitor;
 import org.onap.policy.common.im.IntegrityMonitorException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.utils.CryptoUtils;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.xacml.parser.LogEntryObject.LogType;
 
 /**
@@ -62,6 +61,7 @@ public class ParseLog {
 
     // only logging last line of each log file processed to the log4j log file defined by property - PARSERLOGPATH
     private static final Logger log4jlogger = Logger.getLogger(ParseLog.class.getName());
+    private static final String PROP_AES_KEY = "org.onap.policy.encryption.aes.key";
 
     // processing logging
     private static org.onap.policy.common.logging.flexlogger.Logger logger =
@@ -393,7 +393,7 @@ public class ParseLog {
                     logger.debug("builder.toString(): " + builder.toString());
                     if (builder.toString().contains(last + dataFileName + lineRead)) {
                         final String[] parseString = builder.toString().split(last + dataFileName + lineRead);
-                        final String returnValue = parseString[1].replace("\r", "");                        
+                        final String returnValue = parseString[1].replace("\r", "");
                         return returnValue.trim();
                     }
                     builder = new StringBuilder();
@@ -886,9 +886,10 @@ public class ParseLog {
             jdbcUrl = config.getProperty("JDBC_URL").replace("'", "");
             jdbcUser = config.getProperty("JDBC_USER");
             jdbcDriver = config.getProperty("JDBC_DRIVER");
-            jdbcPassword = CryptoUtils.decryptTxtNoExStr(config.getProperty("JDBC_PASSWORD", ""));
-            config.setProperty("javax.persistence.jdbc.password",
-                    CryptoUtils.decryptTxtNoExStr(config.getProperty("javax.persistence.jdbc.password", "")));
+
+            PeCryptoUtils.initAesKey(config.getProperty(PROP_AES_KEY));
+            jdbcPassword = PeCryptoUtils.decrypt(config.getProperty("JDBC_PASSWORD"));
+            config.setProperty("javax.persistence.jdbc.password", jdbcPassword);
             return config;
 
         } catch (final IOException e) {

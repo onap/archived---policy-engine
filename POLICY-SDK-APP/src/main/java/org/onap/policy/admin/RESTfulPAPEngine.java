@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * Modifications Copyright (C) 2019 Bell Canada
  * ================================================================================
@@ -42,7 +42,7 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.utils.CryptoUtils;
+import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
@@ -329,7 +329,9 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
         HttpURLConnection connection = null;
         String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
         LOGGER.info("User Id is " + papID);
-        String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
+        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY));
+        String papPass = PeCryptoUtils
+                .decrypt(PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)));
         Base64.Encoder encoder = Base64.getEncoder();
         String encoding = encoder.encodeToString((papID + ":" + papPass).getBytes(StandardCharsets.UTF_8));
         Object contentObj = content;

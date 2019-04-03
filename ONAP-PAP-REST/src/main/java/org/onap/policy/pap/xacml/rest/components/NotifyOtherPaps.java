@@ -35,7 +35,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
-import org.onap.policy.utils.CryptoUtils;
+import org.onap.policy.utils.PeCryptoUtils;
 
 public class NotifyOtherPaps {
 
@@ -108,7 +108,7 @@ public class NotifyOtherPaps {
             String username = dbdEntity.getUsername();
             String txt;
             try {
-                txt = new String(CryptoUtils.decryptTxt(dbdEntity.getPassword()), StandardCharsets.UTF_8);
+                txt = PeCryptoUtils.decrypt(dbdEntity.getPassword());
             } catch (Exception e) {
                 LOGGER.debug(e);
                 // if we can't decrypt, might as well try it anyway
