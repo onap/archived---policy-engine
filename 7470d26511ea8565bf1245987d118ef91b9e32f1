@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d06cf846_b9bd3fd6",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 892,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-03T16:02:37Z",
+      "side": 1,
+      "message": "suggestion: use for() instead of an iterator",
+      "revId": "7470d26511ea8565bf1245987d118ef91b9e32f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d329940_57240804",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-03T16:02:37Z",
+      "side": 1,
+      "message": "not quite it: need to stick the compiled pattern into a static so it doesn\u0027t have to be re-compiled every time checkPattern() is invoked",
+      "revId": "7470d26511ea8565bf1245987d118ef91b9e32f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91043270_05eb689f",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-03T16:02:37Z",
+      "side": 1,
+      "message": "change cast to \"Map\" instead of \"LinkedHashMap\" here and in line 1352",
+      "revId": "7470d26511ea8565bf1245987d118ef91b9e32f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8b6cd09_e180977c",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1356,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-03T16:02:37Z",
+      "side": 1,
+      "message": "looks like this variable can be deleted",
+      "revId": "7470d26511ea8565bf1245987d118ef91b9e32f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e48a0e01_e0e32521",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1358,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-03T16:02:37Z",
+      "side": 1,
+      "message": "remove this cast - declare \"data\" will the full type, if necessary",
+      "revId": "7470d26511ea8565bf1245987d118ef91b9e32f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
