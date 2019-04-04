@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7319291c_b858aab5",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/controller/PolicyEngineServices.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-04T22:26:02Z",
+      "side": 1,
+      "message": "just want to verify the client authentication is no longer required for these methods",
+      "revId": "d98cbad766e1c03bb153b2bfed429d3af0181175",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50bd6721_5dcdfd70",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/restauth/AuthenticationService.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-04T22:26:02Z",
+      "side": 1,
+      "message": "should this be heartbeat?",
+      "revId": "d98cbad766e1c03bb153b2bfed429d3af0181175",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0aa77426_01135a67",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/restauth/AuthenticationService.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-04T22:26:02Z",
+      "side": 1,
+      "message": "PLZ FIX: use try-with-resources to ensure the file is closed if load() fails",
+      "revId": "d98cbad766e1c03bb153b2bfed429d3af0181175",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46c30c63_d0f7951b",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/restauth/PdpAuthenticationFilter.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-04T22:26:02Z",
+      "side": 1,
+      "message": "use indexOf(\u0027/\u0027, 1) instead of substring(1).indexOf(\u0027/\u0027)\n\nsame comment below",
+      "revId": "d98cbad766e1c03bb153b2bfed429d3af0181175",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0458f17_ca0b9b03",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/auth/test/AuthenticationServiceTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-04T22:26:02Z",
+      "side": 1,
+      "message": "can this be done with?\n\n  mock(ServletRequest.class)",
+      "revId": "d98cbad766e1c03bb153b2bfed429d3af0181175",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "270360cb_a84109ab",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/api/ConfigNameRequest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-04T22:26:02Z",
+      "side": 1,
+      "message": "fyi: can use StandardCoder for this - it hides the GSON\n\nsame comment in other files",
+      "revId": "d98cbad766e1c03bb153b2bfed429d3af0181175",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
