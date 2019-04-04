@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a94b9445_c1c7eff1",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/DeletePolicyService.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-04T22:03:59Z",
+      "side": 1,
+      "message": "oh, sorry - my mistake:  if deleteCondition\u003d\u003dnull, then this will throw an NPE, so can\u0027t use isBlank().  I hadn\u0027t noticed the invocation of \"toString()\" in here",
+      "revId": "e1fe7fcff0568f6376c3392ddf761b3aa0601587",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
