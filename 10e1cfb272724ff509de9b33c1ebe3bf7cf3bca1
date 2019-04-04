@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef2b9af0_93b6032d",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/DeletePolicyService.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-04T19:51:10Z",
+      "side": 1,
+      "message": "use endsWith()?",
+      "revId": "10e1cfb272724ff509de9b33c1ebe3bf7cf3bca1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bdfd56a_cb85d541",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/DeletePolicyService.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-04T19:51:10Z",
+      "side": 1,
+      "message": "could use StringUtils.isBlank()",
+      "revId": "10e1cfb272724ff509de9b33c1ebe3bf7cf3bca1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "539acf2b_66dc99db",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/AutoPushController.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-04T19:51:10Z",
+      "side": 1,
+      "message": "is \"map(String::new)\" needed?  seems like these values are already strings",
+      "revId": "10e1cfb272724ff509de9b33c1ebe3bf7cf3bca1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
