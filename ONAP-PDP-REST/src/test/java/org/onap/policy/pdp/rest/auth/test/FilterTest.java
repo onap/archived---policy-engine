@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -25,6 +25,8 @@ package org.onap.policy.pdp.rest.auth.test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import com.att.research.xacml.util.XACMLProperties;
+import com.mockrunner.mock.web.MockRequestDispatcher;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -32,14 +34,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
-import org.onap.policy.pdp.rest.restAuth.PDPAuthenticationFilter;
-import com.att.research.xacml.util.XACMLProperties;
-import com.mockrunner.mock.web.MockRequestDispatcher;
+import org.onap.policy.pdp.rest.restauth.PdpAuthenticationFilter;
 
 public class FilterTest {
-
-    private PDPAuthenticationFilter authenticationFilter = new PDPAuthenticationFilter();
-    private final String VALIDHEADERVALUE = "Basic dGVzdHBkcDphbHBoYTQ1Ng==";
+    private PdpAuthenticationFilter authenticationFilter = new PdpAuthenticationFilter();
+    private final String VALIDHEADERVALUE = "Basic cHl0aG9uOnRlc3Q=";
 
     @Before
     public void setUp() throws Exception {
@@ -103,7 +102,7 @@ public class FilterTest {
         FilterChain filterChain = mock(FilterChain.class);
         //
         when(httpServletRequest.getRequestURI()).thenReturn("/pdp/api/getConfig");
-        when(httpServletRequest.getHeader(PDPAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn("error");
+        when(httpServletRequest.getHeader(PdpAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn("error");
         authenticationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
         // verify if unauthorized
         verify(httpServletResponse).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -117,7 +116,7 @@ public class FilterTest {
         FilterChain filterChain = mock(FilterChain.class);
         //
         when(httpServletRequest.getRequestURI()).thenReturn("/pdp/api/getConfig");
-        when(httpServletRequest.getHeader(PDPAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn("Basic test123");
+        when(httpServletRequest.getHeader(PdpAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn("Basic test123");
         authenticationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
         // verify if unauthorized
         verify(httpServletResponse).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -132,7 +131,7 @@ public class FilterTest {
         // New request no environment header check
         when(httpServletRequest.getRequestURI()).thenReturn("/pdp/api/getConfig");
         when(httpServletRequest.getRequestDispatcher("/api/getConfig")).thenReturn(new MockRequestDispatcher());
-        when(httpServletRequest.getHeader(PDPAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn(VALIDHEADERVALUE);
+        when(httpServletRequest.getHeader(PdpAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn(VALIDHEADERVALUE);
         authenticationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
         // verify if authorized
         verify(httpServletRequest).getRequestDispatcher("/api/getConfig");
@@ -141,7 +140,7 @@ public class FilterTest {
         //
         when(httpServletRequest.getRequestURI()).thenReturn("/pdp/getConfig");
         when(httpServletRequest.getRequestDispatcher("/api//getConfig")).thenReturn(new MockRequestDispatcher());
-        when(httpServletRequest.getHeader(PDPAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn(VALIDHEADERVALUE);
+        when(httpServletRequest.getHeader(PdpAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn(VALIDHEADERVALUE);
         authenticationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
         // verify if authorized
         verify(httpServletRequest).getRequestDispatcher("/api//getConfig");
@@ -158,15 +157,17 @@ public class FilterTest {
         //
         when(httpServletRequest.getRequestURI()).thenReturn("/pdp/getConfig");
         when(httpServletRequest.getRequestDispatcher("/api//getConfig")).thenReturn(new MockRequestDispatcher());
-        when(httpServletRequest.getHeader(PDPAuthenticationFilter.ENVIRONMENT_HEADER)).thenReturn("DEVL");
-        when(httpServletRequest.getHeader(PDPAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn(VALIDHEADERVALUE);
+        when(httpServletRequest.getHeader(PdpAuthenticationFilter.ENVIRONMENT_HEADER)).thenReturn("DEVL");
+        when(httpServletRequest.getHeader(PdpAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn(VALIDHEADERVALUE);
+        when(httpServletRequest.getHeader(PdpAuthenticationFilter.CLIENTAUTH_HEADER)).thenReturn(null);
         authenticationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
         // verify if authorized
         verify(httpServletRequest).getRequestDispatcher("/api//getConfig");
         // New request no environment header check
         when(httpServletRequest.getRequestURI()).thenReturn("/pdp/api/getConfig");
         when(httpServletRequest.getRequestDispatcher("/api/getConfig")).thenReturn(new MockRequestDispatcher());
-        when(httpServletRequest.getHeader(PDPAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn(VALIDHEADERVALUE);
+        when(httpServletRequest.getHeader(PdpAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn(VALIDHEADERVALUE);
+        when(httpServletRequest.getHeader(PdpAuthenticationFilter.CLIENTAUTH_HEADER)).thenReturn(null);
         authenticationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
         // verify if authorized
         verify(httpServletRequest).getRequestDispatcher("/api/getConfig");
@@ -175,9 +176,10 @@ public class FilterTest {
         // Requests with InValid Environment Header
         //
         when(httpServletRequest.getRequestURI()).thenReturn("/pdp/getConfig");
-        when(httpServletRequest.getRequestDispatcher("/api//getConfig")).thenReturn(new MockRequestDispatcher());
-        when(httpServletRequest.getHeader(PDPAuthenticationFilter.ENVIRONMENT_HEADER)).thenReturn("TEST");
-        when(httpServletRequest.getHeader(PDPAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn(VALIDHEADERVALUE);
+        when(httpServletRequest.getRequestDispatcher("/api/getConfig")).thenReturn(new MockRequestDispatcher());
+        when(httpServletRequest.getHeader(PdpAuthenticationFilter.ENVIRONMENT_HEADER)).thenReturn("TEST");
+        when(httpServletRequest.getHeader(PdpAuthenticationFilter.AUTHENTICATION_HEADER)).thenReturn(VALIDHEADERVALUE);
+        when(httpServletRequest.getHeader(PdpAuthenticationFilter.CLIENTAUTH_HEADER)).thenReturn(null);
         authenticationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
         // verify if unauthorized
         verify(httpServletResponse).setStatus(HttpServletResponse.SC_UNAUTHORIZED);

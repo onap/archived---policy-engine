@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017,2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,16 +20,16 @@
 
 package org.onap.policy.api;
 
+import com.google.gson.Gson;
 import java.util.UUID;
 
 /**
- * <code>PushPolicyParameters</code> defines the Policy Parameters which are required to Push a
- * Policy to PDPGroup.
- * 
+ * <code>PushPolicyParameters</code> defines the Policy Parameters which are required to Push a Policy to PDPGroup.
+ *
  * @version 0.1
  */
 public class DeletePolicyParameters {
-
+    private static final Gson GSON = new Gson();
     private String policyName;
     private String policyType;
     private String policyComponent;
@@ -121,10 +121,13 @@ public class DeletePolicyParameters {
         this.pdpGroup = pdpGroup;
     }
 
+    /**
+     * Used to print the input Params for REST call.
+     *
+     * @return JSON String of this object.
+     */
     @Override
     public String toString() {
-        return "DeletePolicyParameters [policyName=" + policyName + ", policyType=" + policyType + ", policyComponent="
-                + policyComponent + ", deleteCondition=" + deleteCondition + ", pdpGroup=" + pdpGroup + ", requestID="
-                + requestID + "]";
+        return GSON.toJson(this);
     }
 }
