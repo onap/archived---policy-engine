@@ -25,6 +25,7 @@ import java.io.Serializable;
 
 public class ConfigNameRequest implements Serializable {
     private static final long serialVersionUID = 4487978240532425305L;
+    private static final Gson GSON = new Gson();
 
     private String policyName = null;
 
@@ -37,12 +38,12 @@ public class ConfigNameRequest implements Serializable {
     }
 
     /**
-     * Used to print the input Params for getCOnfig REST call.
+     * Used to print the input Params for getConfig REST call.
      *
      * @return JSON String of this object.
      */
     @Override
     public String toString() {
-        return new Gson().toJson(this);
+        return GSON.toJson(this);
     }
 }
