@@ -33,6 +33,29 @@
       "revId": "8e445bb2bb2267433a1eb3298f4c9ecabd9b6bde",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb251803_aa2f6463",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/restauth/PdpAuthenticationFilter.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-04T17:01:25Z",
+      "side": 1,
+      "message": "Here is where cyclomatic complexity gets big. Why wrap all this code in an if? You can just do this:\nif (! request instanceof HttpServletRequest) {\nreturn;\n}\n\nWhere is the JUnit test for this new file?",
+      "range": {
+        "startLine": 47,
+        "startChar": 7,
+        "endLine": 47,
+        "endChar": 52
+      },
+      "revId": "8e445bb2bb2267433a1eb3298f4c9ecabd9b6bde",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
