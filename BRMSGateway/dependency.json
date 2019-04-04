@@ -5,78 +5,78 @@
             "artifactId": "template.demo",
             "version": "1.4.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "events",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "rest",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "appc",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "aai",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "so",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdnc",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdnr",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "trafficgenerator",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }],
         "amsterdam": [{
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "events",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "appc",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "appclcm",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "vfc",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "so",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdnr",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdnc",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "aai",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdc",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "trafficgenerator",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.drools-applications.controlloop.common",
             "artifactId": "eventmanager",
@@ -86,33 +86,33 @@
             "artifactId": "guard",
             "version": "1.4.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actorServiceProvider",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.appc",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.appclcm",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.so",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.sdnc",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.sdnr",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.vfc",
-            "version": "1.4.0-SNAPSHOT"
+            "version": "2.0.0-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.drools-applications.controlloop.common",
             "artifactId": "policy-yaml",
