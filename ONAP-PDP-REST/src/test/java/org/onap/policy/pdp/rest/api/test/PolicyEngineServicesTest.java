@@ -98,20 +98,7 @@ public class PolicyEngineServicesTest {
     @Test
     public void getConfigAPIFailureTest() throws Exception {
         ConfigRequestParameters pep = new ConfigRequestParameters();
-        pep.setPolicyName(".*");
-        mockMvc.perform(
-                post("/getConfig").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
-        // Authorization tests.
-        mockMvc.perform(post("/getConfig").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, ""))
-                .andExpect(status().isUnauthorized());
-        mockMvc.perform(post("/getConfig").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
-        mockMvc.perform(post("/getConfig").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, ERRORCLIENTVALUE))
-                .andExpect(status().isUnauthorized());
+
         // Set wrong request.
         pep.setPolicyName(null);
         pep.setConfigName("test");
@@ -145,13 +132,6 @@ public class PolicyEngineServicesTest {
     public void getConfigByPolicyNameTest() throws Exception {
         ConfigNameRequest pep = new ConfigNameRequest();
         pep.setPolicyName(".*");
-        mockMvc.perform(
-                post("/getConfig").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
-        // Authorization tests.
-        mockMvc.perform(post("/getConfig").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, ""))
-                .andExpect(status().isUnauthorized());
         mockMvc.perform(post("/getConfigByPolicyName").content(PolicyUtils.objectToJsonString(pep)).headers(headers)
                 .header(UUIDHEADER, UUID.randomUUID()).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -161,12 +141,7 @@ public class PolicyEngineServicesTest {
     public void listConfigTest() throws Exception {
         ConfigRequestParameters pep = new ConfigRequestParameters();
         pep.setPolicyName(".*");
-        mockMvc.perform(post("/listConfig").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().is(400));
-        // Authorization tests.
-        mockMvc.perform(post("/listConfig").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, ""))
-                .andExpect(status().isUnauthorized());
+
         mockMvc.perform(post("/listConfig").content(PolicyUtils.objectToJsonString(pep)).headers(headers)
                 .header(UUIDHEADER, UUID.randomUUID()).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -185,23 +160,12 @@ public class PolicyEngineServicesTest {
     public void getMetricsTest() throws Exception {
         // Failure Tests.
         mockMvc.perform(get("/getMetrics")).andExpect(status().isBadRequest());
-        mockMvc.perform(get("/getMetrics").header(CLIENTAUTHHEADER, "Basic 123")).andExpect(status().isUnauthorized());
         // Service Tests.
         mockMvc.perform(get("/getMetrics").headers(headers).header(UUIDHEADER, "123"))
                 .andExpect(status().isBadRequest());
         mockMvc.perform(get("/getMetrics").headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         mockMvc.perform(get("/getMetrics").headers(headers)).andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void getNotificationAuthFailureTest() throws Exception {
-        mockMvc.perform(post("/getNotification").header(CLIENTAUTHHEADER, "").content("test"))
-                .andExpect(status().isUnauthorized());
-        mockMvc.perform(post("/getNotification").header(CLIENTAUTHHEADER, "Basic test123").content("test"))
-                .andExpect(status().isUnauthorized());
-        mockMvc.perform(post("/getNotification").header(CLIENTAUTHHEADER, ERRORCLIENTVALUE).content(" "))
-                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -248,9 +212,7 @@ public class PolicyEngineServicesTest {
         pep.setEventAttributes(eventAttributes);
         // Failure Tests.
         mockMvc.perform(post("/sendEvent")).andExpect(status().isBadRequest());
-        mockMvc.perform(post("/sendEvent").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
+
         // Service Tests.
         mockMvc.perform(post("/sendEvent").content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "123"))
@@ -277,9 +239,7 @@ public class PolicyEngineServicesTest {
         pep.setDecisionAttributes(eventAttributes);
         // Failure Tests.
         mockMvc.perform(post("/getDecision")).andExpect(status().isBadRequest());
-        mockMvc.perform(post("/getDecision").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
+
         // Service Tests.
         mockMvc.perform(post("/getDecision").content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "123"))
@@ -303,9 +263,7 @@ public class PolicyEngineServicesTest {
         PushPolicyParameters pep = new PushPolicyParameters();
         // Failure Tests.
         mockMvc.perform(put("/pushPolicy")).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
+
         // Service Tests.
         mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
@@ -376,9 +334,7 @@ public class PolicyEngineServicesTest {
         DeletePolicyParameters pep = new DeletePolicyParameters();
         // Failure Tests.
         mockMvc.perform(delete("/deletePolicy")).andExpect(status().isBadRequest());
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
+
         // Service Tests.
         mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
@@ -517,12 +473,7 @@ public class PolicyEngineServicesTest {
         PolicyParameters pep = new PolicyParameters();
         // Failure Tests.
         mockMvc.perform(put("/createPolicy")).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
-        mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
+
         // Service Tests.
         setCreateUpdateImpl();
         mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
@@ -862,12 +813,7 @@ public class PolicyEngineServicesTest {
         DictionaryParameters pep = new DictionaryParameters();
         // Failure Tests.
         mockMvc.perform(put("/createDictionaryItem")).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/createDictionaryItem").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
-        mockMvc.perform(put("/updateDictionaryItem").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
+
         // Service Tests.
         mockMvc.perform(put("/createDictionaryItem").content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "tes123"))
@@ -900,9 +846,7 @@ public class PolicyEngineServicesTest {
         DictionaryParameters pep = new DictionaryParameters();
         // Failure Tests.
         mockMvc.perform(post("/getDictionaryItems")).andExpect(status().isBadRequest());
-        mockMvc.perform(post("/getDictionaryItems").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
+
         // Service Tests.
         mockMvc.perform(post("/getDictionaryItems").content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "tes123"))
@@ -930,12 +874,7 @@ public class PolicyEngineServicesTest {
         ConfigPolicyAPIRequest pep = new ConfigPolicyAPIRequest();
         // Failure Tests.
         mockMvc.perform(put("/createConfig")).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/createConfig").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
-        mockMvc.perform(put("/updateConfig").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
+
         // Service Tests.
         mockMvc.perform(put("/createConfig").content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "tes123"))
@@ -963,12 +902,7 @@ public class PolicyEngineServicesTest {
         ConfigFirewallPolicyAPIRequest pep = new ConfigFirewallPolicyAPIRequest();
         // Failure Tests.
         mockMvc.perform(put("/createFirewallConfig")).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/createFirewallConfig").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
-        mockMvc.perform(put("/updateFirewallConfig").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).header(CLIENTAUTHHEADER, "Basic 123"))
-                .andExpect(status().isUnauthorized());
+
         // Service Tests.
         mockMvc.perform(put("/createFirewallConfig").content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "tes123"))
