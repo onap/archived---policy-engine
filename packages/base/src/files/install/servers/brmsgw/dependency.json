@@ -5,68 +5,68 @@
 			"artifactId": "template.demo",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
-			"groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+			"groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
 			"artifactId": "events",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
-			"groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+			"groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
 			"artifactId": "rest",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
-			"groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+			"groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
 			"artifactId": "appc",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
-			"groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+			"groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
 			"artifactId": "aai",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
-			"groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+			"groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
 			"artifactId": "so",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
-			"groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+			"groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
 			"artifactId": "trafficgenerator",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}],
         "amsterdam": [{
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "events",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "appc",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "appclcm",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "vfc",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "so",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "aai",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdc",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdnr",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdnc",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "trafficgenerator",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
@@ -78,41 +78,41 @@
             "artifactId": "guard",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actorServiceProvider",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.appc",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.appclcm",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.so",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.sdnr",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.sdnc",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.vfc",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common",
+            "groupId": "org.onap.policy.models.policy-models-interactions",
             "artifactId": "policy-yaml",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
             "groupId": "com.att.research.xacml",
             "artifactId": "xacml-pdp",
-            "version": "1.0.0"
+            "version": "1.0.2"
         }]
     }
 }

@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,8 +96,8 @@ import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 /**
- * BRMSPush: Application responsible to push policies to the BRMS PDP Policy Repository (PR). Mavenize and push policy
- * to PR
+ * BRMSPush: Application responsible to push policies to the BRMS PDP Policy Repository (PR).
+ * Mavenize and push policy to PR
  *
  * @version 1.0
  */
@@ -106,7 +107,7 @@ public class BrmsPush {
     private static final String DROOLS_APPS_TEMPLATE_GROUP =
             "org.onap.policy.drools-applications.controlloop.templates";
     private static final String DROOLS_APPS_MODEL_GROUP =
-            "org.onap.policy.drools-applications.controlloop.common.model-impl";
+            "org.onap.policy.models.policy-models-interactions.model-impl";
     private static final String META_INF = "META-INF";
     private static final String KMODULE_XML_FILE = "kmodule.xml";
     private static final String POM_XML_FILE = "pom.xml";
@@ -115,7 +116,7 @@ public class BrmsPush {
     private static final String RESOURCES = "resources";
     private static final Logger LOGGER = FlexLogger.getLogger(BrmsPush.class.getName());
     private static final String PROJECTSLOCATION = "RuleProjects";
-    private static final String[] GOALS = { "clean", "deploy" };
+    private static final String[] GOALS = {"clean", "deploy"};
     private static final String DEFAULT_VERSION = "1.4.0-SNAPSHOT";
     private static final String DEPENDENCY_FILE = "dependency.json";
     private static final String PROP_AES_KEY = "org.onap.policy.encryption.aes.key";
@@ -1089,7 +1090,7 @@ public class BrmsPush {
         if (config.getProperty(GROUP_NAMES).contains(",")) {
             groupNames = config.getProperty(GROUP_NAMES).replaceAll(" ", "").split(",");
         } else {
-            groupNames = new String[] { config.getProperty(GROUP_NAMES).replaceAll(" ", "") };
+            groupNames = new String[] {config.getProperty(GROUP_NAMES).replaceAll(" ", "")};
         }
         if (groupNames == null || groupNames.length == 0) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + groupNamesError);
