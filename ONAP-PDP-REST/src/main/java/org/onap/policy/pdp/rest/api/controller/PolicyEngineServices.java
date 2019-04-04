@@ -20,6 +20,10 @@
 
 package org.onap.policy.pdp.rest.api.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicLong;
@@ -58,24 +62,22 @@ import org.onap.policy.pdp.rest.api.services.NotificationService.NotificationSer
 import org.onap.policy.pdp.rest.api.services.PolicyEngineImportService;
 import org.onap.policy.pdp.rest.api.services.PushPolicyService;
 import org.onap.policy.pdp.rest.api.services.SendEventService;
-import org.onap.policy.pdp.rest.config.PDPApiAuth;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
@@ -83,7 +85,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/")
 public class PolicyEngineServices {
     private static Logger logger = FlexLogger.getLogger(PolicyEngineServices.class.getName());
-    private static final String NOTIFICATIONPERM = "notification";
 
     private final AtomicLong configCounter = new AtomicLong();
     private final AtomicLong configNameCounter = new AtomicLong();
@@ -112,64 +113,72 @@ public class PolicyEngineServices {
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Gets the configuration from the PolicyDecisionPoint(PDP)")
-    @RequestMapping(value = "/getConfig", method = RequestMethod.POST)
+    @PostMapping(value = "/getConfig")
     @ResponseBody
     public ResponseEntity<Collection<PolicyConfig>> getConfig(
             @RequestBody ConfigRequestParameters configRequestParameters,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
         Collection<PolicyConfig> policyConfig = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "getConfig")) {
-            GetConfigService getConfigService = new GetConfigService(configRequestParameters, requestID);
-            policyConfig = getConfigService.getResult();
-            status = getConfigService.getResponseCode();
-        }
+        GetConfigService getConfigService = new GetConfigService(configRequestParameters, requestId);
+        policyConfig = getConfigService.getResult();
+        HttpStatus status = getConfigService.getResponseCode();
         configCounter.incrementAndGet();
         return new ResponseEntity<>(policyConfig, status);
     }
 
+    /**
+     * Gets the config by policy name.
+     *
+     * @param configNameRequest the config name request
+     * @param clientEncoding the client encoding
+     * @param requestId the request id
+     * @return the config by policy name
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Gets the configuration from the PolicyDecisionPoint(PDP) using PolicyName")
-    @RequestMapping(value = "/getConfigByPolicyName", method = RequestMethod.POST)
+    @PostMapping(value = "/getConfigByPolicyName")
     @ResponseBody
     @Deprecated
     public ResponseEntity<Collection<PolicyConfig>> getConfigByPolicyName(
             @RequestBody ConfigNameRequest configNameRequest,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
         Collection<PolicyConfig> policyConfig = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "getConfigByPolicyName")) {
-            ConfigRequestParameters configRequestParameters = new ConfigRequestParameters();
-            configRequestParameters.setPolicyName(configNameRequest.getPolicyName());
-            GetConfigService getConfigService = new GetConfigService(configRequestParameters, requestID);
-            policyConfig = getConfigService.getResult();
-            status = getConfigService.getResponseCode();
-        }
+        logger.info("Operation: getConfigByPolicyName - " + configNameRequest.getPolicyName());
+        ConfigRequestParameters configRequestParameters = new ConfigRequestParameters();
+        configRequestParameters.setPolicyName(configNameRequest.getPolicyName());
+
+        GetConfigService getConfigService = new GetConfigService(configRequestParameters, requestId);
+        policyConfig = getConfigService.getResult();
+        HttpStatus status = getConfigService.getResponseCode();
         configNameCounter.incrementAndGet();
         return new ResponseEntity<>(policyConfig, status);
     }
 
+
+    /**
+     * List config.
+     *
+     * @param configRequestParameters the config request parameters
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Gets the list of configuration policies from the PDP")
-    @RequestMapping(value = "/listConfig", method = RequestMethod.POST)
+    @PostMapping(value = "/listConfig")
     @ResponseBody
     public ResponseEntity<Collection<String>> listConfig(@RequestBody ConfigRequestParameters configRequestParameters,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
         Collection<String> results = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "listConfig")) {
-            ListConfigService listConfigService = new ListConfigService(configRequestParameters, requestID);
-            results = listConfigService.getResult();
-            status = listConfigService.getResponseCode();
-        }
+        logger.info("Operation: listConfig - " + configRequestParameters);
+        ListConfigService listConfigService = new ListConfigService(configRequestParameters, requestId);
+        results = listConfigService.getResult();
+        HttpStatus status = listConfigService.getResponseCode();
         configCounter.incrementAndGet();
         return new ResponseEntity<>(results, status);
     }
@@ -188,422 +197,524 @@ public class PolicyEngineServices {
     @PostMapping(value = "/listPolicy")
     @ResponseBody
     public ResponseEntity<Collection<String>> listPolicy(@RequestBody ConfigNameRequest configNameRequest,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
             @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
         Collection<String> results = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
         logger.info("Operation: listPolicy - " + configNameRequest);
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestId, "listPolicy")) {
-            ListPolicyService listPolicyService = new ListPolicyService(configNameRequest);
-            results = listPolicyService.getResult();
-            status = listPolicyService.getResponseCode();
-        }
+        ListPolicyService listPolicyService = new ListPolicyService(configNameRequest);
+        results = listPolicyService.getResult();
+        HttpStatus status = listPolicyService.getResponseCode();
         configCounter.incrementAndGet();
         return new ResponseEntity<>(results, status);
     }
 
+    /**
+     * Gets the metrics.
+     *
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the metrics
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Gets the policy metrics from the PolicyAccessPoint(PAP)")
-    @RequestMapping(value = "/getMetrics", method = RequestMethod.GET)
+    @GetMapping(value = "/getMetrics")
     @ResponseBody
     public ResponseEntity<MetricsResponse> getMetrics(
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
         MetricsResponse response = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "getMetrics")) {
-            GetMetricsService getMetricsService = new GetMetricsService(requestID);
-            response = getMetricsService.getResult();
-            status = getMetricsService.getResponseCode();
-        }
+        logger.info("Operation: getMetrics");
+
+        GetMetricsService getMetricsService = new GetMetricsService(requestId);
+        response = getMetricsService.getResult();
+        HttpStatus status = getMetricsService.getResponseCode();
         metricCounter.incrementAndGet();
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Gets the notification.
+     *
+     * @param notificationTopic the notification topic
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the notification
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Registers DMaaP Topic to recieve notification from Policy Engine")
-    @RequestMapping(value = "/getNotification", method = RequestMethod.POST)
+    @PostMapping(value = "/getNotification")
     @ResponseBody
     public ResponseEntity<String> getNotification(@RequestBody String notificationTopic,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
-        String policyResponse = "Error Unauthorized to use Notification Service.";
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, NOTIFICATIONPERM)) {
-            NotificationService notificationService =
-                    new NotificationService(notificationTopic, requestID, NotificationServiceType.ADD);
-            policyResponse = notificationService.getResult();
-            status = notificationService.getResponseCode();
-        }
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
+        logger.info("Operation: getNotification for Topic: " + notificationTopic);
+
+        NotificationService notificationService =
+                new NotificationService(notificationTopic, requestId, NotificationServiceType.ADD);
+        String policyResponse = notificationService.getResult();
+        HttpStatus status = notificationService.getResponseCode();
         notificationCounter.incrementAndGet();
         return new ResponseEntity<>(policyResponse, status);
     }
 
+    /**
+     * Stop notification.
+     *
+     * @param notificationTopic the notification topic
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "De-Registers DMaaP Topic to stop recieving notifications from Policy Engine")
-    @RequestMapping(value = "/stopNotification", method = RequestMethod.POST)
+    @PostMapping(value = "/stopNotification")
     @ResponseBody
     public ResponseEntity<String> stopNotification(@RequestBody String notificationTopic,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
-        String policyResponse = "Error Unauthorized to use Notification Service.";
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, NOTIFICATIONPERM)) {
-            NotificationService notificationService =
-                    new NotificationService(notificationTopic, requestID, NotificationServiceType.REMOVE);
-            policyResponse = notificationService.getResult();
-            status = notificationService.getResponseCode();
-        }
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
+        logger.info("Operation: stopNotification for Topic: " + notificationTopic);
+
+        NotificationService notificationService =
+                new NotificationService(notificationTopic, requestId, NotificationServiceType.REMOVE);
+        String policyResponse = notificationService.getResult();
+        HttpStatus status = notificationService.getResponseCode();
+
         notificationCounter.incrementAndGet();
         return new ResponseEntity<>(policyResponse, status);
     }
 
+    /**
+     * Send heartbeat.
+     *
+     * @param notificationTopic the notification topic
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(
             value = "Sends Heartbeat to DMaaP Topic Registry to continue recieving notifications from Policy Engine")
-    @RequestMapping(value = "/sendHeartbeat", method = RequestMethod.POST)
+    @PostMapping(value = "/sendHeartbeat")
     @ResponseBody
     public ResponseEntity<String> sendHeartbeat(@RequestBody String notificationTopic,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
-        String policyResponse = "Error Unauthorized to use Heartbeat Service.";
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, NOTIFICATIONPERM)) {
-            NotificationService notificationService =
-                    new NotificationService(notificationTopic, requestID, NotificationServiceType.HB);
-            policyResponse = notificationService.getResult();
-            status = notificationService.getResponseCode();
-        }
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
+        logger.info("Operation: sendHeartbeat for topic - " + notificationTopic);
+
+        NotificationService notificationService =
+                new NotificationService(notificationTopic, requestId, NotificationServiceType.HB);
+        String policyResponse = notificationService.getResult();
+        HttpStatus status = notificationService.getResponseCode();
+
         return new ResponseEntity<>(policyResponse, status);
     }
 
+    /**
+     * Send event.
+     *
+     * @param eventRequestParameters the event request parameters
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Sends the Events specified to the Policy Engine")
-    @RequestMapping(value = "/sendEvent", method = RequestMethod.POST)
+    @PostMapping(value = "/sendEvent")
     @ResponseBody
     public ResponseEntity<Collection<PolicyResponse>> sendEvent(
             @RequestBody EventRequestParameters eventRequestParameters,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
         Collection<PolicyResponse> policyResponse = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "sendEvent")) {
-            SendEventService sendEventService = new SendEventService(eventRequestParameters, requestID);
-            policyResponse = sendEventService.getResult();
-            status = sendEventService.getResponseCode();
-        }
+        logger.info("Operation: sendEvent with EventAttributes - " + eventRequestParameters.getEventAttributes());
+
+        SendEventService sendEventService = new SendEventService(eventRequestParameters, requestId);
+        policyResponse = sendEventService.getResult();
+        HttpStatus status = sendEventService.getResponseCode();
         eventCounter.incrementAndGet();
         return new ResponseEntity<>(policyResponse, status);
     }
 
+    /**
+     * Gets the decision.
+     *
+     * @param decisionRequestParameters the decision request parameters
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the decision
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Gets the Decision using specified decision parameters")
-    @RequestMapping(value = "/getDecision", method = RequestMethod.POST)
+    @PostMapping(value = "/getDecision")
     @ResponseBody
     public ResponseEntity<DecisionResponse> getDecision(
             @RequestBody DecisionRequestParameters decisionRequestParameters,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
         DecisionResponse decisionResponse = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "getDecision")) {
-            GetDecisionService getDecisionService = new GetDecisionService(decisionRequestParameters, requestID);
-            decisionResponse = getDecisionService.getResult();
-            status = getDecisionService.getResponseCode();
-        }
+
+        GetDecisionService getDecisionService = new GetDecisionService(decisionRequestParameters, requestId);
+        decisionResponse = getDecisionService.getResult();
+        HttpStatus status = getDecisionService.getResponseCode();
         decisionCounter.incrementAndGet();
         return new ResponseEntity<>(decisionResponse, status);
     }
 
+    /**
+     * Push policy.
+     *
+     * @param pushPolicyParameters the push policy parameters
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Pushes the specified policy to the PDP Group.")
-    @RequestMapping(value = "/pushPolicy", method = RequestMethod.PUT)
+    @PutMapping(value = "/pushPolicy")
     @ResponseBody
     public ResponseEntity<String> pushPolicy(@RequestBody PushPolicyParameters pushPolicyParameters,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestAttribute(name = "Mechid") String mechId,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
         String response = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "pushPolicy")) {
-            PushPolicyService pushPolicyService = new PushPolicyService(pushPolicyParameters, requestID);
-            response = pushPolicyService.getResult();
-            status = pushPolicyService.getResponseCode();
-        }
+        logger.info("Operation: pushPolicy - " + pushPolicyParameters + ", Mechid - " + mechId);
+        PushPolicyService pushPolicyService = new PushPolicyService(pushPolicyParameters, requestId);
+        response = pushPolicyService.getResult();
+        HttpStatus status = pushPolicyService.getResponseCode();
         pushCounter.incrementAndGet();
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Delete policy.
+     *
+     * @param deletePolicyParameters the delete policy parameters
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Deletes the specified policy from the PDP Group or PAP.")
-    @RequestMapping(value = "/deletePolicy", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/deletePolicy")
     @ResponseBody
     public ResponseEntity<String> deletePolicy(@RequestBody DeletePolicyParameters deletePolicyParameters,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestAttribute(name = "Mechid") String mechId,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
         String response = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "deletePolicy")) {
-            DeletePolicyService deletePolicyService = new DeletePolicyService(deletePolicyParameters, requestID);
-            response = deletePolicyService.getResult();
-            status = deletePolicyService.getResponseCode();
-        }
+        logger.info("Operation: deletePolicy - " + deletePolicyParameters + ", Mechid - " + mechId);
+        DeletePolicyService deletePolicyService = new DeletePolicyService(deletePolicyParameters, requestId);
+        response = deletePolicyService.getResult();
+        HttpStatus status = deletePolicyService.getResponseCode();
         deleteCounter.incrementAndGet();
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Creates the policy.
+     *
+     * @param policyParameters the policy parameters
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Creates a Policy based on given Policy Parameters.")
-    @RequestMapping(value = "/createPolicy", method = RequestMethod.PUT)
+    @PutMapping(value = "/createPolicy")
     @ResponseBody
     public ResponseEntity<String> createPolicy(@RequestBody PolicyParameters policyParameters,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestAttribute(name = "Mechid") String mechId,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
         String response = null;
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "createPolicy")) {
-            CreateUpdatePolicyService createPolicyService;
-            try {
-                createPolicyService = (CreateUpdatePolicyService) XACMLPdpServlet.getCreateUpdatePolicyConstructor()
-                        .newInstance(policyParameters, requestID, false);
-                response = createPolicyService.getResult();
-                status = createPolicyService.getResponseCode();
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException e) {
-                logger.error(e.getMessage(), e);
-                response = "Problem with CreateUpdate Policy Service. ";
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
+        logger.info("Operation: createPolicy for " + policyParameters.toString() + ", Mechid : " + mechId);
+
+        CreateUpdatePolicyService createPolicyService;
+        try {
+            createPolicyService = (CreateUpdatePolicyService) XACMLPdpServlet.getCreateUpdatePolicyConstructor()
+                    .newInstance(policyParameters, requestId, false);
+            response = createPolicyService.getResult();
+            status = createPolicyService.getResponseCode();
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException e) {
+            logger.error(e.getMessage(), e);
+            response = "Problem with CreateUpdate Policy Service. ";
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         createPolicyCounter.incrementAndGet();
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Update policy.
+     *
+     * @param policyParameters the policy parameters
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Updates a Policy based on given Policy Parameters.")
-    @RequestMapping(value = "/updatePolicy", method = RequestMethod.PUT)
+    @PutMapping(value = "/updatePolicy")
     @ResponseBody
     public ResponseEntity<String> updatePolicy(@RequestBody PolicyParameters policyParameters,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestAttribute(name = "Mechid") String mechId,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
         String response = null;
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "updatePolicy")) {
-            CreateUpdatePolicyService updatePolicyService;
-            try {
-                updatePolicyService = (CreateUpdatePolicyService) XACMLPdpServlet.getCreateUpdatePolicyConstructor()
-                        .newInstance(policyParameters, requestID, true);
-                response = updatePolicyService.getResult();
-                status = updatePolicyService.getResponseCode();
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException e) {
-                logger.error(e.getMessage(), e);
-                response = "Problem with CreateUpdate Policy Service. ";
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
+        logger.info("Operation: updatePolicy for " + policyParameters.toString() + ", MechId - " + mechId);
+
+        CreateUpdatePolicyService updatePolicyService;
+        try {
+            updatePolicyService = (CreateUpdatePolicyService) XACMLPdpServlet.getCreateUpdatePolicyConstructor()
+                    .newInstance(policyParameters, requestId, true);
+            response = updatePolicyService.getResult();
+            status = updatePolicyService.getResponseCode();
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException e) {
+            logger.error(e.getMessage(), e);
+            response = "Problem with CreateUpdate Policy Service. ";
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         updatePolicyCounter.incrementAndGet();
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Creates the dictionary item.
+     *
+     * @param dictionaryParameters the dictionary parameters
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Creates a Dictionary Item for a specific dictionary based on given Parameters.")
-    @RequestMapping(value = "/createDictionaryItem", method = RequestMethod.PUT)
+    @PutMapping(value = "/createDictionaryItem")
     @ResponseBody
     public ResponseEntity<String> createDictionaryItem(@RequestBody DictionaryParameters dictionaryParameters,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
-        String response = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "createDictionary")) {
-            CreateUpdateDictionaryService createDictionaryService =
-                    new CreateUpdateDictionaryService(dictionaryParameters, requestID, false);
-            response = createDictionaryService.getResult();
-            status = createDictionaryService.getResponseCode();
-        }
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
+        logger.info("Operation: createDictionaryItem - " + dictionaryParameters);
+
+        CreateUpdateDictionaryService createDictionaryService =
+                new CreateUpdateDictionaryService(dictionaryParameters, requestId, false);
+        String response = createDictionaryService.getResult();
+        HttpStatus status = createDictionaryService.getResponseCode();
         createDictionaryCounter.incrementAndGet();
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Update dictionary item.
+     *
+     * @param dictionaryParameters the dictionary parameters
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Updates a Dictionary Item for a specific dictionary based on given Parameters.")
-    @RequestMapping(value = "/updateDictionaryItem", method = RequestMethod.PUT)
+    @PutMapping(value = "/updateDictionaryItem")
     @ResponseBody
     public ResponseEntity<String> updateDictionaryItem(@RequestBody DictionaryParameters dictionaryParameters,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
-        String response = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "updateDictionary")) {
-            CreateUpdateDictionaryService updateDictionaryService =
-                    new CreateUpdateDictionaryService(dictionaryParameters, requestID, true);
-            response = updateDictionaryService.getResult();
-            status = updateDictionaryService.getResponseCode();
-        }
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
+        logger.info("Operation: updateDictionaryItem - " + dictionaryParameters);
+
+        CreateUpdateDictionaryService updateDictionaryService =
+                new CreateUpdateDictionaryService(dictionaryParameters, requestId, true);
+        String response = updateDictionaryService.getResult();
+        HttpStatus status = updateDictionaryService.getResponseCode();
         updateDictionaryCounter.incrementAndGet();
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Gets the dictionary items.
+     *
+     * @param dictionaryParameters the dictionary parameters
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the dictionary items
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Gets the dictionary items from the PAP")
-    @RequestMapping(value = "/getDictionaryItems", method = RequestMethod.POST)
+    @PostMapping(value = "/getDictionaryItems")
     @ResponseBody
     public ResponseEntity<DictionaryResponse> getDictionaryItems(@RequestBody DictionaryParameters dictionaryParameters,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
         DictionaryResponse dictionaryResponse = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "getDictionary")) {
-            GetDictionaryService getDictionaryService = new GetDictionaryService(dictionaryParameters, requestID);
-            dictionaryResponse = getDictionaryService.getResult();
-            status = getDictionaryService.getResponseCode();
-        }
+        logger.info("Operation: getDictionaryItems - " + dictionaryParameters);
+        GetDictionaryService getDictionaryService = new GetDictionaryService(dictionaryParameters, requestId);
+        dictionaryResponse = getDictionaryService.getResult();
+        HttpStatus status = getDictionaryService.getResponseCode();
         getDictionaryCounter.incrementAndGet();
         return new ResponseEntity<>(dictionaryResponse, status);
     }
 
+    /**
+     * Policy engine import.
+     *
+     * @param importParametersJson the import parameters json
+     * @param file the file
+     * @param clientEncoding the client encoding
+     * @param requestId the request ID
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
-    @ApiOperation(
-            value = "Imports Policy based on the parameters which represent the service used to create a policy Service.")
-    @RequestMapping(value = "/policyEngineImport", method = RequestMethod.POST)
+    @ApiOperation(value = "Imports models and templates which represent the service used to create a policy.")
+    @PostMapping(value = "/policyEngineImport")
     @ResponseBody
     public ResponseEntity<String> policyEngineImport(@RequestParam("importParametersJson") String importParametersJson,
             @RequestParam("file") MultipartFile file,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
-        String response = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "policyEngineImport")) {
-            PolicyEngineImportService policyEngineImportService =
-                    new PolicyEngineImportService(importParametersJson, file, requestID);
-            response = policyEngineImportService.getResult();
-            status = policyEngineImportService.getResponseCode();
-        }
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
+        logger.info("Operation: policyEngineImport with importParametersJson: " + importParametersJson);
+        PolicyEngineImportService policyEngineImportService =
+                new PolicyEngineImportService(importParametersJson, file, requestId);
+        String response = policyEngineImportService.getResult();
+        HttpStatus status = policyEngineImportService.getResponseCode();
         policyEngineImportCounter.incrementAndGet();
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Creates the config.
+     *
+     * @param configPolicyAPIRequest the config policy API request
+     * @param clientEncoding the client encoding
+     * @param requestId the request id
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Creates a Config Policy based on given Policy Parameters.")
-    @RequestMapping(value = "/createConfig", method = RequestMethod.PUT)
+    @PutMapping(value = "/createConfig")
     @ResponseBody
     @Deprecated
     public ResponseEntity<String> createConfig(@RequestBody ConfigPolicyAPIRequest configPolicyAPIRequest,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
-        String response = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "createPolicy")) {
-            CreateUpdateConfigPolicyService createPolicyService =
-                    new CreateUpdateConfigPolicyService(configPolicyAPIRequest, requestID, false);
-            response = createPolicyService.getResult();
-            status = createPolicyService.getResponseCode();
-        }
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
+        logger.info("Operation: createConfig");
+
+        CreateUpdateConfigPolicyService createPolicyService =
+                new CreateUpdateConfigPolicyService(configPolicyAPIRequest, requestId, false);
+        String response = createPolicyService.getResult();
+        HttpStatus status = createPolicyService.getResponseCode();
         deprecatedCounter.incrementAndGet();
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Update config.
+     *
+     * @param configPolicyAPIRequest the config policy API request
+     * @param clientEncoding the client encoding
+     * @param requestId the request id
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Updates a Config Policy based on given Policy Parameters.")
-    @RequestMapping(value = "/updateConfig", method = RequestMethod.PUT)
+    @PutMapping(value = "/updateConfig")
     @ResponseBody
     @Deprecated
     public ResponseEntity<String> updateConfig(@RequestBody ConfigPolicyAPIRequest configPolicyAPIRequest,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
-        String response = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "updatePolicy")) {
-            CreateUpdateConfigPolicyService updatePolicyService =
-                    new CreateUpdateConfigPolicyService(configPolicyAPIRequest, requestID, true);
-            response = updatePolicyService.getResult();
-            status = updatePolicyService.getResponseCode();
-        }
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
+        logger.info("Operation: updateConfig");
+
+        CreateUpdateConfigPolicyService updatePolicyService =
+                new CreateUpdateConfigPolicyService(configPolicyAPIRequest, requestId, true);
+        String response = updatePolicyService.getResult();
+        HttpStatus status = updatePolicyService.getResponseCode();
         deprecatedCounter.incrementAndGet();
         return new ResponseEntity<>(response, status);
     }
+
+    /**
+     * Creates the firewall config.
+     *
+     * @param configFirewallPolicyAPIRequest the config firewall policy API request
+     * @param clientEncoding the client encoding
+     * @param requestId the request id
+     * @return the response entity
+     */
 
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Creates a Config Firewall Policy")
-    @RequestMapping(value = "/createFirewallConfig", method = RequestMethod.PUT)
+    @PutMapping(value = "/createFirewallConfig")
     @ResponseBody
     @Deprecated
     public ResponseEntity<String> createFirewallConfig(
             @RequestBody ConfigFirewallPolicyAPIRequest configFirewallPolicyAPIRequest,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
-        String response = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "createPolicy")) {
-            CreateUpdateFirewallPolicyService createFirewallPolicyService =
-                    new CreateUpdateFirewallPolicyService(configFirewallPolicyAPIRequest, requestID, false);
-            response = createFirewallPolicyService.getResult();
-            status = createFirewallPolicyService.getResponseCode();
-        }
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
+        logger.info("Operation: createFirewallConfig");
+
+        CreateUpdateFirewallPolicyService createFirewallPolicyService =
+                new CreateUpdateFirewallPolicyService(configFirewallPolicyAPIRequest, requestId, false);
+        String response = createFirewallPolicyService.getResult();
+        HttpStatus status = createFirewallPolicyService.getResponseCode();
         deprecatedCounter.incrementAndGet();
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Update firewall config.
+     *
+     * @param configFirewallPolicyAPIRequest the config firewall policy API request
+     * @param clientEncoding the client encoding
+     * @param requestId the request id
+     * @return the response entity
+     */
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
             @ApiImplicitParam(name = "Environment", required = true, paramType = "Header")})
     @ApiOperation(value = "Updates a Config Firewall Policy")
-    @RequestMapping(value = "/updateFirewallConfig", method = RequestMethod.PUT)
+    @PutMapping(value = "/updateFirewallConfig")
     @ResponseBody
     @Deprecated
     public ResponseEntity<String> updateFirewallConfig(
             @RequestBody ConfigFirewallPolicyAPIRequest configFirewallPolicyAPIRequest,
-            @RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
-            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
-        String response = null;
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        // Check Permissions.
-        if (PDPApiAuth.checkPermissions(clientEncoding, requestID, "updatePolicy")) {
-            CreateUpdateFirewallPolicyService updateFirewallPolicyService =
-                    new CreateUpdateFirewallPolicyService(configFirewallPolicyAPIRequest, requestID, true);
-            response = updateFirewallPolicyService.getResult();
-            status = updateFirewallPolicyService.getResponseCode();
-        }
+            @RequestHeader(value = "ClientAuth", required = false) String clientEncoding,
+            @RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestId) {
+        logger.info("Operation: updateFirewallConfig");
+
+        CreateUpdateFirewallPolicyService updateFirewallPolicyService =
+                new CreateUpdateFirewallPolicyService(configFirewallPolicyAPIRequest, requestId, true);
+        String response = updateFirewallPolicyService.getResult();
+        HttpStatus status = updateFirewallPolicyService.getResponseCode();
         deprecatedCounter.incrementAndGet();
         return new ResponseEntity<>(response, status);
     }
 
+    /**
+     * Gets the count.
+     *
+     * @return the count
+     */
     @ApiOperation(value = "Gets the API Services usage Information")
     @ApiIgnore
-    @RequestMapping(value = "/count", method = RequestMethod.GET)
+    @GetMapping(value = "/count")
     public String getCount() {
         return "Total Config Calls : " + configCounter + "\n" + "Total Config calls made using Policy File Name: "
                 + configNameCounter + "\n" + "Total Event Calls : " + eventCounter + "\nTotal Decision Calls: "
@@ -616,6 +727,13 @@ public class PolicyEngineServices {
                 + "\nTotal Metrics Calls:" + metricCounter + "\nTotal Notification Calls:" + notificationCounter;
     }
 
+    /**
+     * Message not readable exception handler.
+     *
+     * @param req the req
+     * @param exception the exception
+     * @return the response entity
+     */
     @ExceptionHandler({HttpMessageNotReadableException.class})
     public ResponseEntity<String> messageNotReadableExceptionHandler(HttpServletRequest req,
             HttpMessageNotReadableException exception) {
