@@ -40,7 +40,7 @@ import org.apache.commons.io.IOUtils;
 import org.onap.policy.api.PolicyException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.pdp.rest.config.PDPApiAuth;
+import org.onap.policy.pdp.rest.restauth.AuthenticationService;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
@@ -64,7 +64,7 @@ public class PAPServices {
     }
 
     public PAPServices() {
-        environment = PDPApiAuth.getEnvironment();
+        environment = AuthenticationService.getEnvironment();
         if (paps == null) {
             synchronized (papResourceLock) {
                 String urlList = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URLS);
@@ -331,6 +331,7 @@ public class PAPServices {
 
     private String checkResponse(final HttpURLConnection connection, final UUID requestID) throws IOException {
         String response = null;
+        LOGGER.info("PAPServices:checkResponse - RequestId: " + requestID + ", ResponseCode: " + responseCode);
         if (responseCode == 200 || isJunit) {
             // Check for successful creation of policy
             String isSuccess = null;
