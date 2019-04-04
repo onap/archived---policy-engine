@@ -43,7 +43,6 @@ import org.springframework.http.HttpStatus;
 public class DeletePolicyService extends PdpApiService {
 
     private static final Logger LOGGER = FlexLogger.getLogger(DeletePolicyService.class.getName());
-    private static final String PRINT_REQUESTID = " - RequestId - ";
     private DeletePolicyParameters deletePolicyParameters = null;
     private String result = null;
     private List<PolicyNameType> policyList = new ArrayList<>();
