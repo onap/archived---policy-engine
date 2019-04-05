@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa011221_b80f2562",
+        "filename": "packages/base/src/files/install/servers/pdp/bin/client.properties",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-04-05T15:45:43Z",
+      "side": 1,
+      "message": "Q, what is this again for, provided that it wasn\u0027t there in previous version of code for installation?\n\nAnything else that needs to be added at installation for AAF of any of the new changes being introduced ?",
+      "revId": "271e9ce9a00ae7b2aafa1c3a320ef6a71fa1f567",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
