@@ -16,6 +16,24 @@
       "revId": "271e9ce9a00ae7b2aafa1c3a320ef6a71fa1f567",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18c011bb_c090152b",
+        "filename": "packages/base/src/files/install/servers/pdp/bin/client.properties",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-04-05T15:58:03Z",
+      "side": 1,
+      "message": "PAP uses the testpdp/alpha123 in Authorization header to talk to PDP. These values can be used for PDP rest api also if the aaf is disabled in xacml.pdp.properties. There should be no change to install related to AAF auth.",
+      "parentUuid": "fa011221_b80f2562",
+      "revId": "271e9ce9a00ae7b2aafa1c3a320ef6a71fa1f567",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
