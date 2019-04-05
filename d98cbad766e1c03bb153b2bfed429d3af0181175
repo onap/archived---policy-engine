@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8e34571e_6a0f710f",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/controller/PolicyEngineServices.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-04-05T02:07:35Z",
+      "side": 1,
+      "message": "Yes, it is not a required field but can still be used along with authorization header to support existing auth mechanism.",
+      "parentUuid": "7319291c_b858aab5",
+      "revId": "d98cbad766e1c03bb153b2bfed429d3af0181175",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50bd6721_5dcdfd70",
         "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/restauth/AuthenticationService.java",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2019-04-04T22:26:02Z",
       "side": 1,
       "message": "should this be heartbeat?",
+      "revId": "d98cbad766e1c03bb153b2bfed429d3af0181175",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f82cfe15_addfd927",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/restauth/AuthenticationService.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-04-05T02:07:35Z",
+      "side": 1,
+      "message": "The heartbeat uses the same perm as the notification in existing code - PolicyEngineServices - /sendHeartbeat.\nThe heartbeat is to verify conn with notification clients.",
+      "parentUuid": "50bd6721_5dcdfd70",
       "revId": "d98cbad766e1c03bb153b2bfed429d3af0181175",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -98,6 +134,24 @@
       "writtenOn": "2019-04-04T22:26:02Z",
       "side": 1,
       "message": "fyi: can use StandardCoder for this - it hides the GSON\n\nsame comment in other files",
+      "revId": "d98cbad766e1c03bb153b2bfed429d3af0181175",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6e4d846_99aaecec",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/api/ConfigNameRequest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-04-05T02:07:35Z",
+      "side": 1,
+      "message": "Maybe I\u0027m using it wrong but it seems to throw CoderException that needs to be handled and logged(no loggers). I\u0027ll look at it some more tomm.\nstatic Coder coder\u003d new StandardCoder();\ncoder.encode(this)",
+      "parentUuid": "270360cb_a84109ab",
       "revId": "d98cbad766e1c03bb153b2bfed429d3af0181175",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
