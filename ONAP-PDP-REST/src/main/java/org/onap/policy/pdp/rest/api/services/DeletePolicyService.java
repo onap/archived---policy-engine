@@ -173,7 +173,7 @@ public class DeletePolicyService extends PdpApiService {
      */
     private boolean populateFullPolicyName(final PAPServices papServices) {
         for (PolicyNameType policyData : policyList) {
-            if (policyData.getPolicyName().contains("xml")) {
+        	if (policyData.getPolicyName().endsWith("xml")) {
                 policyData.setFullPolicyName(policyData.getPolicyName());
                 continue;
             }
@@ -251,7 +251,7 @@ public class DeletePolicyService extends PdpApiService {
 
         if ("PAP".equalsIgnoreCase(deletePolicyParameters.getPolicyComponent())
                 && (deletePolicyParameters.getDeleteCondition() == null
-                        || deletePolicyParameters.getDeleteCondition().toString().trim().isEmpty())) {
+                        || StringUtils.isBlank(deletePolicyParameters.getDeleteCondition().toString()))) {
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Delete Condition given.";
             LOGGER.warn(message + PRINT_REQUESTID + requestId);
             return false;
