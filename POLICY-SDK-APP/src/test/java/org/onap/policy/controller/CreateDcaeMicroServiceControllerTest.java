@@ -163,10 +163,10 @@ public class CreateDcaeMicroServiceControllerTest {
                 + "\"testttt\",\"Email Notification for failures\":\"sds@l.com\","
                 + "\"Select Server Scope\":\"testttt\",\"Parent Correlation Name\":"
                 + "\"testttt\",\"Parent Correlation Traversal\":\"testttt\",\"logicalConnector\":"
-                + "\"OR\",\"triggerSignature@0.signatures.alarmSignatures@0.traversal\":\"testttt\","
-                + "\"triggerSignature@0.signatures.alarmSignatures@0.alarmSignature@0.VnfType\":"
-                + "\"  testttt\",\"triggerSignature@0.signatures.alarmSignatures@0."
-                + "alarmSignature@0.Contains\":\"AND\",\"triggerSignature@0.signatures."
+                + "\"OR\",\"triggerSignature@0.signaturesAlarm.alarmSignatures@0.traversal\":\"testttt\","
+                + "\"triggerSignature@0.signaturesAlarm.alarmSignatures@0.alarmSignature@0.VnfType\":"
+                + "\"  testttt\",\"triggerSignature@0.signaturesAlarm.alarmSignatures@0."
+                + "alarmSignature@0.Contains\":\"AND\",\"triggerSignature@0.signaturesAlarm."
                 + "alarmSignatures@0.alarmSignature@0.FilterValue\":\"testttt\"}}";
 
         configBodyString = "{\"service\":\"SniroPolicyEntityTest\",\"policyName\":\"someone\",\"description\":\"test\","
