@@ -78,6 +78,8 @@ public class PolicyEngineServicesTest {
     // This value is as per test resource code. Don't change this.
     private static final String CLIENTAUTHVALUE = "Basic cHl0aG9uOnRlc3Q=";
     private static final String ERRORCLIENTVALUE = "Basic dGVzdDp0ZXN0MTIz";
+    private static final String MECHID_ATTR = "Mechid";
+    private static final String MECHID_ATTR_VAL = "junit";
 
     private MockMvc mockMvc;
     private HttpHeaders headers;
@@ -262,70 +264,70 @@ public class PolicyEngineServicesTest {
     public void pushPolicyTest() throws Exception {
         PushPolicyParameters pep = new PushPolicyParameters();
         // Failure Tests.
-        mockMvc.perform(put("/pushPolicy")).andExpect(status().isBadRequest());
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL)).andExpect(status().isBadRequest());
 
         // Service Tests.
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyName("com.");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyName("com.test");
         pep.setPolicyType("");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyName("scopeless");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyName("testing.test");
         pep.setPolicyType("wrong");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyType("BRMS_PARAM");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyType("BRMS_RAW");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyType("MicroService");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyType("ClosedLoop_PM");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyType("ClosedLoop_Fault");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyType("Base");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyType("Decision");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyType("Action");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyType("Firewall");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyType("Optimization");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPdpGroup("default");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "123"))
                 .andExpect(status().isBadRequest());
         pep.setRequestID(UUID.randomUUID());
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyType("Base,Base");
         pep.setPolicyName("com.test1,com.test2");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyType("Base,Base,  ");
         pep.setPolicyName("com.test1,com.test2,com.test3");
-        mockMvc.perform(put("/pushPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/pushPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
     }
 
@@ -333,138 +335,164 @@ public class PolicyEngineServicesTest {
     public void deletePolicyTest() throws Exception {
         DeletePolicyParameters pep = new DeletePolicyParameters();
         // Failure Tests.
-        mockMvc.perform(delete("/deletePolicy")).andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL)).andExpect(status().isBadRequest());
 
         // Service Tests.
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
 
         pep.setPolicyName("testing");
         pep.setPolicyType("Base");
         pep.setPolicyComponent("PDP");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "test123"))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL)
+                .content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON).headers(headers)
+                .requestAttr("userId", "testUserId").header(UUIDHEADER, "test123")).andExpect(status().isBadRequest());
         pep.setPdpGroup("default");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "test123"))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "test123"))
                 .andExpect(status().isBadRequest());
         pep.setPolicyName("com.Config_test.1.xml");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "test123"))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "test123"))
                 .andExpect(status().isBadRequest());
         pep.setPolicyName("testing. ");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "test123"))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "test123"))
                 .andExpect(status().isBadRequest());
         pep.setPolicyName("testscope.name");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL)
+                .content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON).headers(headers))
+                .andExpect(status().isBadRequest());
         pep.setPolicyType("wrong");
         pep.setRequestID(UUID.randomUUID());
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL)
+                .content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON).headers(headers))
+                .andExpect(status().isBadRequest());
         pep.setPolicyType("BRMS_PARAM");
         pep.setPolicyComponent("wrong");
         pep.setRequestID(null);
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL)
+                .content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON).headers(headers))
+                .andExpect(status().isBadRequest());
         pep.setPolicyType("BRMS_PARAM");
         pep.setPolicyComponent("PDP");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL)
+                .content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON).headers(headers))
+                .andExpect(status().isBadRequest());
         pep.setPolicyType("BRMS_RAW");
         pep.setPolicyComponent("PDP");
         pep.setPolicyName("testscope.name");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyType("MicroService");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyType("Optimization");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyType("ClosedLoop_PM");
         pep.setPolicyComponent("PDP");
         pep.setDeleteCondition(DeletePolicyCondition.ALL);
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyType("ClosedLoop_Fault");
         pep.setDeleteCondition(DeletePolicyCondition.ONE);
         pep.setPolicyName("test.test");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyType("Base");
         pep.setPolicyComponent("PAP");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyType("Decision");
         pep.setPolicyComponent("PDP");
         pep.setPolicyName("test.test");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyType("Action");
         pep.setPolicyName("scope.test");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPdpGroup("default");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyComponent("PAP");
         pep.setPolicyType("Firewall");
         pep.setDeleteCondition(null);
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyComponent("PAP");
         pep.setDeleteCondition(DeletePolicyCondition.ONE);
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyComponent("fail");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyComponent("PDP");
         pep.setPolicyName("testscope.policyName");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyComponent(null);
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyComponent("PDP");
         pep.setPolicyName("com.test1,com.test2");
         pep.setPolicyType("Base,Base");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyName("com.test1,com.test2");
         pep.setPolicyType("Base,Base,  ");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyName("com.test1,com.test2,  ");
         pep.setPolicyType("Base,Base,  ");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyComponent("PAP");
         pep.setPolicyName("com.test1,com.test2");
         pep.setPolicyType("Base,Base");
-        mockMvc.perform(delete("/deletePolicy").content(PolicyUtils.objectToJsonString(pep))
-                .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
+        mockMvc.perform(
+                delete("/deletePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
+                        .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -472,42 +500,42 @@ public class PolicyEngineServicesTest {
     public void createUpdatePolicyTest() throws Exception {
         PolicyParameters pep = new PolicyParameters();
         // Failure Tests.
-        mockMvc.perform(put("/createPolicy")).andExpect(status().isBadRequest());
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL)).andExpect(status().isBadRequest());
 
         // Service Tests.
         setCreateUpdateImpl();
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyName("failName");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, "test 123"))
                 .andExpect(status().isBadRequest());
         pep.setPolicyName("test. name");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setPolicyName("   ");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyName("test. ");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyName("te st.name");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyName("test.name");
         pep.setPolicyDescription("testá");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers).header(UUIDHEADER, UUID.randomUUID()))
                 .andExpect(status().isBadRequest());
         pep.setPolicyName("test.name");
         pep.setPolicyDescription("good");
         pep.setTtlDate(new Date());
         pep.setRequestID(UUID.randomUUID());
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
     }
 
@@ -521,10 +549,10 @@ public class PolicyEngineServicesTest {
         setCreateUpdateImpl();
         // Checks for BRMS Param Policy.
         pep.setPolicyConfigType(PolicyConfigType.BRMS_PARAM);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setRiskLevel("test");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
         Map<String, String> matching = new HashMap<>();
@@ -532,16 +560,16 @@ public class PolicyEngineServicesTest {
         attributes.put(AttributeType.MATCHING, matching);
         pep.setAttributes(attributes);
         pep.setRiskLevel("5");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/updatePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         // Checks for BRMS Raw Policy
         pep.setPolicyConfigType(PolicyConfigType.BRMS_RAW);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("test");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setRiskLevel(null);
         pep.setConfigBody("package droolsexample\n\n import com.sample.ItemCity;\nimport java.math.BigDecimal;\n"
@@ -550,12 +578,12 @@ public class PolicyEngineServicesTest {
                 + "         typeofItem == ItemCity.Type.MEDICINES)\n   then\n"
                 + "      BigDecimal tax = new BigDecimal(0.0);\n"
                 + "      item.setLocalTax(tax.multiply(item.getSellPrice()));\nend");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setRiskLevel("5");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/updatePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
     }
 
@@ -569,31 +597,31 @@ public class PolicyEngineServicesTest {
         setCreateUpdateImpl();
         // Checks for Base config Policy.
         pep.setPolicyConfigType(PolicyConfigType.Base);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("testbody");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBodyType(PolicyType.OTHER);
         pep.setRiskLevel("test");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setRiskLevel("4");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setOnapName("ec nam-e");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setOnapName("onapName");
         pep.setConfigName("tes config");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigName("configName");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{'test':'test}");
         pep.setConfigBodyType(PolicyType.JSON);
-        mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/updatePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
         Map<String, String> matching = new HashMap<>();
@@ -601,7 +629,7 @@ public class PolicyEngineServicesTest {
         attributes.put(AttributeType.MATCHING, matching);
         pep.setAttributes(attributes);
         pep.setConfigBody("testBody");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
     }
 
@@ -615,30 +643,30 @@ public class PolicyEngineServicesTest {
         setCreateUpdateImpl();
         // Checks for Closed loop Policy.
         pep.setPolicyConfigType(PolicyConfigType.ClosedLoop_Fault);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("te stá");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("testBody");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{\"key\":\"value\"}");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{\"onapname\":\"\"}");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{\"onapname\":\"test\"}");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setRiskLevel("test");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setRiskLevel("4");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/updatePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
     }
 
@@ -652,35 +680,35 @@ public class PolicyEngineServicesTest {
         setCreateUpdateImpl();
         // Checks for Closed loop Policy.
         pep.setPolicyConfigType(PolicyConfigType.ClosedLoop_PM);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("te stá");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("testBody");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{\"key\":\"value\"}");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{\"onapname\":\"\"}");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{\"onapname\":\"test\"}");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{\"onapname\":\"test\", \"serviceTypePolicyName\":\"value\"}");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setRiskLevel("test");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setRiskLevel("4");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/updatePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
     }
 
@@ -694,25 +722,25 @@ public class PolicyEngineServicesTest {
         setCreateUpdateImpl();
         // Checks for Closed loop Policy.
         pep.setPolicyConfigType(PolicyConfigType.Firewall);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("te st");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{}");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{\"test\":\"test\"}");
         pep.setRiskLevel("test");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setRiskLevel("4");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{\"configName\":\"test\"}");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/updatePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
     }
 
@@ -726,28 +754,28 @@ public class PolicyEngineServicesTest {
         setCreateUpdateImpl();
         // Checks for Closed loop Policy.
         pep.setPolicyConfigType(PolicyConfigType.MicroService);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("te st");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{}");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{\"test\":\"test\"}");
         pep.setOnapName("   ");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setOnapName("testonap");
         pep.setRiskLevel("fail");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setRiskLevel("4");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setConfigBody("{\"service\":\"test\",\"uuid\":\"test\",\"location\":\"test\",\"configName\":\"test\","
                 + "\"description\":\"test\",\"priority\":\"test\",\"version\":\"test\"}");
-        mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/updatePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
     }
 
@@ -761,50 +789,50 @@ public class PolicyEngineServicesTest {
         setCreateUpdateImpl();
         // Checks for action Policy.
         pep.setPolicyClass(PolicyClass.Action);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
         pep.setAttributes(attributes);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         attributes.put(AttributeType.MATCHING, new HashMap<>());
         pep.setAttributes(attributes);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         Map<String, String> matching = new HashMap<>();
         matching.put("key", "value");
         attributes.put(AttributeType.MATCHING, matching);
         pep.setAttributes(attributes);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setActionAttribute("A1");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setActionPerformer("PEX");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setActionPerformer("PEP");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/updatePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         // Checks for Decision Policy.
         pep.setPolicyClass(PolicyClass.Decision);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         pep.setOnapName("xyz");
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         attributes.remove(AttributeType.MATCHING);
         attributes.put(AttributeType.SETTINGS, matching);
         pep.setAttributes(attributes);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
         attributes.put(AttributeType.MATCHING, matching);
         pep.setAttributes(attributes);
-        mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/createPolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
-        mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep))
+        mockMvc.perform(put("/updatePolicy").requestAttr(MECHID_ATTR, MECHID_ATTR_VAL).content(PolicyUtils.objectToJsonString(pep))
                 .contentType(MediaType.APPLICATION_JSON).headers(headers)).andExpect(status().isBadRequest());
     }
 
