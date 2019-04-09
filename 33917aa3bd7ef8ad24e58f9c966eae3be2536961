@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95efae94_2b77ee97",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/controller/CreateDcaeMicroServiceControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-09T20:52:00Z",
+      "side": 1,
+      "message": "I\u0027m not sure how this will add JUnit coverage. But ok we\u0027ll take it.",
+      "revId": "33917aa3bd7ef8ad24e58f9c966eae3be2536961",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
