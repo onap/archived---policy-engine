@@ -26,7 +26,6 @@ import com.att.research.xacml.std.IdentifierImpl;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -40,9 +39,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import javax.script.SimpleBindings;
+
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -700,76 +698,29 @@ public class DecisionPolicy extends Policy {
         // check the index for the label.
         for (String labelAttr : dynamicLabelRuleAlgorithms) {
             if (labelAttr.equals(value1Label)) {
-                String value1 = dynamicFieldOneRuleAlgorithms.get(index);
-                populateDataTypeList(value1);
+                String attributeId = dynamicFieldOneRuleAlgorithms.get(index);
+                populateDataTypeList(attributeId);
 
                 // check if the row contains label again
                 for (String labelValue : dynamicLabelRuleAlgorithms) {
-                    if (labelValue.equals(value1)) {
+                    if (labelValue.equals(attributeId)) {
                         return getCompoundDecisionApply(index);
                     }
                 }
 
                 // Getting the values from the form.
                 String functionKey = dynamicFieldComboRuleAlgorithms.get(index);
-                String value2 = dynamicFieldTwoRuleAlgorithms.get(index);
+                String attributeValue = dynamicFieldTwoRuleAlgorithms.get(index);
                 decisionApply.setFunctionId(getFunctionDefinitionId(functionKey));
                 // if two text field are rule attributes.
-                if ((value1.contains(RULE_VARIABLE)) && (value2.contains(RULE_VARIABLE))) {
-                    ApplyType innerDecisionApply1 = new ApplyType();
-                    ApplyType innerDecisionApply2 = new ApplyType();
-                    AttributeDesignatorType attributeDesignator1 = new AttributeDesignatorType();
-                    AttributeDesignatorType attributeDesignator2 = new AttributeDesignatorType();
-                    // If selected function is Integer function set integer functionID
-                    if (functionKey.toLowerCase().contains("integer")) {
-                        innerDecisionApply1.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
-                        innerDecisionApply2.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
-                        attributeDesignator1.setDataType(INTEGER_DATATYPE);
-                        attributeDesignator2.setDataType(INTEGER_DATATYPE);
-                    } else {
-                        // If selected function is not a Integer function set String functionID
-                        innerDecisionApply1.setFunctionId(FUNCTION_STRING_ONE_AND_ONLY);
-                        innerDecisionApply2.setFunctionId(FUNCTION_STRING_ONE_AND_ONLY);
-                        attributeDesignator1.setDataType(STRING_DATATYPE);
-                        attributeDesignator2.setDataType(STRING_DATATYPE);
-                    }
-                    attributeDesignator1.setCategory(CATEGORY_RESOURCE);
-                    attributeDesignator2.setCategory(CATEGORY_RESOURCE);
-                    // Here set actual field values
-                    attributeDesignator1
-                            .setAttributeId(value1.contains("resource:") ? value1.substring(9) : value1.substring(8));
-                    attributeDesignator2
-                            .setAttributeId(value1.contains("resource:") ? value1.substring(9) : value1.substring(8));
-                    innerDecisionApply1.getExpression()
-                            .add(new ObjectFactory().createAttributeDesignator(attributeDesignator1));
-                    innerDecisionApply2.getExpression()
-                            .add(new ObjectFactory().createAttributeDesignator(attributeDesignator2));
-                    decisionApply.getExpression().add(new ObjectFactory().createApply(innerDecisionApply1));
-                    decisionApply.getExpression().add(new ObjectFactory().createApply(innerDecisionApply2));
+                if ((attributeId.contains(RULE_VARIABLE)) && (attributeValue.contains(RULE_VARIABLE))) {
+                    applyTwoTextFieldRuleAttribute(decisionApply, attributeId, functionKey);
                 } else {
                     // if either of one text field is rule attribute.
-                    if (!value1.startsWith("S_")) {
-                        ApplyType innerDecisionApply = new ApplyType();
-                        AttributeDesignatorType attributeDesignator = new AttributeDesignatorType();
-                        AttributeValueType decisionConditionAttributeValue = new AttributeValueType();
-
-                        if (functionKey.toLowerCase().contains("integer")) {
-                            innerDecisionApply.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
-                            decisionConditionAttributeValue.setDataType(INTEGER_DATATYPE);
-                            attributeDesignator.setDataType(INTEGER_DATATYPE);
-                        } else {
-                            innerDecisionApply.setFunctionId(FUNCTION_STRING_ONE_AND_ONLY);
-                            decisionConditionAttributeValue.setDataType(STRING_DATATYPE);
-                            attributeDesignator.setDataType(STRING_DATATYPE);
-                        }
-
-                        String attributeId = null;
-                        String attributeValue = null;
-
-                        // Find which textField has rule attribute and set it as
-                        // attributeId and the other as attributeValue.
-                        attributeId = value1;
-                        attributeValue = value2;
+                    if (!attributeId.startsWith("S_")) {
+                        ApplyType innerDecisionApply = generateApplyTypeDataType(functionKey);
+                        AttributeDesignatorType attributeDesignator = generateAttributeDesignatorDataType(functionKey);
+                        AttributeValueType decisionConditionAttributeValue = generateAttributeValueTypeDataType(functionKey);
 
                         if (attributeId != null) {
                             attributeDesignator.setCategory(CATEGORY_RESOURCE);
@@ -782,15 +733,15 @@ public class DecisionPolicy extends Policy {
                                 .add(new ObjectFactory().createAttributeValue(decisionConditionAttributeValue));
                         decisionApply.getExpression().add(new ObjectFactory().createApply(innerDecisionApply));
                     } else {
-                        value1 = value1.substring(2, value1.length());
+                        attributeId = attributeId.substring(2, attributeId.length());
                         VariableReferenceType variableReferenceType = new VariableReferenceType();
-                        variableReferenceType.setVariableId(value1);
+                        variableReferenceType.setVariableId(attributeId);
 
                         String dataType = dataTypeList.get(index);
 
                         AttributeValueType decisionConditionAttributeValue = new AttributeValueType();
                         decisionConditionAttributeValue.setDataType(dataType);
-                        decisionConditionAttributeValue.getContent().add(value2);
+                        decisionConditionAttributeValue.getContent().add(attributeValue);
                         decisionApply.getExpression()
                                 .add(new ObjectFactory().createVariableReference(variableReferenceType));
                         decisionApply.getExpression()
@@ -878,6 +829,63 @@ public class DecisionPolicy extends Policy {
             return object.getXacmlid();
         }
         return null;
+    }
+
+    private AttributeDesignatorType generateAttributeDesignatorDataType(String functionKey) {
+        AttributeDesignatorType attributeDesignator = new AttributeDesignatorType();
+        switch(functionKey.toLowerCase())
+        {
+            case "integer":
+                attributeDesignator.setDataType(INTEGER_DATATYPE);
+                break;
+            default:
+                attributeDesignator.setDataType(STRING_DATATYPE);
+        }
+        return attributeDesignator;
+    }
+
+    private ApplyType generateApplyTypeDataType(String functionKey) {
+        ApplyType applyType = new ApplyType();
+        switch(functionKey.toLowerCase())
+        {
+            case "integer":
+                applyType.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
+                break;
+            default:
+                applyType.setFunctionId(FUNCTION_STRING_ONE_AND_ONLY);
+        }
+        return applyType;
+    }
+
+    private AttributeValueType generateAttributeValueTypeDataType(String functionKey) {
+        AttributeValueType applyType = new AttributeValueType();
+        switch(functionKey.toLowerCase())
+        {
+            case "integer":
+                applyType.setDataType(INTEGER_DATATYPE);
+                break;
+            default:
+                applyType.setDataType(STRING_DATATYPE);
+        }
+        return applyType;
+    }
+
+    private void applyTwoTextFieldRuleAttribute(ApplyType decisionApply, String value1, String functionKey) {
+        decisionApply.getExpression().add(new ObjectFactory().createApply(generateApplyTypeDataType(value1, functionKey)));
+        decisionApply.getExpression().add(new ObjectFactory().createApply(generateApplyTypeDataType(value1, functionKey)));
+    }
+
+    private ApplyType generateApplyTypeDataType(String value1, String functionKey) {
+        ApplyType innerApply = generateApplyTypeDataType(functionKey);
+        AttributeDesignatorType attributeDesignator = generateAttributeDesignatorDataType(functionKey);
+
+        attributeDesignator.setCategory(CATEGORY_RESOURCE);
+        // Here set actual field values
+        attributeDesignator
+                .setAttributeId(value1.contains("resource:") ? value1.substring(9) : value1.substring(8));
+        innerApply.getExpression()
+                .add(new ObjectFactory().createAttributeDesignator(attributeDesignator));
+        return innerApply;
     }
 
 }
