@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "c1149689_6251cbe0",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DictionaryHandlerImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-09T21:31:35Z",
+      "side": 1,
+      "message": "I expect either sonar or checkstyle to complain about the extra parens around the string literals",
+      "revId": "33917aa3bd7ef8ad24e58f9c966eae3be2536961",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95efae94_2b77ee97",
         "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/controller/CreateDcaeMicroServiceControllerTest.java",
         "patchSetId": 2
