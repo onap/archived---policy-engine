@@ -3,6 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2017,2019 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2019 Bell Canada.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -548,16 +549,7 @@ public class FirewallConfigPolicy extends Policy {
                                 value = srcListObj.get("value").toString();
                             }
 
-                            if (value!=null){
-                                value = value.replace("\"", "");
-                            }
-
-                            if (srcListString != null) {
-                                srcListString = srcListString.concat(",").concat(value);
-
-                            } else {
-                                srcListString = value;
-                            }
+                            srcListString = getLeftOrRight(srcListString, value);
 
                         }
                         String srcListInsert = "'"+srcListString+"'";
@@ -578,15 +570,7 @@ public class FirewallConfigPolicy extends Policy {
                                 value = destListObj.get("value").toString();
                             }
 
-                            if (value!=null){
-                                value = value.replace("\"", "");
-                            }
-
-                            if (destListString != null) {
-                                destListString = destListString.concat(",").concat(value);
-                            } else {
-                                destListString = value;
-                            }
+                            destListString = getLeftOrRight(destListString, value);
                         }
                         String destListInsert = "'"+destListString+"'";
 
@@ -606,15 +590,7 @@ public class FirewallConfigPolicy extends Policy {
                                 value = destServicesObj.get("value").toString();
                             }
 
-                            if (value!=null){
-                                value = value.replace("\"", "");
-                            }
-
-                            if (destPortListString != null) {
-                                destPortListString = destPortListString.concat(",").concat(value);
-                            } else {
-                                destPortListString = value;
-                            }
+                            destPortListString = getLeftOrRight(destPortListString, value);
                         }
                         String destPortListInsert = "'"+destPortListString+"'";
 
@@ -640,10 +616,7 @@ public class FirewallConfigPolicy extends Policy {
                         termEntry.setUserCreatedBy(userInfo);
                         dbConnection.save(termEntry);
 
-                        ActionList actionEntry = new ActionList();
-                        actionEntry.setActionName(action);
-                        actionEntry.setDescription(action);
-                        dbConnection.save(actionEntry);
+                        saveActionListToDb(dbConnection, action);
                     }
                 }
 
@@ -678,36 +651,7 @@ public class FirewallConfigPolicy extends Policy {
 
                         //Insert values into GROUPSERVICELIST table if name begins with Group
                         if (isServiceGroup) {
-                            String name = null;
-                            for (int membersIndex = 0; membersIndex< membersArray.size(); membersIndex++) {
-                                JsonObject membersObj = membersArray.getJsonObject(membersIndex);
-                                //String value = membersObj.get("name").toString();
-                                String type = membersObj.get("type").toString().replace("\"", "");
-
-                                String value = null;
-                                if(type.equals("REFERENCE")||type.equals("GROUP")||type.equals("SERVICE")){
-                                    value = membersObj.get("name").toString();
-                                } else if (type.equalsIgnoreCase("ANY")){
-                                    value = null;
-                                } else {
-                                    value = membersObj.get("value").toString();
-                                }
-
-                                if(value != null){
-                                    value = value.replace("\"", "");
-                                }
-
-                                if (name != null) {
-                                    name = name.concat(",").concat(value);
-                                } else {
-                                    name = value;
-                                }
-                            }
-                            String nameInsert = "'"+name+"'";
-                            GroupServiceList groupServiceEntry = new GroupServiceList();
-                            groupServiceEntry.setGroupName(serviceListName);
-                            groupServiceEntry.setServiceList(nameInsert);
-                            dbConnection.save(groupServiceEntry);
+                            saveGroupServiceListTableToDb(dbConnection, serviceListName, membersArray);
                         } else { //Insert JSON data serviceList table, protollist table, and portlist table
                             String type = svcGroupListobj.get("type").toString();
                             String transportProtocol = svcGroupListobj.get("transportProtocol").toString();
@@ -716,24 +660,11 @@ public class FirewallConfigPolicy extends Policy {
                             /*
                              * Create Queries to INSERT data into database table and execute
                              */
-                            ServiceList serviceListEntry = new ServiceList();
-                            serviceListEntry.setServiceName(serviceListName);
-                            serviceListEntry.setServiceDescription(description);
-                            serviceListEntry.setServiceType(type);
-                            serviceListEntry.setServiceTransProtocol(transportProtocol);
-                            serviceListEntry.setServiceAppProtocol("null");
-                            serviceListEntry.setServicePorts(ports);
-                            dbConnection.save(serviceListEntry);
+                            saveServiceListToDb(dbConnection, serviceListName, description, type, transportProtocol, ports);
 
-                            ProtocolList protocolEntry = new ProtocolList();
-                            protocolEntry.setProtocolName(transportProtocol);
-                            protocolEntry.setDescription(transportProtocol);
-                            dbConnection.save(protocolEntry);
+                            saveProtocolListToDb(dbConnection, transportProtocol);
 
-                            PortList portListEntry = new PortList();
-                            portListEntry.setPortName(ports);
-                            portListEntry.setDescription(ports);
-                            dbConnection.save(portListEntry);
+                            savePortListToDb(dbConnection, ports);
                         }
                     }
                 }
@@ -766,68 +697,20 @@ public class FirewallConfigPolicy extends Policy {
                             type = membersObj.get("type").toString().replace("\"", "");
 
                             String value = null;
-                            if(type.equals("REFERENCE")||type.equals("GROUP")||type.equals("SERVICE")){
-                                value = membersObj.get("name").toString();
-                            } else if (type.equalsIgnoreCase("ANY")){
-                                value = null;
-                            } else {
-                                value = membersObj.get("value").toString();
-                            }
-
-                            if(value != null){
-                                value = value.replace("\"", "");
-                            }
-
-                            if (prefixIP != null) {
-                                prefixIP = prefixIP.concat(",").concat(value);
-                            } else {
-                                prefixIP = value;
-                            }
+                            prefixIP = getName(prefixIP, membersObj, type);
                         }
                         String prefixList = "'"+prefixIP+"'";
 
                         Boolean isAddressGroup = type.contains("REFERENCE");
 
                         if (isAddressGroup) {
-                            AddressGroup addressGroupEntry = new AddressGroup();
-                            addressGroupEntry.setGroupName(addressGroupName);
-                            addressGroupEntry.setDescription(description);
-                            addressGroupEntry.setServiceList(prefixList);
-                            dbConnection.save(addressGroupEntry);
+                            saveAddressGroupToDb(dbConnection, addressGroupName, description, prefixList);
                         } else {
-                            PrefixList prefixListEntry = new PrefixList();
-                            prefixListEntry.setPrefixListName(addressGroupName);
-                            prefixListEntry.setDescription(description);
-                            prefixListEntry.setPrefixListValue(prefixList);
-                            dbConnection.save(prefixListEntry);
+                            savePrefixListToDb(dbConnection, addressGroupName, description, prefixList);
                         }
                     }
                 }
-
-                /*
-                 * Remove duplicate values from 'lookup' dictionary tables
-                 */
-                //ProtocolList Table
-                String protoDelete = "DELETE FROM protocollist USING protocollist, protocollist p1 "
-                        + "WHERE protocollist.id > p1.id AND protocollist.protocolname = p1.protocolname;";
-                dbConnection.updateQuery(protoDelete);
-
-                //PortList Table
-                String portListDelete = "DELETE FROM portlist USING portlist, portlist p1 "
-                        + "WHERE portlist.id > p1.id AND portlist.portname = p1.portname; ";
-                dbConnection.updateQuery(portListDelete);
-
-                //PrefixList Table
-                String prefixListDelete = "DELETE FROM prefixlist USING prefixlist, prefixlist p1 "
-                        + "WHERE prefixlist.id > p1.id AND prefixlist.pl_name = p1.pl_name AND "
-                        + "prefixlist.pl_value = p1.pl_value AND prefixlist.description = p1.description; ";
-                dbConnection.updateQuery(prefixListDelete);
-
-                //GroupServiceList
-                String groupServiceDelete = "DELETE FROM groupservicelist USING groupservicelist, groupservicelist g1 "
-                        + "WHERE groupservicelist.id > g1.id AND groupservicelist.name = g1.name AND "
-                        + "groupservicelist.serviceList = g1.serviceList; ";
-                dbConnection.updateQuery(groupServiceDelete);
+                removeDuplicateValuesFromLookup(dbConnection);
             }catch (Exception e) {
                 PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "FirewallConfigPolicy", "Exception getting Json values");
                 return false;
@@ -838,6 +721,74 @@ public class FirewallConfigPolicy extends Policy {
             return false;
         }
 
+    }
+
+    /*
+     * Remove duplicate values from 'lookup' dictionary tables
+     */
+    private void removeDuplicateValuesFromLookup(CommonClassDaoImpl dbConnection) {
+        String protoDelete = "DELETE FROM protocollist USING protocollist, protocollist p1 "
+                + "WHERE protocollist.id > p1.id AND protocollist.protocolname = p1.protocolname;";
+        dbConnection.updateQuery(protoDelete);
+
+        //PortList Table
+        String portListDelete = "DELETE FROM portlist USING portlist, portlist p1 "
+                + "WHERE portlist.id > p1.id AND portlist.portname = p1.portname; ";
+        dbConnection.updateQuery(portListDelete);
+
+        //PrefixList Table
+        String prefixListDelete = "DELETE FROM prefixlist USING prefixlist, prefixlist p1 "
+                + "WHERE prefixlist.id > p1.id AND prefixlist.pl_name = p1.pl_name AND "
+                + "prefixlist.pl_value = p1.pl_value AND prefixlist.description = p1.description; ";
+        dbConnection.updateQuery(prefixListDelete);
+
+        //GroupServiceList
+        String groupServiceDelete = "DELETE FROM groupservicelist USING groupservicelist, groupservicelist g1 "
+                + "WHERE groupservicelist.id > g1.id AND groupservicelist.name = g1.name AND "
+                + "groupservicelist.serviceList = g1.serviceList; ";
+        dbConnection.updateQuery(groupServiceDelete);
+    }
+
+    private void saveGroupServiceListTableToDb(CommonClassDaoImpl dbConnection, String serviceListName, JsonArray membersArray) {
+        String name = null;
+        for (int membersIndex = 0; membersIndex< membersArray.size(); membersIndex++) {
+            JsonObject membersObj = membersArray.getJsonObject(membersIndex);
+            String type = membersObj.get("type").toString().replace("\"", "");
+
+            name = getName(name, membersObj, type);
+        }
+        String nameInsert = "'"+name+"'";
+        GroupServiceList groupServiceEntry = new GroupServiceList();
+        groupServiceEntry.setGroupName(serviceListName);
+        groupServiceEntry.setServiceList(nameInsert);
+        dbConnection.save(groupServiceEntry);
+    }
+
+    private String getName(String name, JsonObject membersObj, String type) {
+        String value;
+        if(type.equals("REFERENCE")||type.equals("GROUP")||type.equals("SERVICE")){
+            value = membersObj.get("name").toString();
+        } else if (type.equalsIgnoreCase("ANY")){
+            value = null;
+        } else {
+            value = membersObj.get("value").toString();
+        }
+
+        name = getLeftOrRight(name, value);
+        return name;
+    }
+
+    private String getLeftOrRight(String name, String value) {
+        if (value != null) {
+            value = value.replace("\"", "");
+        }
+
+        if (name != null) {
+            name = name.concat(",").concat(value);
+        } else {
+            name = value.replace("\"", "");;
+        }
+        return name;
     }
 
 
@@ -950,16 +901,7 @@ public class FirewallConfigPolicy extends Policy {
                                     value = srcListObj.get("value").toString();
                                 }
 
-                                if(value != null){
-                                    value = value.replace("\"", "");
-                                }
-
-                                if (srcListString != null) {
-                                    srcListString = srcListString.concat(",").concat(value);
-
-                                } else {
-                                    srcListString = value;
-                                }
+                                srcListString = getLeftOrRight(srcListString, value);
 
                             }
                             String srcListInsert = "'"+srcListString+"'";
@@ -980,15 +922,7 @@ public class FirewallConfigPolicy extends Policy {
                                     value = destListObj.get("value").toString();
                                 }
 
-                                if(value != null){
-                                    value = value.replace("\"", "");
-                                }
-
-                                if (destListString != null) {
-                                    destListString = destListString.concat(",").concat(value);
-                                } else {
-                                    destListString = value;
-                                }
+                                destListString = getLeftOrRight(destListString, value);
                             }
                             String destListInsert = "'"+destListString+"'";
 
@@ -1008,15 +942,7 @@ public class FirewallConfigPolicy extends Policy {
                                     value = destServicesObj.get("value").toString();
                                 }
 
-                                if(value != null){
-                                    value = value.replace("\"", "");
-                                }
-
-                                if (destPortListString != null) {
-                                    destPortListString = destPortListString.concat(",").concat(value);
-                                } else {
-                                    destPortListString = value;
-                                }
+                                destPortListString = getLeftOrRight(destPortListString, value);
                             }
                             String destPortListInsert = "'"+destPortListString+"'";
 
@@ -1044,10 +970,7 @@ public class FirewallConfigPolicy extends Policy {
 
                             List<Object> actionResult = dbConnection.getDataById(ActionList.class, "actionName", action);
                             if(actionResult == null || actionResult.isEmpty()){
-                                ActionList actionEntry = new ActionList();
-                                actionEntry.setActionName(action);
-                                actionEntry.setDescription(action);
-                                dbConnection.save(actionEntry);
+                                saveActionListToDb(dbConnection, action);
                             }
                         }
                     }
@@ -1088,35 +1011,7 @@ public class FirewallConfigPolicy extends Policy {
                                     dbConnection.delete(groupEntry);
                                 }
 
-                                String name = null;
-                                for (int membersIndex = 0; membersIndex < membersArray.size(); membersIndex++) {
-                                    JsonObject membersObj = membersArray.getJsonObject(membersIndex);
-                                    String type = membersObj.get("type").toString().replace("\"", "");
-
-                                    String value = null;
-                                    if(type.equals("REFERENCE")||type.equals("GROUP")||type.equals("SERVICE")){
-                                        value = membersObj.get("name").toString();
-                                    } else if (type.equalsIgnoreCase("ANY")){
-                                        value = null;
-                                    } else {
-                                        value = membersObj.get("value").toString();
-                                    }
-
-                                    if(value != null){
-                                        value = value.replace("\"", "");
-                                    }
-
-                                    if (name != null) {
-                                        name = name.concat(",").concat(value);
-                                    } else {
-                                        name = value;
-                                    }
-                                }
-                                String nameInsert = "'"+name+"'";
-                                GroupServiceList groupServiceEntry = new GroupServiceList();
-                                groupServiceEntry.setGroupName(groupName);
-                                groupServiceEntry.setServiceList(nameInsert);
-                                dbConnection.save(groupServiceEntry);
+                                saveGroupServiceListTableToDb(dbConnection, groupName, membersArray);
                             } else { //Insert JSON data serviceGroup table, protocollist table, and portlist table
                                 String type = svcGroupListobj.get("type").toString().replace('"', '\'');
                                 String transportProtocol = svcGroupListobj.get("transportProtocol").toString().replace('"', '\'');
@@ -1128,29 +1023,16 @@ public class FirewallConfigPolicy extends Policy {
                                     dbConnection.delete(serviceEntry);
                                 }
 
-                                ServiceList serviceListEntry = new ServiceList();
-                                serviceListEntry.setServiceName(groupName);
-                                serviceListEntry.setServiceDescription(description);
-                                serviceListEntry.setServiceType(type);
-                                serviceListEntry.setServiceTransProtocol(transportProtocol);
-                                serviceListEntry.setServiceAppProtocol("null");
-                                serviceListEntry.setServicePorts(ports);
-                                dbConnection.save(serviceListEntry);
+                                saveServiceListToDb(dbConnection, groupName, description, type, transportProtocol, ports);
 
                                 List<Object> protocolResult = dbConnection.getDataById(ProtocolList.class, "protocolName", transportProtocol);
                                 if(protocolResult == null || protocolResult.isEmpty()){
-                                    ProtocolList protocolEntry = new ProtocolList();
-                                    protocolEntry.setProtocolName(transportProtocol);
-                                    protocolEntry.setDescription(transportProtocol);
-                                    dbConnection.save(protocolEntry);
+                                    saveProtocolListToDb(dbConnection, transportProtocol);
                                 }
 
                                 List<Object> portResult = dbConnection.getDataById(PortList.class, "portName", ports);
                                 if(portResult == null || portResult.isEmpty()){
-                                    PortList portEntry = new PortList();
-                                    portEntry.setPortName(ports);
-                                    portEntry.setDescription(ports);
-                                    dbConnection.save(portEntry);
+                                    savePortListToDb(dbConnection, ports);
                                 }
                             }
                         }
@@ -1184,23 +1066,7 @@ public class FirewallConfigPolicy extends Policy {
                                 type = membersObj.get("type").toString().replace("\"", "");
 
                                 String value = null;
-                                if(type.equals("REFERENCE")||type.equals("GROUP")||type.equals("SERVICE")){
-                                    value = membersObj.get("name").toString();
-                                } else if (type.equalsIgnoreCase("ANY")){
-                                    value = null;
-                                } else {
-                                    value = membersObj.get("value").toString();
-                                }
-
-                                if(value != null){
-                                    value = value.replace("\"", "");
-                                }
-
-                                if (prefixIP != null) {
-                                    prefixIP = prefixIP.concat(",").concat(value);
-                                } else {
-                                    prefixIP = value;
-                                }
+                                prefixIP = getName(prefixIP, membersObj, type);
                             }
 
                             String prefixList = "'"+prefixIP+"'";
@@ -1212,51 +1078,19 @@ public class FirewallConfigPolicy extends Policy {
                                     AddressGroup addressGroupEntry = (AddressGroup) result.get(0);
                                     dbConnection.delete(addressGroupEntry);
                                 }
-                                AddressGroup newAddressGroup = new AddressGroup();
-                                newAddressGroup.setGroupName(addressGroupName);
-                                newAddressGroup.setDescription(description);
-                                newAddressGroup.setServiceList(prefixList);
-                                dbConnection.save(newAddressGroup);
+                                saveAddressGroupToDb(dbConnection, addressGroupName, description, prefixList);
                             } else {
                                 List<Object> result = dbConnection.getDataById(PrefixList.class, "prefixListName", addressGroupName);
                                 if(result != null && !result.isEmpty()){
                                     PrefixList prefixListEntry = (PrefixList) result.get(0);
                                     dbConnection.delete(prefixListEntry);
                                 }
-                                PrefixList newPrefixList = new PrefixList();
-                                newPrefixList.setPrefixListName(addressGroupName);
-                                newPrefixList.setDescription(description);
-                                newPrefixList.setPrefixListValue(prefixList);
-                                dbConnection.save(newPrefixList);
+                                savePrefixListToDb(dbConnection, addressGroupName, description, prefixList);
                             }
                         }
                     }
                 }
-
-                /*
-                 * Remove duplicate values from 'lookup' dictionary tables
-                 */
-                //ProtocolList Table
-                String protoDelete = "DELETE FROM protocollist USING protocollist, protocollist p1 "
-                        + "WHERE protocollist.id > p1.id AND protocollist.protocolname = p1.protocolname;";
-                dbConnection.updateQuery(protoDelete);
-
-                //PortList Table
-                String portListDelete = "DELETE FROM portlist USING portlist, portlist p1 "
-                        + "WHERE portlist.id > p1.id AND portlist.portname = p1.portname; ";
-                dbConnection.updateQuery(portListDelete);
-
-                //PrefixList Table
-                String prefixListDelete = "DELETE FROM prefixlist USING prefixlist, prefixlist p1 "
-                        + "WHERE prefixlist.id > p1.id AND prefixlist.pl_name = p1.pl_name AND "
-                        + "prefixlist.pl_value = p1.pl_value AND prefixlist.description = p1.description; ";
-                dbConnection.updateQuery(prefixListDelete);
-
-                //GroupServiceList
-                String groupServiceDelete = "DELETE FROM groupservicelist USING groupservicelist, groupservicelist g1 "
-                        + "WHERE groupservicelist.id > g1.id AND groupservicelist.name = g1.name AND "
-                        + "groupservicelist.serviceList = g1.serviceList; ";
-                dbConnection.updateQuery(groupServiceDelete);
+                removeDuplicateValuesFromLookup(dbConnection);
             }catch (Exception e) {
                 PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "FirewallConfigPolicy", "Exception executing Firewall queries");
                 return false;
@@ -1266,6 +1100,54 @@ public class FirewallConfigPolicy extends Policy {
             return false;
         }
 
+    }
+
+    private void saveActionListToDb(CommonClassDaoImpl dbConnection, String action) {
+        ActionList actionEntry = new ActionList();
+        actionEntry.setActionName(action);
+        actionEntry.setDescription(action);
+        dbConnection.save(actionEntry);
+    }
+
+    private void savePortListToDb(CommonClassDaoImpl dbConnection, String ports) {
+        PortList portEntry = new PortList();
+        portEntry.setPortName(ports);
+        portEntry.setDescription(ports);
+        dbConnection.save(portEntry);
+    }
+
+    private void saveProtocolListToDb(CommonClassDaoImpl dbConnection, String transportProtocol) {
+        ProtocolList protocolEntry = new ProtocolList();
+        protocolEntry.setProtocolName(transportProtocol);
+        protocolEntry.setDescription(transportProtocol);
+        dbConnection.save(protocolEntry);
+    }
+
+    private void saveServiceListToDb(CommonClassDaoImpl dbConnection, String groupName, String description, String type, String transportProtocol, String ports) {
+        ServiceList serviceListEntry = new ServiceList();
+        serviceListEntry.setServiceName(groupName);
+        serviceListEntry.setServiceDescription(description);
+        serviceListEntry.setServiceType(type);
+        serviceListEntry.setServiceTransProtocol(transportProtocol);
+        serviceListEntry.setServiceAppProtocol("null");
+        serviceListEntry.setServicePorts(ports);
+        dbConnection.save(serviceListEntry);
+    }
+
+    private void savePrefixListToDb(CommonClassDaoImpl dbConnection, String addressGroupName, String description, String prefixList) {
+        PrefixList newPrefixList = new PrefixList();
+        newPrefixList.setPrefixListName(addressGroupName);
+        newPrefixList.setDescription(description);
+        newPrefixList.setPrefixListValue(prefixList);
+        dbConnection.save(newPrefixList);
+    }
+
+    private void saveAddressGroupToDb(CommonClassDaoImpl dbConnection, String addressGroupName, String description, String prefixList) {
+        AddressGroup newAddressGroup = new AddressGroup();
+        newAddressGroup.setGroupName(addressGroupName);
+        newAddressGroup.setDescription(description);
+        newAddressGroup.setServiceList(prefixList);
+        dbConnection.save(newAddressGroup);
     }
 
     private JsonObject stringToJson(String jsonString) {
