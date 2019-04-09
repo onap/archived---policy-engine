@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3d7843d0_c439e1d1",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/test/PolicyEngineServicesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-09T17:59:46Z",
+      "side": 1,
+      "message": "sonar: replace these strings with constants",
+      "revId": "300f5b7c22a218fe8516f822d4edbc8128db9fd6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
