@@ -31,6 +31,7 @@ import org.springframework.http.HttpStatus;
 
 public abstract class PdpApiService {
     private static final Logger LOGGER = FlexLogger.getLogger(PdpApiService.class.getName());
+    protected static final String PRINT_REQUESTID = " - RequestId - ";
     protected String requestId = null;
     protected String filePrefix = null;
     protected String clientScope = null;

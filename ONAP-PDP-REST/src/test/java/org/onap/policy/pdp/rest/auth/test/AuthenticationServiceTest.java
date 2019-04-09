@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -22,14 +22,16 @@
 
 package org.onap.policy.pdp.rest.auth.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
+import javax.servlet.ServletRequest;
 import org.junit.Test;
-import org.onap.policy.pdp.rest.restAuth.AuthenticationService;
+import org.onap.policy.pdp.rest.restauth.AuthenticationService;
 
 public class AuthenticationServiceTest {
-    private final String testCred = "testpdp:alpha456";
+    private final String testCred = "python:test";
     private final String testCredEncoded = new String(Base64.getEncoder().encode(testCred.getBytes()));
     private final String basicCred = "Basic " + testCredEncoded;
 
@@ -40,9 +42,9 @@ public class AuthenticationServiceTest {
         // Set the system property temporarily
         String oldProperty = System.getProperty(systemKey);
         System.setProperty(systemKey, "xacml.pdp.properties");
+        ServletRequest request = mock(ServletRequest.class);
 
-        AuthenticationService service = new AuthenticationService();
-        assertEquals(service.authenticate(basicCred), true);
+        assertTrue(AuthenticationService.checkPermissions(null, basicCred, "getConfig", "DEVL", request));
 
         // Restore the original system property
         if (oldProperty != null) {
