@@ -313,7 +313,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
             response.addHeader("error", message);
             return;
         }
-        if (result.equalsIgnoreCase("Success")) {
+        if(("Success").equalsIgnoreCase(result)) {
             response.setStatus(HttpServletResponse.SC_OK);
             response.addHeader("successMapKey", "success");
             if (operation.equalsIgnoreCase("update")) {
@@ -321,10 +321,10 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
             } else {
                 response.addHeader("operation", "createDictionary");
             }
-        } else if (result.equalsIgnoreCase("Duplicate")) {
+        } else if (("Duplicate").equalsIgnoreCase(result)) {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
             response.addHeader("error", "dictionaryItemExists");
-        } else if (result.equalsIgnoreCase("DuplicateGroup")) {
+        } else if (("DuplicateGroup").equalsIgnoreCase(result)) {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
             response.addHeader("error", "duplicateGroup");
         } else {
