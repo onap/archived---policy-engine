@@ -185,7 +185,8 @@ public class ConsoleAndApiService {
                         if (policyId.contains("Config_MS_") || policyId.contains("BRMS_Param")) {
                             PushPolicyHandler pushPolicyHandler = PushPolicyHandler.getInstance();
                             policyForSafetyCheck.setId(policyId);
-                            if (pushPolicyHandler.preSafetyCheck(policyForSafetyCheck, XACMLPapServlet.getConfigHome())) {
+                            if (pushPolicyHandler.preSafetyCheck(policyForSafetyCheck,
+                                    XACMLPapServlet.getConfigHome())) {
                                 LOGGER.debug("Precheck Successful.");
                             }
                         }
@@ -218,8 +219,8 @@ public class ConsoleAndApiService {
                 }
 
                 /*
-                 * If request comes from the API we need to run the PolicyDBDao updateGroup() to
-                 * notify other paps of the change. The GUI does this from the POLICY-SDK-APP code.
+                 * If request comes from the API we need to run the PolicyDBDao updateGroup() to notify other paps of
+                 * the change. The GUI does this from the POLICY-SDK-APP code.
                  */
 
                 // Get new transaction to perform updateGroup()
@@ -288,7 +289,8 @@ public class ConsoleAndApiService {
                 // It should never be the case that multiple groups are
                 // currently marked as the default, but protect against that
                 // anyway.
-                PolicyDBDaoTransaction setDefaultGroupTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
+                PolicyDBDaoTransaction setDefaultGroupTransaction =
+                        XACMLPapServlet.getPolicyDbDao().getNewTransaction();
                 try {
                     setDefaultGroupTransaction.changeDefaultGroup(group, PAPSERVLETDOACPOST);
                     papEngine.setDefaultGroup(group);
@@ -587,6 +589,7 @@ public class ConsoleAndApiService {
                 loggingContext.transactionEnded();
                 PolicyLogger.audit(TRANSACTIONFAILED);
                 setResponseError(response, HttpServletResponse.SC_NOT_FOUND, message);
+                acPutTransaction.rollbackTransaction();
                 return;
             }
             if (request.getParameter("policy") != null) {
@@ -601,6 +604,7 @@ public class ConsoleAndApiService {
                 PolicyLogger.audit(TRANSACTIONFAILED);
                 auditLogger.info(SUCCESS);
                 PolicyLogger.audit(TRANSENDED);
+                acPutTransaction.rollbackTransaction();
                 return;
             } else if (request.getParameter("pdpId") != null) {
                 // ARGS: group=<groupId> pdpId=<pdpId/URL> <= create a new PDP
@@ -708,6 +712,7 @@ public class ConsoleAndApiService {
                 loggingContext.transactionEnded();
                 PolicyLogger.audit(TRANSACTIONFAILED);
                 setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
+                acPutTransaction.rollbackTransaction();
                 return;
             } else {
                 // Assume that this is an update of an existing PDP Group
@@ -824,6 +829,7 @@ public class ConsoleAndApiService {
                 loggingContext.transactionEnded();
                 PolicyLogger.audit(TRANSACTIONFAILED);
                 setResponseError(response, HttpServletResponse.SC_NOT_FOUND, "Unknown groupId '" + groupId + "'");
+                removePdpOrGroupTransaction.rollbackTransaction();
                 return;
             }
             // determine the operation needed based on the parameters in the
@@ -836,6 +842,7 @@ public class ConsoleAndApiService {
                 loggingContext.transactionEnded();
                 PolicyLogger.audit(TRANSACTIONFAILED);
                 setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
+                removePdpOrGroupTransaction.rollbackTransaction();
                 return;
             } else if (request.getParameter("pdpId") != null) {
                 // ARGS: group=<groupId> pdpId=<pdpId> <= delete PDP
@@ -865,6 +872,7 @@ public class ConsoleAndApiService {
                 loggingContext.transactionEnded();
                 PolicyLogger.audit(TRANSACTIONFAILED);
                 setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
+                removePdpOrGroupTransaction.rollbackTransaction();
                 return;
             } else {
                 // ARGS: group=<groupId> movePDPsToGroupId=<movePDPsToGroupId>
