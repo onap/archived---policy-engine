@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e5e7ddb3_e1c81560",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/HandleIncomingNotificationsTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-09T23:35:13Z",
+      "side": 1,
+      "message": "No need to fix because of time, but add message to help debugging fail(e2.getMessage())",
+      "range": {
+        "startLine": 144,
+        "startChar": 12,
+        "endLine": 144,
+        "endChar": 19
+      },
+      "revId": "3c51deca3d848a988f16a88c04327d6c61026d54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6a9b233_d1fed7a5",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/HandleIncomingNotificationsTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-09T23:35:13Z",
+      "side": 1,
+      "message": "No need to fix because of time, but in the future, just use fail(e.getMessage())",
+      "range": {
+        "startLine": 153,
+        "startChar": 12,
+        "endLine": 153,
+        "endChar": 26
+      },
+      "revId": "3c51deca3d848a988f16a88c04327d6c61026d54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
