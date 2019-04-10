@@ -27,7 +27,8 @@ CREATE TABLE policyAuditlog (
 );
 
 ALTER TABLE microservicemodels
-ADD ruleFormation VARCHAR(45) DEFAULT NULL;
+ADD ruleFormation VARCHAR(45) DEFAULT NULL,
+ADD COLUMN `decisionModel` tinyint(1) DEFAULT NULL;
 
 CREATE TABLE `onap_sdk`.`dictionaryData` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
