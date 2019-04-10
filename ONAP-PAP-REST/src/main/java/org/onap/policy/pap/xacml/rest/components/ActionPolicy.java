@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import com.att.research.xacml.api.pap.PAPException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -31,18 +32,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.dao.CommonClassDao;
-import org.onap.policy.rest.jpa.FunctionDefinition;
-import org.onap.policy.xacml.api.XACMLErrorConstants;
-
-import com.att.research.xacml.api.pap.PAPException;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
@@ -58,12 +47,17 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+import org.onap.policy.common.logging.eelf.MessageCodes;
+import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.FunctionDefinition;
+import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 public class ActionPolicy extends Policy {
 
-    /**
-     * ActionPolicy Fields
-     */
     private static final Logger LOGGER = FlexLogger.getLogger(ActionPolicy.class);
 
     public static final String JSON_CONFIG = "JSON";
@@ -93,7 +87,7 @@ public class ActionPolicy extends Policy {
 
     private static boolean isAttribute = false;
 
-    private synchronized static boolean getAttribute() {
+    private static synchronized boolean getAttribute() {
         return isAttribute;
 
     }
@@ -122,7 +116,7 @@ public class ActionPolicy extends Policy {
         }
 
         if (!isPreparedToSave()) {
-            //Prep and configure the policy for saving
+            // Prep and configure the policy for saving
             prepareToSave();
         }
 
@@ -133,13 +127,13 @@ public class ActionPolicy extends Policy {
         return successMap;
     }
 
-    //This is the method for preparing the policy for saving.  We have broken it out
-    //separately because the fully configured policy is used for multiple things
+    // This is the method for preparing the policy for saving. We have broken it out
+    // separately because the fully configured policy is used for multiple things
     @Override
     public boolean prepareToSave() throws PAPException {
 
         if (isPreparedToSave()) {
-            //we have already done this
+            // we have already done this
             return true;
         }
 
@@ -165,15 +159,15 @@ public class ActionPolicy extends Policy {
             String actionBody = policyAdapter.getActionBody();
             setAttribute(false);
 
-            //if actionBody is null or empty then we know the ActionAttribute in the request does not exist in the
+            // if actionBody is null or empty then we know the ActionAttribute in the request does not exist in the
             // dictionary
             if (!(actionBody == null || "".equals(actionBody))) {
                 saveActionBody(policyName, actionBody);
                 setAttribute(true);
             } else {
                 if (!getAttribute()) {
-                    LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Could not find " + comboDictValue +
-                            " in the ActionPolicyDict table.");
+                    LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Could not find " + comboDictValue
+                            + " in the ActionPolicyDict table.");
                     return false;
                 }
             }
@@ -237,8 +231,8 @@ public class ActionPolicy extends Policy {
                 }
                 // if rule algorithm not a compound
                 if (!isCompound) {
-                    condition.setExpression(new ObjectFactory().createApply(getInnerActionApply(
-                            dynamicLabelRuleAlgorithms.get(index))));
+                    condition.setExpression(new ObjectFactory()
+                            .createApply(getInnerActionApply(dynamicLabelRuleAlgorithms.get(index))));
                 }
                 rule.setCondition(condition);
             }
@@ -247,8 +241,8 @@ public class ActionPolicy extends Policy {
             actionPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
             policyAdapter.setPolicyData(actionPolicy);
         } else {
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Unsupported data object." + Objects
-                    .requireNonNull(policyAdapter.getData()).getClass().getCanonicalName());
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Unsupported data object."
+                    + Objects.requireNonNull(policyAdapter.getData()).getClass().getCanonicalName());
         }
 
         setPreparedToSave(true);
@@ -502,7 +496,7 @@ public class ActionPolicy extends Policy {
 
     public String getFunctionDefinitionId(String key) {
         FunctionDefinition object =
-                (FunctionDefinition) commonClassDao.getDataById(FunctionDefinition.class, "short_name", key);
+                (FunctionDefinition) commonClassDao.getEntityItem(FunctionDefinition.class, "short_name", key);
         if (object != null) {
             return object.getXacmlid();
         }

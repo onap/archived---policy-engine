@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -65,8 +66,10 @@ import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.pap.xacml.rest.policycontroller.PolicyCreation;
 import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.ActionPolicyDict;
 import org.onap.policy.rest.jpa.BRMSParamTemplate;
 import org.onap.policy.rest.jpa.Category;
+import org.onap.policy.rest.jpa.FunctionDefinition;
 import org.onap.policy.rest.jpa.PolicyEditorScopes;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.utils.PolicyUtils;
@@ -307,10 +310,10 @@ public class XACMLPAPTest {
         matchingAttributes.put("guardActiveEnd", "10:00");
         StdPAPPolicy newPAPPolicy =
 
-                new StdPAPPolicy(
-                        StdPAPPolicyParams.builder().policyName("testGuardMinMax").description("test rule").onapName("PDPD")
-                                .providerComboBox("GUARD_MIN_MAX").dynamicFieldConfigAttributes(matchingAttributes)
-                                .editPolicy(false).domain("test").highestVersion(0).build());
+                new StdPAPPolicy(StdPAPPolicyParams.builder().policyName("testGuardMinMax").description("test rule")
+                        .onapName("PDPD").providerComboBox("GUARD_MIN_MAX")
+                        .dynamicFieldConfigAttributes(matchingAttributes).editPolicy(false).domain("test")
+                        .highestVersion(0).build());
         MockServletInputStream mockInput =
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
@@ -370,6 +373,63 @@ public class XACMLPAPTest {
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
 
+    @Test
+    public void testActionPolicy() throws IOException, ServletException, SQLException {
+        setPolicyCreation();
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        Mockito.when(httpServletRequest.getHeader(ENVIRONMENT_HEADER)).thenReturn("DEVL");
+        Mockito.when(httpServletRequest.getMethod()).thenReturn("PUT");
+        Mockito.when(httpServletRequest.getParameter("apiflag")).thenReturn("API");
+        Mockito.when(httpServletRequest.getParameter("operation")).thenReturn("create");
+        Mockito.when(httpServletRequest.getParameter("policyType")).thenReturn("Action");
+
+        CommonClassDao commonClassDao = Mockito.mock(CommonClassDao.class);
+        PolicyCreation.setCommonClassDao(commonClassDao);
+        ActionPolicyDict actionDict = new ActionPolicyDict();
+        actionDict.setBody("{\"test\":\"test\"}");
+        actionDict.setHeader("test122=test12:test22=test34");
+        actionDict.setType("REST");
+        actionDict.setMethod("GET");
+        actionDict.setUrl("testsomeurl.com");
+        Mockito.when(commonClassDao.getEntityItem(ActionPolicyDict.class, "attributeName", "test"))
+                .thenReturn(actionDict);
+        FunctionDefinition funcDefn = new FunctionDefinition();
+        funcDefn.setXacmlid("urn:oasis:names:tc:xacml:1.0:function:and");
+        Mockito.when(commonClassDao.getEntityItem(FunctionDefinition.class, "short_name", "and")).thenReturn(funcDefn);
+        funcDefn.setXacmlid("urn:oasis:names:tc:xacml:1.0:function:integer-equal");
+        Mockito.when(commonClassDao.getEntityItem(FunctionDefinition.class, "short_name", "integer-equal"))
+                .thenReturn(funcDefn);
+        funcDefn.setXacmlid("urn:oasis:names:tc:xacml:3.0:function:string-contains");
+        Mockito.when(commonClassDao.getEntityItem(FunctionDefinition.class, "short_name", "string-contains"))
+                .thenReturn(funcDefn);
+        funcDefn.setXacmlid("urn:oasis:names:tc:xacml:1.0:function:integer-greater-than");
+        Mockito.when(commonClassDao.getEntityItem(FunctionDefinition.class, "short_name", "integer-greater-than"))
+                .thenReturn(funcDefn);
+        funcDefn.setXacmlid("urn:oasis:names:tc:xacml:1.0:function:or");
+        Mockito.when(commonClassDao.getEntityItem(FunctionDefinition.class, "short_name", "or")).thenReturn(funcDefn);
+
+        Map<String, String> componentAttributes = new HashMap<>();
+        componentAttributes.put("java", "test");
+        StdPAPPolicy newPapPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder().policyName("test").description("test")
+                .dynamicFieldConfigAttributes(componentAttributes)
+                .dynamicRuleAlgorithmLabels(Arrays.asList("A1", "A2", "A3", "A4", "A5", "A6", "A7"))
+                .dynamicRuleAlgorithmCombo(Arrays.asList("integer-equal", "string-contains", "integer-equal", "and",
+                        "integer-greater-than", "or", "and"))
+                .dynamicRuleAlgorithmField1(Arrays.asList("cobal", "cap", "cobal", "A2", "Config", "A4", "A1"))
+                .dynamicRuleAlgorithmField2(Arrays.asList("90", "ca", "90", "A3", "45", "A5", "A6"))
+                .actionPerformer("PDP").actionAttribute("test").editPolicy(false).domain("com").highestVersion(0)
+                .build());
+        newPapPolicy.setActionBody("{\"test\":\"test\"}");
+
+        MockServletInputStream mockInput =
+                new MockServletInputStream(PolicyUtils.objectToJsonString(newPapPolicy).getBytes());
+        Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
+
+        pap.service(httpServletRequest, httpServletResponse);
+        Mockito.verify(httpServletResponse).addHeader("operation", "create");
+    }
+
+
     private void setPolicyCreation() {
         CommonClassDao commonClassDao = Mockito.mock(CommonClassDao.class);
         PolicyCreation.setCommonClassDao(commonClassDao);
@@ -396,7 +456,6 @@ public class XACMLPAPTest {
         template.setRule(rule);
         Mockito.when(commonClassDao.getEntityItem(BRMSParamTemplate.class, "ruleName", "testPolicy"))
                 .thenReturn(template);
-
     }
 
     @Test
