@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7940d4cc_aa81435c",
+        "filename": "packages/docker/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 4914
+      },
+      "writtenOn": "2019-04-11T21:13:45Z",
+      "side": 1,
+      "message": "Can you delete this spaces ?",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 1
+      },
+      "revId": "f848369c375c6c5b06d39862b24adc3699e118a3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13aa1437_f8888269",
+        "filename": "packages/docker/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 4914
+      },
+      "writtenOn": "2019-04-11T21:13:45Z",
+      "side": 1,
+      "message": "I think you should update and upgrade your vm before installing mariadb-client\n\napk --no-cache update \u0026\u0026 apk --no-cache upgrade;",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 37
+      },
+      "revId": "f848369c375c6c5b06d39862b24adc3699e118a3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
