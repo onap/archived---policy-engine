@@ -87,8 +87,8 @@
             "version": "${{BRMS_MODELS_DEPENDENCY_VERSION}}"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
-            "artifactId": "actor.MODELS_appclcm",
-            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+            "artifactId": "actor.appclcm",
+            "version": "${{BRMS_MODELS_DEPENDENCY_VERSION}}"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.so",
@@ -107,7 +107,7 @@
             "version": "${{BRMS_MODELS_DEPENDENCY_VERSION}}"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions",
-            "artifactId": "policy-yaml",
+            "artifactId": "model-yaml",
             "version": "${{BRMS_MODELS_DEPENDENCY_VERSION}}"
         }, {
             "groupId": "com.att.research.xacml",

@@ -114,9 +114,9 @@
             "artifactId": "actor.vfc",
             "version": "2.0.0-SNAPSHOT"
         }, {
-            "groupId": "org.onap.policy.drools-applications.controlloop.common",
-            "artifactId": "policy-yaml",
-            "version": "1.4.0-SNAPSHOT"
+            "groupId": "org.onap.policy.models.policy-models-interactions",
+            "artifactId": "model-yaml",
+            "version": "2.0.0-SNAPSHOT"
         }, {
             "groupId": "com.att.research.xacml",
             "artifactId": "xacml-pdp",
