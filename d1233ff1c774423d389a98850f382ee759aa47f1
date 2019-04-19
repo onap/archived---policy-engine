@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "71cad9ef_50bf9509",
+        "filename": "packages/docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-04-19T22:37:11Z",
+      "side": 1,
+      "message": "This would be onap/policy-common-alpine:1.4.0.",
+      "revId": "d1233ff1c774423d389a98850f382ee759aa47f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be2db76a_ecb10ec8",
+        "filename": "packages/docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-04-19T22:37:11Z",
+      "side": 1,
+      "message": "Not sure about the \"upgrade\", haven\u0027t seen much of it before in Docker images.\n\nIn any case, I think mariadb-client is a package that should be in \"policy-common-alpine\" or \"policy-base-alpine\" for all images.   All of them use mariadb, and I think it would be beneficial to include the client in all of them.\n\nI just put together some thoughts about structuring the software in your ticket INT-995.   I think it would be benefitial to have all this base software snapshotted in an official release, so applications would be immune of any changes underneath in a development release.",
+      "revId": "d1233ff1c774423d389a98850f382ee759aa47f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
