@@ -193,9 +193,7 @@ PAP Recipes (inside the "pap" container)
        :caption: Bypass Portal Authentication with the Policy Web UI
        :linenos:
 
-        edit: /opt/app/policy/servers/console/webapps/onap/WEB-INF/classes/portal.properties
-        comment out: #role_access_centralized = remote
-        restart pap: policy.sh stop; policy.sh start;
+        sed -i "s/^role_access_centralized.*$/#role_access_centralized=remote/g" /opt/app/policy/servers/console/webapps/onap/WEB-INF/classes/portal.properties; policy.sh stop; policy.sh start;
 
 
     .. code-block:: bash

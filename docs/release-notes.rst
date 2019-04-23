@@ -36,6 +36,14 @@ The following items were deployed with the Casablanca Maintenance Release:
 
     * [POLICY-1433] - Remove proprietary licenses in PSSD test CSAR
 
+**Known Issues**
+ 
+The following known issue will be addressed in a future release.
+
+    * `[POLICY-1650] <https://jira.onap.org/browse/POLICY-1277>`_ - Policy UI doesn't show left menu or any content
+
+A workaround for this issue consists in bypassing the Portal UI when accessing the Policy UI.   See `PAP recipes <https://docs.onap.org/en/casablanca/submodules/policy/engine.git/docs/platform/cookbook.html?highlight=policy%20cookbook#id23>`_ for the specific procedure.
+
 
 Version: 3.0.1
 --------------
