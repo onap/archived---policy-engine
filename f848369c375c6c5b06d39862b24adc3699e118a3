@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "084fe14c_ab657a16",
+        "filename": "packages/docker/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 5040
+      },
+      "writtenOn": "2019-04-23T08:24:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7940d4cc_aa81435c",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 1
+      },
+      "revId": "f848369c375c6c5b06d39862b24adc3699e118a3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "13aa1437_f8888269",
         "filename": "packages/docker/src/main/docker/Dockerfile",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2019-04-11T21:13:45Z",
       "side": 1,
       "message": "I think you should update and upgrade your vm before installing mariadb-client\n\napk --no-cache update \u0026\u0026 apk --no-cache upgrade;",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 37
+      },
+      "revId": "f848369c375c6c5b06d39862b24adc3699e118a3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d7e6a6b_06069e85",
+        "filename": "packages/docker/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 5040
+      },
+      "writtenOn": "2019-04-23T08:24:54Z",
+      "side": 1,
+      "message": "--no-cache option automatically involves indexes update so I propose: apk --no-cache upgrade \u0026\u0026 apk add --no-cahe maria...",
+      "parentUuid": "13aa1437_f8888269",
       "range": {
         "startLine": 9,
         "startChar": 0,
