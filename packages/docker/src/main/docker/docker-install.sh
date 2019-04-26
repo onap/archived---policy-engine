@@ -555,9 +555,9 @@ function install_brmsgw() {
 	
 	install_prereqs "${BASE_CONF}"
 
-	if [[ -n ${BUILD_VERSION} ]]; then
-		echo "Replacing ${BUILD_VERSION} in ${COMPONENT_TYPE}.conf"
-		sed -i -e "s/^BRMS_DEPENDENCY_VERSION=.*$/BRMS_DEPENDENCY_VERSION=${BUILD_VERSION}/g" "${COMPONENT_TYPE}.conf"
+	if [[ -n ${BUILD_VERSION_ENGINE} ]]; then
+		echo "Replacing ${BUILD_VERSION_ENGINE} in ${COMPONENT_TYPE}.conf"
+		sed -i -e "s/^BRMS_DEPENDENCY_VERSION=.*$/BRMS_DEPENDENCY_VERSION=${BUILD_VERSION_ENGINE}/g" "${COMPONENT_TYPE}.conf"
 	fi
 	
 	if ! process_configuration "${COMPONENT_TYPE}.conf"; then
