@@ -66,6 +66,10 @@ echo $MVN_MAJMIN_VERSION
 
 echo "Building $IMAGE"
 
+docker login -u docker -p docker nexus3.onap.org:10001
+docker pull nexus3.onap.org:10001/onap/policy-common-alpine:1.4.0
+docker tag nexus3.onap.org:10001/onap/policy-common-alpine:1.4.0 onap/policy-common-alpine:1.4.0
+
 #
 # This is the local latest tagged image. The Dockerfile's need this to build images
 #

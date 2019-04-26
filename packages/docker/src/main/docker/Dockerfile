@@ -9,7 +9,9 @@ ENV POLICY_LOGS ${POLICY_LOGS}
 RUN apk add --no-cache mariadb-client
 
 RUN mkdir -p /tmp/policy-install ${POLICY_LOGS} && \
-    chown policy:policy /tmp/policy-install ${POLICY_LOGS}
+    chown policy:policy /tmp/policy-install ${POLICY_LOGS} && \
+    rmdir ${POLICY_HOME}/etc/ssl && \
+    rmdir ${POLICY_HOME}/etc
 
 WORKDIR /tmp/policy-install
 
