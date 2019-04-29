@@ -43,3 +43,4 @@ VALUES ('GocVNFType', 'getDictionary/get_GocVnfTypeDataByName', 'gocVnfTypeDicti
 ('ServerScope','getDictionary/get_ServerScopeDataByName','gocServerScopeDictionaryDatas'),
 ('TraversalData', 'getDictionary/get_TraversalDataByName', 'gocTraversalDictionaryDatas'); 
 
+INSERT INTO `onap_sdk`.`fn_user_role` (`USER_ID`, `ROLE_ID`, `APP_ID`) VALUES ('1 ', '16', '1');
