@@ -23,13 +23,14 @@ package org.onap.policy.pap.xacml.rest;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
+
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,10 +41,11 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.SessionFactory;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.ONAPLoggingContext;
 import org.onap.policy.pap.xacml.rest.components.ConfigPolicy;
@@ -81,8 +83,8 @@ public class ConsoleAndApiServiceTest {
     private static final String USER_ID = "userId";
     private static final String APIFLAG = "apiflag";
     private static final String ENVIRONMENT_HEADER = "Environment";
+    private static final ONAPLoggingContext logContext = Mockito.mock(ONAPLoggingContext.class);
     private static PolicyDBDao dbd;
-    private static Path repository;
     private static StdEngine stdEngine = null;
     private static SessionFactory sessionFactory = null;
     private static List<String> headers = new ArrayList<>();
@@ -91,7 +93,8 @@ public class ConsoleAndApiServiceTest {
     private static XACMLPapServlet pap;
     private HttpServletRequest httpServletRequest;
     private HttpServletResponse httpServletResponse;
-    private static final ONAPLoggingContext logContext = Mockito.mock(ONAPLoggingContext.class);
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     /**
      * Sets the up before class.
@@ -104,7 +107,7 @@ public class ConsoleAndApiServiceTest {
         try {
             sessionFactory = PolicyDBDaoTest.setupH2DbDaoImpl("testConsoleApi");
         } catch (Exception e) {
-            Assert.fail();
+            fail(e.getMessage());
         }
 
         PolicyDBDao.setJunit(true);
@@ -136,8 +139,8 @@ public class ConsoleAndApiServiceTest {
         Mockito.when(httpServletRequest.getAttributeNames()).thenReturn(Collections.enumeration(headers));
         CommonClassDaoImpl.setSessionfactory(sessionFactory);
         PolicyCreation.setCommonClassDao(new CommonClassDaoImpl());
-        repository = Paths.get("src/test/resources/pdps");
-        stdEngine = new StdEngine(repository);
+        File tmpGrpDir = folder.newFolder("src", "test", "resources", "grpTest");
+        stdEngine = new StdEngine(tmpGrpDir.toPath());
         dbd.setPapEngine(stdEngine);
     }
 
@@ -205,8 +208,7 @@ public class ConsoleAndApiServiceTest {
         Mockito.when(httpServletRequest.getParameter(USER_ID)).thenReturn(API);
         Mockito.when(httpServletRequest.getParameter(GROUP_DESCRIPTION)).thenReturn(null);
         Mockito.when(httpServletRequest.getParameter(POLICY_ID)).thenReturn(POLICY_NAME);
-        repository = Paths.get(PDPS);
-        stdEngine = new StdEngine(repository);
+        stdEngine = new StdEngine(Paths.get(PDPS));
         dbd.setPapEngine(stdEngine);
         populatePolicyInDb();
 
@@ -225,8 +227,7 @@ public class ConsoleAndApiServiceTest {
         Mockito.when(httpServletRequest.getParameter(APIFLAG)).thenReturn(API2);
         Mockito.when(httpServletRequest.getParameter(USER_ID)).thenReturn(API);
         Mockito.when(httpServletRequest.getParameter("policy")).thenReturn(POLICY_NAME);
-        repository = Paths.get(PDPS);
-        stdEngine = new StdEngine(repository);
+        stdEngine = new StdEngine(Paths.get(PDPS));
         dbd.setPapEngine(stdEngine);
 
         try {
@@ -305,6 +306,8 @@ public class ConsoleAndApiServiceTest {
 
     @Test
     public void testGet() throws Exception {
+        stdEngine = new StdEngine(Paths.get("src/test/resources/pdps"));
+        dbd.setPapEngine(stdEngine);
         Mockito.when(httpServletRequest.getHeader(ENVIRONMENT_HEADER)).thenReturn(DEVL);
         Mockito.when(httpServletRequest.getMethod()).thenReturn("GET");
         Mockito.when(httpServletRequest.getParameter(APIFLAG)).thenReturn(API2);
@@ -357,8 +360,8 @@ public class ConsoleAndApiServiceTest {
         try {
             policyObject.policyAdapter
                     .setParentPath(IOUtils.toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml")));
-        } catch (Exception e2) {
-            fail();
+        } catch (Exception e) {
+            fail(e.getMessage());
         }
 
         PolicyDBDaoTransaction transaction = dbd.getNewTransaction();
@@ -367,7 +370,7 @@ public class ConsoleAndApiServiceTest {
             transaction.commitTransaction();
         } catch (Exception e) {
             transaction.rollbackTransaction();
-            Assert.fail();
+            fail(e.getMessage());
         }
     }
 }
