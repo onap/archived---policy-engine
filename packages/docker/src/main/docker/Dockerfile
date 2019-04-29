@@ -2,8 +2,10 @@ FROM onap/policy-common-alpine:1.4.0
 
 LABEL maintainer="Policy Team"
 
+ARG BUILD_VERSION_ENGINE=${BUILD_VERSION_ENGINE}
 ARG POLICY_LOGS=/var/log/onap
 
+ENV BUILD_VERSION_ENGINE ${BUILD_VERSION_ENGINE}
 ENV POLICY_LOGS ${POLICY_LOGS}
 
 RUN apk add --no-cache mariadb-client
