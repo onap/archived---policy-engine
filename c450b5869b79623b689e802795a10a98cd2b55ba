@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5173316b_a65ef3ae",
+        "filename": "packages/base/src/files/install/mysql/data/190202_upgrade_script.sql",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-04-29T21:42:56Z",
+      "side": 1,
+      "message": "aren\u0027t they supposed to be int fields?",
+      "range": {
+        "startLine": 46,
+        "startChar": 24,
+        "endLine": 46,
+        "endChar": 36
+      },
+      "revId": "c450b5869b79623b689e802795a10a98cd2b55ba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
