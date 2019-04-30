@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b95df8a_4f234f99",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/ConsoleAndApiServiceTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-30T19:26:40Z",
+      "side": 1,
+      "message": "something I just learned: could split the string into separate components, leaving out the \"/\", as Paths.get() will recombine them, adding the appropriate separator for you",
+      "revId": "c3dd7887cd8355470cd4c75dfc2326f6c7152141",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
