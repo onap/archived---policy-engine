@@ -21,15 +21,15 @@
 package org.onap.policy.pap.xacml.rest;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
+
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,10 +40,11 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.SessionFactory;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.ONAPLoggingContext;
 import org.onap.policy.pap.xacml.rest.components.ConfigPolicy;
@@ -54,6 +55,7 @@ import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTransaction;
 import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.pap.xacml.rest.policycontroller.PolicyCreation;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.dao.PolicyDBException;
 import org.onap.policy.xacml.std.pap.StdEngine;
 import org.onap.policy.xacml.std.pap.StdPDP;
 import org.springframework.mock.web.DelegatingServletInputStream;
@@ -81,8 +83,8 @@ public class ConsoleAndApiServiceTest {
     private static final String USER_ID = "userId";
     private static final String APIFLAG = "apiflag";
     private static final String ENVIRONMENT_HEADER = "Environment";
+    private static final ONAPLoggingContext logContext = Mockito.mock(ONAPLoggingContext.class);
     private static PolicyDBDao dbd;
-    private static Path repository;
     private static StdEngine stdEngine = null;
     private static SessionFactory sessionFactory = null;
     private static List<String> headers = new ArrayList<>();
@@ -91,7 +93,8 @@ public class ConsoleAndApiServiceTest {
     private static XACMLPapServlet pap;
     private HttpServletRequest httpServletRequest;
     private HttpServletResponse httpServletResponse;
-    private static final ONAPLoggingContext logContext = Mockito.mock(ONAPLoggingContext.class);
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     /**
      * Sets the up before class.
@@ -101,16 +104,10 @@ public class ConsoleAndApiServiceTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/xacml.pap.properties");
-        try {
-            sessionFactory = PolicyDBDaoTest.setupH2DbDaoImpl("testConsoleApi");
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
+        sessionFactory = PolicyDBDaoTest.setupH2DbDaoImpl("testConsoleApi");
         PolicyDBDao.setJunit(true);
         dbd = PolicyDBDao.getPolicyDBDaoInstance();
         PolicyDBDao.setJunit(true);
-
         consoleAndApi = new ConsoleAndApiService();
 
         servletConfig = Mockito.mock(MockServletConfig.class);
@@ -136,65 +133,52 @@ public class ConsoleAndApiServiceTest {
         Mockito.when(httpServletRequest.getAttributeNames()).thenReturn(Collections.enumeration(headers));
         CommonClassDaoImpl.setSessionfactory(sessionFactory);
         PolicyCreation.setCommonClassDao(new CommonClassDaoImpl());
-        repository = Paths.get("src/test/resources/pdps");
-        stdEngine = new StdEngine(repository);
+        File tmpGrpDir = folder.newFolder("src", "test", "resources", "grpTest");
+        stdEngine = new StdEngine(tmpGrpDir.toPath());
         dbd.setPapEngine(stdEngine);
     }
 
     @Test
-    public void testGroupCreation() {
+    public void testGroupCreation() throws IOException {
         Mockito.when(httpServletRequest.getHeader(ENVIRONMENT_HEADER)).thenReturn(DEVL);
         Mockito.when(httpServletRequest.getMethod()).thenReturn(POST);
         Mockito.when(httpServletRequest.getParameter(APIFLAG)).thenReturn(API2);
         Mockito.when(httpServletRequest.getParameter(USER_ID)).thenReturn(API);
         Mockito.when(httpServletRequest.getParameter(GROUP_DESCRIPTION)).thenReturn("test");
         Mockito.when(httpServletRequest.getParameter(GROUP_NAME)).thenReturn(TESTGRP1);
-        try {
-            consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP1, logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
+        consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP1, logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
+
     }
 
     @Test
-    public void testGroupNotExistInDb() {
+    public void testGroupNotExistInDb() throws IOException {
         Mockito.when(httpServletRequest.getHeader(ENVIRONMENT_HEADER)).thenReturn(DEVL);
         Mockito.when(httpServletRequest.getMethod()).thenReturn(POST);
         Mockito.when(httpServletRequest.getParameter(APIFLAG)).thenReturn(API2);
         Mockito.when(httpServletRequest.getParameter(USER_ID)).thenReturn(API);
         Mockito.when(httpServletRequest.getParameter(GROUP_NAME)).thenReturn("testgrpNotExist");
-        try {
-            consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, "testgrpNotExist", logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_INTERNAL_SERVER_ERROR == httpServletResponse.getStatus());
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
+        consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, "testgrpNotExist", logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_INTERNAL_SERVER_ERROR == httpServletResponse.getStatus());
+
     }
 
     @Test
-    public void testGroupChange() {
+    public void testGroupChange() throws IOException {
         Mockito.when(httpServletRequest.getHeader(ENVIRONMENT_HEADER)).thenReturn(DEVL);
         Mockito.when(httpServletRequest.getMethod()).thenReturn(POST);
         Mockito.when(httpServletRequest.getParameter(APIFLAG)).thenReturn(API2);
         Mockito.when(httpServletRequest.getParameter(USER_ID)).thenReturn(API);
         Mockito.when(httpServletRequest.getParameter(GROUP_DESCRIPTION)).thenReturn("test");
         Mockito.when(httpServletRequest.getParameter(GROUP_NAME)).thenReturn(TESTGRP2);
-        try {
-            consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP2, logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
+        consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP2, logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
 
         Mockito.when(httpServletRequest.getParameter(GROUP_DESCRIPTION)).thenReturn(null);
         Mockito.when(httpServletRequest.getParameter(DEFAULT)).thenReturn(DEFAULT);
-        try {
-            consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP2, logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
+        consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP2, logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
+
     }
 
     @Test
@@ -205,17 +189,13 @@ public class ConsoleAndApiServiceTest {
         Mockito.when(httpServletRequest.getParameter(USER_ID)).thenReturn(API);
         Mockito.when(httpServletRequest.getParameter(GROUP_DESCRIPTION)).thenReturn(null);
         Mockito.when(httpServletRequest.getParameter(POLICY_ID)).thenReturn(POLICY_NAME);
-        repository = Paths.get(PDPS);
-        stdEngine = new StdEngine(repository);
+        stdEngine = new StdEngine(Paths.get(PDPS));
         dbd.setPapEngine(stdEngine);
         populatePolicyInDb();
 
-        try {
-            consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, DEFAULT, logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
+        consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, DEFAULT, logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
+
     }
 
     @Test
@@ -225,16 +205,12 @@ public class ConsoleAndApiServiceTest {
         Mockito.when(httpServletRequest.getParameter(APIFLAG)).thenReturn(API2);
         Mockito.when(httpServletRequest.getParameter(USER_ID)).thenReturn(API);
         Mockito.when(httpServletRequest.getParameter("policy")).thenReturn(POLICY_NAME);
-        repository = Paths.get(PDPS);
-        stdEngine = new StdEngine(repository);
+        stdEngine = new StdEngine(Paths.get(PDPS));
         dbd.setPapEngine(stdEngine);
 
-        try {
-            consoleAndApi.doAcPut(httpServletRequest, httpServletResponse, DEFAULT, logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
+        consoleAndApi.doAcPut(httpServletRequest, httpServletResponse, DEFAULT, logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
+
     }
 
     @Test
@@ -246,15 +222,12 @@ public class ConsoleAndApiServiceTest {
         Mockito.when(httpServletRequest.getParameter(USER_ID)).thenReturn(API);
         Mockito.when(httpServletRequest.getParameter(GROUP_DESCRIPTION)).thenReturn("test");
         Mockito.when(httpServletRequest.getParameter(GROUP_NAME)).thenReturn(TESTGRP4);
-        try {
-            consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP4, logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
-            Mockito.when(httpServletRequest.getParameter(GROUP_NAME)).thenReturn(TESTGRP5);
-            consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP5, logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
+        consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP4, logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
+        Mockito.when(httpServletRequest.getParameter(GROUP_NAME)).thenReturn(TESTGRP5);
+        consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP5, logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
+
 
         Mockito.when(httpServletRequest.getParameter(GROUP_DESCRIPTION)).thenReturn(null);
         Mockito.when(httpServletRequest.getParameter(PDP_ID)).thenReturn("http://localhost:4344/pdp/");
@@ -264,12 +237,9 @@ public class ConsoleAndApiServiceTest {
         ObjectWriter ow = new ObjectMapper().writer();
         when(httpServletRequest.getInputStream()).thenReturn(new DelegatingServletInputStream(
                 new ByteArrayInputStream(ow.writeValueAsString(newPdp).getBytes(StandardCharsets.UTF_8))));
-        try {
-            consoleAndApi.doAcPut(httpServletRequest, httpServletResponse, TESTGRP5, logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
+        consoleAndApi.doAcPut(httpServletRequest, httpServletResponse, TESTGRP5, logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
+
 
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = new MockHttpServletResponse();
@@ -279,12 +249,9 @@ public class ConsoleAndApiServiceTest {
         Mockito.when(httpServletRequest.getParameter(USER_ID)).thenReturn(API);
         Mockito.when(httpServletRequest.getParameter(PDP_ID)).thenReturn("http://localhost:4344/pdp/");
         Mockito.when(httpServletRequest.getParameter(GROUP_NAME)).thenReturn(TESTGRP4);
-        try {
-            consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP4, logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
+        consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP4, logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
+
 
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = new MockHttpServletResponse();
@@ -294,45 +261,39 @@ public class ConsoleAndApiServiceTest {
         Mockito.when(httpServletRequest.getParameter(USER_ID)).thenReturn(API);
         Mockito.when(httpServletRequest.getParameter(PDP_ID)).thenReturn("http://localhost:4344/pdp/");
         Mockito.when(httpServletRequest.getParameter(GROUP_NAME)).thenReturn(TESTGRP4);
-        try {
-            consoleAndApi.doAcDelete(httpServletRequest, httpServletResponse, TESTGRP4, logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
+        consoleAndApi.doAcDelete(httpServletRequest, httpServletResponse, TESTGRP4, logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
+
 
     }
 
     @Test
     public void testGet() throws Exception {
+        stdEngine = new StdEngine(Paths.get("src", "test", "resources", "pdps"));
+        dbd.setPapEngine(stdEngine);
         Mockito.when(httpServletRequest.getHeader(ENVIRONMENT_HEADER)).thenReturn(DEVL);
         Mockito.when(httpServletRequest.getMethod()).thenReturn("GET");
         Mockito.when(httpServletRequest.getParameter(APIFLAG)).thenReturn(API2);
         Mockito.when(httpServletRequest.getParameter(USER_ID)).thenReturn(API);
         Mockito.when(httpServletRequest.getParameter(PDP_ID)).thenReturn("http://localhost:4344/pdp/");
         Mockito.when(httpServletRequest.getParameter(GROUP_NAME)).thenReturn("");
-        try {
-            consoleAndApi.doAcGet(httpServletRequest, httpServletResponse, "", logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_OK == httpServletResponse.getStatus());
-            httpServletResponse = new MockHttpServletResponse();
-            Mockito.when(httpServletRequest.getParameter(DEFAULT)).thenReturn(DEFAULT);
-            consoleAndApi.doAcGet(httpServletRequest, httpServletResponse, "", logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_OK == httpServletResponse.getStatus());
-            Mockito.when(httpServletRequest.getParameter(PDP_ID)).thenReturn(null);
-            Mockito.when(httpServletRequest.getParameter(DEFAULT)).thenReturn(null);
-            consoleAndApi.doAcGet(httpServletRequest, httpServletResponse, "", logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_OK == httpServletResponse.getStatus());
-            Mockito.when(httpServletRequest.getParameter("getPDPGroup")).thenReturn(TESTGROUP2);
-            Mockito.when(httpServletRequest.getParameter(GROUP_NAME)).thenReturn(TESTGROUP2);
-            consoleAndApi.doAcGet(httpServletRequest, httpServletResponse, TESTGROUP2, logContext, stdEngine);
-            assertTrue(HttpServletResponse.SC_OK == httpServletResponse.getStatus());
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
-
+        consoleAndApi.doAcGet(httpServletRequest, httpServletResponse, "", logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_OK == httpServletResponse.getStatus());
+        httpServletResponse = new MockHttpServletResponse();
+        Mockito.when(httpServletRequest.getParameter(DEFAULT)).thenReturn(DEFAULT);
+        consoleAndApi.doAcGet(httpServletRequest, httpServletResponse, "", logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_OK == httpServletResponse.getStatus());
+        Mockito.when(httpServletRequest.getParameter(PDP_ID)).thenReturn(null);
+        Mockito.when(httpServletRequest.getParameter(DEFAULT)).thenReturn(null);
+        consoleAndApi.doAcGet(httpServletRequest, httpServletResponse, "", logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_OK == httpServletResponse.getStatus());
+        Mockito.when(httpServletRequest.getParameter("getPDPGroup")).thenReturn(TESTGROUP2);
+        Mockito.when(httpServletRequest.getParameter(GROUP_NAME)).thenReturn(TESTGROUP2);
+        consoleAndApi.doAcGet(httpServletRequest, httpServletResponse, TESTGROUP2, logContext, stdEngine);
+        assertTrue(HttpServletResponse.SC_OK == httpServletResponse.getStatus());
     }
 
-    private static void populatePolicyInDb() {
+    private static void populatePolicyInDb() throws IOException, PolicyDBException {
         CommonClassDaoImpl.setSessionfactory(sessionFactory);
         PolicyCreation.setCommonClassDao(new CommonClassDaoImpl());
         Policy policyObject = new ConfigPolicy();
@@ -348,26 +309,17 @@ public class ConsoleAndApiServiceTest {
         policyObject.policyAdapter.setHighestVersion(1);
         PolicyType policyTypeObject = new PolicyType();
         policyObject.policyAdapter.setPolicyData(policyTypeObject);
-        ClassLoader classLoader = ConsoleAndApiServiceTest.class.getClassLoader();
+
         PolicyType policyConfig = new PolicyType();
         policyConfig.setVersion("1");
         policyConfig.setPolicyId("");
         policyConfig.setTarget(new TargetType());
         policyObject.policyAdapter.setData(policyConfig);
-        try {
-            policyObject.policyAdapter
-                    .setParentPath(IOUtils.toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml")));
-        } catch (Exception e2) {
-            fail();
-        }
+        policyObject.policyAdapter.setParentPath(IOUtils.toString(
+                ConsoleAndApiServiceTest.class.getClassLoader().getResourceAsStream("Config_SampleTest1206.1.xml")));
 
         PolicyDBDaoTransaction transaction = dbd.getNewTransaction();
-        try {
-            transaction.createPolicy(policyObject, API);
-            transaction.commitTransaction();
-        } catch (Exception e) {
-            transaction.rollbackTransaction();
-            Assert.fail();
-        }
+        transaction.createPolicy(policyObject, API);
+        transaction.commitTransaction();
     }
 }
