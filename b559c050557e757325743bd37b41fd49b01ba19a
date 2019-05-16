@@ -93,6 +93,30 @@
       "revId": "b559c050557e757325743bd37b41fd49b01ba19a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "677ca860_4c15f7f2",
+        "filename": "packages/base/src/files/install/servers/brmsgw/config.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-05-16T17:12:24Z",
+      "side": 1,
+      "message": "I think it doesn\u0027t matter as there are other external scripts in oom, I think, but this is good change.",
+      "parentUuid": "609dfa49_5b601242",
+      "range": {
+        "startLine": 87,
+        "startChar": 26,
+        "endLine": 87,
+        "endChar": 29
+      },
+      "revId": "b559c050557e757325743bd37b41fd49b01ba19a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
