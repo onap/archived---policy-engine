@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2bae91f2_46cc1b3b",
+        "filename": "BRMSGateway/dependency.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-05-16T14:55:36Z",
+      "side": 1,
+      "message": "No change needed here.",
+      "parentUuid": "d5baf619_9224ba1f",
+      "range": {
+        "startLine": 120,
+        "startChar": 12,
+        "endLine": 124,
+        "endChar": 10
+      },
+      "revId": "b559c050557e757325743bd37b41fd49b01ba19a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4cc51f16_080c21b1",
         "filename": "packages/base/src/files/install/servers/brmsgw/config.properties",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2019-05-16T14:53:09Z",
       "side": 1,
       "message": "Not sure about this either. I think from before someone mentioned it didn\u0027t matter.",
+      "range": {
+        "startLine": 87,
+        "startChar": 26,
+        "endLine": 87,
+        "endChar": 29
+      },
+      "revId": "b559c050557e757325743bd37b41fd49b01ba19a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "609dfa49_5b601242",
+        "filename": "packages/base/src/files/install/servers/brmsgw/config.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-05-16T14:55:36Z",
+      "side": 1,
+      "message": "Possibly - Jorge?",
+      "parentUuid": "4cc51f16_080c21b1",
       "range": {
         "startLine": 87,
         "startChar": 26,
