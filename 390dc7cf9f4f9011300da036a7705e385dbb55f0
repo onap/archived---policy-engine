@@ -46,6 +46,30 @@
       "revId": "390dc7cf9f4f9011300da036a7705e385dbb55f0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "188573cc_3910d17a",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PdpApiService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-05-17T11:04:18Z",
+      "side": 0,
+      "message": "I am not sure.  This is the fix Praveen gave me to implement and I verified it with the current code in AT\u0026T code base.  Perhaps they are making the scope check elsewhere.  Praveen can you answer this question?",
+      "parentUuid": "45c9d5e9_3de3391f",
+      "range": {
+        "startLine": 123,
+        "startChar": 17,
+        "endLine": 126,
+        "endChar": 17
+      },
+      "revId": "390dc7cf9f4f9011300da036a7705e385dbb55f0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
