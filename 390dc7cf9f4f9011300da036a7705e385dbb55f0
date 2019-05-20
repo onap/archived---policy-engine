@@ -94,6 +94,30 @@
       "revId": "390dc7cf9f4f9011300da036a7705e385dbb55f0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92df9ab6_a7079b47",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PdpApiService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-05-20T14:32:56Z",
+      "side": 0,
+      "message": "need to clear policyScope each time through the loop?  What if the first policy name is good, but the second contains neither \"xml\" nor \".\", wouldn\u0027t the isBlank() checks be OK, even though the policy name is not?",
+      "parentUuid": "848abdb2_728bbbdf",
+      "range": {
+        "startLine": 123,
+        "startChar": 17,
+        "endLine": 126,
+        "endChar": 17
+      },
+      "revId": "390dc7cf9f4f9011300da036a7705e385dbb55f0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
