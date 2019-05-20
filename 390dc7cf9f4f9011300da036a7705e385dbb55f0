@@ -118,6 +118,30 @@
       "revId": "390dc7cf9f4f9011300da036a7705e385dbb55f0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8433eb6_ee3e014a",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PdpApiService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-05-20T14:54:42Z",
+      "side": 0,
+      "message": "correct. missed the closer declaration on merge.",
+      "parentUuid": "92df9ab6_a7079b47",
+      "range": {
+        "startLine": 123,
+        "startChar": 17,
+        "endLine": 126,
+        "endChar": 17
+      },
+      "revId": "390dc7cf9f4f9011300da036a7705e385dbb55f0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
