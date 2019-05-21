@@ -14,6 +14,139 @@ Policy Release Notes
 
 
 ..      ==========================
+..      * * *      DUBLIN    * * *
+..      ==========================
+
+Version: 4.0.0
+--------------
+
+:Release Date: 2019-06-06 (Dublin Release)
+
+**New Features**
+
+The Dublin release for POLICY delivered the following Epics. For a full list of stories and tasks delivered in the Dublin release, refer to `JiraPolicyDublin`_.
+
+    * [POLICY-1068] - This epic covers the work to cleanup, enhance, fix, etc. any Control Loop based code base.
+        - POLICY-1459	PDP-D [Control Loop] : Create a Control Loop flavored PDP-D image
+        - POLICY-1397	PDP-D: NOOP Endpoints Support to test Operational Policies.
+        - POLICY-1195	Separate model code from drools-applications into other repositories
+        - POLICY-1367	Spike - Experimentation for management of Drools templates and Operational Policies
+
+    * [POLICY-1069] - This epic covers the work to harden the codebase for the Policy Framework project.
+        - POLICY-1250	Fix issues reported by sonar in policy modules
+        - POLICY-1202	policy-engine & apex-pdp are using different version of eclipselink
+        - POLICY-1368	Remove hibernate from policy repos
+        - POLICY-1007	Remove Jackson from policy framework components
+        - POLICY-1457	Use Alpine in base docker images
+
+    * [POLICY-1072] - This epic covers the work to support S3P Performance criteria.
+
+    * [POLICY-1171] - Enhance CLC Facility
+        - POLICY-1173	High-level specification of coordination directives
+
+    * [POLICY-1220] - This epic covers the work to support S3P Security criteria
+        - Task	POLICY-1538	Upgrade Elasticsearch to 6.4.x to clear security issue
+
+    * [POLICY-1269] - R4 Dublin - ReBuild Policy Infrastructure
+        - POLICY-1453	Apex PDP Dmaap Deploy/UnDeploy Functionality
+        - POLICY-1452	Apex PDP Dmaap Register/UnRegister Functionality
+        - POLICY-1460	Create S3P JMeter Tests for PAP
+        - POLICY-1458	Create S3P JMeter Tests for Policy API
+        - POLICY-1462	Create S3P JMeter Tests for Policy SDC Distribution
+        - POLICY-1461	Create S3P JMeter Tests for Policy XACML Engine (2nd Generation)
+        - POLICY-1272	Create the S3P JMeter tests for API, PAP, XACML (2nd Gen)
+        - POLICY-1455	Drools PDP Dmaap Deploy/UnDeploy Functionality
+        - POLICY-1454	Drools PDP Dmaap Register/UnRegister Functionality
+        - POLICY-1474	Modifications of Control Loop Operational Policy to support new Policy Lifecycle API
+        - POLICY-1443	PAP Dmaap PDP Register/UnRegister Main Entry Point
+        - POLICY-1444	PAP Dmaap Policy Deploy/Undeploy Policies Main Entry Point
+        - POLICY-1542	PAP REST API for PDPGroup Deployment, State Management & Health Check
+        - POLICY-1541	PAP REST API for PDPGroup Query, Statistics & Delete
+        - POLICY-1271	PAP RESTful HealthCheck/Statistics Main Entry Point
+        - POLICY-1471	Policy Application Designer - Develop Guard and Control Loop Coordination Policy Type application
+        - POLICY-1456	Policy Architecture and Roadmap Documentation
+        - POLICY-1442	Policy Lifecycle API RESTful Create/Read Main Entry Point for Concrete Policies
+        - POLICY-1441	Policy Lifecycle API RESTful Create/Read Main Entry Point for Policy Types
+        - POLICY-1447	Policy Lifecycle API RESTful Delete Main Entry Point for Concrete Policies
+        - POLICY-1446	Policy Lifecycle API RESTful Delete Main Entry Point for Policy Types
+        - POLICY-1270	Policy Lifecycle API RESTful HealthCheck/Statistics Main Entry Point
+        - POLICY-1273	Policy Type Application Design Requirements
+        - POLICY-1515	Prototype Policy Lifecycle API Swagger Entry Points
+        - POLICY-1516	Prototype the Policy Decision API
+        - POLICY-1451	XACML PDP Dmaap Deploy/UnDeploy Functionality
+        - POLICY-1449	XACML PDP Dmaap Register/UnRegister Functionality
+        - POLICY-1440	XACML PDP RESTful Decision API Main Entry Point
+        - POLICY-1436	XACML PDP RESTful HealthCheck/Statistics Main Entry Point
+        - POLICY-1445	XACML PDP upgrade to xacml 2.0.0
+
+    * [POLICY-1399] - This epic covers the work to support model drive control loop design as defined by the Control Loop Subcommittee
+
+    * [POLICY-1404] - This epic covers the work to support the CCVPN Use Case for Dublin
+        - POLICY-1405	Develop SDNC API for trigger bandwidth
+
+    * [POLICY-1408] - This epic covers the work done with the Casablanca release
+        - POLICY-1419	Better multi-role support
+        - POLICY-1427	Controller Logging Feature
+        - POLICY-1413	Dashboard enhancements
+        - POLICY-1422	Enhanced encryption
+        - POLICY-1420	Model enhancement to support embedded JSON
+        - POLICY-1416	Model enhancements to support CLAMP
+        - POLICY-1421	New audit data for push/delete
+        - POLICY-1418	PDP APIs - make ClientAuth optional
+        - POLICY-1414	Push Policy and DeletePolicy API enhancement
+        - POLICY-1417	Resiliency improvements
+        - POLICY-1423	Save original model file
+        - POLICY-1410	List Policy API
+        - POLICY-1499	Mdc Filter Feature
+        - POLICY-1489	PDP-D: Nested JSON Event Filtering support with JsonPath
+
+    * [POLICY-1438] - This epic covers the work to support 5G OOF PCI Use Case
+        - POLICY-1464	Config related aspects for OOF SON use case
+        - POLICY-1463	Functional code changes in Policy for OOF SON use case
+
+    * [POLICY-1450] - This epic covers the work to support the Scale Out Use Case.
+        - POLICY-1278	AAI named-queries are being deprecated and should be replaced with custom-queries
+        - POLICY-1545	E2E Automation - Parse the newly added model ids from operation policy
+
+    * Additional items delivered with the release.
+        - POLICY-1266	A&AI Modularity
+        - POLICY-1274	further improvement in PSSD S3P test
+        - POLICY-1159	Move expectException to policy-common/utils-test
+        - POLICY-1465	Support configurable Heap Memory Settings for JVM processes
+        - POLICY-1176	Work on technical debt introduced by CLC POC
+
+
+**Bug Fixes**
+
+The following bug fixes have been deployed with this release:
+
+    * `[POLICY-1627] <https://jira.onap.org/browse/POLICY-1627>`_ - APEX does not support specification of a partitioner class for Kafka
+    * `[POLICY-1289] <https://jira.onap.org/browse/POLICY-1289>`_ - Apex only considers 200 response codes as successful result codes
+    * `[POLICY-1437] <https://jira.onap.org/browse/POLICY-1437>`_ - Fix issues in FileSystemReceptionHandler of policy-distribution component
+    * `[POLICY-1501] <https://jira.onap.org/browse/POLICY-1501>`_ - policy-engine JUnit tests are not independent
+    * `[POLICY-1241] <https://jira.onap.org/browse/POLICY-1241>`_ - Test failure in drools-pdp if JAVA_HOME is not set
+
+**Security Notes**
+
+POLICY code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The POLICY open Critical security vulnerabilities and their risk assessment have been documented as part of the `project (Dublin Release) <https://wiki.onap.org/pages/viewpage.action?pageId=54723253>`_.
+
+Quick Links:
+    - `POLICY project page`_
+    - `Passing Badge information for POLICY`_
+    - `Project Vulnerability Review Table for POLICY (Dublin Release) <https://wiki.onap.org/pages/viewpage.action?pageId=54723253>`_
+
+
+**Known Issues**
+ 
+The following known issues will be addressed in a future release:
+
+    * `[POLICY-1291] - <https://jira.onap.org/browse/POLICY-1291>`_ Maven Error when building Apex documentation in Windows
+    * `[POLICY-1650] - <https://jira.onap.org/browse/POLICY-1650>`_ Policy UI doesn't show left menu or any content
+    * `[POLICY-1725] - <https://jira.onap.org/browse/POLICY-1725>`_ XACML PDP returns 500 vs 400 for bad syntax JSON
+
+
+
+..      ==========================
 ..      * * *   CASABLANCA   * * *
 ..      ==========================
 
@@ -138,10 +271,8 @@ The following bug fixes have been deployed with this release:
 POLICY code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The POLICY open Critical security vulnerabilities and their risk assessment have been documented as part of the `project (Casablanca Release) <https://wiki.onap.org/pages/viewpage.action?pageId=45300864>`_.
 
 Quick Links:
-    - `POLICY project page <https://wiki.onap.org/display/DW/Policy+Framework+Project>`_
-
-    - `Passing Badge information for POLICY <https://bestpractices.coreinfrastructure.org/en/projects/1614>`_
-
+    - `POLICY project page`_
+    - `Passing Badge information for POLICY`_
     - `Project Vulnerability Review Table for POLICY (Casablanca Release) <https://wiki.onap.org/pages/viewpage.action?pageId=45300864>`_
 
 **Known Issues**
@@ -248,11 +379,9 @@ The following bug fixes have been deployed with this release:
 POLICY code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The POLICY open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=25437092>`_.
 
 Quick Links:
- 	- `POLICY project page <https://wiki.onap.org/display/DW/Policy+Framework+Project>`_
-
- 	- `Passing Badge information for POLICY <https://bestpractices.coreinfrastructure.org/en/projects/1614>`_
-
- 	- `Project Vulnerability Review Table for POLICY <https://wiki.onap.org/pages/viewpage.action?pageId=25437092>`_
+    - `POLICY project page`_
+    - `Passing Badge information for POLICY`_
+    - `Project Vulnerability Review Table for POLICY <https://wiki.onap.org/pages/viewpage.action?pageId=25437092>`_
 
 **Known Issues**
 
@@ -364,13 +493,20 @@ The Amsterdam release continued evolving the design driven architecture of and f
 
 .. Links to jira release notes
 
+.. _JiraPolicyDublin: https://jira.onap.org/secure/ReleaseNote.jspa?projectId=10106&version=10464
 .. _JiraPolicyCasablanca: https://jira.onap.org/secure/ReleaseNote.jspa?projectId=10106&version=10446
 .. _JiraPolicyBeijing: https://jira.onap.org/secure/ReleaseNote.jspa?projectId=10106&version=10349
 .. _JiraPolicyAmsterdam: https://jira.onap.org/secure/ReleaseNote.jspa?projectId=10106&version=10300
 
+.. Links to Project related pages
+
+.. _POLICY project page: https://wiki.onap.org/display/DW/Policy+Framework+Project
+.. _Passing Badge information for POLICY: https://bestpractices.coreinfrastructure.org/en/projects/1614
+
 
 .. note
 ..      CHANGE  HISTORY
+..	05/16/2019 - Updated for Dublin Release.
 ..      01/17/2019 - Updated for Casablanca Maintenance Release.
 ..      11/19/2018 - Updated for Casablanca.  Also, fixed bugs is a list of bugs where the "Affected Version" is Beijing.
 ..		Changed version number to use ONAP versions.
@@ -387,7 +523,7 @@ End of Release Notes
 
 .. How to notes for SS 
 ..	For initial document: list epic and user stories for each, list user stories with no epics.  
-..     	For Bugs section, list bugs that are not tied to an epic.  Remove all items with "Won't Do" resolution.
+..     	For Bugs section, list bugs where Affected Version is a prior release (Casablanca, Beijing etc), Fixed Version is the current release (Dublin), Resolution is done.
 ..     	For Known issues, list bugs that are slotted for a future release.
 
 
