@@ -103,8 +103,7 @@ public abstract class PdpApiService {
 
     protected boolean validatePolicyNameAndScope(List<String> policyNames, List<String> policyTypes,
             List<PolicyNameType> policyList) {
-        String policyName = null;
-        String policyScope = null;
+
         String polType = null;
 
         if (policyTypes.size() == 1) {
@@ -117,13 +116,20 @@ public abstract class PdpApiService {
                 if (policyTypes.size() > 1) {
                     polType = policyTypes.get(i).trim();
                 }
-                if (polName.contains(".")) {
+
+                String policyName = null;
+                String policyScope = null;
+                if (polName.endsWith("xml")) {
+                    policyName = polName;
+                    policyScope = policyName.substring(0, StringUtils.lastOrdinalIndexOf(policyName, ".", 3));
+                } else if (polName.contains(".")) {
                     policyName = polName.substring(polName.lastIndexOf('.') + 1);
                     policyScope = polName.substring(0, polName.lastIndexOf('.'));
                 } else {
                     message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Scope given.";
                     return false;
                 }
+
                 if (StringUtils.isBlank(policyName) || StringUtils.isBlank(policyScope)) {
                     message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Policy Name.";
                     return false;
