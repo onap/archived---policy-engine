@@ -166,6 +166,8 @@ public class ConfigPolicy extends Policy {
                     isValidForm = false;
                 }
                 break;
+            default:
+                break;
         }
         return isValidForm;
 
