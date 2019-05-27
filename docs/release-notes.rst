@@ -5,11 +5,11 @@ Policy Release Notes
 
 .. note
 ..      * This Release Notes must be updated each time the team decides to Release new artifacts.
-..      * The scope of these Release Notes are for ONAP POLICY. In other words, each ONAP component has its Release Notes.  
-..      * This Release Notes is cumulative, the most recently Released artifact is made visible in the top of 
+..      * The scope of these Release Notes are for ONAP POLICY. In other words, each ONAP component has its Release Notes.
+..      * This Release Notes is cumulative, the most recently Released artifact is made visible in the top of
 ..      * this Release Notes.
-..      * Except the date and the version number, all the other sections are optional but there must be at least 
-..      * one section describing the purpose of this new release.  
+..      * Except the date and the version number, all the other sections are optional but there must be at least
+..      * one section describing the purpose of this new release.
 ..      * This note must be removed after content has been added.
 
 
@@ -128,6 +128,12 @@ The following bug fixes have been deployed with this release:
 
 **Security Notes**
 
+*Fixed Security Issues*
+
+*Known Security Issues*
+
+*Known Vulnerabilities in Used Modules*
+
 POLICY code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The POLICY open Critical security vulnerabilities and their risk assessment have been documented as part of the `project (Dublin Release) <https://wiki.onap.org/pages/viewpage.action?pageId=54723253>`_.
 
 Quick Links:
@@ -137,7 +143,7 @@ Quick Links:
 
 
 **Known Issues**
- 
+
 The following known issues will be addressed in a future release:
 
     * `[POLICY-1291] - <https://jira.onap.org/browse/POLICY-1291>`_ Maven Error when building Apex documentation in Windows
@@ -164,13 +170,13 @@ The following items were deployed with the Casablanca Maintenance Release:
 **Security Fixes**
 
     * [POLICY-1538] - Upgrade Elasticsearch to 6.4.x to clear security issue
-    
+
 **License Issues**
 
     * [POLICY-1433] - Remove proprietary licenses in PSSD test CSAR
 
 **Known Issues**
- 
+
 The following known issue will be addressed in a future release.
 
     * `[POLICY-1650] <https://jira.onap.org/browse/POLICY-1277>`_ - Policy UI doesn't show left menu or any content
@@ -190,7 +196,7 @@ The following items were deployed with the Casablanca Maintenance Release:
     * [POLICY-1221] - Policy distribution application to support HTTPS communication
     * [POLICY-1222] - Apex policy PDP to support HTTPS Communication
 
-**Bug Fixes** 
+**Bug Fixes**
 
     * `[POLICY-1282] <https://jira.onap.org/browse/POLICY-1282>`_ - Policy format with some problems
     * `[POLICY-1395] <https://jira.onap.org/browse/POLICY-1395>`_ - Apex PDP does not preserve context on model upgrade
@@ -205,29 +211,29 @@ Version: 3.0.0
 
 The Casablanca release for POLICY delivered the following Epics. For a full list of stories and tasks delivered in the Casablanca release, refer to `JiraPolicyCasablanca`_ (Note: Jira details can also be viewed from this link).
 
-    * [POLICY-701] - This epic covers the work to integrate Policy into the SDC Service Distribution 
-    
+    * [POLICY-701] - This epic covers the work to integrate Policy into the SDC Service Distribution
+
     The policy team introduced a new application into the framework that provides integration of the Service Distribution Notifications from SDC to Policy.
-        
+
     * [POLICY-719] - This epic covers the work to build the Policy Lifecycle API
     * [POLICY-726] - This epic covers the work to distribute policy from the PAP to the PDPs into the ONAP platform
     * [POLICY-876] - This epics covers the work to re-build how the PAP organizes the PDP's into groups.
-    
+
     The policy team did some forward looking spike work towards re-building the Software Architecture.
 
     * [POLICY-809] - Maintain and implement performance
     * [POLICY-814] - 72 hour stability testing (component and platform)
-    
+
     The policy team made enhancements to the Drools PDP to further support S3P Performance.
     For the new Policy SDC Distribution application and the newly ingested Apex PDP the team established S3P
     performance standard and performed 72 hour stability tests.
-    
+
     * [POLICY-824] - maintain and implement security
-    
+
     The policy team established AAF Root Certificate for HTTPS communication and CADI/AAF integration into the
     MVP applications. In addition, many java dependencies were upgraded to clear CLM security issues.
-    
-    * [POLICY-840] - Flexible control loop coordination facility. 
+
+    * [POLICY-840] - Flexible control loop coordination facility.
 
     Work towards a POC for control loop coordination policies were implemented.
 
@@ -236,14 +242,14 @@ The Casablanca release for POLICY delivered the following Epics. For a full list
     Enhancements were made to support the HPA use case through the use of the new Policy SDC Service Distribution application.
 
     * [POLICY-842] - This epic covers the work to support the Auto Scale Out functional requirements
-    
+
     Enhancements were made to support Scale Out Use Case to enforce new guard policies and updated SO and A&AI APIs.
 
     * [POLICY-851] - This epic covers the work to bring in the Apex PDP code
-    
+
     A new Apex PDP engine was ingested into the platform and work was done to ensure code cleared CLM security issues,
     sonar issues, and checkstyle.
-    
+
     * [POLICY-1081] - This epic covers the contribution for the 5G OOF PCI Optimization use case.
 
     Policy templates changes were submitted that supported the 5G OOF PCI optimization use case.
@@ -276,7 +282,7 @@ Quick Links:
     - `Project Vulnerability Review Table for POLICY (Casablanca Release) <https://wiki.onap.org/pages/viewpage.action?pageId=45300864>`_
 
 **Known Issues**
- 
+
     * `[POLICY-1277] <https://jira.onap.org/browse/POLICY-1277>`_ - policy config takes too long time to become retrievable in PDP
     * `[POLICY-1282] <https://jira.onap.org/browse/POLICY-1282>`_ - Policy format with some problems
 
@@ -366,7 +372,7 @@ The following bug fixes have been deployed with this release:
     * `[POLICY-519] <https://jira.onap.org/browse/POLICY-519>`_ - Correctly initialize the value of allSeemsWell in DroolsPdpsElectionHandler
     * `[POLICY-629] <https://jira.onap.org/browse/POLICY-629>`_ - Fixed a bug on editor screen
     * `[POLICY-684] <https://jira.onap.org/browse/POLICY-684>`_ - Fix regex for brmsgw dependency handling
-    * `[POLICY-707] <https://jira.onap.org/browse/POLICY-707>`_ - ONAO-PAP-REST unit tests fail on first build on clean checkout 
+    * `[POLICY-707] <https://jira.onap.org/browse/POLICY-707>`_ - ONAO-PAP-REST unit tests fail on first build on clean checkout
     * `[POLICY-717] <https://jira.onap.org/browse/POLICY-717>`_ - Fix a bug in checking required fields if the object has include function
     * `[POLICY-734] <https://jira.onap.org/browse/POLICY-734>`_ - Fix Fortify Header Manipulation Issue
     * `[POLICY-743] <https://jira.onap.org/browse/POLICY-743>`_ - Fixed data name since its name was changed on server side
@@ -427,46 +433,46 @@ The Amsterdam release continued evolving the design driven architecture of and f
         - POLICY-67  Rainy Day Decision Policy
         - POLICY-93  Notification API
         - POLICY-158  policy/engine: SQL injection Mitigation
-        - POLICY-269  Policy API Support for Rainy Day Decision Policy and Dictionaries  
+        - POLICY-269  Policy API Support for Rainy Day Decision Policy and Dictionaries
 
     * [POLICY-33] - This epic covers the body of work involved in deploying the Policy Platform components
-        - POLICY-40  MSB Integration  
-        - POLICY-124  Integration with oparent  
-        - POLICY-41  OOM Integration  
-        - POLICY-119  PDP-D: noop sinks  
+        - POLICY-40  MSB Integration
+        - POLICY-124  Integration with oparent
+        - POLICY-41  OOM Integration
+        - POLICY-119  PDP-D: noop sinks
 
     * [POLICY-34] - This epic covers the work required to support a Policy developer environment in which Policy Developers can create, update policy templates/rules separate from the policy Platform runtime platform.
-        - POLICY-57  VF-C Actor code development  
-        - POLICY-43  Amsterdam Use Case Template  
-        - POLICY-173  Deployment of Operational Policies Documentation  
+        - POLICY-57  VF-C Actor code development
+        - POLICY-43  Amsterdam Use Case Template
+        - POLICY-173  Deployment of Operational Policies Documentation
 
     * [POLICY-35] - This epic covers the body of work involved in supporting policy that is platform specific.
-        - POLICY-68  TOSCA Parsing for nested objects for Microservice Policies  
+        - POLICY-68  TOSCA Parsing for nested objects for Microservice Policies
 
     * [POLICY-36] - This epic covers the work required to capture policy during VNF on-boarding.
 
     * [POLICY-37] - This epic covers the work required to capture, update, extend Policy(s) during Service Design.
-        - POLICY-64  CLAMP Configuration and Operation Policies for vFW Use Case  
-        - POLICY-65  CLAMP Configuration and Operation Policies for vDNS Use Case  
-        - POLICY-48  CLAMP Configuration and Operation Policies for vCPE Use Case 
-        - POLICY-63  CLAMP Configuration and Operation Policies for VOLTE Use Case  
+        - POLICY-64  CLAMP Configuration and Operation Policies for vFW Use Case
+        - POLICY-65  CLAMP Configuration and Operation Policies for vDNS Use Case
+        - POLICY-48  CLAMP Configuration and Operation Policies for vCPE Use Case
+        - POLICY-63  CLAMP Configuration and Operation Policies for VOLTE Use Case
 
     * [POLICY-38] - This epic covers the work required to support service distribution by SDC.
 
     * [POLICY-39] - This epic covers the work required to support the Policy Platform during runtime.
-        - POLICY-61  vFW Use Case - Runtime  
-        - POLICY-62  vDNS Use Case - Runtime  
-        - POLICY-59  vCPE Use Case - Runtime  
-        - POLICY-60  VOLTE Use Case - Runtime  
-        - POLICY-51  Runtime Policy Update Support  
-        - POLICY-328  vDNS Use Case - Runtime Testing  
-        - POLICY-324  vFW Use Case - Runtime Testing  
-        - POLICY-320  VOLTE Use Case - Runtime Testing  
-        - POLICY-316  vCPE Use Case - Runtime Testing  
+        - POLICY-61  vFW Use Case - Runtime
+        - POLICY-62  vDNS Use Case - Runtime
+        - POLICY-59  vCPE Use Case - Runtime
+        - POLICY-60  VOLTE Use Case - Runtime
+        - POLICY-51  Runtime Policy Update Support
+        - POLICY-328  vDNS Use Case - Runtime Testing
+        - POLICY-324  vFW Use Case - Runtime Testing
+        - POLICY-320  VOLTE Use Case - Runtime Testing
+        - POLICY-316  vCPE Use Case - Runtime Testing
 
     * [POLICY-76] - This epic covers the body of work involved in supporting R1 Amsterdam Milestone Release Planning Milestone Tasks.
-        - POLICY-77  Functional Test case definition for Control Loops  
-        - POLICY-387  Deliver the released policy artifacts  
+        - POLICY-77  Functional Test case definition for Control Loops
+        - POLICY-387  Deliver the released policy artifacts
 
 
 **Bug Fixes**
@@ -511,19 +517,17 @@ The Amsterdam release continued evolving the design driven architecture of and f
 ..      11/19/2018 - Updated for Casablanca.  Also, fixed bugs is a list of bugs where the "Affected Version" is Beijing.
 ..		Changed version number to use ONAP versions.
 ..      10/08/2018 - Initial document for Casablanca release.
-..		Per Jorge, POLICY-785 did not get done in Casablanca (removed).  
+..		Per Jorge, POLICY-785 did not get done in Casablanca (removed).
 ..	05/29/2018 - Information for Beijing release.
 ..      03/22/2018 - Initial document for Beijing release.
 ..      01/15/2018 - Added change for version 1.1.3 to the Amsterdam branch.  Also corrected prior version (1.2.0) to (1.1.1)
 ..		Also, Set up initial information for Beijing.
 ..		Excluded POLICY-454 from bug list since it doesn't apply to Beijing per Jorge.
- 
+
 
 End of Release Notes
 
-.. How to notes for SS 
-..	For initial document: list epic and user stories for each, list user stories with no epics.  
+.. How to notes for SS
+..	For initial document: list epic and user stories for each, list user stories with no epics.
 ..     	For Bugs section, list bugs where Affected Version is a prior release (Casablanca, Beijing etc), Fixed Version is the current release (Dublin), Resolution is done.
 ..     	For Known issues, list bugs that are slotted for a future release.
-
-
