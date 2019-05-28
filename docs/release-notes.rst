@@ -131,6 +131,7 @@ The following bug fixes have been deployed with this release:
 *Fixed Security Issues*
 
     * `[OJSI-117] <https://jira.onap.org/browse/OJSI-117>`_ - In default deployment POLICY (nexus) exposes HTTP port 30236 outside of cluster.
+    * `[OJSI-157] <https://jira.onap.org/browse/OJSI-157>`_ - In default deployment POLICY (policy-api) exposes HTTP port 30240 outside of cluster.
 
 *Known Security Issues*
 
