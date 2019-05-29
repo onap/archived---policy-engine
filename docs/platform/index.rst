@@ -3,6 +3,10 @@
 Policy Engine Platform
 ----------------------
 
+Please note that the Policy Engine code contained in the policy/engine repository will be deprecated in Frankfurt.
+
+Please refer to :ref:`policy-framework-doc` for the new Policy Framework Architecture that supports the new Policy Lifecycle API.
+
 .. toctree::
    :maxdepth: 1
 
