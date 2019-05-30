@@ -22,6 +22,30 @@
       "revId": "6bc4e95261ed8ec8bc931696e3674ee5ec54d542",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "071763aa_01daac2a",
+        "filename": "BRMSGateway/dependency.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-05-30T21:01:01Z",
+      "side": 0,
+      "message": "hope not, since it doesn\u0027t exist anymore.  In fact, there never was a 2.0.2-SNAPSHOT version.",
+      "parentUuid": "97f34332_1765f19c",
+      "range": {
+        "startLine": 34,
+        "startChar": 25,
+        "endLine": 39,
+        "endChar": 11
+      },
+      "revId": "6bc4e95261ed8ec8bc931696e3674ee5ec54d542",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
