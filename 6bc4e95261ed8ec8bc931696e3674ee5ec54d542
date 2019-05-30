@@ -46,6 +46,30 @@
       "revId": "6bc4e95261ed8ec8bc931696e3674ee5ec54d542",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb4a957c_4c5d72b8",
+        "filename": "BRMSGateway/dependency.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-05-30T21:30:27Z",
+      "side": 0,
+      "message": "OK!",
+      "parentUuid": "071763aa_01daac2a",
+      "range": {
+        "startLine": 34,
+        "startChar": 25,
+        "endLine": 39,
+        "endChar": 11
+      },
+      "revId": "6bc4e95261ed8ec8bc931696e3674ee5ec54d542",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
