@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97f34332_1765f19c",
+        "filename": "BRMSGateway/dependency.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-05-30T20:56:22Z",
+      "side": 0,
+      "message": "Is trafficgenerator not needed?",
+      "range": {
+        "startLine": 34,
+        "startChar": 25,
+        "endLine": 39,
+        "endChar": 11
+      },
+      "revId": "6bc4e95261ed8ec8bc931696e3674ee5ec54d542",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
