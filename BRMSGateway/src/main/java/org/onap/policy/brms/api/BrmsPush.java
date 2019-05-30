@@ -117,7 +117,7 @@ public class BrmsPush {
     private static final Logger LOGGER = FlexLogger.getLogger(BrmsPush.class.getName());
     private static final String PROJECTSLOCATION = "RuleProjects";
     private static final String[] GOALS = {"clean", "deploy"};
-    private static final String DEFAULT_VERSION = "1.4.2-SNAPSHOT";
+    private static final String DEFAULT_VERSION = "1.5.0-SNAPSHOT";
     private static final String DEPENDENCY_FILE = "dependency.json";
     private static final String PROP_AES_KEY = "org.onap.policy.encryption.aes.key";
     public static final String BRMSPERSISTENCE = "brmsEclipselink.persistencexml";
@@ -1049,12 +1049,6 @@ public class BrmsPush {
         msoDependency.setArtifactId("controlloop.common.model-impl.so");
         msoDependency.setVersion(version);
         dependencyList.add(msoDependency);
-
-        final Dependency trafficgeneratorDependency = new Dependency();
-        trafficgeneratorDependency.setGroupId(DROOLS_APPS_MODEL_GROUP);
-        trafficgeneratorDependency.setArtifactId("controlloop.common.model-impl.trafficgenerator");
-        trafficgeneratorDependency.setVersion(version);
-        dependencyList.add(trafficgeneratorDependency);
         return dependencyList;
     }
 
