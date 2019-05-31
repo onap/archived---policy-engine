@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d781bdce_1bb3a297",
+        "filename": "BRMSGateway/src/test/java/org/onap/policy/brms/api/BrmsPushTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-05-31T12:13:21Z",
+      "side": 1,
+      "message": "-2019",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "15e0409133020ba7fc57e379aa6edde9225d6604",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
