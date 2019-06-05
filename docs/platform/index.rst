@@ -20,7 +20,6 @@ Policy Installation and Deployment
 .. toctree::
    :maxdepth: 1
 
-   installation.rst
    installationVM.rst
    installAmsterController.rst
    swarch_srm.rst
