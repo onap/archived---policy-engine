@@ -3,6 +3,7 @@
   ONAP Policy Engine - Docker files
   ================================================================================
   Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  Modifications Copyright (C) 2019 Bell Canada.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,99 +19,151 @@
   ============LICENSE_END=========================================================
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-                <groupId>org.onap.policy.engine</groupId>
-                <artifactId>packages</artifactId>
-                <version>1.5.0-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>org.onap.policy.engine</groupId>
+        <artifactId>packages</artifactId>
+        <version>1.5.0-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>docker</artifactId>
-	<packaging>pom</packaging>
-	<name>Policy Engine - Docker build</name>
-	<description>ONAP Policy Docker Build</description>
+    <artifactId>docker</artifactId>
+    <packaging>pom</packaging>
+    <name>Policy Engine - Docker build</name>
+    <description>ONAP Policy Docker Build</description>
 
-	<properties>
-		<nexusproxy>https://nexus.onap.org</nexusproxy>
-	</properties>
+    <properties>
+        <nexusproxy>https://nexus.onap.org</nexusproxy>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <dist.project.version>${project.version}</dist.project.version>
+        <docker.skip>false</docker.skip>
+        <docker.skip.build>false</docker.skip.build>
+        <docker.skip.push>false</docker.skip.push>
+        <docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
+        <docker.push.registry>nexus3.onap.org:10003</docker.push.registry>
+        <maven.build.timestamp.format>yyyyMMdd'T'HHmm</maven.build.timestamp.format>
+    </properties>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-pe-zip</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/policy-pe</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.onap.policy.engine</groupId>
-									<artifactId>install</artifactId>
-									<version>${project.version}</version>
-									<type>zip</type>
-									<destFileName>install.zip</destFileName>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.0.2</version>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/policy-pe</outputDirectory>
-							<resources>          
-								<resource>
-									<directory>src/main/docker</directory>
-								</resource>
-							</resources>              
-						</configuration>            
-					</execution>
-				</executions>
-			</plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
-        <executions>
-          <execution>
-          	<id>get-target-version</id>
-          	<phase>prepare-package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <executable>echo</executable>
-          <workingDirectory>${project.build.directory}</workingDirectory>
-          <arguments>
-            <argument>${project.version}</argument>
-          </arguments>
-          <outputFile>${project.build.directory}/version</outputFile>
-        </configuration>
-      </plugin>
-
-		</plugins>
-	</build>
-
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.groovy.maven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                                println 'Project version: ' + project.properties['dist.project.version']
+                                if (project.properties['dist.project.version'] != null) {
+                                    def versionArray = project.properties['dist.project.version'].split('-')
+                                    def minMaxVersionArray = versionArray[0].tokenize('.')
+                                    if (project.properties['dist.project.version'].endsWith("-SNAPSHOT")) {
+                                        project.properties['project.docker.latest.minmax.tag.version'] =
+                                            minMaxVersionArray[0] + "." + minMaxVersionArray[1] + "-SNAPSHOT-latest"
+                                    } else {
+                                        project.properties['project.docker.latest.minmax.tag.version'] =
+                                            minMaxVersionArray[0] + "." + minMaxVersionArray[1] + "-STAGING-latest"
+                                    }
+                                    println 'New tag for docker: ' + project.properties['project.docker.latest.minmax.tag.version']
+                                }
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.30.0</version> <!-- Extract this as a property from the policy-parent -->
+                <configuration>
+                    <verbose>true</verbose>
+                    <apiVersion>1.23</apiVersion>
+                    <pullRegistry>${docker.pull.registry}</pullRegistry>
+                    <pushRegistry>${docker.push.registry}</pushRegistry>
+                    <images>
+                        <image>
+                            <name>onap/policy-pe</name>
+                            <build>
+                                <cleanup>try</cleanup>
+                                <dockerFile>Dockerfile</dockerFile>
+                                <tags>
+                                    <tag>${project.version}</tag>
+                                    <tag>${project.version}-${maven.build.timestamp}</tag>
+                                    <tag>${project.docker.latest.minmax.tag.version}</tag>
+                                </tags>
+                                <assembly>
+                                    <inline>
+                                        <dependencySets>
+                                            <dependencySet>
+                                                <includes>
+                                                    <include>org.onap.policy.engine:install</include>
+                                                </includes>
+                                                <outputDirectory>.</outputDirectory>
+                                                <outputFileNameMapping>install.zip</outputFileNameMapping>
+                                            </dependencySet>
+                                        </dependencySets>
+                                    </inline>
+                                </assembly>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>clean-images</id>
+                        <phase>pre-clean</phase>
+                        <goals>
+                            <goal>remove</goal>
+                        </goals>
+                        <configuration>
+                            <removeAll>true</removeAll>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-images</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>push-images</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <image>onap/policy-pe</image>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>install</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+    </dependencies>
 </project>
