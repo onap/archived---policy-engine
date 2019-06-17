@@ -17,7 +17,7 @@ RUN mkdir -p /tmp/policy-install ${POLICY_LOGS} && \
 
 WORKDIR /tmp/policy-install
 
-COPY install.zip docker-install.sh do-start.sh wait-for-port.sh ./
+COPY /maven/install.zip docker-install.sh do-start.sh wait-for-port.sh ./
 RUN unzip install.zip && rm install.zip && chown policy * && chmod +x *.sh
 
 USER policy
