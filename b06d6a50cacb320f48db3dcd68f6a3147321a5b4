@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1df51f0c_68a7cd4e",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/DecisionPolicy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-06-18T16:19:16Z",
+      "side": 1,
+      "message": "cool - fixed the compilation issue AND made it more efficient!",
+      "revId": "b06d6a50cacb320f48db3dcd68f6a3147321a5b4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
