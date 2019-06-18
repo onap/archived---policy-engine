@@ -3,13 +3,14 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications copyright (c) 2019 Nokia
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,26 +20,29 @@
  */
 package org.onap.policy.rest.daoimpl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-
 import javax.script.SimpleBindings;
-
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.h2.tools.Server;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-//import org.onap.policy.conf.HibernateSession;
-//import org.onap.policy.controller.PolicyController;
 import org.onap.policy.rest.jpa.OnapName;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyRoles;
@@ -47,21 +51,24 @@ import org.onap.policy.rest.jpa.SystemLogDB;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.rest.jpa.WatchPolicyNotificationTable;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
+
+//import org.onap.policy.conf.HibernateSession;
+//import org.onap.policy.controller.PolicyController;
 
 
 public class PolicyValidationDaoImplTest {
 
     private static Logger logger = FlexLogger.getLogger(PolicyValidationDaoImplTest.class);
 
-    SessionFactory sessionFactory;
-    Server server;
-    PolicyValidationDaoImpl commonClassDao;
+    static SessionFactory sessionFactory;
+    static Server server;
+    static PolicyValidationDaoImpl commonClassDao;
 
-    @Before
-    public void setUp() throws Exception{
-        try{
+    @BeforeClass
+    public static void setupAll() {
+        try {
             BasicDataSource dataSource = new BasicDataSource();
             dataSource.setDriverClassName("org.h2.Driver");
             // In-memory DB for testing
@@ -108,6 +115,17 @@ public class PolicyValidationDaoImplTest {
             System.err.println(e);
             fail();
         }
+    }
+
+    @AfterClass
+    public static void deleteDB() {
+        sessionFactory.close();
+        server.stop();
+    }
+
+    @After
+    public void tearDown() {
+        truncateAllTables();
     }
 
     @Test
@@ -431,11 +449,16 @@ public class PolicyValidationDaoImplTest {
         }
     }
 
-    @After
-    public void deleteDB(){
-        sessionFactory.close();
-        server.stop();
 
+    private void truncateAllTables() {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        sessionFactory.getAllClassMetadata().forEach((tableName, x) -> {
+            Query query = session.createQuery("DELETE FROM " + tableName);
+            query.executeUpdate();
+        });
+        transaction.commit();
+        session.close();
     }
 
 }
