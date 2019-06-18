@@ -16,6 +16,24 @@
       "revId": "8c191f7dc47ed620a95a4adce48f7bfb756cbc93",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "26a0894d_163ac302",
+        "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/BusTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 3541
+      },
+      "writtenOn": "2019-06-18T09:54:49Z",
+      "side": 1,
+      "message": "(on my machine)",
+      "parentUuid": "9fd88c09_5f309810",
+      "revId": "8c191f7dc47ed620a95a4adce48f7bfb756cbc93",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
