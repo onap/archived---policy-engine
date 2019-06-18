@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.utils.test;
+package org.onap.policy.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,10 +26,11 @@ import static org.junit.Assert.assertTrue;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 
+import java.util.Collections;
 import org.junit.Test;
 import org.onap.dmaap.mr.client.MRClient.MRApiException;
-import org.onap.policy.utils.BusConsumer;
-import org.onap.policy.utils.BusPublisher;
+import org.onap.dmaap.mr.client.impl.MRConsumerImpl;
+import org.onap.policy.utils.BusConsumer.DmaapConsumerWrapper;
 
 public class BusTest {
     
@@ -43,7 +44,11 @@ public class BusTest {
     
     @Test (expected = MRApiException.class)
     public void busConsumerFailTest() throws MalformedURLException, MRApiException{
-        new BusConsumer.DmaapConsumerWrapper(Arrays.asList("test"), "test", "test", "test", "test", "test", 1, 1).fetch();
+        //given
+        DmaapConsumerWrapper dmaapConsumerWrapper = new DmaapConsumerWrapper(new MockMrConsumer(), "", "", "");
+
+        //when
+        dmaapConsumerWrapper.fetch();
     }
     
     @Test
@@ -51,6 +56,18 @@ public class BusTest {
         BusConsumer bus = new BusConsumer.DmaapConsumerWrapper(Arrays.asList("test"), "test", "test", "test", "test", "test", 1, 1);
         assertEquals(bus.toString(),"DmaapConsumerWrapper [consumer.getAuthDate()=null, consumer.getAuthKey()=null, consumer.getHost()=test:3904, consumer.getProtocolFlag()=HTTPAAF, consumer.getUsername()=test]");
         bus.close();
+    }
+
+    private class MockMrConsumer extends MRConsumerImpl{
+
+        MockMrConsumer() throws MalformedURLException {
+            super(Collections.singletonList("test"),"", "", "", 1, 1, "", "", "");
+        }
+
+        @Override
+        public Iterable<String> fetch(int timeoutMs, int limit) throws Exception {
+            throw new Exception();
+        }
     }
 
 }
