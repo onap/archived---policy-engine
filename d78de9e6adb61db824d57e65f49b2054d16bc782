@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d4ddff3_e4773365",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/daoimpl/PolicyValidationDaoImplTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-06-18T15:43:53Z",
+      "side": 1,
+      "message": "suggestion: maybe use try-with-resources here?  (not sure if Session is auto-closeable)",
+      "revId": "d78de9e6adb61db824d57e65f49b2054d16bc782",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bce5f24_541b8156",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BusConsumer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-06-18T15:43:53Z",
+      "side": 1,
+      "message": "while we\u0027re touching this file, perhaps changes tabs to spaces",
+      "revId": "d78de9e6adb61db824d57e65f49b2054d16bc782",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55b43f95_7409abfc",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BusConsumer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-06-18T15:43:53Z",
+      "side": 1,
+      "message": "fix indentation level of these two methods",
+      "revId": "d78de9e6adb61db824d57e65f49b2054d16bc782",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e405f43_0807d3c0",
+        "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/BusTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-06-18T15:43:53Z",
+      "side": 1,
+      "message": "suggest to use mockito and avoid this class altogether",
+      "revId": "d78de9e6adb61db824d57e65f49b2054d16bc782",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
