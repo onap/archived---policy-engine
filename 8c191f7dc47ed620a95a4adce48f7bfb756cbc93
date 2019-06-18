@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fd88c09_5f309810",
+        "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/BusTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 3541
+      },
+      "writtenOn": "2019-06-18T09:19:52Z",
+      "side": 1,
+      "message": "This test used to test message router consumer.\nIt\u0027s dmaap dependency not policy code. \nIt should be properly tested in DMaaP repo not here. \n(It could be tested in policy integration tests but not in unit tests)\n \nI injected mock instead of using original message router consumer that timeouts after 2 minutes with ClassCastException.\n(It\u0027s a bit worrying too)\n\nThis improved PolicyEngineUtils build by 2min 10s",
+      "revId": "8c191f7dc47ed620a95a4adce48f7bfb756cbc93",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
