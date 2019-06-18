@@ -3,6 +3,7 @@
  * PolicyEngineUtils
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications copyright (c) 2019 Nokia
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +19,20 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.utils.test;
+package org.onap.policy.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.net.MalformedURLException;
 import java.util.Arrays;
 
 import org.junit.Test;
 import org.onap.dmaap.mr.client.MRClient.MRApiException;
-import org.onap.policy.utils.BusConsumer;
-import org.onap.policy.utils.BusPublisher;
+import org.onap.dmaap.mr.client.impl.MRConsumerImpl;
+import org.onap.policy.utils.BusConsumer.DmaapConsumerWrapper;
 
 public class BusTest {
     
@@ -42,8 +45,14 @@ public class BusTest {
     }
     
     @Test (expected = MRApiException.class)
-    public void busConsumerFailTest() throws MalformedURLException, MRApiException{
-        new BusConsumer.DmaapConsumerWrapper(Arrays.asList("test"), "test", "test", "test", "test", "test", 1, 1).fetch();
+    public void busConsumerFailTest() throws Exception {
+        //given
+        MRConsumerImpl mrConsumer = mock(MRConsumerImpl.class);
+        when(mrConsumer.fetch()).thenThrow(new Exception());
+        DmaapConsumerWrapper dmaapConsumerWrapper = new DmaapConsumerWrapper(mrConsumer, "", "", "");
+
+        //when
+        dmaapConsumerWrapper.fetch();
     }
     
     @Test
