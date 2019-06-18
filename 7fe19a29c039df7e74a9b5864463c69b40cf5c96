@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6327f99b_bc2412a5",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/daoimpl/PolicyValidationDaoImplTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 3541
+      },
+      "writtenOn": "2019-06-18T12:23:17Z",
+      "side": 1,
+      "message": "There is no need to create in memory database before each test.\nI\u0027ve added mechanism clearing tables after each test.\nThis lets me reuse single DB.\n\nThis improved ONAP-REST build by 47s\n(on my machine)",
+      "revId": "7fe19a29c039df7e74a9b5864463c69b40cf5c96",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
