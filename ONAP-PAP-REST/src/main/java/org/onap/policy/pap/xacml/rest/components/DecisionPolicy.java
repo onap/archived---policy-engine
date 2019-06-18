@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -147,7 +147,7 @@ public class DecisionPolicy extends Policy {
         successMap = createPolicy(newPolicyPath, getCorrectPolicyDataObject());
         return successMap;
     }
-    
+
     /**
      * Scan the Raw Policy data and set to PolicyAdapter.
      */
@@ -172,7 +172,7 @@ public class DecisionPolicy extends Policy {
         policyAdapter.setPolicyData(policy);
         policyAdapter.setData(policy);
         setPreparedToSave(true);
-         
+
     }
 
     // This is the method for preparing the policy for saving. We have broken it out
@@ -204,10 +204,10 @@ public class DecisionPolicy extends Policy {
         }
         policyName = policyAdapter.getNewFileName();
 
-        if(policyAdapter.getRuleProvider().equals(GUARD_YAML) || 
-                policyAdapter.getRuleProvider().equals(GUARD_BL_YAML) || 
+        if(policyAdapter.getRuleProvider().equals(GUARD_YAML) ||
+                policyAdapter.getRuleProvider().equals(GUARD_BL_YAML) ||
                 policyAdapter.getRuleProvider().equals(GUARD_MIN_MAX)){
-            
+
             Map<String, String> yamlParams = new HashMap<>();
             String blackListEntryType = policyAdapter.getBlackListEntryType() != null
                     ? policyAdapter.getBlackListEntryType() : "Use Manual Entry";
@@ -368,7 +368,7 @@ public class DecisionPolicy extends Policy {
                 case GUARD_MIN_MAX:
                     templateFile = new File(classLoader.getResource(XACML_GUARD_MIN_MAX_TEMPLATE).getFile());
                     xacmlTemplatePath = templateFile.toPath();
-                    cons = new Constraint(Integer.parseInt(yamlParams.get("min")), 
+                    cons = new Constraint(Integer.parseInt(yamlParams.get("min")),
                             Integer.parseInt(yamlParams.get("max")), activeTimeRange);
                     break;
                 default:
@@ -390,7 +390,7 @@ public class DecisionPolicy extends Policy {
                     cons = new Constraint(Integer.parseInt(yamlParams.get("limit")), timeWindow, activeTimeRange);
                     break;
             }
-            
+
             builder = builder.addLimitConstraint(policy1.getId(), cons);
             // Build the specification
             Results results = builder.buildSpecification();
@@ -403,45 +403,38 @@ public class DecisionPolicy extends Policy {
                 yamlSpecs.put(POLICY_NAME, yamlParams.get(POLICY_NAME));
                 yamlSpecs.put(DESCRIPTION, yamlParams.get(DESCRIPTION));
                 yamlSpecs.put(ONAPNAME, yamlParams.get(ONAPNAME));
-                yamlSpecs.put("actor", yamlGuardObject.getGuards().getFirst().getMatch_parameters().getActor());
-                yamlSpecs.put("recipe", yamlGuardObject.getGuards().getFirst().getMatch_parameters().getRecipe());
-                yamlSpecs.put("clname",
-                        yamlGuardObject.getGuards().getFirst().getMatch_parameters().getControlLoopName());
-                if (yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
-                        .getFreq_limit_per_target() != null) {
-                    yamlSpecs.put("limit", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
-                            .getFreq_limit_per_target().toString());
+                GuardPolicy guard = yamlGuardObject.getGuards().get(0);
+
+                yamlSpecs.put("actor", guard.getMatch_parameters().getActor());
+                yamlSpecs.put("recipe", guard.getMatch_parameters().getRecipe());
+                yamlSpecs.put("clname", guard.getMatch_parameters().getControlLoopName());
+
+                Constraint constraints = guard.getLimit_constraints().get(0);
+                if (constraints.getFreq_limit_per_target() != null) {
+                    yamlSpecs.put("limit", constraints.getFreq_limit_per_target().toString());
                 }
-                if (yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getTime_window() != null) {
-                    yamlSpecs.put("twValue", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
-                            .getTime_window().get("value"));
-                    yamlSpecs.put("twUnits", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
-                            .getTime_window().get("units"));
-                }
-                
-                if (yamlGuardObject.getGuards().getFirst().getLimit_constraints().
-                        getFirst().getMaxVnfCount() != null) {
-                    yamlSpecs.put("max", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
-                            .getMaxVnfCount().toString());
-                }
-                if (yamlGuardObject.getGuards().getFirst().getLimit_constraints().
-                        getFirst().getMinVnfCount() != null) {
-                    yamlSpecs.put("min", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
-                            .getMinVnfCount().toString());
+                if (constraints.getTime_window() != null) {
+                    yamlSpecs.put("twValue", constraints.getTime_window().get("value"));
+                    yamlSpecs.put("twUnits", constraints.getTime_window().get("units"));
                 }
 
-                yamlSpecs.put("guardActiveStart", yamlGuardObject.getGuards().getFirst().getLimit_constraints()
-                        .getFirst().getActive_time_range().get("start"));
-                yamlSpecs.put("guardActiveEnd", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
-                        .getActive_time_range().get("end"));
+                if (constraints.getMaxVnfCount() != null) {
+                    yamlSpecs.put("max", constraints.getMaxVnfCount().toString());
+                }
+                if (constraints.getMinVnfCount() != null) {
+                    yamlSpecs.put("min", constraints.getMinVnfCount().toString());
+                }
+
+                yamlSpecs.put("guardActiveStart", constraints.getActive_time_range().get("start"));
+                yamlSpecs.put("guardActiveEnd", constraints.getActive_time_range().get("end"));
                 String xacmlPolicyContent = SafePolicyBuilder.generateXacmlGuard(xacmlTemplateContent, yamlSpecs,
-                        yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getBlacklist(),
-                        yamlGuardObject.getGuards().getFirst().getMatch_parameters().getTargets());
-                
+                        constraints.getBlacklist(),
+                        guard.getMatch_parameters().getTargets());
+
                 // Convert the Policy into Stream input to Policy Adapter.
                 Object policy = XACMLPolicyScanner
                         .readPolicy(new ByteArrayInputStream(xacmlPolicyContent.getBytes(StandardCharsets.UTF_8)));
-                
+
                 return (PolicyType) policy;
             } catch (IOException e) {
                 LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while creating the policy " + e.getMessage(),
