@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e61d7183_042431f2",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/daoimpl/PolicyValidationDaoImplTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 3541
+      },
+      "writtenOn": "2019-06-19T09:03:30Z",
+      "side": 1,
+      "message": "Unfortunately it is not.",
+      "parentUuid": "1d4ddff3_e4773365",
+      "revId": "d78de9e6adb61db824d57e65f49b2054d16bc782",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6bce5f24_541b8156",
         "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BusConsumer.java",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2019-06-18T15:43:53Z",
       "side": 1,
       "message": "while we\u0027re touching this file, perhaps changes tabs to spaces",
+      "revId": "d78de9e6adb61db824d57e65f49b2054d16bc782",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "40a9fa23_1bdf5e6f",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BusConsumer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 3541
+      },
+      "writtenOn": "2019-06-19T09:03:30Z",
+      "side": 1,
+      "message": "Done, however it obscures logical changes and makes it hard to review.",
+      "parentUuid": "6bce5f24_541b8156",
       "revId": "d78de9e6adb61db824d57e65f49b2054d16bc782",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "9096c25e_02084153",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BusConsumer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 3541
+      },
+      "writtenOn": "2019-06-19T09:03:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55b43f95_7409abfc",
+      "revId": "d78de9e6adb61db824d57e65f49b2054d16bc782",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e405f43_0807d3c0",
         "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/BusTest.java",
         "patchSetId": 4
@@ -64,6 +118,24 @@
       "writtenOn": "2019-06-18T15:43:53Z",
       "side": 1,
       "message": "suggest to use mockito and avoid this class altogether",
+      "revId": "d78de9e6adb61db824d57e65f49b2054d16bc782",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0772d5b4_90379f45",
+        "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/BusTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 3541
+      },
+      "writtenOn": "2019-06-19T09:03:30Z",
+      "side": 1,
+      "message": "Somehow I\u0027ve missed that it\u0027s available on classpath.\nDone",
+      "parentUuid": "6e405f43_0807d3c0",
       "revId": "d78de9e6adb61db824d57e65f49b2054d16bc782",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
