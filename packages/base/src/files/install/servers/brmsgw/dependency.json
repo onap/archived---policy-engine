@@ -24,10 +24,6 @@
 			"groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
 			"artifactId": "so",
 			"version": "${{BRMS_MODELS_DEPENDENCY_VERSION}}"
-		}, {
-			"groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
-			"artifactId": "trafficgenerator",
-			"version": "${{BRMS_MODELS_DEPENDENCY_VERSION}}"
 		}],
         "amsterdam": [{
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
@@ -64,10 +60,6 @@
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdnc",
-            "version": "${{BRMS_MODELS_DEPENDENCY_VERSION}}"
-        }, {
-            "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
-            "artifactId": "trafficgenerator",
             "version": "${{BRMS_MODELS_DEPENDENCY_VERSION}}"
         }, {
             "groupId": "org.onap.policy.drools-applications.controlloop.common",
