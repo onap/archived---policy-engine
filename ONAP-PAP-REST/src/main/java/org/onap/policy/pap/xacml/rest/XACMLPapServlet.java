@@ -557,7 +557,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             PolicyLogger.metrics("XACMLPapServlet doPost im startTransaction");
         } catch (AdministrativeStateException ae) {
             String message = "POST interface called for PAP " + papResourceName
-                    + " but it has an Administrative" + " state of "
+                    + " but it has an Administrative state of "
                     + im.getStateManager().getAdminState() + "\n Exception Message: "
                     + PolicyUtils.CATCH_EXCEPTION;
             LOGGER.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message, ae);
@@ -567,12 +567,15 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             PolicyLogger.audit("Transaction Failed - See Error.log");
             setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
             return;
-        } catch (StandbyStatusException se) {
+        } catch (IntegrityMonitorException ime) {
             String message = "POST interface called for PAP " + papResourceName
-                    + " but it has a Standby Status" + " of "
-                    + im.getStateManager().getStandbyStatus() + "\n Exception Message: "
-                    + se.getMessage();
-            LOGGER.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message, se);
+                    + " but it has an Administrative state of "
+                    + im.getStateManager().getAdminState()
+                    + " and a Standby Status of "
+                    + im.getStateManager().getStandbyStatus()
+                    + "\n Exception Message: "
+                    + ime.getMessage();
+            LOGGER.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message, ime);
             loggingContext.metricEnded();
             PolicyLogger.metrics("XACMLPapServlet doPost im startTransaction");
             loggingContext.transactionEnded();
@@ -831,23 +834,15 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             im.startTransaction();
             loggingContext.metricEnded();
             PolicyLogger.metrics("XACMLPapServlet doGet im startTransaction");
-        } catch (AdministrativeStateException ae) {
+        } catch (IntegrityMonitorException ime) {
             String message = "GET interface called for PAP " + papResourceName
-                    + " but it has an Administrative" + " state of "
-                    + im.getStateManager().getAdminState() + "\n Exception Message: "
-                    + ae.getMessage();
-            LOGGER.info(message, ae);
-            PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
-            loggingContext.transactionEnded();
-            PolicyLogger.audit("Transaction Failed - See Error.log");
-            setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-            return;
-        } catch (StandbyStatusException se) {
-            String message = "GET interface called for PAP " + papResourceName
-                    + " but it has a Standby Status" + " of "
-                    + im.getStateManager().getStandbyStatus() + "\n Exception Message: "
-                    + se.getMessage();
-            LOGGER.info(message, se);
+                    + " but it has an Administrative state of "
+                    + im.getStateManager().getAdminState()
+                    + " and a Standby Status of "
+                    + im.getStateManager().getStandbyStatus()
+                    + "\n Exception Message: "
+                    + ime.getMessage();
+            LOGGER.info(message, ime);
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
             loggingContext.transactionEnded();
             PolicyLogger.audit("Transaction Failed - See Error.log");
@@ -1031,19 +1026,13 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             loggingContext.metricEnded();
             PolicyLogger.metrics("XACMLPapServlet doPut im startTransaction");
         } catch (IntegrityMonitorException e) {
-            String message = "PUT interface called for PAP " + papResourceName;
-            if (e instanceof AdministrativeStateException) {
-                message += " but it has an Administrative state of "
-                        + im.getStateManager().getAdminState();
-            } else if (e instanceof StandbyStatusException) {
-                message += " but it has a Standby Status of "
-                        + im.getStateManager().getStandbyStatus();
-            } else {
-                message += " but an exception occurred";
-
-            }
-            message += "\n Exception Message: " + e.getMessage();
-
+            String message = "PUT interface called for PAP " + papResourceName
+                    + " but it has an Administrative state of "
+                    + im.getStateManager().getAdminState()
+                    + " and a Standby Status of "
+                    + im.getStateManager().getStandbyStatus()
+                    + "\n Exception Message: "
+                    + e.getMessage();
             LOGGER.info(message, e);
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
             loggingContext.transactionEnded();
@@ -1253,23 +1242,15 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             im.startTransaction();
             loggingContext.metricEnded();
             PolicyLogger.metrics("XACMLPapServlet doDelete im startTransaction");
-        } catch (AdministrativeStateException ae) {
+        } catch (IntegrityMonitorException ime) {
             String message = "DELETE interface called for PAP " + papResourceName
-                    + " but it has an Administrative" + " state of "
-                    + im.getStateManager().getAdminState() + "\n Exception Message: "
-                    + ae.getMessage();
-            LOGGER.info(message, ae);
-            PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
-            loggingContext.transactionEnded();
-            PolicyLogger.audit("Transaction Failed - See Error.log");
-            setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-            return;
-        } catch (StandbyStatusException se) {
-            String message = "PUT interface called for PAP " + papResourceName
-                    + " but it has a Standby Status" + " of "
-                    + im.getStateManager().getStandbyStatus() + "\n Exception Message: "
-                    + se.getMessage();
-            LOGGER.info(message, se);
+                    + " but it has an Administrative state of "
+                    + im.getStateManager().getAdminState()
+                    + " and a Standby Status of "
+                    + im.getStateManager().getStandbyStatus()
+                    + "\n Exception Message: "
+                    + ime.getMessage();
+            LOGGER.info(message, ime);
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
             loggingContext.transactionEnded();
             PolicyLogger.audit("Transaction Failed - See Error.log");
