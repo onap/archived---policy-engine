@@ -127,6 +127,7 @@ public class XACMLPAPTest {
     public void testInit() {
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        logger.info(httpServletResponse);
         Mockito.when(httpServletRequest.getHeaderNames()).thenReturn(Collections.enumeration(headers));
         Mockito.when(httpServletRequest.getAttributeNames()).thenReturn(Collections.enumeration(headers));
         CommonClassDaoImpl.setSessionfactory(sessionFactory);
@@ -163,7 +164,8 @@ public class XACMLPAPTest {
         MockServletInputStream mockInput =
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
-
+        logger.info(httpServletRequest);
+        logger.info(httpServletResponse);
         pap.service(httpServletRequest, httpServletResponse);
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
@@ -192,6 +194,8 @@ public class XACMLPAPTest {
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
 
         setPolicyCreation();
+        logger.info(httpServletRequest);
+        logger.info(httpServletResponse);
         pap.service(httpServletRequest, httpServletResponse);
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
@@ -215,6 +219,8 @@ public class XACMLPAPTest {
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
 
         setPolicyCreation();
+        logger.info(httpServletRequest);
+        logger.info(httpServletResponse);
         pap.service(httpServletRequest, httpServletResponse);
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
@@ -238,6 +244,8 @@ public class XACMLPAPTest {
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
 
         setPolicyCreation();
+        logger.info(httpServletRequest);
+        logger.info(httpServletResponse);
         pap.service(httpServletRequest, httpServletResponse);
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
@@ -257,6 +265,8 @@ public class XACMLPAPTest {
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
 
+        logger.info(httpServletRequest);
+        logger.info(httpServletResponse);
         pap.service(httpServletRequest, httpServletResponse);
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
@@ -287,6 +297,8 @@ public class XACMLPAPTest {
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
 
+        logger.info(httpServletRequest);
+        logger.info(httpServletResponse);
         pap.service(httpServletRequest, httpServletResponse);
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
@@ -318,6 +330,8 @@ public class XACMLPAPTest {
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
 
+        logger.info(httpServletRequest);
+        logger.info(httpServletResponse);
         pap.service(httpServletRequest, httpServletResponse);
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
@@ -346,6 +360,8 @@ public class XACMLPAPTest {
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
 
+        logger.info(httpServletRequest);
+        logger.info(httpServletResponse);
         pap.service(httpServletRequest, httpServletResponse);
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
@@ -369,6 +385,8 @@ public class XACMLPAPTest {
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
 
+        logger.info(httpServletRequest);
+        logger.info(httpServletResponse);
         pap.service(httpServletRequest, httpServletResponse);
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
@@ -425,6 +443,8 @@ public class XACMLPAPTest {
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPapPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
 
+        logger.info(httpServletRequest);
+        logger.info(httpServletResponse);
         pap.service(httpServletRequest, httpServletResponse);
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
@@ -897,14 +917,14 @@ public class XACMLPAPTest {
         try {
             Mockito.when(httpServletResponse.getOutputStream()).thenReturn(mockOutput);
         } catch (IOException e) {
-            fail();
+            fail(e.getMessage());
         }
 
         try {
             pap.service(httpServletRequest, httpServletResponse);
             assertTrue(true);
         } catch (Exception e) {
-            fail();
+            fail(e.getMessage());
         }
     }
 
