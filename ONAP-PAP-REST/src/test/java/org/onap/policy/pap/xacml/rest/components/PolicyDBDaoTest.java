@@ -30,6 +30,9 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
@@ -101,6 +104,8 @@ public class PolicyDBDaoTest {
     }
 
     public static SessionFactory setupH2DbDaoImpl(String dbName) {
+        setUpAuditDb();
+
         System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/xacml.pap.properties");
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName("org.h2.Driver");
@@ -151,6 +156,17 @@ public class PolicyDBDaoTest {
         return sessionFac;
     }
 
+
+    private static void setUpAuditDb() {
+        Properties properties = new Properties();
+        properties.put(XACMLRestProperties.PROP_PAP_DB_DRIVER,"org.h2.Driver");
+        properties.put(XACMLRestProperties.PROP_PAP_DB_URL, "jdbc:h2:file:./sql/xacmlTest");
+        properties.put(XACMLRestProperties.PROP_PAP_DB_USER, "sa");
+        properties.put(XACMLRestProperties.PROP_PAP_DB_PASSWORD, "");
+
+        // create the DB and then close it
+        Persistence.createEntityManagerFactory("testPapPU", properties).close();
+    }
 
     @Test
     public void testGetConfigFile() {
