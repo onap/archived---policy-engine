@@ -31,7 +31,7 @@ import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.onap.policy.common.logging.ONAPLoggingContext;
+import org.onap.policy.common.logging.OnapLoggingContext;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -352,7 +352,7 @@ public class DeleteHandler {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void doApiDeleteFromPdp(HttpServletRequest request, HttpServletResponse response,
-            ONAPLoggingContext loggingContext) throws IOException {
+            OnapLoggingContext loggingContext) throws IOException {
 
         String groupId = request.getParameter("groupId");
 
@@ -449,7 +449,7 @@ public class DeleteHandler {
         }
     }
 
-    private String deletePolicyFromPdpGroup(OnapPDPGroup group, ONAPLoggingContext loggingContext, String userId) {
+    private String deletePolicyFromPdpGroup(OnapPDPGroup group, OnapLoggingContext loggingContext, String userId) {
         PolicyDBDaoTransaction acPutTransaction = XACMLPapServlet.getDbDaoTransaction();
         String response = null;
         loggingContext.setServiceName("API:PAP.DeleteHandler");

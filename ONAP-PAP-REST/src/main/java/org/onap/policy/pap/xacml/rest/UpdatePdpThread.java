@@ -28,7 +28,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
-import org.onap.policy.common.logging.ONAPLoggingContext;
+import org.onap.policy.common.logging.OnapLoggingContext;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -39,14 +39,14 @@ import org.onap.policy.xacml.api.pap.OnapPDP;
 public class UpdatePdpThread implements Runnable {
 
     private static final Logger LOGGER = FlexLogger.getLogger(UpdatePdpThread.class);
-    private ONAPLoggingContext baseLoggingContext = new XACMLPapServlet().getBaseLoggingContext();
+    private OnapLoggingContext baseLoggingContext = new XACMLPapServlet().getBaseLoggingContext();
     private static final Logger auditLogger = FlexLogger.getLogger("auditLogger");
     private static final String XACMLPAPSERVLET = "XACMLPapServlet";
     private static final String MESSAGE = "  message: ";
 
     private OnapPDP pdp;
     private String requestId;
-    private ONAPLoggingContext loggingContext;
+    private OnapLoggingContext loggingContext;
     private List<Properties> properties;
 
 
@@ -62,11 +62,11 @@ public class UpdatePdpThread implements Runnable {
      * @param loggingContext the logging context
      * @param properties the properties
      */
-    public UpdatePdpThread(OnapPDP pdp, ONAPLoggingContext loggingContext, List<Properties> properties) {
+    public UpdatePdpThread(OnapPDP pdp, OnapLoggingContext loggingContext, List<Properties> properties) {
         this.pdp = pdp;
         if (loggingContext != null
-                && (loggingContext.getRequestID() != null || "".equals(loggingContext.getRequestID()))) {
-            this.requestId = loggingContext.getRequestID();
+                && (loggingContext.getRequestId() != null || "".equals(loggingContext.getRequestId()))) {
+            this.requestId = loggingContext.getRequestId();
         }
         this.loggingContext = loggingContext;
         this.properties = properties;
@@ -79,7 +79,7 @@ public class UpdatePdpThread implements Runnable {
         // get a new logging context for the thread
         try {
             if (this.loggingContext == null) {
-                loggingContext = new ONAPLoggingContext(baseLoggingContext);
+                loggingContext = new OnapLoggingContext(baseLoggingContext);
             }
         } catch (Exception e) {
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, XACMLPAPSERVLET,
@@ -95,14 +95,14 @@ public class UpdatePdpThread implements Runnable {
             // post to loggingContext to be used later when calling PDP
             if (requestId == null || "".equals(requestId)) {
                 UUID requestId = UUID.randomUUID();
-                loggingContext.setRequestID(requestId.toString());
+                loggingContext.setRequestId(requestId.toString());
                 PolicyLogger
                         .info("requestID not provided in call to XACMLPapSrvlet (UpdatePDPThread) so we generated one: "
-                                + loggingContext.getRequestID());
+                                + loggingContext.getRequestId());
             } else {
-                loggingContext.setRequestID(requestId);
+                loggingContext.setRequestId(requestId);
                 PolicyLogger.info("requestID was provided in call to XACMLPapSrvlet (UpdatePDPThread):  "
-                        + loggingContext.getRequestID());
+                        + loggingContext.getRequestId());
             }
             loggingContext.transactionStarted();
             // the Id of the PDP is its URL
@@ -120,7 +120,7 @@ public class UpdatePdpThread implements Runnable {
                 connection.setRequestProperty("Authorization", "Basic " + encoding);
             }
             connection.setRequestProperty("Content-Type", "text/x-java-properties");
-            connection.setRequestProperty("X-ECOMP-RequestID", loggingContext.getRequestID());
+            connection.setRequestProperty("X-ECOMP-RequestID", loggingContext.getRequestId());
             connection.setInstanceFollowRedirects(true);
             connection.setDoOutput(true);
             if (!writePropertiesToStream(connection)) {

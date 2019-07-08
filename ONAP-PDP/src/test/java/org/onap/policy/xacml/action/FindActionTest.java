@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
+import org.onap.policy.common.endpoints.http.server.HttpServletServerFactoryInstance;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.xacml.custom.OnapFunctionDefinitionFactory;
 
@@ -68,8 +69,8 @@ public class FindActionTest {
     @BeforeClass
     public static void setUpServer() {
         try {
-            final HttpServletServer testServer =
-                    HttpServletServer.factory.build("dmaapSim", "localhost", MOCK_SERVER_PORT, "/", false, true);
+            final HttpServletServer testServer = HttpServletServerFactoryInstance.getServerFactory().build("dmaapSim",
+                            "localhost", MOCK_SERVER_PORT, "/", false, true);
             testServer.addServletClass("/*", DummyRest.class.getName());
             testServer.waitedStart(2000);
             if (!NetworkUtil.isTcpPortOpen("localhost", testServer.getPort(), 5, 10000L)) {
@@ -83,7 +84,7 @@ public class FindActionTest {
 
     @AfterClass
     public static void tearDownSimulator() {
-        HttpServletServer.factory.destroy();
+        HttpServletServerFactoryInstance.getServerFactory().destroy();
     }
 
     /**

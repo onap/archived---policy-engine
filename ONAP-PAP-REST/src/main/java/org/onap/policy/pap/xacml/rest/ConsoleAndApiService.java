@@ -35,7 +35,7 @@ import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.onap.policy.common.logging.ONAPLoggingContext;
+import org.onap.policy.common.logging.OnapLoggingContext;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -79,7 +79,7 @@ public class ConsoleAndApiService {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void doAcPost(HttpServletRequest request, HttpServletResponse response, String groupId,
-            ONAPLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
+            OnapLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
         PolicyDBDaoTransaction doAcPostTransaction = null;
         try {
             String groupName = request.getParameter("groupName");
@@ -370,7 +370,7 @@ public class ConsoleAndApiService {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void doAcGet(HttpServletRequest request, HttpServletResponse response, String groupId,
-            ONAPLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
+            OnapLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
         try {
             String parameterDefault = request.getParameter("default");
             String pdpId = request.getParameter("pdpId");
@@ -572,7 +572,7 @@ public class ConsoleAndApiService {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void doAcPut(HttpServletRequest request, HttpServletResponse response, String groupId,
-            ONAPLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
+            OnapLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
         PolicyDBDaoTransaction acPutTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
         try {
             String userId = request.getParameter("userId");
@@ -816,7 +816,7 @@ public class ConsoleAndApiService {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void doAcDelete(HttpServletRequest request, HttpServletResponse response, String groupId,
-            ONAPLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
+            OnapLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
         PolicyDBDaoTransaction removePdpOrGroupTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
         try {
             // for all DELETE operations the group must exist before the

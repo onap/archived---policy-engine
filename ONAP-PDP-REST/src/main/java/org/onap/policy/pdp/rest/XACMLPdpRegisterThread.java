@@ -2,15 +2,15 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,20 +42,20 @@ import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import com.att.research.xacml.util.XACMLProperties;
 
-import org.onap.policy.common.logging.ONAPLoggingContext;
+import org.onap.policy.common.logging.OnapLoggingContext;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.common.logging.flexlogger.*; 
+import org.onap.policy.common.logging.flexlogger.*;
 
 public class XACMLPdpRegisterThread implements Runnable {
     private static final Logger LOGGER	= FlexLogger.getLogger(XACMLPdpRegisterThread.class);
     private static final Logger auditLogger = FlexLogger.getLogger("auditLogger");
-    private ONAPLoggingContext baseLoggingContext = null;
+    private OnapLoggingContext baseLoggingContext = null;
 
 
 
     public volatile boolean isRunning = false;
 
-    public XACMLPdpRegisterThread(ONAPLoggingContext baseLoggingContext) {
+    public XACMLPdpRegisterThread(OnapLoggingContext baseLoggingContext) {
         this.baseLoggingContext = baseLoggingContext;
     }
 
@@ -78,7 +78,7 @@ public class XACMLPdpRegisterThread implements Runnable {
             this.isRunning = true;
         }
         // get a new logging context for the thread
-        ONAPLoggingContext loggingContext = new ONAPLoggingContext(baseLoggingContext);
+        OnapLoggingContext loggingContext = new OnapLoggingContext(baseLoggingContext);
         loggingContext.setServiceName("PDP:PAP.register");
         //are we registered with at least one
         boolean registered = false;
@@ -124,7 +124,7 @@ public class XACMLPdpRegisterThread implements Runnable {
                 // each time through the inner loop (which handles redirects) is a
                 // continuation of the same transaction.
                 UUID requestID = UUID.randomUUID();
-                loggingContext.setRequestID(requestID.toString());
+                loggingContext.setRequestId(requestID.toString());
                 //PolicyLogger.info("Request Id generated in XACMLPdpRegisterThread under XACML-PDP-REST");
                 loggingContext.transactionStarted();
                 //

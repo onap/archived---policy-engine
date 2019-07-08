@@ -46,7 +46,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
-import org.onap.policy.common.logging.ONAPLoggingContext;
+import org.onap.policy.common.logging.OnapLoggingContext;
 import org.onap.policy.pap.xacml.rest.components.ConfigPolicy;
 import org.onap.policy.pap.xacml.rest.components.Policy;
 import org.onap.policy.pap.xacml.rest.components.PolicyDBDao;
@@ -83,7 +83,7 @@ public class ConsoleAndApiServiceTest {
     private static final String USER_ID = "userId";
     private static final String APIFLAG = "apiflag";
     private static final String ENVIRONMENT_HEADER = "Environment";
-    private static final ONAPLoggingContext logContext = Mockito.mock(ONAPLoggingContext.class);
+    private static final OnapLoggingContext logContext = Mockito.mock(OnapLoggingContext.class);
     private static PolicyDBDao dbd;
     private static StdEngine stdEngine = null;
     private static SessionFactory sessionFactory = null;

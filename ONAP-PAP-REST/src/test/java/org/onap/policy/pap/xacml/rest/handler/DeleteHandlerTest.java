@@ -37,7 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.onap.policy.common.logging.ONAPLoggingContext;
+import org.onap.policy.common.logging.OnapLoggingContext;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.pap.xacml.rest.elk.client.PolicyElasticSearchController;
@@ -102,7 +102,7 @@ public class DeleteHandlerTest {
 		}
 
         // Test deletion from PDP
-        ONAPLoggingContext loggingContext = Mockito.mock(ONAPLoggingContext.class);
+        OnapLoggingContext loggingContext = Mockito.mock(OnapLoggingContext.class);
         try {
             handler.doApiDeleteFromPdp(request, response, loggingContext);
         }

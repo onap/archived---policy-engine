@@ -23,7 +23,7 @@ package org.onap.policy.pap.xacml.rest.handler;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.onap.policy.common.logging.ONAPLoggingContext;
+import org.onap.policy.common.logging.OnapLoggingContext;
 import org.onap.policy.pap.xacml.rest.service.ImportService;
 import org.onap.policy.pap.xacml.rest.service.MetricService;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
@@ -97,7 +97,7 @@ public class APIRequestHandler {
      * @param apiflag the apiflag
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public void doDelete(HttpServletRequest request, HttpServletResponse response, ONAPLoggingContext loggingContext,
+    public void doDelete(HttpServletRequest request, HttpServletResponse response, OnapLoggingContext loggingContext,
             String apiflag) throws IOException {
         DeleteHandler deleteHandler = DeleteHandler.getInstance();
         if ("deletePapApi".equalsIgnoreCase(apiflag)) {

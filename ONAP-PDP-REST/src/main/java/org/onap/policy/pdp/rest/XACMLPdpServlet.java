@@ -20,17 +20,6 @@
 
 package org.onap.policy.pdp.rest;
 
-import com.att.research.xacml.api.Request;
-import com.att.research.xacml.api.Response;
-import com.att.research.xacml.api.pap.PDPStatus.Status;
-import com.att.research.xacml.api.pdp.PDPEngine;
-import com.att.research.xacml.api.pdp.PDPException;
-import com.att.research.xacml.std.dom.DOMRequest;
-import com.att.research.xacml.std.dom.DOMResponse;
-import com.att.research.xacml.std.json.JSONRequest;
-import com.att.research.xacml.std.json.JSONResponse;
-import com.att.research.xacml.util.XACMLProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -64,8 +53,8 @@ import org.onap.policy.common.im.IntegrityMonitor;
 import org.onap.policy.common.im.IntegrityMonitorException;
 import org.onap.policy.common.im.IntegrityMonitorProperties;
 import org.onap.policy.common.im.StandbyStatusException;
-import org.onap.policy.common.logging.ONAPLoggingContext;
-import org.onap.policy.common.logging.ONAPLoggingUtils;
+import org.onap.policy.common.logging.OnapLoggingContext;
+import org.onap.policy.common.logging.OnapLoggingUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.pdp.rest.jmx.PdpRestMonitor;
@@ -75,6 +64,17 @@ import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.pdp.std.functions.PolicyList;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
+import com.att.research.xacml.api.Request;
+import com.att.research.xacml.api.Response;
+import com.att.research.xacml.api.pap.PDPStatus.Status;
+import com.att.research.xacml.api.pdp.PDPEngine;
+import com.att.research.xacml.api.pdp.PDPException;
+import com.att.research.xacml.std.dom.DOMRequest;
+import com.att.research.xacml.std.dom.DOMResponse;
+import com.att.research.xacml.std.json.JSONRequest;
+import com.att.research.xacml.std.json.JSONResponse;
+import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Servlet implementation class XacmlPdpServlet
@@ -177,7 +177,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
     //
     private static transient Thread configThread = null;
     private static volatile boolean configThreadTerminate = false;
-    private transient ONAPLoggingContext baseLoggingContext = null;
+    private transient OnapLoggingContext baseLoggingContext = null;
     private transient IntegrityMonitor im;
 
     public IntegrityMonitor getIm() {
@@ -226,7 +226,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
         //
         // Logging stuff....
         //
-        baseLoggingContext = new ONAPLoggingContext();
+        baseLoggingContext = new OnapLoggingContext();
         // fixed data that will be the same in all logging output goes here
         try {
             String hostname = InetAddress.getLocalHost().getCanonicalHostName();
@@ -281,7 +281,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to create IntegrityMonitor" + e);
             throw new ServletException(e);
         }
-        
+
         try {
             System.setProperty("msToscaModel.home", properties.getProperty("msToscaModel.home"));
         } catch (Exception e) {
@@ -291,7 +291,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
         startThreads(baseLoggingContext, new Thread(this));
     }
 
-    private static void startThreads(ONAPLoggingContext baseLoggingContext, Thread thread) {
+    private static void startThreads(OnapLoggingContext baseLoggingContext, Thread thread) {
         environment = XACMLProperties.getProperty("ENVIRONMENT", "DEVL");
         //
         // Kick off our thread to register with the PAP servlet.
@@ -426,11 +426,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ONAPLoggingContext loggingContext = ONAPLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
+        OnapLoggingContext loggingContext = OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         loggingContext.transactionStarted();
-        if ((loggingContext.getRequestID() == null) || "".equals(loggingContext.getRequestID())) {
+        if ((loggingContext.getRequestId() == null) || "".equals(loggingContext.getRequestId())) {
             UUID requestID = UUID.randomUUID();
-            loggingContext.setRequestID(requestID.toString());
+            loggingContext.setRequestId(requestID.toString());
             PolicyLogger.info("requestID not provided in call to XACMLPdpSrvlet (doPut) so we generated one");
         } else {
             PolicyLogger.info("requestID was provided in call to XACMLPdpSrvlet (doPut)");
@@ -509,7 +509,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
     }
 
     protected void doPutConfig(String config, HttpServletRequest request, HttpServletResponse response,
-            ONAPLoggingContext loggingContext) throws IOException {
+            OnapLoggingContext loggingContext) throws IOException {
         try {
             // prevent multiple configuration changes from stacking up
             logger.info("XACMLPdpServlet: checking remainingCapacity of Queue.");
@@ -642,11 +642,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ONAPLoggingContext loggingContext = ONAPLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
+        OnapLoggingContext loggingContext = OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         loggingContext.transactionStarted();
-        if ((loggingContext.getRequestID() == null) || (loggingContext.getRequestID() == "")) {
+        if ((loggingContext.getRequestId() == null) || (loggingContext.getRequestId() == "")) {
             UUID requestID = UUID.randomUUID();
-            loggingContext.setRequestID(requestID.toString());
+            loggingContext.setRequestId(requestID.toString());
             PolicyLogger.info("requestID not provided in call to XACMLPdpSrvlet (doGet) so we generated one");
         } else {
             PolicyLogger.info("requestID was provided in call to XACMLPdpSrvlet (doGet)");
@@ -825,12 +825,12 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        ONAPLoggingContext loggingContext = ONAPLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
+        OnapLoggingContext loggingContext = OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         loggingContext.transactionStarted();
         loggingContext.setServiceName("PDP.decide");
-        if ((loggingContext.getRequestID() == null) || ("".equals(loggingContext.getRequestID()))) {
+        if ((loggingContext.getRequestId() == null) || ("".equals(loggingContext.getRequestId()))) {
             UUID requestID = UUID.randomUUID();
-            loggingContext.setRequestID(requestID.toString());
+            loggingContext.setRequestId(requestID.toString());
             PolicyLogger.info("requestID not provided in call to XACMLPdpSrvlet (doPost) so we generated one");
         } else {
             PolicyLogger.info("requestID was provided in call to XACMLPdpSrvlet (doPost)");

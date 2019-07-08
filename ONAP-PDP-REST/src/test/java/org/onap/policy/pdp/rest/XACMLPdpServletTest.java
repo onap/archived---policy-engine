@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -41,7 +41,7 @@ import org.mockito.Mockito;
 import org.onap.policy.common.ia.IntegrityAuditProperties;
 import org.onap.policy.common.im.IntegrityMonitor;
 import org.onap.policy.common.im.IntegrityMonitorException;
-import org.onap.policy.common.logging.ONAPLoggingContext;
+import org.onap.policy.common.logging.OnapLoggingContext;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
@@ -223,7 +223,7 @@ public class XACMLPdpServletTest extends TestCase {
     public void testXACMLPdpRegisterThread() {
         LOGGER.info("XACMLPdpServletTest - testXACMLPdpRegisterThread");
         try {
-            ONAPLoggingContext baseLoggingContext = new ONAPLoggingContext();
+            OnapLoggingContext baseLoggingContext = new OnapLoggingContext();
             baseLoggingContext.setServer("localhost");
             XACMLPdpRegisterThread regThread = new XACMLPdpRegisterThread(baseLoggingContext);
             regThread.run();

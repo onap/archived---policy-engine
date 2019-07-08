@@ -20,13 +20,6 @@
 
 package org.onap.policy.pap.xacml.rest;
 
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.api.pap.PDPPolicy;
-import com.att.research.xacml.api.pap.PDPStatus;
-import com.att.research.xacml.util.FactoryException;
-import com.att.research.xacml.util.XACMLProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Splitter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -59,8 +52,8 @@ import org.onap.policy.common.im.IntegrityMonitor;
 import org.onap.policy.common.im.IntegrityMonitorException;
 import org.onap.policy.common.im.IntegrityMonitorProperties;
 import org.onap.policy.common.im.StandbyStatusException;
-import org.onap.policy.common.logging.ONAPLoggingContext;
-import org.onap.policy.common.logging.ONAPLoggingUtils;
+import org.onap.policy.common.logging.OnapLoggingContext;
+import org.onap.policy.common.logging.OnapLoggingUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -87,6 +80,13 @@ import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPItemSetChangeNotifier.StdItemSetChangeListener;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.api.pap.PDPPolicy;
+import com.att.research.xacml.api.pap.PDPStatus;
+import com.att.research.xacml.util.FactoryException;
+import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Splitter;
 
 /**
  * Servlet implementation class XacmlPapServlet.
@@ -158,7 +158,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
      * this servlet starts. Its configurable by the admin.
      */
     private static transient Thread initiateThread = null;
-    private transient ONAPLoggingContext baseLoggingContext = null;
+    private transient OnapLoggingContext baseLoggingContext = null;
     private static final String GROUPID = "groupId";
 
     /**
@@ -175,7 +175,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     public void init(ServletConfig config) throws ServletException {
         try {
             // Logging
-            baseLoggingContext = new ONAPLoggingContext();
+            baseLoggingContext = new OnapLoggingContext();
             // fixed data that will be the same in all logging output goes here
             try {
                 String hostname = InetAddress.getLocalHost().getCanonicalHostName();
@@ -546,8 +546,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ONAPLoggingContext loggingContext =
-                ONAPLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
+        OnapLoggingContext loggingContext =
+                OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         setLoggingContext(loggingContext, "doPost", "PAP.post");
         PolicyDBDaoTransaction pdpTransaction = null;
         try {
@@ -810,8 +810,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ONAPLoggingContext loggingContext =
-                ONAPLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
+        OnapLoggingContext loggingContext =
+                OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         setLoggingContext(loggingContext, "doGet", "PAP.get");
         loggingContext.metricStarted();
         XACMLRest.dumpRequest(request);
@@ -1017,8 +1017,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ONAPLoggingContext loggingContext =
-                ONAPLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
+        OnapLoggingContext loggingContext =
+                OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         setLoggingContext(loggingContext, "doPut", "PAP.put");
         try {
             loggingContext.metricStarted();
@@ -1234,8 +1234,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ONAPLoggingContext loggingContext =
-                ONAPLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
+        OnapLoggingContext loggingContext =
+                OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         setLoggingContext(loggingContext, "doDelete", "PAP.delete");
         try {
             loggingContext.metricStarted();
@@ -1397,7 +1397,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
      * @throws IOException
      */
     public void updateGroupsFromAPI(HttpServletRequest request, HttpServletResponse response,
-            String groupId, ONAPLoggingContext loggingContext) throws IOException {
+            String groupId, OnapLoggingContext loggingContext) throws IOException {
         PolicyDBDaoTransaction acPutTransaction = policyDbDao.getNewTransaction();
         PolicyLogger.audit("PolicyDBDaoTransaction started for updateGroupsFromAPI");
         try {
@@ -1541,7 +1541,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         }
     }
 
-    public void changed(ONAPLoggingContext loggingContext) {
+    public void changed(OnapLoggingContext loggingContext) {
         // all PDPs in all groups need to be updated/sync'd
         Set<OnapPDPGroup> groups;
         try {
@@ -1565,7 +1565,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         }
     }
 
-    public void groupChanged(OnapPDPGroup group, ONAPLoggingContext loggingContext) {
+    public void groupChanged(OnapPDPGroup group, OnapLoggingContext loggingContext) {
         // all PDPs within one group need to be updated/sync'd
         for (OnapPDP pdp : group.getOnapPdps()) {
             pdpChanged(pdp, loggingContext, getPdpDataByGroup(group));
@@ -1585,7 +1585,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         }
     }
 
-    public void pdpChanged(OnapPDP pdp, ONAPLoggingContext loggingContext) {
+    public void pdpChanged(OnapPDP pdp, OnapLoggingContext loggingContext) {
         // kick off a thread to do an event notification for each PDP.
         // This needs to be on a separate thread so that PDPs that do not
         // respond (down, non-existent, etc)
@@ -1604,7 +1604,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         }
     }
 
-    private void pdpChanged(OnapPDP pdp, ONAPLoggingContext loggingContext,
+    private void pdpChanged(OnapPDP pdp, OnapLoggingContext loggingContext,
             List<Properties> pdpDataByGroup) {
         Thread t = new Thread(new UpdatePdpThread(pdp, loggingContext, pdpDataByGroup));
         if (CheckPDP.validateID(pdp.getId())) {
@@ -1622,7 +1622,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         return dataToNotify.setPolicyConfigProperties(pdp, papEngine);
     }
 
-    private void testService(ONAPLoggingContext loggingContext, HttpServletResponse response)
+    private void testService(OnapLoggingContext loggingContext, HttpServletResponse response)
             throws IOException {
         LOGGER.info("Test request received");
         try {
@@ -1686,13 +1686,13 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         }
     }
 
-    private void setLoggingContext(ONAPLoggingContext loggingContext, String methodType,
+    private void setLoggingContext(OnapLoggingContext loggingContext, String methodType,
             String serviceName) {
         loggingContext.transactionStarted();
         loggingContext.setServiceName(serviceName);
-        if (loggingContext.getRequestID() == null || "".equals(loggingContext.getRequestID())) {
+        if (loggingContext.getRequestId() == null || "".equals(loggingContext.getRequestId())) {
             UUID requestID = UUID.randomUUID();
-            loggingContext.setRequestID(requestID.toString());
+            loggingContext.setRequestId(requestID.toString());
             PolicyLogger.info("requestID not provided in call to XACMLPapServlet ('" + methodType
                     + "') so we generated one");
         } else {
@@ -1842,11 +1842,11 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         XACMLPapServlet.msPolicyName = msPolicyName;
     }
 
-    public ONAPLoggingContext getBaseLoggingContext() {
+    public OnapLoggingContext getBaseLoggingContext() {
         return baseLoggingContext;
     }
 
-    public void setBaseLoggingContext(ONAPLoggingContext baseLoggingContext) {
+    public void setBaseLoggingContext(OnapLoggingContext baseLoggingContext) {
         this.baseLoggingContext = baseLoggingContext;
     }
 }
