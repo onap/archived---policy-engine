@@ -1,4 +1,4 @@
-FROM onap/policy-common-alpine:1.4.0
+FROM cristinapauna/policy-common-alpine:1.5.0
 
 LABEL maintainer="Policy Team"
 
