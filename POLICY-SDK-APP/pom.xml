@@ -71,9 +71,7 @@
         <logback.version>1.2.3</logback.version>
         <skipassembly>true</skipassembly>
         <skiptests>false</skiptests>
-        <!-- When ONAP brings back Javascript requirement for code coverage, let's move back to this exclusion. Keeping for reference. -->
-        <!-- sonar.exclusions>**/gen/**,**/generated-sources/**,**/yang-gen**,**/pax/**,src/main/webapp/app/policyApp/CSS/**/*,src/main/webapp/app/policyApp/libs.bower_components/**/*</sonar.exclusions -->
-        <sonar.exclusions>**/gen/**,**/generated-sources/**,**/yang-gen**,**/pax/**,src/main/webapp/app/policyApp/**/*</sonar.exclusions>
+        <sonar.exclusions>**/gen/**,**/generated-sources/**,**/yang-gen**,**/pax/**,src/main/webapp/app/policyApp/CSS/**/*,src/main/webapp/app/policyApp/libs.bower_components/**/*</sonar.exclusions>
     </properties>
     <dependencies>
         <dependency>
