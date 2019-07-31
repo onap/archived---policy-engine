@@ -16,6 +16,24 @@
       "revId": "db6dc041db0aa8fbc5379299979dbd1d446ccc89",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77791f23_51770833",
+        "filename": "packages/base/src/files/install/servers/pdp/bin/xacml.pdp.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-07-31T23:08:05Z",
+      "side": 1,
+      "message": "untouched code plus legacy soon to be deprecated, I think there\u0027s quite a bit of them especially in this repo.  If worth it, I think we can do overall cleanup in a different exercise.",
+      "parentUuid": "e0a70a75_53d62b85",
+      "revId": "db6dc041db0aa8fbc5379299979dbd1d446ccc89",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
