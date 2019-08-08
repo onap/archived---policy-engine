@@ -74,320 +74,328 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping({"/"})
+@RequestMapping({ "/" })
 public class AutoPushController extends RestrictedBaseController {
 
-    private static final Logger logger = FlexLogger.getLogger(AutoPushController.class);
-    private static final String UTF8 = "UTF-8";
+	private static final Logger logger = FlexLogger.getLogger(AutoPushController.class);
+	private static final String UTF8 = "UTF-8";
 
-    @Autowired
-    CommonClassDao commonClassDao;
+	@Autowired
+	CommonClassDao commonClassDao;
 
-    private PDPGroupContainer container;
-    private PDPPolicyContainer policyContainer;
-    private PolicyController policyController;
-    protected List<OnapPDPGroup> groups = Collections.synchronizedList(new ArrayList<>());
+	private PDPGroupContainer container;
+	private PDPPolicyContainer policyContainer;
+	private PolicyController policyController;
+	protected List<OnapPDPGroup> groups = Collections.synchronizedList(new ArrayList<>());
 
-    public PolicyController getPolicyController() {
-        return policyController;
-    }
+	public PolicyController getPolicyController() {
+		return policyController;
+	}
 
-    public void setPolicyController(PolicyController policyController) {
-        this.policyController = policyController;
-    }
+	public void setPolicyController(PolicyController policyController) {
+		this.policyController = policyController;
+	}
 
-    public synchronized void refreshGroups() {
-        synchronized (this.groups) {
-            this.groups.clear();
-            try {
-                PolicyController controller = getPolicyControllerInstance();
-                this.groups.addAll(controller.getPapEngine().getOnapPDPGroups());
-            } catch (PAPException e) {
-                String message = "Unable to retrieve Groups from server: " + e;
-                logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
-            }
+	public synchronized void refreshGroups() {
+		synchronized (this.groups) {
+			this.groups.clear();
+			try {
+				PolicyController controller = getPolicyControllerInstance();
+				this.groups.addAll(controller.getPapEngine().getOnapPDPGroups());
+			} catch (PAPException e) {
+				String message = "Unable to retrieve Groups from server: " + e;
+				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
+			}
 
-        }
-    }
+		}
+	}
 
-    private PolicyController getPolicyControllerInstance() {
-        return policyController != null ? getPolicyController() : new PolicyController();
-    }
+	private PolicyController getPolicyControllerInstance() {
+		return policyController != null ? getPolicyController() : new PolicyController();
+	}
 
-    @RequestMapping(value = {"/get_AutoPushPoliciesContainerData"}, method = {RequestMethod.GET},
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public void getPolicyGroupContainerData(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            Set<String> scopes = new HashSet<>();
-            List<String> roles = new ArrayList<>();
-            List<Object> data = new ArrayList<>();
-            Map<String, Object> model = new HashMap<>();
+	private Set<String> addAllScopes(Roles userRole) {
+		Set<String> scopes = new HashSet<>();
+		if (userRole.getScope() != null) {
+			scopes.addAll(Stream.of(userRole.getScope().split(",")).collect(Collectors.toSet()));
+		}
+		return scopes;
+	}
 
-            String userId = UserUtils.getUserSession(request).getOrgUserId();
+	@RequestMapping(value = { "/get_AutoPushPoliciesContainerData" }, method = {
+			RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void getPolicyGroupContainerData(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Set<String> scopes = new HashSet<>();
+			List<String> roles = new ArrayList<>();
+			List<Object> data = new ArrayList<>();
+			Map<String, Object> model = new HashMap<>();
 
-            PolicyController controller = policyController != null ? getPolicyController() : new PolicyController();
-            List<Object> userRoles = controller.getRoles(userId);
-            for (Object role : userRoles) {
-                Roles userRole = (Roles) role;
-                roles.add(userRole.getRole());
-                scopes.addAll(Stream.of(userRole.getScope().split(",")).collect(Collectors.toSet()));
-            }
-            if (roles.contains("super-admin") || roles.contains("super-editor") || roles.contains("super-guest")) {
-                data = commonClassDao.getData(PolicyVersion.class);
-            } else {
-                if (!scopes.isEmpty()) {
-                    for (String scope : scopes) {
-                        scope += "%";
-                        String query = "From PolicyVersion where policy_name like :scope and id > 0";
-                        SimpleBindings params = new SimpleBindings();
-                        params.put("scope", scope);
-                        List<Object> filterdatas = commonClassDao.getDataByQuery(query, params);
-                        if (filterdatas != null) {
-                            data.addAll(filterdatas);
-                        }
-                    }
-                } else {
-                    PolicyVersion emptyPolicyName = new PolicyVersion();
-                    emptyPolicyName
-                            .setPolicyName("Please Contact Policy Super Admin, There are no scopes assigned to you");
-                    data.add(emptyPolicyName);
-                }
-            }
-            ObjectMapper mapper = new ObjectMapper();
-            model.put("policydatas", mapper.writeValueAsString(data));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
-        } catch (Exception e) {
-            logger.error("Exception Occurred" + e);
-        }
-    }
+			String userId = UserUtils.getUserSession(request).getOrgUserId();
 
-    @RequestMapping(value = {"/auto_Push/PushPolicyToPDP.htm"}, method = {RequestMethod.POST})
-    public ModelAndView pushPolicyToPDPGroup(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        try {
-            ArrayList<Object> selectedPDPS = new ArrayList<>();
-            ArrayList<String> selectedPoliciesInUI = new ArrayList<>();
-            PolicyController controller = getPolicyControllerInstance();
-            this.groups.addAll(controller.getPapEngine().getOnapPDPGroups());
-            ObjectMapper mapper = new ObjectMapper();
-            this.container = new PDPGroupContainer(controller.getPapEngine());
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            JsonNode root = mapper.readTree(request.getReader());
+			PolicyController controller = policyController != null ? getPolicyController() : new PolicyController();
+			List<Object> userRoles = controller.getRoles(userId);
+			for (Object role : userRoles) {
+				Roles userRole = (Roles) role;
+				roles.add(userRole.getRole());
+				scopes = addAllScopes(userRole);
+			}
+			if (roles.contains("super-admin") || roles.contains("super-editor") || roles.contains("super-guest")) {
+				data = commonClassDao.getData(PolicyVersion.class);
+			} else {
+				if (!scopes.isEmpty()) {
+					for (String scope : scopes) {
+						scope += "%";
+						String query = "From PolicyVersion where policy_name like :scope and id > 0";
+						SimpleBindings params = new SimpleBindings();
+						params.put("scope", scope);
+						List<Object> filterdatas = commonClassDao.getDataByQuery(query, params);
+						if (filterdatas != null) {
+							data.addAll(filterdatas);
+						}
+					}
+				} else {
+					PolicyVersion emptyPolicyName = new PolicyVersion();
+					emptyPolicyName
+							.setPolicyName("Please Contact Policy Super Admin, There are no scopes assigned to you");
+					data.add(emptyPolicyName);
+				}
+			}
+			ObjectMapper mapper = new ObjectMapper();
+			model.put("policydatas", mapper.writeValueAsString(data));
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
+			JSONObject j = new JSONObject(msg);
+			response.getWriter().write(j.toString());
+		} catch (Exception e) {
+			logger.error("Exception Occurred" + e);
+		}
+	}
 
-            String userId = UserUtils.getUserSession(request).getOrgUserId();
-            logger.info(
-                    "****************************************Logging UserID while Pushing  Policy to PDP Group*****************************************");
-            logger.info("UserId:  " + userId + "Push Policy Data:  " + root.get("pushTabData").toString());
-            logger.info(
-                    "***********************************************************************************************************************************");
+	@RequestMapping(value = { "/auto_Push/PushPolicyToPDP.htm" }, method = { RequestMethod.POST })
+	public ModelAndView pushPolicyToPDPGroup(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		try {
+			ArrayList<Object> selectedPDPS = new ArrayList<>();
+			ArrayList<String> selectedPoliciesInUI = new ArrayList<>();
+			PolicyController controller = getPolicyControllerInstance();
+			this.groups.addAll(controller.getPapEngine().getOnapPDPGroups());
+			ObjectMapper mapper = new ObjectMapper();
+			this.container = new PDPGroupContainer(controller.getPapEngine());
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			JsonNode root = mapper.readTree(request.getReader());
 
-            AutoPushTabAdapter adapter = mapper.readValue(root.get("pushTabData").toString(), AutoPushTabAdapter.class);
-            for (Object pdpGroupId : adapter.getPdpDatas()) {
-                LinkedHashMap<?, ?> selectedPDP = (LinkedHashMap<?, ?>) pdpGroupId;
-                for (OnapPDPGroup pdpGroup : this.groups) {
-                    if (pdpGroup.getId().equals(selectedPDP.get("id"))) {
-                        selectedPDPS.add(pdpGroup);
-                    }
-                }
-            }
+			String userId = UserUtils.getUserSession(request).getOrgUserId();
+			logger.info(
+					"****************************************Logging UserID while Pushing  Policy to PDP Group*****************************************");
+			logger.info("UserId:  " + userId + "Push Policy Data:  " + root.get("pushTabData").toString());
+			logger.info(
+					"***********************************************************************************************************************************");
 
-            for (Object policyId : adapter.getPolicyDatas()) {
-                LinkedHashMap<?, ?> selected = (LinkedHashMap<?, ?>) policyId;
-                String policyName =
-                        selected.get("policyName").toString() + "." + selected.get("activeVersion").toString() + ".xml";
-                selectedPoliciesInUI.add(policyName);
-            }
+			AutoPushTabAdapter adapter = mapper.readValue(root.get("pushTabData").toString(), AutoPushTabAdapter.class);
+			for (Object pdpGroupId : adapter.getPdpDatas()) {
+				LinkedHashMap<?, ?> selectedPDP = (LinkedHashMap<?, ?>) pdpGroupId;
+				for (OnapPDPGroup pdpGroup : this.groups) {
+					if (pdpGroup.getId().equals(selectedPDP.get("id"))) {
+						selectedPDPS.add(pdpGroup);
+					}
+				}
+			}
 
-            for (Object pdpDestinationGroupId : selectedPDPS) {
-                Set<PDPPolicy> currentPoliciesInGroup = new HashSet<>();
-                Set<PDPPolicy> selectedPolicies = new HashSet<>();
-                for (String policyId : selectedPoliciesInUI) {
-                    logger.debug("Handlepolicies..." + pdpDestinationGroupId + policyId);
+			for (Object policyId : adapter.getPolicyDatas()) {
+				LinkedHashMap<?, ?> selected = (LinkedHashMap<?, ?>) policyId;
+				String policyName = selected.get("policyName").toString() + "."
+						+ selected.get("activeVersion").toString() + ".xml";
+				selectedPoliciesInUI.add(policyName);
+			}
 
-                    //
-                    // Get the current selection
-                    //
-                    assert policyId != null;
-                    // create the id of the target file
-                    // Our standard for file naming is:
-                    // <domain>.<filename>.<version>.xml
-                    // since the file name usually has a ".xml", we need to strip
-                    // that
-                    // before adding the other parts
-                    String name = policyId.replace(File.separator, ".");
-                    String id = name;
-                    if (id.endsWith(".xml")) {
-                        id = id.replace(".xml", "");
-                        id = id.substring(0, id.lastIndexOf('.'));
-                    }
+			for (Object pdpDestinationGroupId : selectedPDPS) {
+				Set<PDPPolicy> currentPoliciesInGroup = new HashSet<>();
+				Set<PDPPolicy> selectedPolicies = new HashSet<>();
+				for (String policyId : selectedPoliciesInUI) {
+					logger.debug("Handlepolicies..." + pdpDestinationGroupId + policyId);
 
-                    // Default policy to be Root policy; user can change to deferred
-                    // later
+					//
+					// Get the current selection
+					//
+					assert policyId != null;
+					// create the id of the target file
+					// Our standard for file naming is:
+					// <domain>.<filename>.<version>.xml
+					// since the file name usually has a ".xml", we need to strip
+					// that
+					// before adding the other parts
+					String name = policyId.replace(File.separator, ".");
+					String id = name;
+					if (id.endsWith(".xml")) {
+						id = id.replace(".xml", "");
+						id = id.substring(0, id.lastIndexOf('.'));
+					}
 
-                    StdPDPPolicy selectedPolicy = null;
-                    String dbCheckName = name;
-                    if (dbCheckName.contains("Config_")) {
-                        dbCheckName = dbCheckName.replace(".Config_", ":Config_");
-                    } else if (dbCheckName.contains("Action_")) {
-                        dbCheckName = dbCheckName.replace(".Action_", ":Action_");
-                    } else if (dbCheckName.contains("Decision_")) {
-                        dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
-                    }
-                    String[] split = dbCheckName.split(":");
-                    String query = "FROM PolicyEntity where policyName = :split_1 and scope = :split_0";
-                    SimpleBindings policyParams = new SimpleBindings();
-                    policyParams.put("split_1", split[1]);
-                    policyParams.put("split_0", split[0]);
-                    List<Object> queryData = controller.getDataByQuery(query, policyParams);
-                    PolicyEntity policyEntity = (PolicyEntity) queryData.get(0);
-                    File temp = new File(name);
-                    BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
-                    bw.write(policyEntity.getPolicyData());
-                    bw.close();
-                    URI selectedURI = temp.toURI();
-                    try {
-                        // Create the policy
-                        selectedPolicy = new StdPDPPolicy(name, true, id, selectedURI);
-                    } catch (IOException e) {
-                        logger.error("Unable to create policy '" + name + "': " + e.getMessage(), e);
-                    }
-                    StdPDPGroup selectedGroup = (StdPDPGroup) pdpDestinationGroupId;
-                    if (selectedPolicy != null) {
-                        // Add Current policies from container
-                        for (OnapPDPGroup group : container.getGroups()) {
-                            if (group.getId().equals(selectedGroup.getId())) {
-                                currentPoliciesInGroup.addAll(group.getPolicies());
-                            }
-                        }
-                        // copy policy to PAP
-                        try {
-                            controller.getPapEngine().copyPolicy(selectedPolicy, (StdPDPGroup) pdpDestinationGroupId);
-                        } catch (PAPException e) {
-                            logger.error("Exception Occured" + e);
-                            return null;
-                        }
-                        selectedPolicies.add(selectedPolicy);
-                    }
-                    temp.delete();
-                }
-                StdPDPGroup pdpGroup = (StdPDPGroup) pdpDestinationGroupId;
-                StdPDPGroup updatedGroupObject = new StdPDPGroup(pdpGroup.getId(), pdpGroup.isDefaultGroup(),
-                        pdpGroup.getName(), pdpGroup.getDescription(), pdpGroup.getDirectory());
-                updatedGroupObject.setOnapPdps(pdpGroup.getOnapPdps());
-                updatedGroupObject.setPipConfigs(pdpGroup.getPipConfigs());
-                updatedGroupObject.setStatus(pdpGroup.getStatus());
-                updatedGroupObject.setOperation("push");
+					// Default policy to be Root policy; user can change to deferred
+					// later
 
-                // replace the original set of Policies with the set from the
-                // container (possibly modified by the user)
-                // do not allow multiple copies of same policy
-                Iterator<PDPPolicy> policyIterator = currentPoliciesInGroup.iterator();
-                logger.debug("policyIterator....." + selectedPolicies);
-                while (policyIterator.hasNext()) {
-                    PDPPolicy existingPolicy = policyIterator.next();
-                    for (PDPPolicy selPolicy : selectedPolicies) {
-                        if (selPolicy.getName().equals(existingPolicy.getName())) {
-                            if (selPolicy.getVersion().equals(existingPolicy.getVersion())) {
-                                if (selPolicy.getId().equals(existingPolicy.getId())) {
-                                    policyIterator.remove();
-                                    logger.debug("Removing policy: " + selPolicy);
-                                    break;
-                                }
-                            } else {
-                                policyIterator.remove();
-                                logger.debug("Removing Old Policy version: " + selPolicy);
-                                break;
-                            }
-                        }
-                    }
-                }
+					StdPDPPolicy selectedPolicy = null;
+					String dbCheckName = name;
+					if (dbCheckName.contains("Config_")) {
+						dbCheckName = dbCheckName.replace(".Config_", ":Config_");
+					} else if (dbCheckName.contains("Action_")) {
+						dbCheckName = dbCheckName.replace(".Action_", ":Action_");
+					} else if (dbCheckName.contains("Decision_")) {
+						dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
+					}
+					String[] split = dbCheckName.split(":");
+					String query = "FROM PolicyEntity where policyName = :split_1 and scope = :split_0";
+					SimpleBindings policyParams = new SimpleBindings();
+					policyParams.put("split_1", split[1]);
+					policyParams.put("split_0", split[0]);
+					List<Object> queryData = controller.getDataByQuery(query, policyParams);
+					PolicyEntity policyEntity = (PolicyEntity) queryData.get(0);
+					File temp = new File(name);
+					BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
+					bw.write(policyEntity.getPolicyData());
+					bw.close();
+					URI selectedURI = temp.toURI();
+					try {
+						// Create the policy
+						selectedPolicy = new StdPDPPolicy(name, true, id, selectedURI);
+					} catch (IOException e) {
+						logger.error("Unable to create policy '" + name + "': " + e.getMessage(), e);
+					}
+					StdPDPGroup selectedGroup = (StdPDPGroup) pdpDestinationGroupId;
+					if (selectedPolicy != null) {
+						// Add Current policies from container
+						for (OnapPDPGroup group : container.getGroups()) {
+							if (group.getId().equals(selectedGroup.getId())) {
+								currentPoliciesInGroup.addAll(group.getPolicies());
+							}
+						}
+						// copy policy to PAP
+						try {
+							controller.getPapEngine().copyPolicy(selectedPolicy, (StdPDPGroup) pdpDestinationGroupId);
+						} catch (PAPException e) {
+							logger.error("Exception Occured" + e);
+							return null;
+						}
+						selectedPolicies.add(selectedPolicy);
+					}
+					temp.delete();
+				}
+				StdPDPGroup pdpGroup = (StdPDPGroup) pdpDestinationGroupId;
+				StdPDPGroup updatedGroupObject = new StdPDPGroup(pdpGroup.getId(), pdpGroup.isDefaultGroup(),
+						pdpGroup.getName(), pdpGroup.getDescription(), pdpGroup.getDirectory());
+				updatedGroupObject.setOnapPdps(pdpGroup.getOnapPdps());
+				updatedGroupObject.setPipConfigs(pdpGroup.getPipConfigs());
+				updatedGroupObject.setStatus(pdpGroup.getStatus());
+				updatedGroupObject.setOperation("push");
 
-                currentPoliciesInGroup.addAll(selectedPolicies);
-                updatedGroupObject.setPolicies(currentPoliciesInGroup);
-                this.container.updateGroup(updatedGroupObject, userId);
+				// replace the original set of Policies with the set from the
+				// container (possibly modified by the user)
+				// do not allow multiple copies of same policy
+				Iterator<PDPPolicy> policyIterator = currentPoliciesInGroup.iterator();
+				logger.debug("policyIterator....." + selectedPolicies);
+				while (policyIterator.hasNext()) {
+					PDPPolicy existingPolicy = policyIterator.next();
+					for (PDPPolicy selPolicy : selectedPolicies) {
+						if (selPolicy.getName().equals(existingPolicy.getName())) {
+							if (selPolicy.getVersion().equals(existingPolicy.getVersion())) {
+								if (selPolicy.getId().equals(existingPolicy.getId())) {
+									policyIterator.remove();
+									logger.debug("Removing policy: " + selPolicy);
+									break;
+								}
+							} else {
+								policyIterator.remove();
+								logger.debug("Removing Old Policy version: " + selPolicy);
+								break;
+							}
+						}
+					}
+				}
 
-                response.setCharacterEncoding(UTF8);
-                response.setContentType("application / json");
-                request.setCharacterEncoding(UTF8);
+				currentPoliciesInGroup.addAll(selectedPolicies);
+				updatedGroupObject.setPolicies(currentPoliciesInGroup);
+				this.container.updateGroup(updatedGroupObject, userId);
 
-                PrintWriter out = response.getWriter();
-                refreshGroups();
-                JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-                JSONObject j = new JSONObject(msg);
-                out.write(j.toString());
-                //
-                // Why is this here? This defeats the purpose of the loop??
-                // Sonar says to remove it or make it conditional
-                //
-                return null;
-            }
-        } catch (Exception e) {
-            response.setCharacterEncoding(UTF8);
-            request.setCharacterEncoding(UTF8);
-            PrintWriter out = response.getWriter();
-            logger.error(e);
-            out.write(PolicyUtils.CATCH_EXCEPTION);
-        }
-        return null;
-    }
+				response.setCharacterEncoding(UTF8);
+				response.setContentType("application / json");
+				request.setCharacterEncoding(UTF8);
 
-    @SuppressWarnings("unchecked")
-    @RequestMapping(value = {"/auto_Push/remove_GroupPolicies.htm"}, method = {RequestMethod.POST})
-    public ModelAndView removePDPGroup(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try {
-            PolicyController controller = getPolicyControllerInstance();
-            this.container = new PDPGroupContainer(controller.getPapEngine());
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            JsonNode root = mapper.readTree(request.getReader());
-            StdPDPGroup group = mapper.readValue(root.get("activePdpGroup").toString(), StdPDPGroup.class);
-            JsonNode removePolicyData = root.get("data");
+				PrintWriter out = response.getWriter();
+				refreshGroups();
+				JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
+				JSONObject j = new JSONObject(msg);
+				out.write(j.toString());
+				//
+				// Why is this here? This defeats the purpose of the loop??
+				// Sonar says to remove it or make it conditional
+				//
+				return null;
+			}
+		} catch (Exception e) {
+			response.setCharacterEncoding(UTF8);
+			request.setCharacterEncoding(UTF8);
+			PrintWriter out = response.getWriter();
+			logger.error(e);
+			out.write(PolicyUtils.CATCH_EXCEPTION);
+		}
+		return null;
+	}
 
-            String userId = UserUtils.getUserSession(request).getOrgUserId();
-            logger.info(
-                    "****************************************Logging UserID while Removing Policy from PDP Group*****************************************");
-            logger.info("UserId:  " + userId + "PDP Group Data:  " + root.get("activePdpGroup").toString()
-                    + "Remove Policy Data: " + root.get("data"));
-            logger.info(
-                    "***********************************************************************************************************************************");
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = { "/auto_Push/remove_GroupPolicies.htm" }, method = { RequestMethod.POST })
+	public ModelAndView removePDPGroup(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		try {
+			PolicyController controller = getPolicyControllerInstance();
+			this.container = new PDPGroupContainer(controller.getPapEngine());
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			JsonNode root = mapper.readTree(request.getReader());
+			StdPDPGroup group = mapper.readValue(root.get("activePdpGroup").toString(), StdPDPGroup.class);
+			JsonNode removePolicyData = root.get("data");
 
-            policyContainer = new PDPPolicyContainer(group);
-            if (removePolicyData.size() > 0) {
-                IntStream.range(0, removePolicyData.size()).mapToObj(i -> removePolicyData.get(i).toString())
-                        .forEach(polData -> this.policyContainer.removeItem(polData));
-                Set<PDPPolicy> changedPolicies =
-                        new HashSet<>((Collection<PDPPolicy>) this.policyContainer.getItemIds());
-                StdPDPGroup updatedGroupObject = new StdPDPGroup(group.getId(), group.isDefaultGroup(), group.getName(),
-                        group.getDescription(), null);
-                updatedGroupObject.setPolicies(changedPolicies);
-                updatedGroupObject.setOnapPdps(group.getOnapPdps());
-                updatedGroupObject.setPipConfigs(group.getPipConfigs());
-                updatedGroupObject.setStatus(group.getStatus());
-                updatedGroupObject.setOperation("delete");
-                this.container.updateGroup(updatedGroupObject);
-            }
+			String userId = UserUtils.getUserSession(request).getOrgUserId();
+			logger.info(
+					"****************************************Logging UserID while Removing Policy from PDP Group*****************************************");
+			logger.info("UserId:  " + userId + "PDP Group Data:  " + root.get("activePdpGroup").toString()
+					+ "Remove Policy Data: " + root.get("data"));
+			logger.info(
+					"***********************************************************************************************************************************");
 
-            response.setCharacterEncoding(UTF8);
-            response.setContentType("application / json");
-            request.setCharacterEncoding(UTF8);
+			policyContainer = new PDPPolicyContainer(group);
+			if (removePolicyData.size() > 0) {
+				IntStream.range(0, removePolicyData.size()).mapToObj(i -> removePolicyData.get(i).toString())
+						.forEach(polData -> this.policyContainer.removeItem(polData));
+				Set<PDPPolicy> changedPolicies = new HashSet<>(
+						(Collection<PDPPolicy>) this.policyContainer.getItemIds());
+				StdPDPGroup updatedGroupObject = new StdPDPGroup(group.getId(), group.isDefaultGroup(), group.getName(),
+						group.getDescription(), null);
+				updatedGroupObject.setPolicies(changedPolicies);
+				updatedGroupObject.setOnapPdps(group.getOnapPdps());
+				updatedGroupObject.setPipConfigs(group.getPipConfigs());
+				updatedGroupObject.setStatus(group.getStatus());
+				updatedGroupObject.setOperation("delete");
+				this.container.updateGroup(updatedGroupObject);
+			}
 
-            PrintWriter out = response.getWriter();
-            refreshGroups();
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-            JSONObject j = new JSONObject(msg);
+			response.setCharacterEncoding(UTF8);
+			response.setContentType("application / json");
+			request.setCharacterEncoding(UTF8);
 
-            out.write(j.toString());
+			PrintWriter out = response.getWriter();
+			refreshGroups();
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
+			JSONObject j = new JSONObject(msg);
 
-            return null;
-        } catch (Exception e) {
-            response.setCharacterEncoding(UTF8);
-            request.setCharacterEncoding(UTF8);
-            PrintWriter out = response.getWriter();
-            logger.error(e);
-            out.write(PolicyUtils.CATCH_EXCEPTION);
-        }
-        return null;
-    }
+			out.write(j.toString());
+
+			return null;
+		} catch (Exception e) {
+			response.setCharacterEncoding(UTF8);
+			request.setCharacterEncoding(UTF8);
+			PrintWriter out = response.getWriter();
+			logger.error(e);
+			out.write(PolicyUtils.CATCH_EXCEPTION);
+		}
+		return null;
+	}
 }
