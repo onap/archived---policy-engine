@@ -113,6 +113,14 @@ public class AutoPushController extends RestrictedBaseController {
     private PolicyController getPolicyControllerInstance() {
         return policyController != null ? getPolicyController() : new PolicyController();
     }
+    
+    private Set<String> addAllScopes(Roles userRole) {
+    	Set<String> scopes = new HashSet<>();
+    	if (userRole.getScope() != null) {
+            scopes.addAll(Stream.of(userRole.getScope().split(",")).collect(Collectors.toSet()));
+    	}
+    	return scopes;
+    }
 
     @RequestMapping(value = {"/get_AutoPushPoliciesContainerData"}, method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -130,7 +138,7 @@ public class AutoPushController extends RestrictedBaseController {
             for (Object role : userRoles) {
                 Roles userRole = (Roles) role;
                 roles.add(userRole.getRole());
-                scopes.addAll(Stream.of(userRole.getScope().split(",")).collect(Collectors.toSet()));
+                scopes = addAllScopes(userRole);
             }
             if (roles.contains("super-admin") || roles.contains("super-editor") || roles.contains("super-guest")) {
                 data = commonClassDao.getData(PolicyVersion.class);
