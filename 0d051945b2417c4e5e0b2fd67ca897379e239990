@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "813032ca_e1e9ef6a",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/AutoPushController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-08-08T21:43:10Z",
+      "side": 1,
+      "message": "Not sure about this Mike, the \"scopes\" reference here gets overriden in every iteration with new values.   Note that the method \"addAllScopes\" returns a new set object, and here, it just simply overrides the previous reference losing any values that were accumulated in a previous iteration.   A potential solution would be to pass the Set reference as an additional argument to addAllScopes.",
+      "revId": "0d051945b2417c4e5e0b2fd67ca897379e239990",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
