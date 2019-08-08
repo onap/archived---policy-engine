@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b22aa0c9_c0df3f9c",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/AutoPushController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-08-08T16:44:56Z",
+      "side": 1,
+      "message": "if you can reformat Mike to keep whitespaces instead of tabs ?",
+      "revId": "8ba069267a16afcc56e021f522027dfc5adcba95",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
