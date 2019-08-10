@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba428ac0_cd7f5152",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/AutoPushController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-08-10T00:34:14Z",
+      "side": 1,
+      "message": "The \"scopes \u003d\" assignment is redundant, may get a sonar out of it ..",
+      "revId": "387ea95842917a00675aefc6e72c854e38335313",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
