@@ -29,6 +29,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.when;
+import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.controller.PolicyController;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyVersion;
@@ -46,10 +47,16 @@ public class PolicyNotificationMailTest {
         PolicyController.setjUnit(true);
         PolicyController.setSmtpApplicationName("Test");
         PolicyController.setSmtpEmailExtension("test.com");
-        PolicyController.setSmtpHost("test");
-        PolicyController.setSmtpPort("23");
+        PolicyController.setSmtpHost("localhost");
         PolicyController.setSmtpPassword("test");
         PolicyController.setSmtpUsername("test");
+
+        /*
+         * Allocate a port to which the mail sender should connect, but don't actually
+         * start a listener on the port so that connection attempts will be immediately
+         * rejected.
+         */
+        PolicyController.setSmtpPort(String.valueOf(NetworkUtil.allocPort()));
 
         version = new PolicyVersion();
         version.setPolicyName("com/Config_Test");
