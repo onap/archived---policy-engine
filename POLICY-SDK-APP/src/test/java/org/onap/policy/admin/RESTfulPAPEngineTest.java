@@ -23,28 +23,28 @@ package org.onap.policy.admin;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import javax.servlet.http.HttpServletResponse;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URLConnection;
+import javax.servlet.http.HttpServletResponse;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
+import com.att.research.xacml.util.XACMLProperties;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({URL.class, RESTfulPAPEngine.class})
 public class RESTfulPAPEngineTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -61,13 +61,20 @@ public class RESTfulPAPEngineTest {
     OnapPDP pdp = Mockito.mock(OnapPDP.class);
     InputStream policy;
 
+    @BeforeClass
+    public static void setUpBeforeClass() {
+        XACMLProperties.reloadProperties();
+    }
+
+    @AfterClass
+    public static void tearDownAfterClass() {
+        XACMLProperties.reloadProperties();
+    }
+
     @Before
     public void runConstructor() throws Exception {
-        // Mock url and connection
-        URL url = PowerMockito.mock(URL.class);
-        PowerMockito.whenNew(URL.class).withArguments(Mockito.any()).thenReturn(url);
+        // Mock connection
         HttpURLConnection connection = Mockito.mock(HttpURLConnection.class);
-        Mockito.when(url.openConnection()).thenReturn(connection);
         Mockito.when(connection.getResponseCode()).thenReturn(HttpServletResponse.SC_NO_CONTENT);
 
         // Set the system property temporarily
@@ -77,7 +84,12 @@ public class RESTfulPAPEngineTest {
 
         // Test constructor
         String urlName = "localhost:1234";
-        engine = new RESTfulPAPEngine(urlName);
+        engine = new RESTfulPAPEngine(urlName) {
+            @Override
+            protected URLConnection makeConnection(String fullURL) throws IOException {
+                return connection;
+            }
+        };
 
         // Initialize policy
         policy = new ByteArrayInputStream(policyContent.getBytes("UTF-8"));
