@@ -36,7 +36,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -379,12 +381,10 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
                 }
             }
 
-            URL url = new URL(fullURL);
-
             //
             // Open up the connection
             //
-            connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) makeConnection(fullURL);
             //
             // Setup our method and headers
             //
@@ -526,5 +526,11 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
         }
         LOGGER.info("JSON response from PAP: " + json);
         return json;
+    }
+
+    // these may be overridden by junit tests
+
+    protected URLConnection makeConnection(String fullURL) throws MalformedURLException, IOException {
+        return new URL(fullURL).openConnection();
     }
 }

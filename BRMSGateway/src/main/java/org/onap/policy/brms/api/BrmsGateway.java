@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,7 +31,7 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
  * BRMSGateway: This application acts as the Gateway interface between the PDP XACML and PDP Drools.
  * The listens for BRMS based policies and pushes them to the specified Policy Repository, from
  * where the PDP Drools reads the Rule Jar.
- * 
+ *
  * @version 0.1
  */
 public class BrmsGateway {
@@ -40,6 +40,8 @@ public class BrmsGateway {
     private static final String CONFIGFILE = "config.properties";
 
     private static PolicyEngine policyEngine = null;
+
+    private static Factory factory = new Factory();
 
     private BrmsGateway() {
         // Default private constructor
@@ -68,7 +70,7 @@ public class BrmsGateway {
         logger.info("Initializing BRMS Handler");
         BrmsHandler brmsHandler = null;
         try {
-            brmsHandler = new BrmsHandler(configFile);
+            brmsHandler = factory.makeBrmsHandler(configFile);
         } catch (final PolicyException e) {
             String errorString = "Check your property file: " + e.getMessage();
             logger.error(errorString);
@@ -88,18 +90,35 @@ public class BrmsGateway {
         final Runnable runnable = () -> {
             while (true) {
                 try {
-                    Thread.sleep(30000);
+                    factory.sleep(30000);
                 } catch (final InterruptedException e) {
                     logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Thread Exception " + e.getMessage());
                     Thread.currentThread().interrupt();
                 }
             }
         };
-        final Thread thread = new Thread(runnable);
+        final Thread thread = factory.makeThread(runnable);
         thread.start();
     }
 
     public static PolicyEngine getPolicyEngine() {
         return policyEngine;
+    }
+
+    /**
+     * Factory to provide various data.  May be overridden by junit tests.
+     */
+    public static class Factory {
+        public BrmsHandler makeBrmsHandler(String configFile) throws PolicyException {
+            return new BrmsHandler(configFile);
+        }
+
+        public void sleep(long sleepMs) throws InterruptedException {
+            Thread.sleep(sleepMs);
+        }
+
+        public Thread makeThread(Runnable runnable) {
+            return new Thread(runnable);
+        }
     }
 }
