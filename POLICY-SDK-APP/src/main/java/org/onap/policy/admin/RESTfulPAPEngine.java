@@ -22,13 +22,6 @@
 
 package org.onap.policy.admin;
 
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.api.pap.PDPPolicy;
-import com.att.research.xacml.api.pap.PDPStatus;
-import com.att.research.xacml.util.XACMLProperties;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -36,7 +29,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -63,6 +55,13 @@ import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPItemSetChangeNotifier;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.api.pap.PDPPolicy;
+import com.att.research.xacml.api.pap.PDPStatus;
+import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 
 /**
  * Implementation of the PAPEngine interface that communicates with a PAP engine in a remote servlet through a RESTful
