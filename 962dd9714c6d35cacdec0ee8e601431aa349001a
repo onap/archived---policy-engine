@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3f63832_0b15818f",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsGateway.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-08-23T03:31:33Z",
+      "side": 1,
+      "message": "license year",
+      "revId": "962dd9714c6d35cacdec0ee8e601431aa349001a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "566f19c4_751bde47",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/PolicyNotificationMailTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-08-23T03:31:33Z",
+      "side": 1,
+      "message": "license year - general",
+      "revId": "962dd9714c6d35cacdec0ee8e601431aa349001a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
