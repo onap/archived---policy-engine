@@ -22,6 +22,30 @@
       "revId": "1c67caa3a748649504ae60cd2db7fdec79903d0b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60edd92d_f7ace697",
+        "filename": "ONAP-SDK-APP/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-08-26T13:24:57Z",
+      "side": 1,
+      "message": "Yes we can probably do this.  I was hoping to test this change first to verify it works and then I can go back and upgrade the parent.  I don\u0027t think that one will have too many issues since it does not have any dependencies that conflict with portal sdk.",
+      "parentUuid": "aa20440e_0fea591c",
+      "range": {
+        "startLine": 32,
+        "startChar": 33,
+        "endLine": 32,
+        "endChar": 48
+      },
+      "revId": "1c67caa3a748649504ae60cd2db7fdec79903d0b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
