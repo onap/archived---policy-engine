@@ -1,9 +1,12 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
 
+.. _legacyapis-label:
 
-Offered APIs
-============
+Legacy Offered APIs  
+===================
+
+.. warning:: These Legacy APIs are scheduled to be deprecated after the Frankfurt release!
 
 .. contents:: 
     :depth: 2
