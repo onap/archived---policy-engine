@@ -22,6 +22,30 @@
       "revId": "dde7c80b605c459569bf32838983c5e4c163521a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84ee136d_b0dd24ca",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/main/policyEditor.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-08-30T13:04:37Z",
+      "side": 1,
+      "message": "You are correct it comes from portal.. everything in the fusion directory is from portal.",
+      "parentUuid": "b28f0f63_f532d1dd",
+      "range": {
+        "startLine": 29,
+        "startChar": 48,
+        "endLine": 38,
+        "endChar": 55
+      },
+      "revId": "dde7c80b605c459569bf32838983c5e4c163521a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
