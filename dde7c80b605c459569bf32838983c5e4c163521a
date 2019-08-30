@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b28f0f63_f532d1dd",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/main/policyEditor.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-30T12:20:27Z",
+      "side": 1,
+      "message": "wait a minute - don\u0027t you have to change the local packaging to ensure these angular-1.4.13 javascript packages are there?? Or are these pulling from somewhere within the portal sdk jar file??\n\nsee ONAP-SDK-APP/src/main/webapp/app/fusion/external\n\nwhere is the base for app/fusion/external... coming from?? I think from the portal jar (or war) just want to confirm.",
+      "range": {
+        "startLine": 29,
+        "startChar": 48,
+        "endLine": 38,
+        "endChar": 55
+      },
+      "revId": "dde7c80b605c459569bf32838983c5e4c163521a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
