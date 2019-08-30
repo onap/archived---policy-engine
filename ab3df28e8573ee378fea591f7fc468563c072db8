@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "18057f6f_42d64b6c",
+        "filename": "docs/platform/offeredapis.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-30T10:52:19Z",
+      "side": 1,
+      "message": "are scheduled to be deprecated after the",
+      "range": {
+        "startLine": 9,
+        "startChar": 31,
+        "endLine": 9,
+        "endChar": 60
+      },
+      "revId": "ab3df28e8573ee378fea591f7fc468563c072db8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
