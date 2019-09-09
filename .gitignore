@@ -33,6 +33,8 @@ XACML-REST/IntegrityMonitor.log
 *.checkstyle
 *.iml
 *.log
+*.pyc
+*.pyo
 BRMSGateway/logs/
 BRMSGateway/sql/
 BRMSGateway/src/test/resources/META-INF/generatedCreate.ddl
