@@ -65,7 +65,7 @@
     </build>
     <properties>
         <encoding>UTF-8</encoding>
-        <epsdk.version>2.6.0-SNAPSHOT</epsdk.version>
+        <epsdk.version>2.6.0</epsdk.version>
         <springframework.version>4.3.24.RELEASE</springframework.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <logback.version>1.2.3</logback.version>
