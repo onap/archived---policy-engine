@@ -94,7 +94,7 @@ OOM Installation - Policy Kubernetes Recipes
        :caption: Access the PAP container
        :linenos:
 
-        kubectl exec -it <pap-pod> -c pap -n onap bash
+        kubectl exec -it <pap-pod> -c pap -n onap -- bash --login
 
 
     .. code-block:: bash
@@ -112,7 +112,7 @@ OOM Installation - Policy Kubernetes Recipes
 
         # <policy-deployment-prefix> depends on the deployment configuration
 
-        kubectl exec -it <policy-deployment-prefix>-pdp-0 -c drools -n onap bash
+        kubectl exec -it <policy-deployment-prefix>-pdp-0 -c pdp -n onap -- bash --login
 
 
     .. code-block:: bash
@@ -193,15 +193,17 @@ PAP Recipes (inside the "pap" container)
        :caption: Bypass Portal Authentication with the Policy Web UI
        :linenos:
 
-        sed -i "s/^role_access_centralized.*$/#role_access_centralized=remote/g" /opt/app/policy/servers/console/webapps/onap/WEB-INF/classes/portal.properties; policy.sh stop; policy.sh start;
+        sed -i "s/^role_access_centralized.*$/#role_access_centralized=remote/g" /opt/app/policy/servers/console/webapps/onap/WEB-INF/classes/portal.properties
+        cd /opt/app/policy/servers/pap
+        /opt/app/policy/etc/init.d/pap stop; /opt/app/policy/etc/init.d/pap start
+        policy.sh status
 
 
     .. code-block:: bash
        :caption: Access the Policy Web UI without going through the Portal UI
        :linenos:
 
-       https://<pap-vm>:8443/onap/login.htm  (Heat)
-       https://<pap-vm>:30219/onap/login.htm  (Kubernetes)
+       https://policy.api.simpledemo.onap.org:30219/onap/policy  (Kubernetes)
 
 
 End of Document
