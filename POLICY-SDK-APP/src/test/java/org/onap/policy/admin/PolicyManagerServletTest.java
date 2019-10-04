@@ -19,19 +19,23 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.admin;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -98,8 +102,7 @@ public class PolicyManagerServletTest extends Mockito {
         String policyContent = "";
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            policyContent = IOUtils
-                    .toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml"));
+            policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml"));
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
         }
@@ -141,8 +144,7 @@ public class PolicyManagerServletTest extends Mockito {
         HttpSession mockSession = mock(HttpSession.class);
         User user = new User();
         user.setOrgUserId("Test");
-        Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name")))
-                .thenReturn(user);
+        Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name"))).thenReturn(user);
         Mockito.when(request.getSession(false)).thenReturn(mockSession);
         commonClassDao = mock(CommonClassDao.class);
 
@@ -153,14 +155,11 @@ public class PolicyManagerServletTest extends Mockito {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         ServletConfig servletConfig = mock(ServletConfig.class);
         try {
-            when(servletConfig.getInitParameterNames())
-                    .thenReturn(Collections.enumeration(headers));
-            when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME"))
-                    .thenReturn("xacml.admin.properties");
+            when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
+            when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("xacml.admin.properties");
             System.setProperty("xacml.rest.admin.closedLoopJSON",
-                    new File(".").getCanonicalPath() + File.separator + "src" + File.separator
-                            + "test" + File.separator + "resources" + File.separator
-                            + "JSONConfig.json");
+                    new File(".").getCanonicalPath() + File.separator + "src" + File.separator + "test" + File.separator
+                            + "resources" + File.separator + "JSONConfig.json");
             servlet.init(servletConfig);
 
             assertTrue(PolicyManagerServlet.getServiceTypeNamesList().size() > 0);
@@ -177,14 +176,11 @@ public class PolicyManagerServletTest extends Mockito {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         ServletConfig servletConfig = mock(ServletConfig.class);
         try {
-            when(servletConfig.getInitParameterNames())
-                    .thenReturn(Collections.enumeration(headers));
-            when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME"))
-                    .thenReturn("xacml.admin.properties");
+            when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
+            when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("xacml.admin.properties");
             System.setProperty("xacml.rest.admin.closedLoopJSON",
-                    new File(".").getCanonicalPath() + File.separator + "src" + File.separator
-                            + "test" + File.separator + "resources" + File.separator
-                            + "JSONConfig.foo");
+                    new File(".").getCanonicalPath() + File.separator + "src" + File.separator + "test" + File.separator
+                            + "resources" + File.separator + "JSONConfig.foo");
             servlet.init(servletConfig);
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
@@ -197,14 +193,11 @@ public class PolicyManagerServletTest extends Mockito {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         ServletConfig servletConfig = mock(ServletConfig.class);
         try {
-            when(servletConfig.getInitParameterNames())
-                    .thenReturn(Collections.enumeration(headers));
-            when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME"))
-                    .thenReturn("xacml.admin.properties");
+            when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
+            when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("xacml.admin.properties");
             System.setProperty("xacml.rest.admin.closedLoopJSON",
-                    new File(".").getCanonicalPath() + File.separator + "src" + File.separator
-                            + "test" + File.separator + "resources" + File.separator
-                            + "IDonotExist.json");
+                    new File(".").getCanonicalPath() + File.separator + "src" + File.separator + "test" + File.separator
+                            + "resources" + File.separator + "IDonotExist.json");
             servlet.init(servletConfig);
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
@@ -217,8 +210,8 @@ public class PolicyManagerServletTest extends Mockito {
     public void testDescribePolicy() {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
-        BufferedReader reader = new BufferedReader(new StringReader(
-                "{params: { mode: 'DESCRIBEPOLICYFILE', path: 'com.Config_SampleTest1206.1.xml'}}"));
+        BufferedReader reader = new BufferedReader(
+                new StringReader("{params: { mode: 'DESCRIBEPOLICYFILE', path: 'com.Config_SampleTest1206.1.xml'}}"));
         try {
             when(request.getReader()).thenReturn(reader);
             String query = "FROM PolicyEntity where policyName = :split_1 and scope = :split_0";
@@ -230,7 +223,6 @@ public class PolicyManagerServletTest extends Mockito {
             fail();
         }
     }
-
 
     @SuppressWarnings("static-access")
     @Test
@@ -245,14 +237,11 @@ public class PolicyManagerServletTest extends Mockito {
             try {
                 when(request.getReader()).thenReturn(reader);
                 when(controller.getRoles("Test")).thenReturn(rolesdata);
-                when(controller.getDataByQuery("from PolicyEditorScopes", null))
+                when(controller.getDataByQuery("from PolicyEditorScopes", null)).thenReturn(policyEditorScopes);
+                when(controller.getDataByQuery("from PolicyEditorScopes where SCOPENAME like :scopeName", null))
                         .thenReturn(policyEditorScopes);
-                when(controller.getDataByQuery(
-                        "from PolicyEditorScopes where SCOPENAME like :scopeName", null))
-                                .thenReturn(policyEditorScopes);
-                when(controller.getDataByQuery(
-                        "from PolicyVersion where POLICY_NAME like :scopeName", null))
-                                .thenReturn(policyVersion);
+                when(controller.getDataByQuery("from PolicyVersion where POLICY_NAME like :scopeName", null))
+                        .thenReturn(policyVersion);
                 servlet.setPolicyController(controller);
                 servlet.setTestUserId("Test");
                 servlet.doPost(request, response);
@@ -269,16 +258,14 @@ public class PolicyManagerServletTest extends Mockito {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
-        list.add(
-                "{params: { mode: 'EDITFILE', path: '/com/Config_SampleTest1206.1.xml', onlyFolders: false}}");
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Config_SampleTest1206.1.xml', onlyFolders: false}}");
         for (int i = 0; i < list.size(); i++) {
             BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
             try {
                 when(request.getReader()).thenReturn(reader);
                 when(controller.getRoles("Test")).thenReturn(rolesdata);
-                when(controller.getDataByQuery(
-                        "FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null))
-                                .thenReturn(basePolicyData);
+                when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0",
+                        null)).thenReturn(basePolicyData);
                 servlet.setPolicyController(controller);
                 servlet.setTestUserId("Test");
                 servlet.doPost(request, response);
@@ -297,10 +284,10 @@ public class PolicyManagerServletTest extends Mockito {
         String configData = "";
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            policyContent = IOUtils.toString(classLoader
-                    .getResourceAsStream("Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml"));
-            configData = IOUtils.toString(classLoader
-                    .getResourceAsStream("com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.txt"));
+            policyContent =
+                    IOUtils.toString(classLoader.getResourceAsStream("Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml"));
+            configData = IOUtils
+                    .toString(classLoader.getResourceAsStream("com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.txt"));
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
         }
@@ -311,25 +298,22 @@ public class PolicyManagerServletTest extends Mockito {
         ConfigurationDataEntity configurationEntity = new ConfigurationDataEntity();
         configurationEntity.setConfigBody(configData);
         configurationEntity.setConfigType("OTHER");
-        configurationEntity
-                .setConfigurationName("com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.txt");
+        configurationEntity.setConfigurationName("com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.txt");
         configurationEntity.setDescription("test");
         entity.setConfigurationData(configurationEntity);
         policyData.add(entity);
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
-        list.add(
-                "{params: { mode: 'EDITFILE', path: '/com/Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml',"
-                        + " onlyFolders: false}}");
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml',"
+                + " onlyFolders: false}}");
         for (int i = 0; i < list.size(); i++) {
             BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
             try {
                 when(request.getReader()).thenReturn(reader);
                 when(controller.getRoles("Test")).thenReturn(rolesdata);
-                when(controller.getDataByQuery(
-                        "FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null))
-                                .thenReturn(policyData);
+                when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0",
+                        null)).thenReturn(policyData);
                 servlet.setPolicyController(controller);
                 servlet.setTestUserId("Test");
                 servlet.doPost(request, response);
@@ -348,10 +332,10 @@ public class PolicyManagerServletTest extends Mockito {
         String configData = "";
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            policyContent = IOUtils.toString(
-                    classLoader.getResourceAsStream("Config_BRMS_Raw_TestBRMSRawPolicy.1.xml"));
-            configData = IOUtils.toString(
-                    classLoader.getResourceAsStream("com.Config_BRMS_Raw_TestBRMSRawPolicy.1.txt"));
+            policyContent =
+                    IOUtils.toString(classLoader.getResourceAsStream("Config_BRMS_Raw_TestBRMSRawPolicy.1.xml"));
+            configData =
+                    IOUtils.toString(classLoader.getResourceAsStream("com.Config_BRMS_Raw_TestBRMSRawPolicy.1.txt"));
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
         }
@@ -369,17 +353,15 @@ public class PolicyManagerServletTest extends Mockito {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
-        list.add(
-                "{params: { mode: 'EDITFILE', path: '/com/Config_BRMS_Raw_TestBRMSRawPolicy.1.xml',"
-                        + " onlyFolders: false}}");
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Config_BRMS_Raw_TestBRMSRawPolicy.1.xml',"
+                + " onlyFolders: false}}");
         for (int i = 0; i < list.size(); i++) {
             BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
             try {
                 when(request.getReader()).thenReturn(reader);
                 when(controller.getRoles("Test")).thenReturn(rolesdata);
-                when(controller.getDataByQuery(
-                        "FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null))
-                                .thenReturn(policyData);
+                when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0",
+                        null)).thenReturn(policyData);
                 servlet.setPolicyController(controller);
                 servlet.setTestUserId("Test");
                 servlet.doPost(request, response);
@@ -398,10 +380,10 @@ public class PolicyManagerServletTest extends Mockito {
         String configData = "";
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            policyContent = IOUtils.toString(
-                    classLoader.getResourceAsStream("Config_Fault_TestClosedLoopPolicy.1.xml"));
-            configData = IOUtils.toString(classLoader
-                    .getResourceAsStream("com.Config_Fault_TestClosedLoopPolicy.1.json"));
+            policyContent =
+                    IOUtils.toString(classLoader.getResourceAsStream("Config_Fault_TestClosedLoopPolicy.1.xml"));
+            configData =
+                    IOUtils.toString(classLoader.getResourceAsStream("com.Config_Fault_TestClosedLoopPolicy.1.json"));
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
         }
@@ -419,17 +401,15 @@ public class PolicyManagerServletTest extends Mockito {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
-        list.add(
-                "{params: { mode: 'EDITFILE', path: '/com/Config_Fault_TestClosedLoopPolicy.1.xml',"
-                        + " onlyFolders: false}}");
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Config_Fault_TestClosedLoopPolicy.1.xml',"
+                + " onlyFolders: false}}");
         for (int i = 0; i < list.size(); i++) {
             BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
             try {
                 when(request.getReader()).thenReturn(reader);
                 when(controller.getRoles("Test")).thenReturn(rolesdata);
-                when(controller.getDataByQuery(
-                        "FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null))
-                                .thenReturn(policyData);
+                when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0",
+                        null)).thenReturn(policyData);
                 servlet.setPolicyController(controller);
                 servlet.setTestUserId("Test");
                 servlet.doPost(request, response);
@@ -448,10 +428,9 @@ public class PolicyManagerServletTest extends Mockito {
         String configData = "";
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            policyContent = IOUtils.toString(
-                    classLoader.getResourceAsStream("Config_PM_TestClosedLoopPMPolicy.1.xml"));
-            configData = IOUtils.toString(
-                    classLoader.getResourceAsStream("com.Config_PM_TestClosedLoopPMPolicy.1.json"));
+            policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_PM_TestClosedLoopPMPolicy.1.xml"));
+            configData =
+                    IOUtils.toString(classLoader.getResourceAsStream("com.Config_PM_TestClosedLoopPMPolicy.1.json"));
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
         }
@@ -476,9 +455,8 @@ public class PolicyManagerServletTest extends Mockito {
             try {
                 when(request.getReader()).thenReturn(reader);
                 when(controller.getRoles("Test")).thenReturn(rolesdata);
-                when(controller.getDataByQuery(
-                        "FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null))
-                                .thenReturn(policyData);
+                when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0",
+                        null)).thenReturn(policyData);
                 servlet.setPolicyController(controller);
                 servlet.setTestUserId("Test");
                 servlet.doPost(request, response);
@@ -505,10 +483,8 @@ public class PolicyManagerServletTest extends Mockito {
         String configData = "";
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            policyContent =
-                    IOUtils.toString(classLoader.getResourceAsStream("Config_MS_vFirewall.1.xml"));
-            configData = IOUtils
-                    .toString(classLoader.getResourceAsStream("com.Config_MS_vFirewall.1.json"));
+            policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_MS_vFirewall.1.xml"));
+            configData = IOUtils.toString(classLoader.getResourceAsStream("com.Config_MS_vFirewall.1.json"));
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
         }
@@ -526,20 +502,17 @@ public class PolicyManagerServletTest extends Mockito {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
-        list.add(
-                "{params: { mode: 'EDITFILE', path: '/com/Config_MS_vFirewall.1.xml', onlyFolders: false}}");
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Config_MS_vFirewall.1.xml', onlyFolders: false}}");
         for (int i = 0; i < list.size(); i++) {
             BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
             try {
                 when(request.getReader()).thenReturn(reader);
                 when(commonClassDao.getDataById(GroupPolicyScopeList.class, "groupList",
                         "resource=SampleResource,service=SampleService,type=SampleType,"
-                                + "closedLoopControlName=SampleClosedLoop"))
-                                        .thenReturn(groupListData);
+                                + "closedLoopControlName=SampleClosedLoop")).thenReturn(groupListData);
                 when(controller.getRoles("Test")).thenReturn(rolesdata);
-                when(controller.getDataByQuery(
-                        "FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null))
-                                .thenReturn(policyData);
+                when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0",
+                        null)).thenReturn(policyData);
                 servlet.setPolicyController(controller);
                 servlet.setTestUserId("Test");
                 servlet.doPost(request, response);
@@ -558,10 +531,8 @@ public class PolicyManagerServletTest extends Mockito {
         String configData = "";
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            policyContent = IOUtils.toString(
-                    classLoader.getResourceAsStream("Config_FW_TestFireWallPolicy.1.xml"));
-            configData = IOUtils.toString(
-                    classLoader.getResourceAsStream("com.Config_FW_TestFireWallPolicy.1.json"));
+            policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_FW_TestFireWallPolicy.1.xml"));
+            configData = IOUtils.toString(classLoader.getResourceAsStream("com.Config_FW_TestFireWallPolicy.1.json"));
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
         }
@@ -586,9 +557,8 @@ public class PolicyManagerServletTest extends Mockito {
             try {
                 when(request.getReader()).thenReturn(reader);
                 when(controller.getRoles("Test")).thenReturn(rolesdata);
-                when(controller.getDataByQuery(
-                        "FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null))
-                                .thenReturn(policyData);
+                when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0",
+                        null)).thenReturn(policyData);
                 servlet.setPolicyController(controller);
                 servlet.setTestUserId("Test");
                 servlet.doPost(request, response);
@@ -607,10 +577,8 @@ public class PolicyManagerServletTest extends Mockito {
         String configData = "";
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            policyContent = IOUtils
-                    .toString(classLoader.getResourceAsStream("Action_TestActionPolicy.1.xml"));
-            configData = IOUtils.toString(
-                    classLoader.getResourceAsStream("com.Action_TestActionPolicy.1.json"));
+            policyContent = IOUtils.toString(classLoader.getResourceAsStream("Action_TestActionPolicy.1.xml"));
+            configData = IOUtils.toString(classLoader.getResourceAsStream("com.Action_TestActionPolicy.1.json"));
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
         }
@@ -626,16 +594,14 @@ public class PolicyManagerServletTest extends Mockito {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
-        list.add("{params: { mode: 'EDITFILE', path: '/com/Action_TestActionPolicy.1.xml',"
-                + " onlyFolders: false}}");
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Action_TestActionPolicy.1.xml'," + " onlyFolders: false}}");
         for (int i = 0; i < list.size(); i++) {
             BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
             try {
                 when(request.getReader()).thenReturn(reader);
                 when(controller.getRoles("Test")).thenReturn(rolesdata);
-                when(controller.getDataByQuery(
-                        "FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null))
-                                .thenReturn(policyData);
+                when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0",
+                        null)).thenReturn(policyData);
                 servlet.setPolicyController(controller);
                 servlet.setTestUserId("Test");
                 servlet.doPost(request, response);
@@ -653,8 +619,8 @@ public class PolicyManagerServletTest extends Mockito {
         String policyContent = "";
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            policyContent = IOUtils.toString(classLoader
-                    .getResourceAsStream("Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml"));
+            policyContent = IOUtils
+                    .toString(classLoader.getResourceAsStream("Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml"));
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
         }
@@ -666,17 +632,15 @@ public class PolicyManagerServletTest extends Mockito {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
-        list.add(
-                "{params: { mode: 'EDITFILE', path: '/com/Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml',"
-                        + " onlyFolders: false}}");
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml',"
+                + " onlyFolders: false}}");
         for (int i = 0; i < list.size(); i++) {
             BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
             try {
                 when(request.getReader()).thenReturn(reader);
                 when(controller.getRoles("Test")).thenReturn(rolesdata);
-                when(controller.getDataByQuery(
-                        "FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null))
-                                .thenReturn(policyData);
+                when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0",
+                        null)).thenReturn(policyData);
                 servlet.setPolicyController(controller);
                 servlet.setTestUserId("Test");
                 servlet.doPost(request, response);
@@ -692,19 +656,16 @@ public class PolicyManagerServletTest extends Mockito {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<BufferedReader> readers = new ArrayList<>();
+        readers.add(new BufferedReader(new StringReader("{params: { mode: 'ADDFOLDER', path: '/', name: 'Test'}}")));
+        readers.add(new BufferedReader(new StringReader("{params: { mode: 'ADDFOLDER', path: '/', name: 'Test*&'}}")));
         readers.add(new BufferedReader(
-                new StringReader("{params: { mode: 'ADDFOLDER', path: '/', name: 'Test'}}")));
-        readers.add(new BufferedReader(
-                new StringReader("{params: { mode: 'ADDFOLDER', path: '/', name: 'Test*&'}}")));
-        readers.add(new BufferedReader(new StringReader(
-                "{params: { mode: 'ADDFOLDER', path: '/Test', subScopename: 'Test1'}}")));
+                new StringReader("{params: { mode: 'ADDFOLDER', path: '/Test', subScopename: 'Test1'}}")));
         for (int i = 0; i < readers.size(); i++) {
             try {
                 when(request.getReader()).thenReturn(readers.get(i));
                 PolicyManagerServlet.setPolicyController(controller);
                 servlet.doPost(request, response);
-                assertTrue(response.getContentAsString() != null
-                        && response.getContentAsString().contains("success"));
+                assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("success"));
             } catch (Exception e1) {
                 logger.error("Exception Occured" + e1);
                 fail();
@@ -720,18 +681,16 @@ public class PolicyManagerServletTest extends Mockito {
         when(controller.getEntityItem(ConfigurationDataEntity.class, "configurationName",
                 "com.Config_SampleTest1206.1.txt")).thenReturn(configurationEntity);
         when(controller.getDataByQuery(
-                "FROM PolicyEntity where policyName = :oldPolicySplit_1 and scope = :oldPolicySplit_0",
-                null)).thenReturn(basePolicyData);
-        readers.add(new BufferedReader(
-                new StringReader("{params: { mode: 'COPY', path: 'com.Config_test.1.xml',"
-                        + " newPath: 'com.Config_testClone.1.xml'}}")));
+                "FROM PolicyEntity where policyName = :oldPolicySplit_1 and scope = :oldPolicySplit_0", null))
+                        .thenReturn(basePolicyData);
+        readers.add(new BufferedReader(new StringReader("{params: { mode: 'COPY', path: 'com.Config_test.1.xml',"
+                + " newPath: 'com.Config_testClone.1.xml'}}")));
         for (int i = 0; i < readers.size(); i++) {
             try {
                 when(request.getReader()).thenReturn(readers.get(i));
                 PolicyManagerServlet.setPolicyController(controller);
                 servlet.doPost(request, response);
-                assertTrue(response.getContentAsString() != null
-                        && response.getContentAsString().contains("success"));
+                assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("success"));
             } catch (Exception e1) {
                 logger.error("Exception Occured" + e1);
                 fail();
@@ -747,18 +706,16 @@ public class PolicyManagerServletTest extends Mockito {
         when(controller.getEntityItem(ConfigurationDataEntity.class, "configurationName",
                 "com.Config_SampleTest1206.1.txt")).thenReturn(configurationEntity);
         when(controller.getDataByQuery(
-                "FROM PolicyEntity where policyName = :oldPolicySplit_1 and scope = :oldPolicySplit_0",
-                null)).thenReturn(basePolicyData);
-        readers.add(new BufferedReader(
-                new StringReader("{params: { mode: 'RENAME', path: 'com.Config_test.1.xml',"
-                        + " newPath: 'com.Config_testClone.1.xml'}}")));
+                "FROM PolicyEntity where policyName = :oldPolicySplit_1 and scope = :oldPolicySplit_0", null))
+                        .thenReturn(basePolicyData);
+        readers.add(new BufferedReader(new StringReader("{params: { mode: 'RENAME', path: 'com.Config_test.1.xml',"
+                + " newPath: 'com.Config_testClone.1.xml'}}")));
         for (int i = 0; i < readers.size(); i++) {
             try {
                 when(request.getReader()).thenReturn(readers.get(i));
                 PolicyManagerServlet.setPolicyController(controller);
                 servlet.doPost(request, response);
-                assertTrue(response.getContentAsString() != null
-                        && response.getContentAsString().contains("success"));
+                assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("success"));
             } catch (Exception e1) {
                 logger.error("Exception Occured" + e1);
                 fail();
@@ -771,15 +728,13 @@ public class PolicyManagerServletTest extends Mockito {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<BufferedReader> readers = new ArrayList<>();
-        readers.add(new BufferedReader(
-                new StringReader("{params: { mode: 'RENAME', path: 'com', newPath: 'Test'}}")));
+        readers.add(new BufferedReader(new StringReader("{params: { mode: 'RENAME', path: 'com', newPath: 'Test'}}")));
         for (int i = 0; i < readers.size(); i++) {
             try {
                 when(request.getReader()).thenReturn(readers.get(i));
                 PolicyManagerServlet.setPolicyController(controller);
                 servlet.doPost(request, response);
-                assertTrue(response.getContentAsString() != null
-                        && response.getContentAsString().contains("success"));
+                assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("success"));
             } catch (Exception e1) {
                 logger.error("Exception Occured" + e1);
                 fail();

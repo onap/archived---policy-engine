@@ -19,16 +19,21 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
-import org.junit.Test;
-import org.springframework.web.servlet.ModelAndView;
+
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.junit.Test;
+import org.springframework.web.servlet.ModelAndView;
 
 public class PolicyValidationControllerTest {
     @Test

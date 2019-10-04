@@ -24,6 +24,7 @@ package org.onap.policy.controller;
 
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,12 +38,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.annotation.PostConstruct;
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+
 import org.json.JSONObject;
 import org.onap.policy.admin.PolicyNotificationMail;
 import org.onap.policy.admin.RESTfulPAPEngine;
@@ -183,9 +187,8 @@ public class PolicyController extends RestrictedBaseController {
         try {
             String fileName;
             if (jUnit) {
-                fileName = new File(".").getCanonicalPath() + File.separator + "src"
-                        + File.separator + "test" + File.separator + "resources" + File.separator
-                        + "JSONConfig.json";
+                fileName = new File(".").getCanonicalPath() + File.separator + "src" + File.separator + "test"
+                        + File.separator + "resources" + File.separator + "JSONConfig.json";
             } else {
                 fileName = "xacml.admin.properties";
             }
@@ -236,19 +239,17 @@ public class PolicyController extends RestrictedBaseController {
             // Get the Property Values for Dashboard tab Limit
             try {
                 setLogTableLimit(prop.getProperty("xacml.onap.dashboard.logTableLimit"));
-                setSystemAlertTableLimit(
-                        prop.getProperty("xacml.onap.dashboard.systemAlertTableLimit"));
+                setSystemAlertTableLimit(prop.getProperty("xacml.onap.dashboard.systemAlertTableLimit"));
             } catch (Exception e) {
-                policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE
-                        + "Dashboard tab Property fields are missing" + e);
+                policyLogger
+                        .error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Dashboard tab Property fields are missing" + e);
                 setLogTableLimit("5000");
                 setSystemAlertTableLimit("2000");
             }
             System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "xacml.admin.properties");
         } catch (IOException ex) {
             policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE
-                    + "Exception Occured while reading the Smtp properties from xacml.admin.properties file"
-                    + ex);
+                    + "Exception Occured while reading the Smtp properties from xacml.admin.properties file" + ex);
         }
 
         // Initialize the FunctionDefinition table at Server Start up
@@ -298,8 +299,7 @@ public class PolicyController extends RestrictedBaseController {
             FunctionDefinition value = (FunctionDefinition) functiondefinitions.get(i);
             mapID2Function.put(value.getXacmlid(), value);
             if (!mapDatatype2Function.containsKey(value.getDatatypeBean())) {
-                mapDatatype2Function.put(value.getDatatypeBean(),
-                        new ArrayList<FunctionDefinition>());
+                mapDatatype2Function.put(value.getDatatypeBean(), new ArrayList<FunctionDefinition>());
             }
             mapDatatype2Function.get(value.getDatatypeBean()).add(value);
         }
@@ -311,22 +311,22 @@ public class PolicyController extends RestrictedBaseController {
      * @param request HttpServletRequest.
      * @param response HttpServletResponse.
      */
-    @RequestMapping(value = {"/get_FunctionDefinitionDataByName"},
+    @RequestMapping(
+            value = {"/get_FunctionDefinitionDataByName"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void getFunctionDefinitionData(HttpServletRequest request,
-            HttpServletResponse response) {
+    public void getFunctionDefinitionData(HttpServletRequest request, HttpServletResponse response) {
         try {
             Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
-            model.put("functionDefinitionDatas", mapper.writeValueAsString(
-                    commonClassDao.getDataByColumn(FunctionDefinition.class, "shortname")));
+            model.put("functionDefinitionDatas",
+                    mapper.writeValueAsString(commonClassDao.getDataByColumn(FunctionDefinition.class, "shortname")));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
             JSONObject j = new JSONObject(msg);
             response.getWriter().write(j.toString());
         } catch (Exception e) {
-            policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE
-                    + "Error while retriving the Function Definition data" + e);
+            policyLogger.error(
+                    XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while retriving the Function Definition data" + e);
         }
     }
 
@@ -368,7 +368,8 @@ public class PolicyController extends RestrictedBaseController {
      * @param request HttpServletRequest.
      * @param response HttpServletResponse.
      */
-    @RequestMapping(value = {"/get_UserRolesData"},
+    @RequestMapping(
+            value = {"/get_UserRolesData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getUserRolesEntityData(HttpServletRequest request, HttpServletResponse response) {
@@ -402,8 +403,7 @@ public class PolicyController extends RestrictedBaseController {
             setPapEngine(new RESTfulPAPEngine(myRequestUrl));
             new PDPGroupContainer(new RESTfulPAPEngine(myRequestUrl));
         } catch (Exception e) {
-            policyLogger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR
-                    + "Exception Occured while loading PAP" + e);
+            policyLogger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Exception Occured while loading PAP" + e);
         }
         Map<String, Object> model = new HashMap<>();
         return new ModelAndView("policy_Editor", "model", model);
@@ -438,8 +438,7 @@ public class PolicyController extends RestrictedBaseController {
                 savePolicyRoles(name, filteredRole, userId);
             } else {
                 userRoles = getRoles(userId);
-                Pair<Set<String>, List<String>> pair =
-                        org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
+                Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
                 roles = pair.u;
                 if (!roles.contains(filteredRole)) {
                     savePolicyRoles(name, filteredRole, userId);
@@ -511,8 +510,7 @@ public class PolicyController extends RestrictedBaseController {
                 roles.clear();
                 roles.add(SUPERADMIN);
             }
-            if (!roles.contains(SUPERADMIN)
-                    || (POLICYGUEST.equalsIgnoreCase(role) && !superCheck)) {
+            if (!roles.contains(SUPERADMIN) || (POLICYGUEST.equalsIgnoreCase(role) && !superCheck)) {
                 if ("Policy Admin".equalsIgnoreCase(role.trim())) {
                     roles.add("admin");
                 } else if ("Policy Editor".equalsIgnoreCase(role.trim())) {
@@ -576,8 +574,7 @@ public class PolicyController extends RestrictedBaseController {
     }
 
     public PolicyVersion getPolicyEntityFromPolicyVersion(String query) {
-        return (PolicyVersion) commonClassDao.getEntityItem(PolicyVersion.class, "policyName",
-                query);
+        return (PolicyVersion) commonClassDao.getEntityItem(PolicyVersion.class, "policyName", query);
     }
 
     public List<Object> getDataByQuery(String query, SimpleBindings params) {
@@ -620,8 +617,7 @@ public class PolicyController extends RestrictedBaseController {
             dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
         }
         String[] splitDbCheckName = dbCheckName.split(":");
-        String query =
-                "FROM PolicyEntity where policyName like :splitDBCheckName1 and scope = :splitDBCheckName0";
+        String query = "FROM PolicyEntity where policyName like :splitDBCheckName1 and scope = :splitDBCheckName0";
         SimpleBindings params = new SimpleBindings();
         params.put("splitDBCheckName1", splitDbCheckName[1] + "%");
         params.put("splitDBCheckName0", splitDbCheckName[0]);
@@ -637,8 +633,8 @@ public class PolicyController extends RestrictedBaseController {
         if (policyName.contains("/")) {
             policyName = policyName.replace("/", File.separator);
         }
-        PolicyVersion entity = (PolicyVersion) commonClassDao.getEntityItem(PolicyVersion.class,
-                "policyName", policyName);
+        PolicyVersion entity =
+                (PolicyVersion) commonClassDao.getEntityItem(PolicyVersion.class, "policyName", policyName);
         JSONObject el = new JSONObject();
         el.put("activeVersion", entity.getActiveVersion());
         el.put("availableVersions", av);
@@ -662,16 +658,14 @@ public class PolicyController extends RestrictedBaseController {
     }
 
     public String getDescription(PolicyEntity data) {
-        InputStream stream =
-                new ByteArrayInputStream(data.getPolicyData().getBytes(StandardCharsets.UTF_8));
+        InputStream stream = new ByteArrayInputStream(data.getPolicyData().getBytes(StandardCharsets.UTF_8));
         Object policy = XACMLPolicyScanner.readPolicy(stream);
         if (policy instanceof PolicySetType) {
             return ((PolicySetType) policy).getDescription();
         } else if (policy instanceof PolicyType) {
             return ((PolicyType) policy).getDescription();
         } else {
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE
-                    + "Expecting a PolicySet/Policy/Rule object. Got: "
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Expecting a PolicySet/Policy/Rule object. Got: "
                     + policy.getClass().getCanonicalName());
             return null;
         }
@@ -680,16 +674,14 @@ public class PolicyController extends RestrictedBaseController {
     public String[] getUserInfo(PolicyEntity data, List<PolicyVersion> activePolicies) {
         String policyName = data.getScope().replace(".", File.separator) + File.separator
                 + data.getPolicyName().substring(0, data.getPolicyName().indexOf('.'));
-        PolicyVersion polVersion = activePolicies.stream()
-                .filter(a -> policyName.equals(a.getPolicyName())).findAny().orElse(null);
+        PolicyVersion polVersion =
+                activePolicies.stream().filter(a -> policyName.equals(a.getPolicyName())).findAny().orElse(null);
         String[] result = new String[2];
         UserInfo userCreate = null;
         UserInfo userModify = null;
         if (polVersion != null) {
-            userCreate = (UserInfo) getEntityItem(UserInfo.class, "userLoginId",
-                    polVersion.getCreatedBy());
-            userModify = (UserInfo) getEntityItem(UserInfo.class, "userLoginId",
-                    polVersion.getModifiedBy());
+            userCreate = (UserInfo) getEntityItem(UserInfo.class, "userLoginId", polVersion.getCreatedBy());
+            userModify = (UserInfo) getEntityItem(UserInfo.class, "userLoginId", polVersion.getModifiedBy());
         }
 
         result[0] = userCreate != null ? userCreate.getUserName() : SUPERADMIN;
@@ -726,8 +718,7 @@ public class PolicyController extends RestrictedBaseController {
         return mapDatatype2Function;
     }
 
-    public static void setMapDatatype2Function(
-            Map<Datatype, List<FunctionDefinition>> mapDatatype2Function) {
+    public static void setMapDatatype2Function(Map<Datatype, List<FunctionDefinition>> mapDatatype2Function) {
         PolicyController.mapDatatype2Function = mapDatatype2Function;
     }
 

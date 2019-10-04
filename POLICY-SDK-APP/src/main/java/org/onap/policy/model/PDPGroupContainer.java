@@ -20,8 +20,8 @@
 
 package org.onap.policy.model;
 
-
 import com.att.research.xacml.api.pap.PAPException;
+
 import java.awt.Checkbox;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.util.PolicyContainer;

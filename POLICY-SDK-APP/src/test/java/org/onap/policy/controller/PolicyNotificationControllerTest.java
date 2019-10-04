@@ -19,15 +19,22 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+
+import com.mockrunner.mock.web.MockHttpServletRequest;
+import com.mockrunner.mock.web.MockHttpServletResponse;
+
 import java.io.IOException;
 import java.util.Collections;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -38,8 +45,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.web.servlet.ModelAndView;
-import com.mockrunner.mock.web.MockHttpServletRequest;
-import com.mockrunner.mock.web.MockHttpServletResponse;
 
 @RunWith(PowerMockRunner.class)
 public class PolicyNotificationControllerTest {
@@ -60,16 +65,14 @@ public class PolicyNotificationControllerTest {
         PolicyNotificationController controller = new PolicyNotificationController();
         controller.commonClassDao = dao;
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setBodyContent(
-                "{\n\"watchData\": {\"name\": \"testVal\",\"path\": \"testPath\"\n}}\n");
+        request.setBodyContent("{\n\"watchData\": {\"name\": \"testVal\",\"path\": \"testPath\"\n}}\n");
         MockHttpServletResponse response = new MockHttpServletResponse();
         ModelAndView model = controller.watchPolicy(request, response);
         assertNull(model);
         assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
 
         // Negative test watch
-        request.setBodyContent(
-                "{\n\"watchData\": {\"name\": \"testVal\",\"nopath\": \"testPath\"\n}}\n");
+        request.setBodyContent("{\n\"watchData\": {\"name\": \"testVal\",\"nopath\": \"testPath\"\n}}\n");
         response = new MockHttpServletResponse();
         model = controller.watchPolicy(request, response);
         assertNull(model);

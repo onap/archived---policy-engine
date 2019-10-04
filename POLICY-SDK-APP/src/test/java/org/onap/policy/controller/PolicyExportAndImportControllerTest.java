@@ -17,19 +17,26 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+
+import com.mockrunner.mock.web.MockHttpServletRequest;
+import com.mockrunner.mock.web.MockHttpServletResponse;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,8 +50,6 @@ import org.onap.portalsdk.core.web.support.UserUtils;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import com.mockrunner.mock.web.MockHttpServletRequest;
-import com.mockrunner.mock.web.MockHttpServletResponse;
 
 @RunWith(PowerMockRunner.class)
 public class PolicyExportAndImportControllerTest {
@@ -97,9 +102,8 @@ public class PolicyExportAndImportControllerTest {
         ClassLoader classLoader = getClass().getClassLoader();
 
         // Test negative case
-        String file =
-                new File(classLoader.getResource("Config_BRMS_Raw_TestBRMSRawPolicy.1.xml").getFile())
-                        .getAbsolutePath();
+        String file = new File(classLoader.getResource("Config_BRMS_Raw_TestBRMSRawPolicy.1.xml").getFile())
+                .getAbsolutePath();
         JSONObject json = controller.importRepositoryFile(file, request);
         assertNull(json);
 

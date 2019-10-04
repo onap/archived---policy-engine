@@ -22,7 +22,6 @@
 
 package org.onap.policy.controller;
 
-
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -31,6 +30,12 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jackson.JsonLoader;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,9 +44,19 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -53,17 +68,6 @@ import org.onap.policy.rest.jpa.OptimizationModels;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jackson.JsonLoader;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 /**
  * The class <code>CreateOptimizationControllerTest</code> contains tests for the class
@@ -94,26 +98,24 @@ public class CreateOptimizationControllerTest {
         when(commonClassDao.getDataById(OptimizationModels.class, "modelName", "test"))
                 .thenReturn(optimizationModelsData);
 
-        jsonString =
-                "{\"policyData\": {\"error\": \"\",\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
-                        + " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,"
-                        + "\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\",\"createdBy\": \"someone\","
-                        + "\"modifiedBy\": \"someone\",\"content\": \"\",\"recursive\": false},"
-                        + "\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
-                        + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"OOF\","
-                        + "\"policyName\": \"testPolicy\",\"policyDescription\": \"testing input\","
-                        + "\"onapName\": \"test\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
-                        + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
-                        + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
-                        + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
+        jsonString = "{\"policyData\": {\"error\": \"\",\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
+                + " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,"
+                + "\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\",\"createdBy\": \"someone\","
+                + "\"modifiedBy\": \"someone\",\"content\": \"\",\"recursive\": false},"
+                + "\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
+                + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"OOF\","
+                + "\"policyName\": \"testPolicy\",\"policyDescription\": \"testing input\","
+                + "\"onapName\": \"test\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
+                + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
+                + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
+                + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
 
-        configBodyString =
-                "{\"service\":\"PolicyEntityTest\",\"policyName\":\"someone\",\"description\":\"test\","
-                        + "\"templateVersion\":\"1607\",\"version\":\"HD\",\"priority\":\"2\","
-                        + "\"content\":{\"lastPolled\":\"1\",\"boolen-test\":\"true\",\"created\":\"test\","
-                        + "\"retiredDate\":\"test\",\"scope\":\"TEST_PLACEMENT_VDHV\",\"name\":\"test\","
-                        + "\"lastModified\":\"test\",\"state\":\"CREATED\",\"type\":\"CONFIG\",\"intent\":\"test\","
-                        + "\"target\":\"TEST\"}}";
+        configBodyString = "{\"service\":\"PolicyEntityTest\",\"policyName\":\"someone\",\"description\":\"test\","
+                + "\"templateVersion\":\"1607\",\"version\":\"HD\",\"priority\":\"2\","
+                + "\"content\":{\"lastPolled\":\"1\",\"boolen-test\":\"true\",\"created\":\"test\","
+                + "\"retiredDate\":\"test\",\"scope\":\"TEST_PLACEMENT_VDHV\",\"name\":\"test\","
+                + "\"lastModified\":\"test\",\"state\":\"CREATED\",\"type\":\"CONFIG\",\"intent\":\"test\","
+                + "\"target\":\"TEST\"}}";
 
         request = mock(HttpServletRequest.class);
         BufferedReader br = new BufferedReader(new StringReader(jsonString));
@@ -141,15 +143,14 @@ public class CreateOptimizationControllerTest {
         PolicyRestAdapter policyData = null;
         try {
             root = JsonLoader.fromString(jsonString);
-            policyData = (PolicyRestAdapter) mapper.readValue(
-                    root.get("policyData").get("policy").toString(), PolicyRestAdapter.class);
+            policyData = (PolicyRestAdapter) mapper.readValue(root.get("policyData").get("policy").toString(),
+                    PolicyRestAdapter.class);
         } catch (Exception e) {
             logger.error("testSetDataToPolicyRestAdapter", e);
         }
 
         PolicyRestAdapter result = controller.setDataToPolicyRestAdapter(policyData, root);
-        assertTrue(
-                result != null && result.getJsonBody() != null && !result.getJsonBody().isEmpty());
+        assertTrue(result != null && result.getJsonBody() != null && !result.getJsonBody().isEmpty());
 
         logger.debug("result.getJsonBody() : " + result.getJsonBody());
         logger.debug("testSetDataToPolicyRestAdapter: exit");
@@ -181,8 +182,8 @@ public class CreateOptimizationControllerTest {
             testData.setVersion("1707.4.1.2-Junit");
             optimizationModelsData.add(testData);
             // mock the getDataById() call with the same MS model name
-            when(commonClassDao.getDataById(OptimizationModels.class, "modelName",
-                    "testPolicyBody")).thenReturn(optimizationModelsData);
+            when(commonClassDao.getDataById(OptimizationModels.class, "modelName", "testPolicyBody"))
+                    .thenReturn(optimizationModelsData);
 
             controller.getOptimizationTemplateData(request, response);
 
@@ -225,8 +226,8 @@ public class CreateOptimizationControllerTest {
             optimizationModelsData.add(testData);
 
             // mock the getDataById() call with the same MS model name
-            when(commonClassDao.getDataById(OptimizationModels.class, "modelName",
-                    "TestPolicyBody")).thenReturn(optimizationModelsData);
+            when(commonClassDao.getDataById(OptimizationModels.class, "modelName", "TestPolicyBody"))
+                    .thenReturn(optimizationModelsData);
             controller.getModelServiceVersionData(request, response);
 
             assertTrue(response.getContentAsString() != null
@@ -266,8 +267,8 @@ public class CreateOptimizationControllerTest {
 
         try {
             root = JsonLoader.fromString(jsonString);
-            restAdapter = (PolicyRestAdapter) mapper.readValue(
-                    root.get("policyData").get("policy").toString(), PolicyRestAdapter.class);
+            restAdapter = (PolicyRestAdapter) mapper.readValue(root.get("policyData").get("policy").toString(),
+                    PolicyRestAdapter.class);
             PolicyType policyType = new PolicyType();
             TargetType target = new TargetType();
 
@@ -409,9 +410,7 @@ public class CreateOptimizationControllerTest {
             String fileName = "";
             try {
                 ClassLoader classLoader = getClass().getClassLoader();
-                fileName =
-                        new File(classLoader.getResource("schedulerPolicies-v1707.xmi").getFile())
-                                .getAbsolutePath();
+                fileName = new File(classLoader.getResource("schedulerPolicies-v1707.xmi").getFile()).getAbsolutePath();
             } catch (Exception e1) {
                 logger.error("Exception Occured while loading file" + e1);
             }

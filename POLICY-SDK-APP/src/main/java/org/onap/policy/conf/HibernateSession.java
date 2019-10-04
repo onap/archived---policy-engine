@@ -35,41 +35,40 @@ import org.onap.policy.controller.PolicyController;
 import org.onap.policy.rest.jpa.SystemLogDB;
 
 @SuppressWarnings("deprecation")
-public class HibernateSession{
+public class HibernateSession {
 
-	private static final Logger LOGGER	= FlexLogger.getLogger(HibernateSession.class);
-	
-	private static SessionFactory logSessionFactory;
-	
-	static {
-		try {
-			Properties prop= new Properties();
-			prop.setProperty("hibernate.connection.url", PolicyController.getLogdbUrl());
-			prop.setProperty("hibernate.connection.username", PolicyController.getLogdbUserName());
-			prop.setProperty("hibernate.connection.password", PolicyController.getLogdbPassword());
-			prop.setProperty("dialect", PolicyController.getLogdbDialect());
-			prop.setProperty("hibernate.connection.driver_class", PolicyController.getLogdbDriver());	
-			prop.setProperty("show_sql", "false");	
-			logSessionFactory = new Configuration().addPackage("org.onap.policy.*").addProperties(prop)
-				   .addAnnotatedClass(SystemLogDB.class).buildSessionFactory();
-		} catch (Exception ex) {
-			LOGGER.error("Exception Occured while creating Log database Hibernate session"+ex);
-		}
-	}
+    private static final Logger LOGGER = FlexLogger.getLogger(HibernateSession.class);
 
-	private HibernateSession(){
-          /**
-           empty implementation
-          */
-	}
+    private static SessionFactory logSessionFactory;
 
-	public static Session getSession(){
-		return logSessionFactory.openSession();
-	}
-	
-	public static void setSession(SessionFactory logSessionFactory1){
-		logSessionFactory = logSessionFactory1;
-	}
+    static {
+        try {
+            Properties prop = new Properties();
+            prop.setProperty("hibernate.connection.url", PolicyController.getLogdbUrl());
+            prop.setProperty("hibernate.connection.username", PolicyController.getLogdbUserName());
+            prop.setProperty("hibernate.connection.password", PolicyController.getLogdbPassword());
+            prop.setProperty("dialect", PolicyController.getLogdbDialect());
+            prop.setProperty("hibernate.connection.driver_class", PolicyController.getLogdbDriver());
+            prop.setProperty("show_sql", "false");
+            logSessionFactory = new Configuration().addPackage("org.onap.policy.*").addProperties(prop)
+                    .addAnnotatedClass(SystemLogDB.class).buildSessionFactory();
+        } catch (Exception ex) {
+            LOGGER.error("Exception Occured while creating Log database Hibernate session" + ex);
+        }
+    }
 
+    private HibernateSession() {
+        /**
+         * empty implementation
+         */
+    }
+
+    public static Session getSession() {
+        return logSessionFactory.openSession();
+    }
+
+    public static void setSession(SessionFactory logSessionFactory1) {
+        logSessionFactory = logSessionFactory1;
+    }
 
 }

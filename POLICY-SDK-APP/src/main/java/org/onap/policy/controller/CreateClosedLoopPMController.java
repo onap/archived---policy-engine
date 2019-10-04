@@ -21,22 +21,15 @@
 
 package org.onap.policy.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
-
 import java.util.Objects;
+
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-
-import org.onap.policy.admin.PolicyManagerServlet;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.adapter.ClosedLoopPMBody;
-import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.jpa.PolicyEntity;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
@@ -44,6 +37,13 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
+import org.onap.policy.admin.PolicyManagerServlet;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.adapter.ClosedLoopPMBody;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.jpa.PolicyEntity;
 
 public class CreateClosedLoopPMController {
 
@@ -82,8 +82,8 @@ public class CreateClosedLoopPMController {
     }
 
     private void setPolicyAdapterNameValueAndDescription(PolicyRestAdapter policyAdapter, PolicyType policy) {
-        String policyNameValue = policyAdapter.getPolicyName()
-            .substring(policyAdapter.getPolicyName().indexOf("PM_") + 3);
+        String policyNameValue =
+                policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("PM_") + 3);
         policyAdapter.setPolicyName(policyNameValue);
         String description;
         try {
@@ -98,8 +98,8 @@ public class CreateClosedLoopPMController {
     private void setClosedLoopJSONFile(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            ClosedLoopPMBody closedLoopBody = mapper
-                .readValue(entity.getConfigurationData().getConfigBody(), ClosedLoopPMBody.class);
+            ClosedLoopPMBody closedLoopBody =
+                    mapper.readValue(entity.getConfigurationData().getConfigBody(), ClosedLoopPMBody.class);
             policyAdapter.setJsonBodyData(closedLoopBody);
         } catch (IOException e) {
             LOGGER.error("Exception Occured" + e);
@@ -107,51 +107,50 @@ public class CreateClosedLoopPMController {
     }
 
     private void setPolicyAdapterMatchAttributes(final PolicyRestAdapter policyAdapter,
-        final List<AnyOfType> anyOfList) {
+            final List<AnyOfType> anyOfList) {
         anyOfList.stream()
-            //Extract nonNull list of AllOfType objs from each AnyOfType obj
-            .map(AnyOfType::getAllOf).filter(Objects::nonNull)
-            .forEach(allOfList ->
-                //Extract nonNull list of MatchType objs from each AllOFType obj
+                // Extract nonNull list of AllOfType objs from each AnyOfType obj
+                .map(AnyOfType::getAllOf).filter(Objects::nonNull).forEach(allOfList ->
+                // Extract nonNull list of MatchType objs from each AllOFType obj
                 allOfList.stream().map(AllOfType::getMatch).filter(Objects::nonNull)
-                    .forEach(matchList -> matchList.forEach(match -> {
-                        // Under the match we have attribute value and
-                        // attributeDesignator. So,finally down to the actual attribute.
-                        AttributeValueType attributeValue = match.getAttributeValue();
-                        String value = (String) attributeValue.getContent().get(0);
-                        AttributeDesignatorType designator = match.getAttributeDesignator();
-                        String attributeId = designator.getAttributeId();
-                        // First match in the target is OnapName, so set that value.
-                        if ("ONAPName".equals(attributeId)) {
-                            policyAdapter.setOnapName(value);
-                        } else if ("RiskType".equals(attributeId)) {
-                            policyAdapter.setRiskType(value);
-                        } else if ("RiskLevel".equals(attributeId)) {
-                            policyAdapter.setRiskLevel(value);
-                        } else if ("guard".equals(attributeId)) {
-                            policyAdapter.setGuard(value);
-                        } else if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
-                            PolicyController controller = new PolicyController();
-                            String newDate = controller.convertDate(value);
-                            policyAdapter.setTtlDate(newDate);
-                        } else if ("ServiceType".equals(attributeId)) {
-                            LinkedHashMap<String, String> serviceTypePolicyName1 = new LinkedHashMap<>();
-                            serviceTypePolicyName1.put(KEY_SERVICE_TYPE_POLICY_NAME, value);
-                            policyAdapter.setServiceTypePolicyName(serviceTypePolicyName1);
-                            LinkedHashMap<String, String> vertica = new LinkedHashMap<>();
-                            vertica.put("verticaMetrics", getVertica(value));
-                            policyAdapter.setVerticaMetrics(vertica);
-                            LinkedHashMap<String, String> desc = new LinkedHashMap<>();
-                            desc.put("policyDescription", getDescription(value));
-                            policyAdapter.setDescription(desc);
-                            LinkedHashMap<String, Object> attributes = new LinkedHashMap<>();
-                            attributes.put("attributes", getAttributes(value));
-                            policyAdapter.setAttributeFields(attributes);
-                        }
-                    })));
+                        .forEach(matchList -> matchList.forEach(match -> {
+                            // Under the match we have attribute value and
+                            // attributeDesignator. So,finally down to the actual attribute.
+                            AttributeValueType attributeValue = match.getAttributeValue();
+                            String value = (String) attributeValue.getContent().get(0);
+                            AttributeDesignatorType designator = match.getAttributeDesignator();
+                            String attributeId = designator.getAttributeId();
+                            // First match in the target is OnapName, so set that value.
+                            if ("ONAPName".equals(attributeId)) {
+                                policyAdapter.setOnapName(value);
+                            } else if ("RiskType".equals(attributeId)) {
+                                policyAdapter.setRiskType(value);
+                            } else if ("RiskLevel".equals(attributeId)) {
+                                policyAdapter.setRiskLevel(value);
+                            } else if ("guard".equals(attributeId)) {
+                                policyAdapter.setGuard(value);
+                            } else if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
+                                PolicyController controller = new PolicyController();
+                                String newDate = controller.convertDate(value);
+                                policyAdapter.setTtlDate(newDate);
+                            } else if ("ServiceType".equals(attributeId)) {
+                                LinkedHashMap<String, String> serviceTypePolicyName1 = new LinkedHashMap<>();
+                                serviceTypePolicyName1.put(KEY_SERVICE_TYPE_POLICY_NAME, value);
+                                policyAdapter.setServiceTypePolicyName(serviceTypePolicyName1);
+                                LinkedHashMap<String, String> vertica = new LinkedHashMap<>();
+                                vertica.put("verticaMetrics", getVertica(value));
+                                policyAdapter.setVerticaMetrics(vertica);
+                                LinkedHashMap<String, String> desc = new LinkedHashMap<>();
+                                desc.put("policyDescription", getDescription(value));
+                                policyAdapter.setDescription(desc);
+                                LinkedHashMap<String, Object> attributes = new LinkedHashMap<>();
+                                attributes.put("attributes", getAttributes(value));
+                                policyAdapter.setAttributeFields(attributes);
+                            }
+                        })));
     }
 
-    //get vertica metrics data from the table
+    // get vertica metrics data from the table
     private String getVertica(String policyName) {
         JsonArray data = PolicyManagerServlet.getPolicyNames();
         for (int i = 0; i < data.size(); i++) {
@@ -162,7 +161,7 @@ public class CreateClosedLoopPMController {
         return null;
     }
 
-    //get policy description from the table
+    // get policy description from the table
     private String getDescription(String policyName) {
         JsonArray data = PolicyManagerServlet.getPolicyNames();
         for (int i = 0; i < data.size(); i++) {
@@ -173,7 +172,7 @@ public class CreateClosedLoopPMController {
         return null;
     }
 
-    //get Attributes
+    // get Attributes
     private JsonObject getAttributes(String policyName) {
         JsonArray data = PolicyManagerServlet.getPolicyNames();
         for (int i = 0; i < data.size(); i++) {

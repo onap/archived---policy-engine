@@ -30,13 +30,6 @@ import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
 
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.portalsdk.core.controller.RestrictedBaseController;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
@@ -51,8 +44,15 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 @Controller
-@RequestMapping({ "/" })
+@RequestMapping({"/"})
 public class ActionPolicyController extends RestrictedBaseController {
     private static final Logger LOGGER = FlexLogger.getLogger(ActionPolicyController.class);
     private static final String PERFORMER_ATTRIBUTE_ID = "performer";
@@ -116,15 +116,15 @@ public class ActionPolicyController extends RestrictedBaseController {
         for (ObligationExpressionType obligation : obligationList) {
             policyAdapter.setActionAttributeValue(obligation.getObligationId());
             // Under the obligationExpression we have attributeAssignmentExpression.
-            List<AttributeAssignmentExpressionType> attributeAssignmentExpressionList = obligation
-                .getAttributeAssignmentExpression();
+            List<AttributeAssignmentExpressionType> attributeAssignmentExpressionList =
+                    obligation.getAttributeAssignmentExpression();
             if (attributeAssignmentExpressionList == null) {
                 continue;
             }
             for (AttributeAssignmentExpressionType attributeAssignmentExpression : attributeAssignmentExpressionList) {
                 String attributeID = attributeAssignmentExpression.getAttributeId();
-                AttributeValueType attributeValue = (AttributeValueType) attributeAssignmentExpression
-                    .getExpression().getValue();
+                AttributeValueType attributeValue =
+                        (AttributeValueType) attributeAssignmentExpression.getExpression().getValue();
                 if (!attributeID.equals(PERFORMER_ATTRIBUTE_ID)) {
                     continue;
                 }
@@ -139,8 +139,8 @@ public class ActionPolicyController extends RestrictedBaseController {
 
     private void setPolicyAdapterPolicyNameAndDesc(PolicyRestAdapter policyAdapter, PolicyType policy) {
         policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
-        String policyNameValue = policyAdapter.getPolicyName()
-                .substring(policyAdapter.getPolicyName().indexOf('_') + 1);
+        String policyNameValue =
+                policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf('_') + 1);
         policyAdapter.setPolicyName(policyNameValue);
         String description;
         try {
@@ -253,7 +253,7 @@ public class ActionPolicyController extends RestrictedBaseController {
         ruleMap.put("id", "A" + (index + 1));
         // Populate combo box
         Map<String, String> dropDownMap = PolicyController.getDropDownMap();
-        for ( Entry<String, String> entry : dropDownMap.entrySet()) {
+        for (Entry<String, String> entry : dropDownMap.entrySet()) {
             if (entry.getValue().equals(actionApply.getFunctionId())) {
                 ruleMap.put("dynamicRuleAlgorithmCombo", entry.getKey());
             }
@@ -264,8 +264,8 @@ public class ActionPolicyController extends RestrictedBaseController {
             // Get from Attribute Designator
             ApplyType innerActionApply = (ApplyType) jaxbActionTypes.get(0).getValue();
             List<JAXBElement<?>> jaxbInnerActionTypes = innerActionApply.getExpression();
-            AttributeDesignatorType attributeDesignator = (AttributeDesignatorType) jaxbInnerActionTypes.get(0)
-                    .getValue();
+            AttributeDesignatorType attributeDesignator =
+                    (AttributeDesignatorType) jaxbInnerActionTypes.get(0).getValue();
             ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, attributeDesignator.getAttributeId());
 
             // Get from Attribute Value
@@ -281,8 +281,8 @@ public class ActionPolicyController extends RestrictedBaseController {
 
             ApplyType innerActionApply = (ApplyType) jaxbActionTypes.get(1).getValue();
             List<JAXBElement<?>> jaxbInnerActionTypes = innerActionApply.getExpression();
-            AttributeDesignatorType attributeDesignator = (AttributeDesignatorType) jaxbInnerActionTypes.get(0)
-                    .getValue();
+            AttributeDesignatorType attributeDesignator =
+                    (AttributeDesignatorType) jaxbInnerActionTypes.get(0).getValue();
             ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, attributeDesignator.getAttributeId());
         }
         ruleAlgorithmList.add(ruleMap);

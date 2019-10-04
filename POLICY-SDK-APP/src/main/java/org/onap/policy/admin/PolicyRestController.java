@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -39,8 +40,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -120,8 +123,6 @@ public class PolicyRestController extends RestrictedBaseController {
     public static void setCommonClassDao(CommonClassDao commonClassDao) {
         PolicyRestController.commonClassDao = commonClassDao;
     }
-
-
 
     @RequestMapping(value = {"/policycreation/save_policy"}, method = {RequestMethod.POST})
     public void policyCreationController(HttpServletRequest request, HttpServletResponse response) {
@@ -227,7 +228,6 @@ public class PolicyRestController extends RestrictedBaseController {
         }
     }
 
-
     private ResponseEntity<?> sendToPAP(String body, String requestURI, HttpMethod method) {
         String papUrl = PolicyController.getPapUrl();
         String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
@@ -291,7 +291,6 @@ public class PolicyRestController extends RestrictedBaseController {
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTHORIZATION, BASIC + encoding);
         headers.set(CONTENT_TYPE, PolicyController.getContenttype());
-
 
         HttpURLConnection connection = null;
         List<FileItem> items;

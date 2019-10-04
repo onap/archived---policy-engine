@@ -21,6 +21,11 @@
 
 package org.onap.policy.controller;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -29,9 +34,16 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.util.Objects;
 import java.util.stream.IntStream;
+
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.ClosedLoopFaultBody;
@@ -47,18 +59,6 @@ import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 @Controller
 @RequestMapping("/")
@@ -94,15 +94,14 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            ClosedLoopFaultTrapDatas trapDatas = mapper
-                .readValue(root.get("trapData").toString(), ClosedLoopFaultTrapDatas.class);
-            ClosedLoopFaultTrapDatas faultDatas = mapper
-                .readValue(root.get("faultData").toString(), ClosedLoopFaultTrapDatas.class);
-            ClosedLoopGridJSONData policyJsonData = mapper
-                .readValue(root.get("policyData").get("policy").toString(), ClosedLoopGridJSONData.class);
-            ClosedLoopFaultBody jsonBody = mapper
-                .readValue(root.get("policyData").get("policy").get("jsonBodyData").toString(),
-                    ClosedLoopFaultBody.class);
+            ClosedLoopFaultTrapDatas trapDatas =
+                    mapper.readValue(root.get("trapData").toString(), ClosedLoopFaultTrapDatas.class);
+            ClosedLoopFaultTrapDatas faultDatas =
+                    mapper.readValue(root.get("faultData").toString(), ClosedLoopFaultTrapDatas.class);
+            ClosedLoopGridJSONData policyJsonData =
+                    mapper.readValue(root.get("policyData").get("policy").toString(), ClosedLoopGridJSONData.class);
+            ClosedLoopFaultBody jsonBody = mapper.readValue(
+                    root.get("policyData").get("policy").get("jsonBodyData").toString(), ClosedLoopFaultBody.class);
 
             // Build trapSignatureDatas list from faultData
             List<Object> trapSignatureDatas = new ArrayList<>();
@@ -121,7 +120,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
                     uiTriggerSignatures.setSignatures(getUITriggerSignature(TRAP, trapSignatureDatas.get(0)));
                     if (!policyJsonData.getConnecttriggerSignatures().isEmpty()) {
                         uiTriggerSignatures
-                            .setConnectSignatures(getUIConnectTraps(policyJsonData.getConnecttriggerSignatures()));
+                                .setConnectSignatures(getUIConnectTraps(policyJsonData.getConnecttriggerSignatures()));
                     }
                 }
                 jsonBody.setTriggerSignaturesUsedForUI(uiTriggerSignatures);
@@ -146,8 +145,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
                 if (!faultSignatureDatas.isEmpty()) {
                     uifaultSignatures.setSignatures(getUITriggerSignature(FAULT, faultSignatureDatas.get(0)));
                     if (!policyJsonData.getConnectVerificationSignatures().isEmpty()) {
-                        uifaultSignatures
-                            .setConnectSignatures(getUIConnectTraps(policyJsonData.getConnectVerificationSignatures()));
+                        uifaultSignatures.setConnectSignatures(
+                                getUIConnectTraps(policyJsonData.getConnectVerificationSignatures()));
                     }
                 }
                 jsonBody.setVerificationSignaturesUsedForUI(uifaultSignatures);
@@ -170,8 +169,9 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
         if (!policyJsonData.getConnecttriggerSignatures().isEmpty()) {
             resultBody.append("(");
             IntStream.range(0, policyJsonData.getConnecttriggerSignatures().size())
-                .mapToObj(i -> connectTriggerSignature(i, policyJsonData.getConnecttriggerSignatures(),
-                    trapSignatureDatas.get(0))).forEach(resultBody::append);
+                    .mapToObj(i -> connectTriggerSignature(i, policyJsonData.getConnecttriggerSignatures(),
+                            trapSignatureDatas.get(0)))
+                    .forEach(resultBody::append);
             resultBody.append(resultBody).append(")");
         } else {
             if (!trapSignatureDatas.isEmpty()) {
@@ -186,8 +186,9 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
         if (!policyJsonData.getConnectVerificationSignatures().isEmpty()) {
             faultBody.append("(");
             IntStream.range(0, policyJsonData.getConnectVerificationSignatures().size())
-                .mapToObj(i -> connectTriggerSignature(i, policyJsonData.getConnectVerificationSignatures(),
-                    faultSignatureDatas.get(0))).forEach(faultBody::append);
+                    .mapToObj(i -> connectTriggerSignature(i, policyJsonData.getConnectVerificationSignatures(),
+                            faultSignatureDatas.get(0)))
+                    .forEach(faultBody::append);
             faultBody.append(")");
         } else {
             if (!faultSignatureDatas.isEmpty()) {
@@ -237,7 +238,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
     }
 
     private void appendTrapToResultBody(List<Object> triggerSignatures, Object object, StringBuilder resultBody,
-        Map<String, String> connectTraps, String connectTrapName) {
+            Map<String, String> connectTraps, String connectTrapName) {
         String connectTrap = connectTraps.get(connectTrapName);
         if (connectTrap.startsWith(TRAP) || connectTrap.startsWith(FAULT)) {
             String trapBody = callTrap(connectTrap, object);
@@ -359,8 +360,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
     private String getVarbindOID(String attrib) {
         VarbindDictionary varbindId;
         try {
-            varbindId = (VarbindDictionary) commonclassdao
-                .getEntityItem(VarbindDictionary.class, "varbindName", attrib);
+            varbindId =
+                    (VarbindDictionary) commonclassdao.getEntityItem(VarbindDictionary.class, "varbindName", attrib);
             return varbindId.getVarbindOID();
         } catch (Exception e) {
             policyLogger.error("Error during retrieving varbindName " + attrib, e);
@@ -368,7 +369,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
         }
     }
 
-    //connect traps data set to JSON Body as String
+    // connect traps data set to JSON Body as String
     @SuppressWarnings({"unchecked", "rawtypes"})
     private String getUIConnectTraps(List<Object> connectTrapSignatures) {
         StringBuilder resultBody = new StringBuilder();
@@ -401,9 +402,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
                 if (((LinkedHashMap) connectTraps).get(TRAP_COUNT_2) != null) {
                     trapCount2 = ((LinkedHashMap) connectTraps).get(TRAP_COUNT_2).toString();
                 }
-                connectBody =
-                    notBox + "@!" + connectTrap1 + "@!" + trapCount1 + "@!" + operatorBox + "@!" + connectTrap2 + "@!"
-                        + trapCount2 + "#!?!";
+                connectBody = notBox + "@!" + connectTrap1 + "@!" + trapCount1 + "@!" + operatorBox + "@!"
+                        + connectTrap2 + "@!" + trapCount2 + "#!?!";
             }
             resultBody.append(connectBody);
         }
@@ -502,50 +502,48 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
 
     private void setPolicyAdapterMatchAttributes(PolicyRestAdapter policyAdapter, List<AnyOfType> anyOfList) {
         anyOfList.stream()
-            //Extract nonNull list of AllOfType objs from each AnyOfType obj
-            .map(AnyOfType::getAllOf).filter(Objects::nonNull)
-            .forEach(allOfList ->
-                //Extract nonNull list of MatchType objs from each AllOFType obj
-                allOfList.stream().map(AllOfType::getMatch).filter(Objects::nonNull)
-                    .flatMap(Collection::stream)
-                    .forEach(match -> {
-                        // Under the match we have attribute value and
-                        // attributeDesignator. So,finally down to the actual attribute.
-                        AttributeValueType attributeValue = match.getAttributeValue();
-                        String value = (String) attributeValue.getContent().get(0);
-                        AttributeDesignatorType designator = match.getAttributeDesignator();
-                        String attributeId = designator.getAttributeId();
-                        // First match in the target is OnapName, so set that value.
-                        if ("ONAPName".equals(attributeId)) {
-                            policyAdapter.setOnapName(value);
-                            OnapName onapName = new OnapName();
-                            onapName.setOnapName(value);
-                            policyAdapter.setOnapNameField(onapName);
-                        } else if ("RiskType".equals(attributeId)) {
-                            policyAdapter.setRiskType(value);
-                        } else if ("RiskLevel".equals(attributeId)) {
-                            policyAdapter.setRiskLevel(value);
-                        } else if ("guard".equals(attributeId)) {
-                            policyAdapter.setGuard(value);
-                        } else if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
-                            PolicyController controller = new PolicyController();
-                            String newDate = controller.convertDate(value);
-                            policyAdapter.setTtlDate(newDate);
-                        }
-                    }));
+                // Extract nonNull list of AllOfType objs from each AnyOfType obj
+                .map(AnyOfType::getAllOf).filter(Objects::nonNull).forEach(allOfList ->
+                // Extract nonNull list of MatchType objs from each AllOFType obj
+                allOfList.stream().map(AllOfType::getMatch).filter(Objects::nonNull).flatMap(Collection::stream)
+                        .forEach(match -> {
+                            // Under the match we have attribute value and
+                            // attributeDesignator. So,finally down to the actual attribute.
+                            AttributeValueType attributeValue = match.getAttributeValue();
+                            String value = (String) attributeValue.getContent().get(0);
+                            AttributeDesignatorType designator = match.getAttributeDesignator();
+                            String attributeId = designator.getAttributeId();
+                            // First match in the target is OnapName, so set that value.
+                            if ("ONAPName".equals(attributeId)) {
+                                policyAdapter.setOnapName(value);
+                                OnapName onapName = new OnapName();
+                                onapName.setOnapName(value);
+                                policyAdapter.setOnapNameField(onapName);
+                            } else if ("RiskType".equals(attributeId)) {
+                                policyAdapter.setRiskType(value);
+                            } else if ("RiskLevel".equals(attributeId)) {
+                                policyAdapter.setRiskLevel(value);
+                            } else if ("guard".equals(attributeId)) {
+                                policyAdapter.setGuard(value);
+                            } else if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
+                                PolicyController controller = new PolicyController();
+                                String newDate = controller.convertDate(value);
+                                policyAdapter.setTtlDate(newDate);
+                            }
+                        }));
     }
 
     private void setPolicyAdapterPolicyNameAndDescription(PolicyRestAdapter policyAdapter, PolicyType policy) {
         policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
-        String policyNameValue = policyAdapter.getPolicyName()
-            .substring(policyAdapter.getPolicyName().indexOf("Fault_") + 6);
+        String policyNameValue =
+                policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("Fault_") + 6);
         policyAdapter.setPolicyName(policyNameValue);
         String description;
         try {
             description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
         } catch (Exception e) {
             policyLogger.error(
-                "Error during collecting the description tag info for createClosedLoopFault " + policyNameValue, e);
+                    "Error during collecting the description tag info for createClosedLoopFault " + policyNameValue, e);
             description = policy.getDescription();
         }
         policyAdapter.setPolicyDescription(description);
@@ -554,8 +552,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
     private void setClosedLoopJSONFile(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            ClosedLoopFaultBody closedLoopBody = mapper
-                .readValue(entity.getConfigurationData().getConfigBody(), ClosedLoopFaultBody.class);
+            ClosedLoopFaultBody closedLoopBody =
+                    mapper.readValue(entity.getConfigurationData().getConfigBody(), ClosedLoopFaultBody.class);
             if ("ACTIVE".equalsIgnoreCase(closedLoopBody.getClosedLoopPolicyStatus())) {
                 closedLoopBody.setClosedLoopPolicyStatus("Active");
             } else {
@@ -570,13 +568,14 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
             }
             if (closedLoopBody.getVerificationTimeWindowUsedForUI() != null) {
                 policyAdapter
-                    .setVerificationclearTimeOut(closedLoopBody.getVerificationTimeWindowUsedForUI().toString());
+                        .setVerificationclearTimeOut(closedLoopBody.getVerificationTimeWindowUsedForUI().toString());
             }
         } catch (Exception e) {
             policyLogger.error("Exception Occured" + e);
         }
     }
 }
+
 
 class ClosedLoopGridJSONData {
 
@@ -609,7 +608,6 @@ class ClosedLoopGridJSONData {
     public void setVerificationclearTimeOut(String verificationclearTimeOut) {
         this.verificationclearTimeOut = verificationclearTimeOut;
     }
-
 
     public List<Object> getConnecttriggerSignatures() {
         return connecttriggerSignatures;

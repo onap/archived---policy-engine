@@ -20,6 +20,7 @@
 
 package org.onap.policy.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,40 +41,39 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Controller
 @RequestMapping("/")
 public class PolicyValidationController extends RestrictedBaseController {
 
-	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyValidationController.class);
+    private static final Logger LOGGER = FlexLogger.getLogger(PolicyValidationController.class);
 
-	@RequestMapping(value={"/policyController/validate_policy.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView validatePolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try{
-			
-			PolicyValidation validation = new PolicyValidation();
-			PolicyValidationRequestWrapper wrapper = new PolicyValidationRequestWrapper();
-			StringBuilder responseString;
-			ObjectMapper mapper = new ObjectMapper();
+    @RequestMapping(
+            value = {"/policyController/validate_policy.htm"},
+            method = {org.springframework.web.bind.annotation.RequestMethod.POST})
+    public ModelAndView validatePolicy(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
 
-			PolicyRestAdapter policyData = wrapper.populateRequestParameters(request);
-			responseString = validation.validatePolicy(policyData);
-			
-			PrintWriter out = response.getWriter();
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(responseString.toString()));
-			JSONObject j = new JSONObject(msg);
-			out.write(j.toString());
+            PolicyValidation validation = new PolicyValidation();
+            PolicyValidationRequestWrapper wrapper = new PolicyValidationRequestWrapper();
+            StringBuilder responseString;
+            ObjectMapper mapper = new ObjectMapper();
 
-			return null;
-		}
-		catch (Exception e){
-			LOGGER.error("Exception Occured During Policy Validation" +e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
-		return null;
-	}
+            PolicyRestAdapter policyData = wrapper.populateRequestParameters(request);
+            responseString = validation.validatePolicy(policyData);
+
+            PrintWriter out = response.getWriter();
+            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(responseString.toString()));
+            JSONObject j = new JSONObject(msg);
+            out.write(j.toString());
+
+            return null;
+        } catch (Exception e) {
+            LOGGER.error("Exception Occured During Policy Validation" + e);
+            response.setCharacterEncoding("UTF-8");
+            request.setCharacterEncoding("UTF-8");
+            PrintWriter out = response.getWriter();
+            out.write(PolicyUtils.CATCH_EXCEPTION);
+        }
+        return null;
+    }
 }

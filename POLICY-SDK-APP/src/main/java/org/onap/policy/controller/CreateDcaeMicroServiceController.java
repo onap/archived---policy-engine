@@ -20,7 +20,6 @@
 
 package org.onap.policy.controller;
 
-
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -31,6 +30,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -59,6 +59,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -68,6 +69,7 @@ import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
@@ -75,6 +77,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -825,7 +828,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         return jsonResult;
     }
 
-    @RequestMapping(value = {"/policyController/getDCAEMSTemplateData.htm"},
+    @RequestMapping(
+            value = {"/policyController/getDCAEMSTemplateData.htm"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView getDCAEMSTemplateData(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -1042,7 +1046,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         return object;
     }
 
-
     public JSONObject convertToArrayElement(JSONObject json, String keyValue) {
         return convertToArrayElement(json, new HashSet<>(), keyValue);
     }
@@ -1135,8 +1138,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         return keys;
     }
 
-
-    @RequestMapping(value = {"/policyController/getModelServiceVersioneData.htm"},
+    @RequestMapping(
+            value = {"/policyController/getModelServiceVersioneData.htm"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView getModelServiceVersionData(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -1201,7 +1204,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
                 modelName);
     }
 
-    @RequestMapping(value = {"/get_DCAEPriorityValues"},
+    @RequestMapping(
+            value = {"/get_DCAEPriorityValues"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getDCAEPriorityValuesData(HttpServletRequest request, HttpServletResponse response) {
@@ -1320,7 +1324,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         }
         return map;
     }
-
 
     /**
      * Read file.
@@ -1448,7 +1451,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         return attribute;
     }
 
-    @RequestMapping(value = {"/ms_dictionary/set_MSModelData"},
+    @RequestMapping(
+            value = {"/ms_dictionary/set_MSModelData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public void SetMSModelData(HttpServletRequest request, HttpServletResponse response)
             throws IOException, FileUploadException {
@@ -1799,7 +1803,6 @@ class DCAEMicroServiceObject {
     }
 
     private Object content;
-
 
     public String getPolicyName() {
         return policyName;

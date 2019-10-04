@@ -23,6 +23,7 @@
 package org.onap.policy.conf;
 
 import static org.junit.Assert.assertNull;
+
 import org.hibernate.SessionFactory;
 import org.junit.Before;
 import org.junit.Test;

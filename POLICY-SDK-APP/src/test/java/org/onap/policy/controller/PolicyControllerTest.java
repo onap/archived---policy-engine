@@ -19,15 +19,19 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.controller;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.script.SimpleBindings;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,8 +56,7 @@ public class PolicyControllerTest {
         String policyData = "";
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            policyData = IOUtils
-                    .toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml"));
+            policyData = IOUtils.toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml"));
         } catch (Exception e1) {
             e1.printStackTrace();
         }

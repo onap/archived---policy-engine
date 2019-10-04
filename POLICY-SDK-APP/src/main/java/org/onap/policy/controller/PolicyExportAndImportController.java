@@ -23,6 +23,7 @@ package org.onap.policy.controller;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,9 +36,11 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
+
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -90,7 +93,6 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
     private static final String ACTION = "Action_";
     private static CommonClassDao commonClassDao;
 
-
     private PolicyController policyController;
 
     public PolicyController getPolicyController() {
@@ -120,7 +122,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
      * @param response HttpServletResponse
      * @throws IOException error out
      */
-    @RequestMapping(value = {"/policy_download/exportPolicy.htm"},
+    @RequestMapping(
+            value = {"/policy_download/exportPolicy.htm"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public void exportPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try (HSSFWorkbook workBook2 = new HSSFWorkbook()) {
@@ -134,9 +137,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
                 LinkedHashMap<?, ?> selected = (LinkedHashMap<?, ?>) policyId;
                 String policyWithScope =
                         selected.get(policyName).toString() + "." + selected.get("activeVersion").toString() + ".xml";
-                String scope =
-                        policyWithScope.substring(0, policyWithScope.lastIndexOf(File.separator)).replace(
-                                File.separator, ".");
+                String scope = policyWithScope.substring(0, policyWithScope.lastIndexOf(File.separator))
+                        .replace(File.separator, ".");
                 String policyNamel = policyWithScope.substring(policyWithScope.lastIndexOf(File.separator) + 1);
                 selectedPolicy.add(policyNamel + ":" + scope);
             }
@@ -152,9 +154,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
             headingRow.createCell(6).setCellValue(BODYSIZE);
             headingRow.createCell(7).setCellValue(configurationbody);
 
-            List<Object> entityData =
-                    commonClassDao.getMultipleDataOnAddingConjunction(PolicyEntity.class, "policyName:scope",
-                            selectedPolicy);
+            List<Object> entityData = commonClassDao.getMultipleDataOnAddingConjunction(PolicyEntity.class,
+                    "policyName:scope", selectedPolicy);
             processEntityData(entityData, sheet, headingRow); //
             String tmp = System.getProperty("catalina.base") + File.separator + "webapps" + File.separator + "temp";
             String deleteCheckPath = tmp + File.separator + "PolicyExport.xls";
@@ -233,8 +234,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
                     row.createCell(7).setCellValue(body.substring(index, Math.min(index + 30000, body.length())));
                 } else {
                     headingRow.createCell(7 + arraySize).setCellValue(configurationbody + arraySize);
-                    row.createCell(7 + arraySize).setCellValue(
-                            body.substring(index, Math.min(index + 30000, body.length())));
+                    row.createCell(7 + arraySize)
+                            .setCellValue(body.substring(index, Math.min(index + 30000, body.length())));
                 }
                 index += 30000;
                 arraySize += 1;
@@ -246,8 +247,6 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
         }
         return row;
     }
-
-
 
     /**
      * This is to upload a policy and save it to database.
@@ -331,9 +330,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
     }
 
     private void writeConfigurationFile(ConfigurationDataEntity configurationDataEntity) {
-        try (FileWriter fw =
-                new FileWriter(PolicyController.getConfigHome() + File.separator
-                        + configurationDataEntity.getConfigurationName())) {
+        try (FileWriter fw = new FileWriter(
+                PolicyController.getConfigHome() + File.separator + configurationDataEntity.getConfigurationName())) {
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(configurationDataEntity.getConfigBody());
             bw.close();
@@ -343,8 +341,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
     }
 
     private void writeActionBodyFile(ActionBodyEntity actionBodyEntity) {
-        try (FileWriter fw =
-             new FileWriter(PolicyController.getActionHome() + File.separator + actionBodyEntity.getActionBodyName())) {
+        try (FileWriter fw = new FileWriter(
+                PolicyController.getActionHome() + File.separator + actionBodyEntity.getActionBodyName())) {
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(actionBodyEntity.getActionBody());
             bw.close();
@@ -605,14 +603,12 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
     private void savePolicyEntity(PolicyEntity policyEntity, String configName, String userId) {
         if (configName != null) {
             if (configName.contains(config) || configName.contains(DECISION_MS)) {
-                ConfigurationDataEntity configuration =
-                        (ConfigurationDataEntity) commonClassDao.getEntityItem(ConfigurationDataEntity.class,
-                                configurationName, configName);
+                ConfigurationDataEntity configuration = (ConfigurationDataEntity) commonClassDao
+                        .getEntityItem(ConfigurationDataEntity.class, configurationName, configName);
                 policyEntity.setConfigurationData(configuration);
             } else {
-                ActionBodyEntity actionBody =
-                        (ActionBodyEntity) commonClassDao.getEntityItem(ActionBodyEntity.class, "actionBodyName",
-                                configName);
+                ActionBodyEntity actionBody = (ActionBodyEntity) commonClassDao.getEntityItem(ActionBodyEntity.class,
+                        "actionBodyName", configName);
                 policyEntity.setActionBodyEntity(actionBody);
             }
         }
@@ -639,8 +635,9 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
     private int getSetBodySize(PolicyEntity policyEntity, Cell cell, int setBodySize) {
         int setBodySizel = setBodySize;
         if (configurationbody.equalsIgnoreCase(getCellHeaderName(cell))
-                && ((policyEntity.getPolicyName().contains(config) || policyEntity.getPolicyName()
-                        .contains(DECISION_MS)) && (policyEntity.getPolicyName().contains("Config_BRMS_Param_")))) {
+                && ((policyEntity.getPolicyName().contains(config)
+                        || policyEntity.getPolicyName().contains(DECISION_MS))
+                        && (policyEntity.getPolicyName().contains("Config_BRMS_Param_")))) {
             setBodySizel += 1;
         }
         return setBodySizel;
@@ -664,28 +661,27 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
             boolean configurationBodySet) {
         boolean configurationBodySetl = configurationBodySet;
         if (configurationbody.equalsIgnoreCase(getCellHeaderName(cell))
-            && (policyEntity.getPolicyName().contains(config) || policyEntity.getPolicyName().contains(DECISION_MS)) 
-            && (setBodySize == bodySize)) {
+                && (policyEntity.getPolicyName().contains(config) || policyEntity.getPolicyName().contains(DECISION_MS))
+                && (setBodySize == bodySize)) {
             configurationBodySetl = true;
         }
         if (configurationbody.equalsIgnoreCase(getCellHeaderName(cell))
-            && (policyEntity.getPolicyName().contains(config) || policyEntity.getPolicyName().contains(DECISION_MS))
-            && (setBodySize == 0)) {
+                && (policyEntity.getPolicyName().contains(config) || policyEntity.getPolicyName().contains(DECISION_MS))
+                && (setBodySize == 0)) {
             configurationBodySetl = true;
         }
         return configurationBodySetl;
     }
 
-
     private boolean isConfigExists(PolicyEntity policyEntity, Cell cell, boolean configExists) {
         boolean configExistsl = configExists;
         if (configurationbody.equalsIgnoreCase(getCellHeaderName(cell))
-            && (policyEntity.getPolicyName().contains(config) || policyEntity.getPolicyName().contains(DECISION_MS))) {
+                && (policyEntity.getPolicyName().contains(config)
+                        || policyEntity.getPolicyName().contains(DECISION_MS))) {
             configExistsl = true;
         }
         return configExistsl;
     }
-
 
     private boolean isActionExists(PolicyEntity policyEntity, Cell cell, boolean actionExists) {
         boolean actionExistsl = actionExists;
@@ -706,17 +702,18 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 
     private StringBuilder addCellValue(PolicyEntity policyEntity, Cell cell, StringBuilder body) {
         if (configurationbody.equalsIgnoreCase(getCellHeaderName(cell))
-            && (policyEntity.getPolicyName().contains(config) || policyEntity.getPolicyName().contains(DECISION_MS))) {
+                && (policyEntity.getPolicyName().contains(config)
+                        || policyEntity.getPolicyName().contains(DECISION_MS))) {
             body.append(cell.getStringCellValue());
         }
 
         return body;
     }
 
-    private ActionBodyEntity setActionBodyObject(PolicyEntity policyEntity, ActionBodyEntity actionBodyEntity, 
+    private ActionBodyEntity setActionBodyObject(PolicyEntity policyEntity, ActionBodyEntity actionBodyEntity,
             Cell cell) {
         if (configurationbody.equalsIgnoreCase(getCellHeaderName(cell))
-            && (policyEntity.getPolicyName().contains(ACTION))) {
+                && (policyEntity.getPolicyName().contains(ACTION))) {
             actionBodyEntity.setActionBody(cell.getStringCellValue());
         }
         return actionBodyEntity;
@@ -734,7 +731,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
     private ConfigurationDataEntity populateConfigurationDataEntity(PolicyEntity policyEntity,
             ConfigurationDataEntity configurationDataEntity, Cell cell) {
         if (configurationName.equalsIgnoreCase(getCellHeaderName(cell))
-            && (policyEntity.getPolicyName().contains(config) || policyEntity.getPolicyName().contains(DECISION_MS))) {
+                && (policyEntity.getPolicyName().contains(config)
+                        || policyEntity.getPolicyName().contains(DECISION_MS))) {
             configurationDataEntity.setConfigurationName(cell.getStringCellValue());
         }
         return configurationDataEntity;

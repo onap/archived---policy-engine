@@ -19,16 +19,19 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.admin;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
-import static org.mockito.Mockito.when;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.controller.PolicyController;
 import org.onap.policy.rest.dao.CommonClassDao;
@@ -69,9 +72,8 @@ public class PolicyNotificationMailTest {
 
         commonClassDao = mock(CommonClassDao.class);
         PolicyController.setCommonClassDao(commonClassDao);
-        when(commonClassDao.getDataByQuery(
-                "from WatchPolicyNotificationTable where policyName like:policyFileName", null))
-                        .thenReturn(data);
+        when(commonClassDao.getDataByQuery("from WatchPolicyNotificationTable where policyName like:policyFileName",
+                null)).thenReturn(data);
     }
 
     @Test

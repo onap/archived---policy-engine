@@ -19,13 +19,16 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.admin;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -45,8 +48,7 @@ public class PolicyUserInfoControllerTest {
         response = new MockHttpServletResponse();
         User user = new User();
         user.setOrgUserId("Test");
-        Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name")))
-                .thenReturn(user);
+        Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name"))).thenReturn(user);
         Mockito.when(request.getSession(false)).thenReturn(mockSession);
     }
 

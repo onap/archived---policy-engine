@@ -24,13 +24,15 @@ package org.onap.policy.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import com.att.research.xacml.api.pap.PAPException;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.rest.util.PolicyContainer.ItemSetChangeListener;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
-import com.att.research.xacml.api.pap.PAPException;
 
 public class PDPGroupContainerTest {
     private PAPPolicyEngine engine = Mockito.mock(PAPPolicyEngine.class);

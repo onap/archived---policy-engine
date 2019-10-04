@@ -22,6 +22,8 @@
 
 package org.onap.policy.admin;
 
+import com.att.research.xacml.util.XACMLProperties;
+
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.controller.ActionPolicyController;
@@ -36,8 +38,6 @@ import org.onap.policy.controller.CreatePolicyController;
 import org.onap.policy.controller.DecisionPolicyController;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.jpa.PolicyEntity;
-
-import com.att.research.xacml.util.XACMLProperties;
 
 public class PolicyAdapter {
 
@@ -78,8 +78,8 @@ public class PolicyAdapter {
             configPolicyName = "Micro Service";
         } else if (policyAdapter.getPolicyName().startsWith("Config_OOF")) {
             configPolicyName = "Optimization";
-        } else if (policyAdapter.getPolicyName().startsWith("Action") || policyAdapter.getPolicyName()
-            .startsWith("Decision")) {
+        } else if (policyAdapter.getPolicyName().startsWith("Action")
+                || policyAdapter.getPolicyName().startsWith("Decision")) {
             // No configPolicyName is applicable
         } else {
             configPolicyName = "Base";
@@ -109,10 +109,11 @@ public class PolicyAdapter {
 
     public static PolicyAdapter getInstance() {
         try {
-            Class<?> policyAdapter = Class
-                .forName(XACMLProperties.getProperty("policyAdapter.impl.className", PolicyAdapter.class.getName()));
+            Class<?> policyAdapter = Class.forName(
+                    XACMLProperties.getProperty("policyAdapter.impl.className", PolicyAdapter.class.getName()));
             return (PolicyAdapter) policyAdapter.newInstance();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | IllegalArgumentException e) {
             LOGGER.error("Exception Occurred" + e);
         }
         return null;

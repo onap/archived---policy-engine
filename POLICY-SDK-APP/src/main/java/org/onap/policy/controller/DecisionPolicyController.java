@@ -30,19 +30,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import javax.xml.bind.JAXBElement;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.adapter.RainyDayParams;
-import org.onap.policy.rest.adapter.YAMLParams;
-import org.onap.policy.rest.jpa.PolicyEntity;
-import org.onap.policy.xacml.util.XACMLPolicyWriter;
-import org.onap.portalsdk.core.controller.RestrictedBaseController;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
@@ -59,27 +49,40 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableDefinitionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.adapter.RainyDayParams;
+import org.onap.policy.rest.adapter.YAMLParams;
+import org.onap.policy.rest.jpa.PolicyEntity;
+import org.onap.policy.xacml.util.XACMLPolicyWriter;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 @Controller
 @RequestMapping("/")
 public class DecisionPolicyController extends RestrictedBaseController {
     private static final Logger policyLogger = FlexLogger.getLogger(DecisionPolicyController.class);
-    
+
     public static final String FUNCTION_NOT = "urn:oasis:names:tc:xacml:1.0:function:not";
     private static final String BLENTRY = "@blEntry@";
     private static final String DECISIONRAWTYPE = "@#RuleProvider@#Decision_Raw@#RuleProvider@#";
-    private static final String GUARD_YAML= "GUARD_YAML";
-    private static final String GUARD_BL_YAML= "GUARD_BL_YAML";
-    private static final String GUARD_MIN_MAX= "GUARD_MIN_MAX";
-   
+    private static final String GUARD_YAML = "GUARD_YAML";
+    private static final String GUARD_BL_YAML = "GUARD_BL_YAML";
+    private static final String GUARD_MIN_MAX = "GUARD_MIN_MAX";
+
     protected PolicyRestAdapter policyAdapter = null;
     private ArrayList<Object> ruleAlgorithmList;
     private ArrayList<Object> treatmentList = null;
     protected LinkedList<Integer> ruleAlgoirthmTracker;
-    
+
     public DecisionPolicyController() {
         // This constructor is empty
     }
-    
+
     public void rawXACMLPolicy(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         try (InputStream policyXmlStream = XACMLPolicyWriter.getXmlAsInputStream(policyAdapter.getPolicyData())) {
             String name = StringUtils.substringAfter(entity.getPolicyName(), "Decision_");
@@ -249,7 +252,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
                                 if (policyAdapter.getRuleProvider() != null
                                         && (GUARD_YAML.equals(policyAdapter.getRuleProvider())
                                                 || (GUARD_BL_YAML.equals(policyAdapter.getRuleProvider()))
-                                                || (GUARD_MIN_MAX.equals(policyAdapter.getRuleProvider())))){
+                                                || (GUARD_MIN_MAX.equals(policyAdapter.getRuleProvider())))) {
                                     YAMLParams yamlParams = new YAMLParams();
                                     for (int i = 0; i < attributeList.size(); i++) {
                                         Map<String, String> map = (Map<String, String>) attributeList.get(i);
@@ -376,7 +379,6 @@ public class DecisionPolicyController extends RestrictedBaseController {
         } else if ((jaxbDecisionTypes.get(0).getValue()) instanceof VariableReferenceType) {
             VariableReferenceType variableReference = (VariableReferenceType) jaxbDecisionTypes.get(0).getValue();
             ruleMap.put("dynamicRuleAlgorithmField1", "S_" + variableReference.getVariableId());
-
 
             // Get from Attribute Value
             AttributeValueType actionConditionAttributeValue = (AttributeValueType) jaxbDecisionTypes.get(1).getValue();

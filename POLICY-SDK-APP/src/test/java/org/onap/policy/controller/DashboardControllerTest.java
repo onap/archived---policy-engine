@@ -19,15 +19,19 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.controller;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -84,8 +88,8 @@ public class DashboardControllerTest {
     public void testGetPAPStatusData() {
         try {
             controller.getPAPStatusData(request, response);
-            assertTrue(response.getContentAsString() != null
-                    && response.getContentAsString().contains("papTableDatas"));
+            assertTrue(
+                    response.getContentAsString() != null && response.getContentAsString().contains("papTableDatas"));
         } catch (UnsupportedEncodingException e) {
             logger.error("Exception Occured" + e);
             fail();
@@ -96,8 +100,8 @@ public class DashboardControllerTest {
     public void testGetPDPStatusData() {
         try {
             controller.getPDPStatusData(request, response);
-            assertTrue(response.getContentAsString() != null
-                    && response.getContentAsString().contains("pdpTableDatas"));
+            assertTrue(
+                    response.getContentAsString() != null && response.getContentAsString().contains("pdpTableDatas"));
         } catch (UnsupportedEncodingException e) {
             logger.error("Exception Occured" + e);
             fail();

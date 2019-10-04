@@ -20,14 +20,12 @@
 
 package org.onap.policy.dao;
 
-
 import java.util.List;
 
 import org.onap.policy.rest.jpa.SystemLogDB;
 
-
-
 public abstract interface SystemLogDbDao {
-	public abstract List<SystemLogDB> getLoggingData();
-	public abstract List<SystemLogDB> getSystemAlertData();
+    public abstract List<SystemLogDB> getLoggingData();
+
+    public abstract List<SystemLogDB> getSystemAlertData();
 }
