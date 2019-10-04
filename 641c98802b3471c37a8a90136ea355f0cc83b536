@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f38cf754_b3ce8c33",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyNotificationMail.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-04T22:50:01Z",
+      "side": 1,
+      "message": "looks like reformat added some trailing spaces to some comment lines",
+      "revId": "641c98802b3471c37a8a90136ea355f0cc83b536",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
