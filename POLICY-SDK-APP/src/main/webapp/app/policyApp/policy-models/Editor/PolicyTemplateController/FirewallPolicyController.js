@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,13 +112,6 @@ angular.module('abs').controller('fwPolicyController', ['$scope', '$window', 'Po
     	console.log("failed");
     });
 
-    function extend(obj, src) {
-        for (var key in src) {
-            if (src.hasOwnProperty(key)) obj[key] = src[key];
-        }
-        return obj;
-    }
-    
     $scope.viewFWRule = function(policy){
         console.log(policy);
         var uuu = "policyController/ViewFWPolicyRule.htm";
