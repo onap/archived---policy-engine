@@ -30,7 +30,7 @@ angular.module('abs').controller('optimizationController', ['$scope', '$window',
     			policyType : "Config",
     			configPolicyType : "Optimization"
     	}
-    };
+    }
     
     $scope.refresh = function(){
     	if($scope.refreshCheck){
@@ -270,11 +270,9 @@ angular.module('abs').controller('optimizationController', ['$scope', '$window',
 		 }
 	 };
     
-    var splitDash = '-';
 	var splitEqual = '=';
 	var splitComma = ',';
 	var splitcolon = ':';
-	var splitsemicolon = ";";
 	var splitEnum = "],";
 	var plainAttributeKeys = [];
 	var matching = [];
@@ -298,7 +296,6 @@ angular.module('abs').controller('optimizationController', ['$scope', '$window',
                 data: JSON.stringify(postData),
                 success : function(data){
                     $scope.$apply(function(){
-                    	var plainAttributeKeys = [];
                     	$scope.optimizationModelData = data[0].optimizationModelData;
                     	$scope.optimizationJsonDate = data[0].jsonValue;
                         $scope.dataOrderInfo = null;
@@ -332,7 +329,6 @@ angular.module('abs').controller('optimizationController', ['$scope', '$window',
 	               			 $scope.temp.policy.priority = "";
                     	}
                     	
-                       	var enumAttributes = $scope.optimizationModelData.enumValues;
                        	var annotation = $scope.optimizationModelData.annotation;
                        	var dictionary = $scope.microServiceAttributeDictionaryDatas;
 
@@ -352,7 +348,6 @@ angular.module('abs').controller('optimizationController', ['$scope', '$window',
 
                        	if (dictionary!= null && dictionary.length>1){
                        		for (m=0; m < dictionary.length; m += 1){
-                       			var keyCompare = dictionary[m].name;
                        			var valueCompare = dictionary[m].value;
                        			var valueModel = dictionary[m].modelName;
                        			var conpairService = serviceName;
@@ -439,7 +434,6 @@ angular.module('abs').controller('optimizationController', ['$scope', '$window',
 			              	    		    var label = $scope.labelManyKeys[i];
 			              	    				// first add parent/label level
 			             	 	    			for (k = 0; k < unique.length; k++){
-					                    			var newindex = unique[k].lastIndexOf("@");
 					                    			var newKey = unique[k].substring(0, index);
 	 		             	 	    			    if(label == newKey){
                                                         //Check this label has bee created or not

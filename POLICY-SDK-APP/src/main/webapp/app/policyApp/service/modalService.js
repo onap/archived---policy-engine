@@ -21,7 +21,7 @@ angular.module("modalServices",[]).service('modalService', ['$modal', function (
 	
 														
         	this.showSuccess = function(heading, messageBody){
-        		var modalInstance = $modal.open({
+        		$modal.open({
         	        templateUrl: 'modal_informative.html',
         	        controller: 'modalpopupController',
         	        resolve: {
@@ -38,7 +38,7 @@ angular.module("modalServices",[]).service('modalService', ['$modal', function (
         	      }); 
         	};
         	this.showFailure = function(heading, messageBody){
-        	var modalInstance = $modal.open({
+        		$modal.open({
         	        templateUrl: 'modal_warning.html',
         	        controller: 'modalpopupController',
         	        resolve: {
@@ -54,7 +54,7 @@ angular.module("modalServices",[]).service('modalService', ['$modal', function (
         	};
         	
         	this.showMessage = function(heading, messageBody){
-            	var modalInstance = $modal.open({
+            	$modal.open({
             	        templateUrl: 'modal_message.html',
             	        controller: 'modalpopupController',
             	        resolve: {
@@ -70,7 +70,7 @@ angular.module("modalServices",[]).service('modalService', ['$modal', function (
             	};
         	
         	this.showWarning = function(heading, messageBody){
-            	var modalInstance = $modal.open({
+            	$modal.open({
             	        templateUrl: 'modal_warning_message.html',
             	        controller: 'modalpopupController',
             	        resolve: {

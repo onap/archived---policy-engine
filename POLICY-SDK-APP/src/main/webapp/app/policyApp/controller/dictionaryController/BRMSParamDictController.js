@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,6 @@ app.controller('editBRMSParamController' , function ($scope, $modalInstance, mes
     		if(!regex.test(brmsParamDictionaryData.ruleName)) {
     			Notification.error("Enter Valid Rule Name without spaces or special characters");
     		}else{
-    			var file  = $scope.MyFile;
                 var uuu = "saveDictionary/brms_dictionary/save_BRMSParam";
                 var postData={brmsParamDictionaryData: brmsParamDictionaryData, userid: userid};
                 $.ajax({

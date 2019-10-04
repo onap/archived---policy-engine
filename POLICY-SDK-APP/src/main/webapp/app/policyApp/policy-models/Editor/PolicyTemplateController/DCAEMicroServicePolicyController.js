@@ -33,7 +33,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
     			policyType : "Config",
     			configPolicyType : "Micro Service"
     	}
-    };
+    }
     
     $scope.refresh = function(){
     	if($scope.refreshCheck){
@@ -224,7 +224,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 						layer++;
 						if(layer > 4){ 
 							layer = 1
-						};
+						}
 			    	    div.className += ' children_group border' + layer; //here is div with a group of children.
 					}
 				}
@@ -349,11 +349,9 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		 }
 	 };
     
-    var splitDash = '-';
 	var splitEqual = '=';
 	var splitComma = ',';
 	var splitcolon = ':';
-	var splitsemicolon = ";";
 	var splitEnum = "],";
 	var plainAttributeKeys = [];
 	var matching = [];
@@ -388,7 +386,6 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                 	document.getElementById("msPolicyloader").style.visibility = "hidden";
                 	
                     $scope.$apply(function(){
-                    	var plainAttributeKeys = [];
                     	$scope.dcaeModelData = data[0].dcaeModelData;
                     	$scope.dcaeJsonDate = data[0].jsonValue;
                         $scope.dataOrderInfo = null;
@@ -415,7 +412,6 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	               			 $scope.temp.policy.priority = headDefautlsData.priority;
                     	}
                     	
-                       	var enumAttributes = $scope.dcaeModelData.enumValues;
                        	var annotation = $scope.dcaeModelData.annotation;
                        	var dictionary = $scope.microServiceAttributeDictionaryDatas;
 
@@ -435,7 +431,6 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 
                        	if (dictionary!= null && dictionary.length>1){
                        		for (m=0; m < dictionary.length; m += 1){
-                       			var keyCompare = dictionary[m].name;
                        			var valueCompare = dictionary[m].value;
                        			var valueModel = dictionary[m].modelName;
                        			var conpairService = serviceName;
@@ -699,8 +694,6 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			 var double = "double";
 			 var boolean = "boolean";
 			 var baseLevel = level;
-			 var list = "list";
-			 var String = "String";
 			 
 			 var attributekey = "";
 			 
@@ -1167,7 +1160,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 					layer++;
 					if(layer > 4){ 
 						layer = 1
-					};
+					}
 					firstChild_element.className += ' children_group border' + layer; //here is div with a group of children.
 				}
 			}
@@ -1212,11 +1205,6 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
     $scope.labelLayout = function(labelValue, lableName, labelManyKey ){
 		var label = document.createElement("Label")
 		var divID = labelValue;
-		if (labelValue.endsWith('.')){
-			var workingLabel = labelValue.substring(0, labelValue.length-1);
-		}else {
-			var workingLabel = labelValue;
-		}
 		
 		if (labelValue.length  < 1){
 			divID = "DynamicTemplate";
@@ -1274,7 +1262,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 				layer++;
 				if(layer > 4){ 
 					layer = 1
-				};
+				}
 				divTag.className += ' children_group border' + layer; //here is div with a group of children.
 			}
 			if(required){
@@ -1295,7 +1283,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 				layer++;
 				if(layer > 4){ 
 					layer = 1
-				};
+				}
 				divTag.className += ' children_group border' + layer; //here is div with a group of children.
 			}
 			if(required){
@@ -1336,7 +1324,6 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 				label.appendChild(labeltext);
 				isRequired = true;  //set required as true for matching element
 			}else {
-				var labeltext = document.createTextNode(attributeName);		
 				if(isRequired){
 				    var requiredLabName = attributeName+ " * ";
 					labeltext = document.createTextNode(requiredLabName);
@@ -1507,17 +1494,8 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 
 	function onlyUnique(value, index, self) { 
 		return self.indexOf(value) === index;
-	};
-
-
-	function checkDictionary(value){
-		for (i = 0; i < $scope.microServiceAttributeDictionaryDatas.length; i++) {
-			if ($scope.microServiceAttributeDictionaryDatas[i].name.localeCompare(value)){
-				return true;
-			}
-		}
-
 	}
+
 	$scope.savePolicy = function(policy){
 		if(policy.itemContent != undefined){
 			$scope.refreshCheck = true; 
@@ -1626,7 +1604,6 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
     $scope.validatePolicy = function(policy){
     	document.getElementById("validate").innerHTML = "";
     	var splitAt = '*';
-    	var dot ='.';
     	var jsonPolicy = {};
     	if(plainAttributeKeys != null){
     		for(a = 0; a < plainAttributeKeys.length; a++){
@@ -1750,13 +1727,6 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
  		});
     };
 
-    function extend(obj, src) {
-        for (var key in src) {
-            if (src.hasOwnProperty(key)) obj[key] = src[key];
-        }
-        return obj;
-    }
-    
 	// Switch Click
 	$('.Switch').click(function() {
 			// Check If Enabled (Has 'On' Class)

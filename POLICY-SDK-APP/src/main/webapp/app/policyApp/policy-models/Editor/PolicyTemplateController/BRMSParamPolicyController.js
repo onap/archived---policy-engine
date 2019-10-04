@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
     			policyType : "Config",
     			configPolicyType : "BRMS_Param"
     	}
-    };
+    }
     
     $scope.refresh = function(){
     	if($scope.refreshCheck){
@@ -237,13 +237,6 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
  		});
     };
     
-    function extend(obj, src) {
-        for (var key in src) {
-            if (src.hasOwnProperty(key)) obj[key] = src[key];
-        }
-        return obj;
-    }
-
     if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
     	$scope.temp.policy.attributes = [];
     }else{

@@ -32,7 +32,6 @@ angular.module('abs').controller('decisionPolicyController', [ '$scope', 'Policy
 			policyType : "Decision"
 		}
 	}
-	;
 
 	$scope.refresh = function() {
 		if ($scope.refreshCheck) {
@@ -113,14 +112,6 @@ angular.module('abs').controller('decisionPolicyController', [ '$scope', 'Policy
 	}, function(error) {
 		console.log("failed");
 	});
-
-	function extend(obj, src) {
-		for (var key in src) {
-			if (src.hasOwnProperty(key))
-				obj[key] = src[key];
-		}
-		return obj;
-	}
 
 	$scope.saveDecisionPolicy = function(policy) {
 		if (policy.itemContent != undefined) {
