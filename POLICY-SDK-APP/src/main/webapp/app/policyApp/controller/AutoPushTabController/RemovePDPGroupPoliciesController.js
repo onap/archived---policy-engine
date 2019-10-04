@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,11 +40,9 @@ app.controller('removeGroupPoliciesController' ,  function ($scope, $modalInstan
         //set gridApi on scope
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope,function(row){
-            var msg = 'row selected ' + row.isSelected;
         });
 
         gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
-            var msg = 'rows changed ' + rows.length;
         });
     };
 

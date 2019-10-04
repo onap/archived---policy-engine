@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ app.controller('actionPolicyController', ['$scope', 'PolicyAppService', 'policyN
     	}
     	$scope.modal('createNewPolicy', true);
     	$scope.temp.policy = "";
-    };
+    }
     
     $scope.modal = function(id, hide) {
         return $('#' + id).modal(hide ? 'hide' : 'show');
@@ -71,13 +71,6 @@ app.controller('actionPolicyController', ['$scope', 'PolicyAppService', 'policyN
     }, function (error) {
     	console.log("failed");
     });
-
-    function extend(obj, src) {
-        for (var key in src) {
-            if (src.hasOwnProperty(key)) obj[key] = src[key];
-        }
-        return obj;
-    }
     
     $scope.saveActionPolicy = function(policy){
     	if(policy.itemContent != undefined){

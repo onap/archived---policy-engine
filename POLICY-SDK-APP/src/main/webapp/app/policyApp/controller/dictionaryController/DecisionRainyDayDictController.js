@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,6 @@ app.controller('editRainyDayDictController' , function ($scope, $modalInstance, 
     
     $scope.editRainyDayTreatment = message.rainyDayDictionaryData;
     $scope.saveDecisionTreatments = function(rainyDayDictionaryData) {
-		var finalData = extend(rainyDayDictionaryData, $scope.treatmentDatas[0]);
 		var uuu = "saveDictionary/decision_dictionary/save_RainyDay";
 		var postData={rainyDayDictionaryData: rainyDayDictionaryData, userid: userid};
 		$.ajax({
@@ -76,13 +75,6 @@ app.controller('editRainyDayDictController' , function ($scope, $modalInstance, 
 			}
 		});
     };
-    
-    function extend(obj, src) {
-        for (var key in src) {
-            if (src.hasOwnProperty(key)) obj[key] = src[key];
-        }
-        return obj;
-    }
     
     $scope.treatmentDatas = [{"userDataTypeValues" : $scope.treatments}];
     $scope.addNewTreatment = function() {

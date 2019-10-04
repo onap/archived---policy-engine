@@ -51,10 +51,6 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             this.model = angular.copy(rawModel);
             this.tempModel = angular.copy(rawModel);
 
-            function parseMySQLDate(mysqlDate) {
-                var d = (mysqlDate || '').toString().split(/[- :]/);
-                return new Date(d[0], d[1] - 1, d[2], d[3], d[4], d[5]);
-            }
         };
 
         Item.prototype.update = function() {
@@ -263,7 +259,6 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             self.error = '';
             $http.post(policyManagerConfig.describePolicyUrl, data).success(function(data) {
                 self.tempModel.content =  self.model.content = data.html;
-                var describeTemplate =  self.tempModel.content;
 
                 self.deferredHandler(data, deferred);
             }).error(function(data) {
