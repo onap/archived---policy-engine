@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.utils;
 
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public final class UserUtils {
     /**
      * Read non super role scopes and add to map.
      * 
-     * @param userRole  Role Object.
+     * @param userRole Role Object.
      * @param rolesList roleList Object.
      * @return return the map<scope, role>.
      */

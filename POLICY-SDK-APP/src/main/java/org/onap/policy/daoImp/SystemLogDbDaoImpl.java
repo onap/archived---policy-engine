@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,85 +20,83 @@
 
 package org.onap.policy.daoImp;
 
-
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.springframework.stereotype.Service;
-
-import org.onap.policy.xacml.api.XACMLErrorConstants;
-
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.conf.HibernateSession;
 import org.onap.policy.controller.PolicyController;
 import org.onap.policy.dao.SystemLogDbDao;
 import org.onap.policy.rest.jpa.SystemLogDB;
-import org.onap.policy.common.logging.flexlogger.FlexLogger; 
-import org.onap.policy.common.logging.flexlogger.Logger;
-
+import org.onap.policy.xacml.api.XACMLErrorConstants;
+import org.springframework.stereotype.Service;
 
 @Service("SystemLogDbDao")
 public class SystemLogDbDaoImpl implements SystemLogDbDao {
-	private static final Logger logger = FlexLogger.getLogger(SystemLogDbDaoImpl.class);
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<SystemLogDB> getLoggingData() {
-		Session session = HibernateSession.getSession();
-		Transaction tx = session.beginTransaction();
-		List<SystemLogDB> system = null;
-        try {
-        	String sqlWhere = null;
-        	if(PolicyController.isjUnit()){
-        		sqlWhere = "";
-        	}else{
-        		sqlWhere = "date > DATE_SUB(curdate(), INTERVAL 5 DAY) ORDER BY date DESC limit "+PolicyController.getLogTableLimit()+"";
-        	}
-        	Criteria cr = session.createCriteria(SystemLogDB.class);
-        	cr.add(Restrictions.sqlRestriction(sqlWhere));
-            system = cr.list();
-			tx.commit();
-		} catch (Exception e) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying SystemLogDB Table"+e);	
-		}finally{
-			try{
-				session.close();
-			}catch(Exception e1){
-				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
-			}
-		}
-		return system;
-	}
+    private static final Logger logger = FlexLogger.getLogger(SystemLogDbDaoImpl.class);
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<SystemLogDB> getSystemAlertData() {
-		Session session = HibernateSession.getSession();
-		Transaction tx = session.beginTransaction();
-		List<SystemLogDB> system = null;
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<SystemLogDB> getLoggingData() {
+        Session session = HibernateSession.getSession();
+        Transaction tx = session.beginTransaction();
+        List<SystemLogDB> system = null;
         try {
-        	String sqlWhere = null;
-        	if(PolicyController.isjUnit()){
-        		sqlWhere = "";
-        	}else{
-        		sqlWhere = "date > DATE_SUB(curdate(), INTERVAL 5 DAY) and logtype = 'error' ORDER BY date DESC limit "+PolicyController.getSystemAlertTableLimit()+"";
-        	}
-        	Criteria cr = session.createCriteria(SystemLogDB.class);
-        	cr.add(Restrictions.sqlRestriction(sqlWhere));
+            String sqlWhere = null;
+            if (PolicyController.isjUnit()) {
+                sqlWhere = "";
+            } else {
+                sqlWhere = "date > DATE_SUB(curdate(), INTERVAL 5 DAY) ORDER BY date DESC limit "
+                        + PolicyController.getLogTableLimit() + "";
+            }
+            Criteria cr = session.createCriteria(SystemLogDB.class);
+            cr.add(Restrictions.sqlRestriction(sqlWhere));
             system = cr.list();
-			tx.commit();
-		} catch (Exception e) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying SystemLogDB Table"+e);	
-		}finally{
-			try{
-				session.close();
-			}catch(Exception e1){
-				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
-			}
-		}
-		return system;
-	}
+            tx.commit();
+        } catch (Exception e) {
+            logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying SystemLogDB Table" + e);
+        } finally {
+            try {
+                session.close();
+            } catch (Exception e1) {
+                logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e1);
+            }
+        }
+        return system;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<SystemLogDB> getSystemAlertData() {
+        Session session = HibernateSession.getSession();
+        Transaction tx = session.beginTransaction();
+        List<SystemLogDB> system = null;
+        try {
+            String sqlWhere = null;
+            if (PolicyController.isjUnit()) {
+                sqlWhere = "";
+            } else {
+                sqlWhere = "date > DATE_SUB(curdate(), INTERVAL 5 DAY) and logtype = 'error' ORDER BY date DESC limit "
+                        + PolicyController.getSystemAlertTableLimit() + "";
+            }
+            Criteria cr = session.createCriteria(SystemLogDB.class);
+            cr.add(Restrictions.sqlRestriction(sqlWhere));
+            system = cr.list();
+            tx.commit();
+        } catch (Exception e) {
+            logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying SystemLogDB Table" + e);
+        } finally {
+            try {
+                session.close();
+            } catch (Exception e1) {
+                logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e1);
+            }
+        }
+        return system;
+    }
 
 }

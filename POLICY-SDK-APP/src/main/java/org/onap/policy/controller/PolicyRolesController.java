@@ -20,6 +20,12 @@
 
 package org.onap.policy.controller;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,12 +51,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Controller
 @RequestMapping("/")
 public class PolicyRolesController extends RestrictedBaseController {
@@ -69,11 +69,13 @@ public class PolicyRolesController extends RestrictedBaseController {
     /**
      * Gets the policy roles entity data.
      *
-     * @param request  the request
+     * @param request the request
      * @param response the response
      */
-    @RequestMapping(value = { "/get_RolesData" }, method = {
-            org.springframework.web.bind.annotation.RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            value = {"/get_RolesData"},
+            method = {org.springframework.web.bind.annotation.RequestMethod.GET},
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPolicyRolesEntityData(HttpServletRequest request, HttpServletResponse response) {
         try {
             Map<String, Object> model = new HashMap<>();
@@ -90,12 +92,13 @@ public class PolicyRolesController extends RestrictedBaseController {
     /**
      * Save roles and Mechid entity data.
      *
-     * @param request  the request
+     * @param request the request
      * @param response the response
      * @return the model and view
      */
-    @RequestMapping(value = { "/save_NonSuperRolesData" }, method = {
-            org.springframework.web.bind.annotation.RequestMethod.POST })
+    @RequestMapping(
+            value = {"/save_NonSuperRolesData"},
+            method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView SaveRolesEntityData(HttpServletRequest request, HttpServletResponse response) {
         try {
             StringBuilder scopeName = new StringBuilder();
@@ -164,11 +167,13 @@ public class PolicyRolesController extends RestrictedBaseController {
     /**
      * Gets the policy scopes entity data.
      *
-     * @param request  the request
+     * @param request the request
      * @param response the response
      */
-    @RequestMapping(value = { "/get_PolicyRolesScopeData" }, method = {
-            org.springframework.web.bind.annotation.RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            value = {"/get_PolicyRolesScopeData"},
+            method = {org.springframework.web.bind.annotation.RequestMethod.GET},
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPolicyScopesEntityData(HttpServletRequest request, HttpServletResponse response) {
         try {
             scopelist = new ArrayList<>();
@@ -185,6 +190,7 @@ public class PolicyRolesController extends RestrictedBaseController {
         }
     }
 }
+
 
 class ReadScopes {
     private int id;

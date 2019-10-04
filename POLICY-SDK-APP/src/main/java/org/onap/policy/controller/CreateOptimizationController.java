@@ -20,7 +20,6 @@
 
 package org.onap.policy.controller;
 
-
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -28,6 +27,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.gson.Gson;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -49,8 +49,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
@@ -58,6 +60,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -118,7 +121,6 @@ public class CreateOptimizationController extends RestrictedBaseController {
     public static final String UTF8 = "UTF-8";
     public static final String MODELNAME = "modelName";
     public static final String APPLICATIONJSON = "application / json";
-
 
     @Autowired
     private CreateOptimizationController(CommonClassDao commonClassDao) {
@@ -186,7 +188,8 @@ public class CreateOptimizationController extends RestrictedBaseController {
         return policyAdapter;
     }
 
-    @RequestMapping(value = {"/policyController/getOptimizationTemplateData.htm"},
+    @RequestMapping(
+            value = {"/policyController/getOptimizationTemplateData.htm"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView getOptimizationTemplateData(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -442,7 +445,8 @@ public class CreateOptimizationController extends RestrictedBaseController {
         return keys;
     }
 
-    @RequestMapping(value = {"/policyController/getModelServiceVersionData.htm"},
+    @RequestMapping(
+            value = {"/policyController/getModelServiceVersionData.htm"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView getModelServiceVersionData(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -612,7 +616,8 @@ public class CreateOptimizationController extends RestrictedBaseController {
 
     }
 
-    @RequestMapping(value = {"/oof_dictionary/set_ModelData"},
+    @RequestMapping(
+            value = {"/oof_dictionary/set_ModelData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public void setModelData(HttpServletRequest request, HttpServletResponse response)
             throws IOException, FileUploadException {

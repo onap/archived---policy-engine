@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -19,18 +19,22 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.admin;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -73,69 +77,65 @@ public class PolicyRestControllerTest {
         response = new MockHttpServletResponse();
         User user = new User();
         user.setOrgUserId("Test");
-        Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name")))
-                .thenReturn(user);
+        Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name"))).thenReturn(user);
         Mockito.when(request.getSession(false)).thenReturn(mockSession);
-        clRequestString =
-                "{\"policyData\":{\"error\":\"\",\"inprocess\":false,\"model\":{\"name\":\"com\","
-                        + "\"subScopename\":\"\",\"path\":[],\"type\":\"dir\",\"size\":0,"
-                        + "\"date\":\"2017-06-01T15:45:36.000Z\",\"version\":\"\",\"createdBy\":\"Demo\","
-                        + "\"modifiedBy\":\"Demo\",\"content\":\"\",\"recursive\":false},"
-                        + "\"tempModel\":{\"name\":\"com\",\"subScopename\":\"\",\"path\":[],\"type\":\"dir\","
-                        + "\"size\":0,\"date\":\"2017-06-01T15:45:36.000Z\",\"version\":\"\",\"createdBy\":\"Demo\","
-                        + "\"modifiedBy\":\"Demo\",\"content\":\"\",\"recursive\":false},"
-                        + "\"$$hashKey\":\"object:1439\",\"policy\":{\"policyType\":\"Config\","
-                        + "\"configPolicyType\":\"ClosedLoop_Fault\",\"triggerTrapSignatures\":[1,1,2,3],"
-                        + "\"triggerfaultSignatures\":[1,1,2,3],\"traptriggerSignatures\":[{\"id\":\"Trap1\","
-                        + "\"$$hashKey\":\"object:1526\"},{\"id\":\"Trap2\",\"$$hashKey\":\"object:1534\"}],"
-                        + "\"connecttriggerSignatures\":[{\"id\":\"C1\",\"$$hashKey\":\"object:1554\","
-                        + "\"notBox\":\"NOT\",\"connectTrap1\":\"Trap1\",\"trapCount1\":\"12\","
-                        + "\"operatorBox\":\"AND\",\"connectTrap2\":\"Trap2\",\"trapCount2\":\"14\"}],"
-                        + "\"faulttriggerSignatures\":[{\"id\":\"Fault1\",\"$$hashKey\":\"object:1566\"},"
-                        + "{\"id\":\"Fault2\",\"$$hashKey\":\"object:1575\"}],\"connectVerificationSignatures\":"
-                        + "[{\"id\":\"C1\",\"$$hashKey\":\"object:1595\",\"notBox\":\"NOT\","
-                        + "\"connectTrap1\":\"Fault1\",\"trapCount1\":\"11\",\"operatorBox\":\"AND\","
-                        + "\"connectTrap2\":\"Fault2\",\"trapCount2\":\"12\"}],\"jsonBodyData\":"
-                        + "{\"trapMaxAge\":\"300\",\"vnfType\":\"Test\",\"closedLoopPolicyStatus\":\"Active\","
-                        + "\"vUSP\":true,\"trinity\":true,\"vDNS\":true,\"mcr\":true,\"gamma\":true,"
-                        + "\"actions\":\"Test\",\"timeInterval\":\"11\",\"timeOutvPRO\":\"11\",\"timeOutRuby\":\"11\","
-                        + "\"retrys\":\"1\",\"agingWindow\":\"12\",\"geoLink\":\"test\","
-                        + "\"emailAddress\":\"aa@test.com\",\"pepName\":\"Test\",\"pepAction\":\"test\","
-                        + "\"conditions\":\"SEND\"},\"policyName\":\"SampleTest\","
-                        + "\"policyDescription\":\"SampleTest\",\"riskType\":\"SampleRiskType\",\"riskLevel\":\"1\","
-                        + "\"guard\":\"True\",\"onapName\":\"SampleDemo\",\"ttlDate\":\"14/09/2017\","
-                        + "\"clearTimeOut\":\"123\",\"trapMaxAge\":\"11\",\"verificationclearTimeOut\":\"13\"}},"
-                        + "\"trapData\":{\"trap1\":[{\"id\":\"A1\",\"$$hashKey\":\"object:1528\","
-                        + "\"notBox\":\"NOT\",\"trigger1\":\"Test\",\"operatorBox\":\"AND\",\"trigger2\":\"Test\"}],"
-                        + "\"trap2\":[{\"id\":\"A1\",\"$$hashKey\":\"object:1536\",\"notBox\":\"NOT\","
-                        + "\"trigger1\":\"Test\",\"operatorBox\":\"AND\",\"trigger2\":\"Test\"},{\"id\":\"A2\","
-                        + "\"$$hashKey\":\"object:1542\",\"notBox\":\"NOT\",\"trigger1\":\"A1\","
-                        + "\"operatorBox\":\"AND\",\"trigger2\":\"Test\"},{\"id\":\"A3\","
-                        + "\"$$hashKey\":\"object:1548\",\"notBox\":\"NOT\",\"trigger1\":\"A1\","
-                        + "\"operatorBox\":\"OR\",\"trigger2\":\"A2\"}]},\"faultData\":{\"trap1\":[{\"id\":\"A1\","
-                        + "\"$$hashKey\":\"object:1568\",\"notBox\":\"NOT\",\"trigger1\":\"Test\","
-                        + "\"operatorBox\":\"AND\",\"trigger2\":\"Test\"}],\"trap2\":[{\"id\":\"A1\","
-                        + "\"$$hashKey\":\"object:1577\",\"notBox\":\"NOT\",\"trigger1\":\"Test\","
-                        + "\"operatorBox\":\"AND\",\"trigger2\":\"Test\"},{\"id\":\"A2\",\"$$hashKey\":"
-                        + "\"object:1583\",\"notBox\":\"NOT\",\"trigger1\":\"Test\",\"operatorBox\":\"OR\","
-                        + "\"trigger2\":\"Test\"},{\"id\":\"A3\",\"$$hashKey\":\"object:1589\",\"notBox\":\"NOT\","
-                        + "\"trigger1\":\"A1\",\"operatorBox\":\"AND\",\"trigger2\":\"A2\"}]}}";
+        clRequestString = "{\"policyData\":{\"error\":\"\",\"inprocess\":false,\"model\":{\"name\":\"com\","
+                + "\"subScopename\":\"\",\"path\":[],\"type\":\"dir\",\"size\":0,"
+                + "\"date\":\"2017-06-01T15:45:36.000Z\",\"version\":\"\",\"createdBy\":\"Demo\","
+                + "\"modifiedBy\":\"Demo\",\"content\":\"\",\"recursive\":false},"
+                + "\"tempModel\":{\"name\":\"com\",\"subScopename\":\"\",\"path\":[],\"type\":\"dir\","
+                + "\"size\":0,\"date\":\"2017-06-01T15:45:36.000Z\",\"version\":\"\",\"createdBy\":\"Demo\","
+                + "\"modifiedBy\":\"Demo\",\"content\":\"\",\"recursive\":false},"
+                + "\"$$hashKey\":\"object:1439\",\"policy\":{\"policyType\":\"Config\","
+                + "\"configPolicyType\":\"ClosedLoop_Fault\",\"triggerTrapSignatures\":[1,1,2,3],"
+                + "\"triggerfaultSignatures\":[1,1,2,3],\"traptriggerSignatures\":[{\"id\":\"Trap1\","
+                + "\"$$hashKey\":\"object:1526\"},{\"id\":\"Trap2\",\"$$hashKey\":\"object:1534\"}],"
+                + "\"connecttriggerSignatures\":[{\"id\":\"C1\",\"$$hashKey\":\"object:1554\","
+                + "\"notBox\":\"NOT\",\"connectTrap1\":\"Trap1\",\"trapCount1\":\"12\","
+                + "\"operatorBox\":\"AND\",\"connectTrap2\":\"Trap2\",\"trapCount2\":\"14\"}],"
+                + "\"faulttriggerSignatures\":[{\"id\":\"Fault1\",\"$$hashKey\":\"object:1566\"},"
+                + "{\"id\":\"Fault2\",\"$$hashKey\":\"object:1575\"}],\"connectVerificationSignatures\":"
+                + "[{\"id\":\"C1\",\"$$hashKey\":\"object:1595\",\"notBox\":\"NOT\","
+                + "\"connectTrap1\":\"Fault1\",\"trapCount1\":\"11\",\"operatorBox\":\"AND\","
+                + "\"connectTrap2\":\"Fault2\",\"trapCount2\":\"12\"}],\"jsonBodyData\":"
+                + "{\"trapMaxAge\":\"300\",\"vnfType\":\"Test\",\"closedLoopPolicyStatus\":\"Active\","
+                + "\"vUSP\":true,\"trinity\":true,\"vDNS\":true,\"mcr\":true,\"gamma\":true,"
+                + "\"actions\":\"Test\",\"timeInterval\":\"11\",\"timeOutvPRO\":\"11\",\"timeOutRuby\":\"11\","
+                + "\"retrys\":\"1\",\"agingWindow\":\"12\",\"geoLink\":\"test\","
+                + "\"emailAddress\":\"aa@test.com\",\"pepName\":\"Test\",\"pepAction\":\"test\","
+                + "\"conditions\":\"SEND\"},\"policyName\":\"SampleTest\","
+                + "\"policyDescription\":\"SampleTest\",\"riskType\":\"SampleRiskType\",\"riskLevel\":\"1\","
+                + "\"guard\":\"True\",\"onapName\":\"SampleDemo\",\"ttlDate\":\"14/09/2017\","
+                + "\"clearTimeOut\":\"123\",\"trapMaxAge\":\"11\",\"verificationclearTimeOut\":\"13\"}},"
+                + "\"trapData\":{\"trap1\":[{\"id\":\"A1\",\"$$hashKey\":\"object:1528\","
+                + "\"notBox\":\"NOT\",\"trigger1\":\"Test\",\"operatorBox\":\"AND\",\"trigger2\":\"Test\"}],"
+                + "\"trap2\":[{\"id\":\"A1\",\"$$hashKey\":\"object:1536\",\"notBox\":\"NOT\","
+                + "\"trigger1\":\"Test\",\"operatorBox\":\"AND\",\"trigger2\":\"Test\"},{\"id\":\"A2\","
+                + "\"$$hashKey\":\"object:1542\",\"notBox\":\"NOT\",\"trigger1\":\"A1\","
+                + "\"operatorBox\":\"AND\",\"trigger2\":\"Test\"},{\"id\":\"A3\","
+                + "\"$$hashKey\":\"object:1548\",\"notBox\":\"NOT\",\"trigger1\":\"A1\","
+                + "\"operatorBox\":\"OR\",\"trigger2\":\"A2\"}]},\"faultData\":{\"trap1\":[{\"id\":\"A1\","
+                + "\"$$hashKey\":\"object:1568\",\"notBox\":\"NOT\",\"trigger1\":\"Test\","
+                + "\"operatorBox\":\"AND\",\"trigger2\":\"Test\"}],\"trap2\":[{\"id\":\"A1\","
+                + "\"$$hashKey\":\"object:1577\",\"notBox\":\"NOT\",\"trigger1\":\"Test\","
+                + "\"operatorBox\":\"AND\",\"trigger2\":\"Test\"},{\"id\":\"A2\",\"$$hashKey\":"
+                + "\"object:1583\",\"notBox\":\"NOT\",\"trigger1\":\"Test\",\"operatorBox\":\"OR\","
+                + "\"trigger2\":\"Test\"},{\"id\":\"A3\",\"$$hashKey\":\"object:1589\",\"notBox\":\"NOT\","
+                + "\"trigger1\":\"A1\",\"operatorBox\":\"AND\",\"trigger2\":\"A2\"}]}}";
 
-
-        fwRequestString =
-                "{\"policyData\":{\"error\":\"\",\"inprocess\":false,\"model\":{\"name\":\"com\","
-                        + "\"subScopename\":\"\",\"path\":[],\"type\":\"dir\",\"size\":0,"
-                        + "\"date\":\"2017-06-01T15:45:36.000Z\",\"version\":\"\",\"createdBy\":\"Demo\","
-                        + "\"modifiedBy\":\"Demo\",\"content\":\"\",\"recursive\":false},\"tempModel\":"
-                        + "{\"name\":\"com\",\"subScopename\":\"\",\"path\":[],\"type\":\"dir\",\"size\":0,"
-                        + "\"date\":\"2017-06-01T15:45:36.000Z\",\"version\":\"\",\"createdBy\":\"Demo\","
-                        + "\"modifiedBy\":\"Demo\",\"content\":\"\",\"recursive\":false},\"$$hashKey\":\"object:260\","
-                        + "\"policy\":{\"policyType\":\"Config\",\"configPolicyType\":\"Firewall Config\","
-                        + "\"attributes\":[{\"id\":\"choice1\",\"$$hashKey\":\"object:338\",\"key\":\"Test\","
-                        + "\"value\":\"Test\"}],\"fwattributes\":[],\"policyName\":\"SampleTest\","
-                        + "\"policyDescription\":\"SampleTest\",\"riskType\":\"SampleRiskType\",\"riskLevel\":\"1\","
-                        + "\"guard\":\"True\",\"configName\":\"SampleTest\",\"ttlDate\":\"14/09/2017\","
-                        + "\"securityZone\":\"Test\"}}}";
+        fwRequestString = "{\"policyData\":{\"error\":\"\",\"inprocess\":false,\"model\":{\"name\":\"com\","
+                + "\"subScopename\":\"\",\"path\":[],\"type\":\"dir\",\"size\":0,"
+                + "\"date\":\"2017-06-01T15:45:36.000Z\",\"version\":\"\",\"createdBy\":\"Demo\","
+                + "\"modifiedBy\":\"Demo\",\"content\":\"\",\"recursive\":false},\"tempModel\":"
+                + "{\"name\":\"com\",\"subScopename\":\"\",\"path\":[],\"type\":\"dir\",\"size\":0,"
+                + "\"date\":\"2017-06-01T15:45:36.000Z\",\"version\":\"\",\"createdBy\":\"Demo\","
+                + "\"modifiedBy\":\"Demo\",\"content\":\"\",\"recursive\":false},\"$$hashKey\":\"object:260\","
+                + "\"policy\":{\"policyType\":\"Config\",\"configPolicyType\":\"Firewall Config\","
+                + "\"attributes\":[{\"id\":\"choice1\",\"$$hashKey\":\"object:338\",\"key\":\"Test\","
+                + "\"value\":\"Test\"}],\"fwattributes\":[],\"policyName\":\"SampleTest\","
+                + "\"policyDescription\":\"SampleTest\",\"riskType\":\"SampleRiskType\",\"riskLevel\":\"1\","
+                + "\"guard\":\"True\",\"configName\":\"SampleTest\",\"ttlDate\":\"14/09/2017\","
+                + "\"securityZone\":\"Test\"}}}";
 
         fwViewRequestString =
                 "{\"policyData\":{\"policyType\":\"Config\",\"configPolicyType\":\"Firewall Config\",\"attributes\":"
@@ -143,8 +143,6 @@ public class PolicyRestControllerTest {
                         + "\"fwattributes\":[],\"policyName\":\"SampleTest\",\"policyDescription\":\"SampleTest\","
                         + "\"riskType\":\"SampleRiskType\",\"riskLevel\":\"1\",\"guard\":\"True\","
                         + "\"configName\":\"SampleTest\",\"ttlDate\":\"14/09/2017\",\"securityZone\":\"Test\"}}";
-
-
 
         prefixListData = new ArrayList<>();
         PrefixList prefixList = new PrefixList();
@@ -209,8 +207,7 @@ public class PolicyRestControllerTest {
         termList.setAction("Test");
         termListData.add(termList);
         when(commonClassDao.getData(TermList.class)).thenReturn(termListData);
-        when(commonClassDao.getDataById(TermList.class, "termName", "Test"))
-                .thenReturn(termListData);
+        when(commonClassDao.getDataById(TermList.class, "termName", "Test")).thenReturn(termListData);
     }
 
     @Test

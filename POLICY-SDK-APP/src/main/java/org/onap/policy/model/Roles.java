@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 
@@ -31,69 +32,69 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
-@Table(name="Roles")
-@NamedQuery(name="Roles.findAll", query="SELECT r FROM Roles r ")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})  
-public class Roles implements Serializable{
-	private static final long serialVersionUID = 1L;
+@Table(name = "Roles")
+@NamedQuery(name = "Roles.findAll", query = "SELECT r FROM Roles r ")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Roles implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
 
-	@Column(name="id")
-	private int id;
+    @Column(name = "id")
+    private int id;
 
-	@Column(name="loginId")
-	private String loginId;
-	
-	private String name;
-	private String scope;
-	private String role;
+    @Column(name = "loginId")
+    private String loginId;
 
-	public Roles(){
-		// Empty constructor
-	}
-	
-	public int getId() {
-		return this.id;
-	}
+    private String name;
+    private String scope;
+    private String role;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public Roles() {
+        // Empty constructor
+    }
 
-	public String getLoginId() {
-		return this.loginId;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
-		
-	}
-	public String getScope() {
-		return this.scope;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setScope(String scope) {
-		this.scope = scope;
-		
-	}
-	
-	public String getName() {
-		return name;
-	}
+    public String getLoginId() {
+        return this.loginId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getRole() {
-		return this.role;
-	}
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
 
-	public void setRole(String role) {
-		this.role = role;
-	}
+    }
+
+    public String getScope() {
+        return this.scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getRole() {
+        return this.role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

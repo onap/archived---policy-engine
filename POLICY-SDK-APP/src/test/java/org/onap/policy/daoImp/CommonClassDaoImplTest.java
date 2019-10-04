@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -26,12 +26,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+
 import javax.script.SimpleBindings;
+
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.h2.tools.Server;
 import org.hibernate.SessionFactory;
@@ -150,8 +153,7 @@ public class CommonClassDaoImplTest {
             userinfo.setUserName(loginId_userName);
             commonClassDao.save(userinfo);
 
-            List<Object> dataCur =
-                    commonClassDao.getDataByQuery("from UserInfo", new SimpleBindings());
+            List<Object> dataCur = commonClassDao.getDataByQuery("from UserInfo", new SimpleBindings());
 
             assertEquals(1, dataCur.size());
             UserInfo cur = (UserInfo) dataCur.get(0);
@@ -183,8 +185,7 @@ public class CommonClassDaoImplTest {
             pe.setCreatedBy("Test");
             commonClassDao.save(pe);
 
-            List<Object> dataCur =
-                    commonClassDao.getDataByQuery("from PolicyEntity", new SimpleBindings());
+            List<Object> dataCur = commonClassDao.getDataByQuery("from PolicyEntity", new SimpleBindings());
 
             assertTrue(1 == dataCur.size());
             assertTrue(dataCur.get(0) instanceof PolicyEntity);
@@ -296,8 +297,7 @@ public class CommonClassDaoImplTest {
             String[] splitDBCheckName = dbCheckName.split(":");
 
             // Current Implementation
-            String query =
-                    "FROM PolicyEntity where policyName like :splitDBCheckName1 and scope = :splitDBCheckName0";
+            String query = "FROM PolicyEntity where policyName like :splitDBCheckName1 and scope = :splitDBCheckName0";
             SimpleBindings params = new SimpleBindings();
             params.put("splitDBCheckName1", splitDBCheckName[1] + "%");
             params.put("splitDBCheckName0", splitDBCheckName[0]);
@@ -328,8 +328,7 @@ public class CommonClassDaoImplTest {
             commonClassDao.save(watch);
 
             // Current Implementation
-            String query =
-                    "from WatchPolicyNotificationTable where POLICYNAME = :finalName and LOGINIDS = :userId";
+            String query = "from WatchPolicyNotificationTable where POLICYNAME = :finalName and LOGINIDS = :userId";
             SimpleBindings params = new SimpleBindings();
             params.put("finalName", finalName);
             params.put("userId", userId);
@@ -371,8 +370,7 @@ public class CommonClassDaoImplTest {
             String finalName = "banana' OR '1'='1";
 
             // Current Implementation
-            String query =
-                    "from WatchPolicyNotificationTable where POLICYNAME = :finalName and LOGINIDS = :userId";
+            String query = "from WatchPolicyNotificationTable where POLICYNAME = :finalName and LOGINIDS = :userId";
             SimpleBindings params = new SimpleBindings();
             params.put("finalName", finalName);
             params.put("userId", userId);
@@ -399,19 +397,18 @@ public class CommonClassDaoImplTest {
             userInfo.setUserLoginId("TestID");
             userInfo.setUserName("Test");
             commonClassDao.save(userInfo);
-            List<Object> data = commonClassDao.getDataById(UserInfo.class, "userLoginId:userName",
-                    "TestID:Test");
+            List<Object> data = commonClassDao.getDataById(UserInfo.class, "userLoginId:userName", "TestID:Test");
             assertTrue(data.size() == 1);
             UserInfo userInfoUpdate = (UserInfo) data.get(0);
             userInfoUpdate.setUserName("Test1");
             commonClassDao.update(userInfoUpdate);
             List<String> data1 = commonClassDao.getDataByColumn(UserInfo.class, "userLoginId");
             assertTrue(data1.size() == 1);
-            UserInfo data2 = (UserInfo) commonClassDao.getEntityItem(UserInfo.class,
-                    "userLoginId:userName", "TestID:Test1");
+            UserInfo data2 =
+                    (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId:userName", "TestID:Test1");
             assertTrue("TestID".equals(data2.getUserLoginId()));
-            List<Object> data3 = commonClassDao.checkDuplicateEntry("TestID:Test1",
-                    "userLoginId:userName", UserInfo.class);
+            List<Object> data3 =
+                    commonClassDao.checkDuplicateEntry("TestID:Test1", "userLoginId:userName", UserInfo.class);
             assertTrue(data3.size() == 1);
             PolicyRoles roles = new PolicyRoles();
             roles.setRole("admin");
