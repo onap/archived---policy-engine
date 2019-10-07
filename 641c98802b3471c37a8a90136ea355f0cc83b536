@@ -34,6 +34,24 @@
       "revId": "641c98802b3471c37a8a90136ea355f0cc83b536",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2300788f_da667c9b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyNotificationMail.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-07T13:02:25Z",
+      "side": 1,
+      "message": "Red on the right means that it added it.  Red on the left means that it removed it.",
+      "parentUuid": "a7901619_80bb6dd9",
+      "revId": "641c98802b3471c37a8a90136ea355f0cc83b536",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
