@@ -36,7 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.IntStream;
-
+import lombok.Getter;
+import lombok.Setter;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
@@ -577,6 +578,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
 }
 
 
+@Getter
+@Setter
 class ClosedLoopGridJSONData {
 
     private String clearTimeOut;
@@ -585,43 +588,4 @@ class ClosedLoopGridJSONData {
     private List<Object> connecttriggerSignatures;
     private List<Object> connectVerificationSignatures;
 
-    public String getClearTimeOut() {
-        return clearTimeOut;
-    }
-
-    public void setClearTimeOut(String clearTimeOut) {
-        this.clearTimeOut = clearTimeOut;
-    }
-
-    public String getTrapMaxAge() {
-        return trapMaxAge;
-    }
-
-    public void setTrapMaxAge(String trapMaxAge) {
-        this.trapMaxAge = trapMaxAge;
-    }
-
-    public String getVerificationclearTimeOut() {
-        return verificationclearTimeOut;
-    }
-
-    public void setVerificationclearTimeOut(String verificationclearTimeOut) {
-        this.verificationclearTimeOut = verificationclearTimeOut;
-    }
-
-    public List<Object> getConnecttriggerSignatures() {
-        return connecttriggerSignatures;
-    }
-
-    public void setConnecttriggerSignatures(List<Object> connecttriggerSignatures) {
-        this.connecttriggerSignatures = connecttriggerSignatures;
-    }
-
-    public List<Object> getConnectVerificationSignatures() {
-        return connectVerificationSignatures;
-    }
-
-    public void setConnectVerificationSignatures(List<Object> connectVerificationSignatures) {
-        this.connectVerificationSignatures = connectVerificationSignatures;
-    }
 }
