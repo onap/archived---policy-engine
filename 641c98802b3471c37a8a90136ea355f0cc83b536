@@ -52,6 +52,24 @@
       "revId": "641c98802b3471c37a8a90136ea355f0cc83b536",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4521eb51_ff943068",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyNotificationMail.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-07T13:14:21Z",
+      "side": 1,
+      "message": "That\u0027s not what I see locally on the file I changed - there is no extra space there in the file I committed for review. Looks like a trailing space was removed. I\u0027m not sure why colors would mean something different on the RHS. Red means removed, green means added.",
+      "parentUuid": "2300788f_da667c9b",
+      "revId": "641c98802b3471c37a8a90136ea355f0cc83b536",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
