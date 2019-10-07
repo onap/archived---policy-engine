@@ -16,6 +16,24 @@
       "revId": "641c98802b3471c37a8a90136ea355f0cc83b536",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7901619_80bb6dd9",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyNotificationMail.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-07T12:43:05Z",
+      "side": 1,
+      "message": "I thought red signified that it was removed, not added. Interesting in that the plugin is for \"eclipse\" - which should behave the same as if I was in Eclipse and reformatted the source.",
+      "parentUuid": "f38cf754_b3ce8c33",
+      "revId": "641c98802b3471c37a8a90136ea355f0cc83b536",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
