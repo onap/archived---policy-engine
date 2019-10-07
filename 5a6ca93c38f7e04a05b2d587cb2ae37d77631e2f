@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d8565adc_632e1c53",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/controller/PolicyRolesControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-07T19:45:42Z",
+      "side": 1,
+      "message": "trailing space\n\nsame comment below and in other files",
+      "revId": "5a6ca93c38f7e04a05b2d587cb2ae37d77631e2f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
