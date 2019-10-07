@@ -88,6 +88,24 @@
       "revId": "641c98802b3471c37a8a90136ea355f0cc83b536",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6eccce1c_5a4cf8e4",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyNotificationMail.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-07T13:16:40Z",
+      "side": 1,
+      "message": "Well actually I am wrong - looks like it did add it. Weird.",
+      "parentUuid": "b75533c8_b85eb8e7",
+      "revId": "641c98802b3471c37a8a90136ea355f0cc83b536",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
