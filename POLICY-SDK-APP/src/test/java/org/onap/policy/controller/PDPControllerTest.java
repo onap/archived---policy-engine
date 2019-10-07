@@ -22,6 +22,7 @@
 
 package org.onap.policy.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.UnsupportedEncodingException;
@@ -50,6 +51,11 @@ public class PDPControllerTest extends Mockito {
     private Set<StdPDPGroup> groups;
     private static List<Object> rolesdata;
 
+    /**
+     * Before.
+     *
+     * @throws Exception Exception
+     */
     @Before
     public void setUp() throws Exception {
         logger.info("setUp: Entering");
@@ -79,9 +85,9 @@ public class PDPControllerTest extends Mockito {
     }
 
     @Test
-    public void testPDPGroupData() {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+    public void testPdpGroupData() {
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        final MockHttpServletResponse response = new MockHttpServletResponse();
         PolicyController controller = mock(PolicyController.class);
         PDPController pdpController = new PDPController();
         pdpController.setJunit(true);;
@@ -94,5 +100,18 @@ public class PDPControllerTest extends Mockito {
         } catch (UnsupportedEncodingException e) {
             logger.error("Exception Occured" + e);
         }
+    }
+
+    @Test
+    public void testPdpData() {
+        PdpData data = new PdpData();
+        data.setId("id");
+        assertEquals("id", data.getId());
+        data.setDescription("foo");
+        assertEquals("foo", data.getDescription());
+        data.setJmxPort(0);
+        assertEquals(0, data.getJmxPort());
+        data.setName("name");
+        assertEquals("name", data.getName());
     }
 }

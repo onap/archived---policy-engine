@@ -51,6 +51,11 @@ public class PolicyRolesControllerTest {
     private PolicyRolesController controller = null;
     private static CommonClassDao commonClassDao;
 
+    /**
+     * Before.
+     *
+     * @throws Exception exception
+     */
     @Before
     public void setUp() throws Exception {
         logger.info("setUp: Entering");
