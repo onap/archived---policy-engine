@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee749a27_5c266913",
+        "filename": "PolicyEngineAPI/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-07T19:36:43Z",
+      "side": 1,
+      "message": "license - I know Jim.",
+      "range": {
+        "startLine": 6,
+        "startChar": 16,
+        "endLine": 6,
+        "endChar": 25
+      },
+      "revId": "11fb70825ed28d34a3ad37ff221d7f9ed6da9fa9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
