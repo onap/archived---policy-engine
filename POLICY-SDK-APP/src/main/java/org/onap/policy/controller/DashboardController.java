@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
@@ -41,6 +42,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;
@@ -53,6 +55,7 @@ import javax.management.remote.JMXServiceURL;
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -117,15 +120,14 @@ public class DashboardController extends RestrictedBaseController {
         return policyController != null ? getPolicyController() : new PolicyController();
     }
 
-
-
     /**
      * This method is to retrieve all the data of last 30 days from PolicyEntity table as default.
      * 
      * @param request object
      * @param response object contains retrieved data
      */
-    @RequestMapping(value = {"/get_DashboardPolicyCRUDData"},
+    @RequestMapping(
+            value = {"/get_DashboardPolicyCRUDData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void get_DashboardPolicyCrudData(HttpServletRequest request, HttpServletResponse response) {
@@ -149,7 +151,8 @@ public class DashboardController extends RestrictedBaseController {
      * @param request object
      * @param response object contains retrieved data
      */
-    @RequestMapping(value = {"/dashboardController/dashboardAdvancedSearch.htm"},
+    @RequestMapping(
+            value = {"/dashboardController/dashboardAdvancedSearch.htm"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public void dashboardAdvancedSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String lscope = null;
@@ -202,7 +205,8 @@ public class DashboardController extends RestrictedBaseController {
      * @param request object
      * @param response object contains retrieved data
      */
-    @RequestMapping(value = {"/get_DashboardPdpPolicyCRUDData"},
+    @RequestMapping(
+            value = {"/get_DashboardPdpPolicyCRUDData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void get_DashboardPdpPolicyCrudData(HttpServletRequest request, HttpServletResponse response) {
@@ -219,7 +223,8 @@ public class DashboardController extends RestrictedBaseController {
         }
     }
 
-    @RequestMapping(value = {"/get_DashboardLoggingData"},
+    @RequestMapping(
+            value = {"/get_DashboardLoggingData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getData(HttpServletRequest request, HttpServletResponse response) {
@@ -235,7 +240,8 @@ public class DashboardController extends RestrictedBaseController {
         }
     }
 
-    @RequestMapping(value = {"/get_DashboardSystemAlertData"},
+    @RequestMapping(
+            value = {"/get_DashboardSystemAlertData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getSystemAlertData(HttpServletRequest request, HttpServletResponse response) {
@@ -251,7 +257,8 @@ public class DashboardController extends RestrictedBaseController {
         }
     }
 
-    @RequestMapping(value = {"/get_DashboardPAPStatusData"},
+    @RequestMapping(
+            value = {"/get_DashboardPAPStatusData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPAPStatusData(HttpServletRequest request, HttpServletResponse response) {
@@ -269,7 +276,8 @@ public class DashboardController extends RestrictedBaseController {
         }
     }
 
-    @RequestMapping(value = {"/get_DashboardPDPStatusData"},
+    @RequestMapping(
+            value = {"/get_DashboardPDPStatusData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPDPStatusData(HttpServletRequest request, HttpServletResponse response) {
@@ -289,7 +297,8 @@ public class DashboardController extends RestrictedBaseController {
         }
     }
 
-    @RequestMapping(value = {"/get_DashboardPolicyActivityData"},
+    @RequestMapping(
+            value = {"/get_DashboardPolicyActivityData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPolicyActivityData(HttpServletRequest request, HttpServletResponse response) {
@@ -336,7 +345,6 @@ public class DashboardController extends RestrictedBaseController {
         object.put("noOfConnectedTrap", pdpCount);
         papStatusData.add(0, object);
     }
-
 
     /*
      * Add the PAP Policy information to the PAP Table
@@ -407,7 +415,8 @@ public class DashboardController extends RestrictedBaseController {
     /*
      * Add the Policy information to the policyStatusCRUDDataTable
      */
-    private void getPolicyData(String inputScope, String inputStage, String isDeleted, String createdAfter, String createdBefore) {
+    private void getPolicyData(String inputScope, String inputStage, String isDeleted, String createdAfter,
+            String createdBefore) {
         policyStatusCrudData = new ArrayList<>();
         List<Object> policyData = null;
         SimpleBindings geParams = new SimpleBindings();
@@ -572,9 +581,8 @@ public class DashboardController extends RestrictedBaseController {
         HashMap map = null;
         try (JMXConnector jmxConnection = JMXConnectorFactory.newJMXConnector(createConnectionURL(host, port), map)) {
             jmxConnection.connect();
-            Object o =
-                    jmxConnection.getMBeanServerConnection().getAttribute(
-                            new ObjectName("PdpRest:type=PdpRestMonitor"), jmxAttribute);
+            Object o = jmxConnection.getMBeanServerConnection()
+                    .getAttribute(new ObjectName("PdpRest:type=PdpRestMonitor"), jmxAttribute);
             policyLogger.debug("pdpEvaluationNA value retreived: " + o);
             return (long) o;
         } catch (MalformedURLException e) {
@@ -600,7 +608,6 @@ public class DashboardController extends RestrictedBaseController {
     private static JMXServiceURL createConnectionURL(String host, int port) throws MalformedURLException {
         return new JMXServiceURL("rmi", "", 0, "/jndi/rmi://" + host + ":" + port + "/jmxrmi");
     }
-
 
     /*
      * Add the information to the Policy Table
@@ -666,14 +673,13 @@ public class DashboardController extends RestrictedBaseController {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     private Object getPolicy(String host, int port, String jmxAttribute) {
-        policyLogger.debug("Create an RMI connector client and connect it to the JMX connector server for Policy: "
-                + host);
+        policyLogger
+                .debug("Create an RMI connector client and connect it to the JMX connector server for Policy: " + host);
         HashMap map = null;
         try (JMXConnector jmxConnection = JMXConnectorFactory.newJMXConnector(createConnectionURL(host, port), map)) {
             jmxConnection.connect();
-            Object o =
-                    jmxConnection.getMBeanServerConnection().getAttribute(
-                            new ObjectName("PdpRest:type=PdpRestMonitor"), "policyMap");
+            Object o = jmxConnection.getMBeanServerConnection()
+                    .getAttribute(new ObjectName("PdpRest:type=PdpRestMonitor"), "policyMap");
             policyLogger.debug("policyMap value retreived: " + o);
             return o;
         } catch (MalformedURLException e) {

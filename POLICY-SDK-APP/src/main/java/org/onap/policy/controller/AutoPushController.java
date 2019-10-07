@@ -26,6 +26,7 @@ import com.att.research.xacml.api.pap.PDPPolicy;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -45,9 +46,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -121,7 +124,9 @@ public class AutoPushController extends RestrictedBaseController {
         return scopes;
     }
 
-    @RequestMapping(value = {"/get_AutoPushPoliciesContainerData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_AutoPushPoliciesContainerData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPolicyGroupContainerData(HttpServletRequest request, HttpServletResponse response) {
         try {

@@ -22,8 +22,8 @@
 
 package org.onap.policy.admin;
 
-
 import com.att.research.xacml.util.XACMLProperties;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XACMLRestProperties;
@@ -63,7 +64,7 @@ public class CheckPDP {
     private static final Logger LOGGER = FlexLogger.getLogger(CheckPDP.class);
 
     private CheckPDP() {
-        //default constructor
+        // default constructor
     }
 
     public static Map<String, String> getPdpMap() {
@@ -104,9 +105,8 @@ public class CheckPDP {
         } else if (pdpPath == null) {
             pdpPath = Paths.get(pdpFile);
             if (!pdpPath.toString().endsWith(".properties") || !pdpPath.toFile().exists()) {
-                LOGGER.error(
-                    XACMLErrorConstants.ERROR_SYSTEM_ERROR + "File doesn't exist in the specified Path : " + pdpPath
-                        .toString());
+                LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "File doesn't exist in the specified Path : "
+                        + pdpPath.toString());
                 CheckPDP.reset();
                 return;
             }
@@ -173,7 +173,7 @@ public class CheckPDP {
                 Base64.Encoder encoder = Base64.getEncoder();
                 // 0 - PDPURL
                 pdpMap.put(pdpValues.get(0),
-                    encoder.encodeToString((userID + ":" + pass).getBytes(StandardCharsets.UTF_8)));
+                        encoder.encodeToString((userID + ":" + pass).getBytes(StandardCharsets.UTF_8)));
             } else {
                 LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS + "No Credentials to send Request: " + pdpValues);
             }

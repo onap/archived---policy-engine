@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Bell Canada
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,10 @@
  */
 
 package org.onap.policy.controller;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -44,10 +48,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Controller
 @RequestMapping({"/"})
 public class AdminTabController extends RestrictedBaseController {
@@ -58,7 +58,7 @@ public class AdminTabController extends RestrictedBaseController {
     private static CommonClassDao commonClassDao;
 
     public AdminTabController() {
-        //default constructor
+        // default constructor
     }
 
     @Autowired
@@ -74,8 +74,10 @@ public class AdminTabController extends RestrictedBaseController {
         AdminTabController.commonClassDao = commonClassDao;
     }
 
-    @RequestMapping(value = {"/get_LockDownData"}, method = {
-        org.springframework.web.bind.annotation.RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            value = {"/get_LockDownData"},
+            method = {org.springframework.web.bind.annotation.RequestMethod.GET},
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public void getAdminTabEntityData(HttpServletRequest request, HttpServletResponse response) {
         try {
             Map<String, Object> model = new HashMap<>();
@@ -89,22 +91,23 @@ public class AdminTabController extends RestrictedBaseController {
         }
     }
 
-    @RequestMapping(value = {"/adminTabController/save_LockDownValue.htm"}, method = {
-        org.springframework.web.bind.annotation.RequestMethod.POST})
+    @RequestMapping(
+            value = {"/adminTabController/save_LockDownValue.htm"},
+            method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView saveAdminTabLockdownValue(HttpServletRequest request, HttpServletResponse response)
-        throws IOException {
+            throws IOException {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             String userId = UserUtils.getUserSession(request).getOrgUserId();
             LOGGER.info(
-                "****************************************Logging UserID for Application Lockdown Function*****************************************");
+                    "****************************************Logging UserID for Application Lockdown Function*****************************************");
             LOGGER.info("UserId:  " + userId);
             LOGGER.info(
-                "*********************************************************************************************************************************");
+                    "*********************************************************************************************************************************");
             JsonNode root = mapper.readTree(request.getReader());
-            GlobalRoleSettings globalRole = mapper
-                .readValue(root.get("lockdowndata").toString(), GlobalRoleSettings.class);
+            GlobalRoleSettings globalRole =
+                    mapper.readValue(root.get("lockdowndata").toString(), GlobalRoleSettings.class);
             globalRole.setRole("super-admin");
             commonClassDao.update(globalRole);
 

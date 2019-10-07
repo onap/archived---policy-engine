@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Bell Canada
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,8 +27,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.util.Objects;
+
 import javax.xml.bind.JAXBElement;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
@@ -90,37 +90,35 @@ public class CreateBRMSRawController {
 
     private void setPolicyAdapterMatchAttributes(PolicyRestAdapter policyAdapter, List<AnyOfType> anyOfList) {
         anyOfList.stream()
-            //Extract nonNull list of AllOfType objs from each AnyOfType obj
-            .map(AnyOfType::getAllOf).filter(Objects::nonNull)
-            .forEach(allOfList ->
-                //Extract nonNull list of MatchType objs from each AllOFType obj
-                allOfList.stream().map(AllOfType::getMatch).filter(Objects::nonNull)
-                    .flatMap(Collection::stream)
-                    .forEach(match -> {
-                        // Under the match we have attribute value and
-                        // attributeDesignator. So,finally down to the actual attribute.
-                        AttributeValueType attributeValue = match.getAttributeValue();
-                        String value = (String) attributeValue.getContent().get(0);
-                        AttributeDesignatorType designator = match.getAttributeDesignator();
-                        String attributeId = designator.getAttributeId();
-                        if ("RiskType".equals(attributeId)) {
-                            policyAdapter.setRiskType(value);
-                        } else if ("RiskLevel".equals(attributeId)) {
-                            policyAdapter.setRiskLevel(value);
-                        } else if ("guard".equals(attributeId)) {
-                            policyAdapter.setGuard(value);
-                        } else if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
-                            PolicyController controller = new PolicyController();
-                            String newDate = controller.convertDate(value);
-                            policyAdapter.setTtlDate(newDate);
-                        }
-                    }));
+                // Extract nonNull list of AllOfType objs from each AnyOfType obj
+                .map(AnyOfType::getAllOf).filter(Objects::nonNull).forEach(allOfList ->
+                // Extract nonNull list of MatchType objs from each AllOFType obj
+                allOfList.stream().map(AllOfType::getMatch).filter(Objects::nonNull).flatMap(Collection::stream)
+                        .forEach(match -> {
+                            // Under the match we have attribute value and
+                            // attributeDesignator. So,finally down to the actual attribute.
+                            AttributeValueType attributeValue = match.getAttributeValue();
+                            String value = (String) attributeValue.getContent().get(0);
+                            AttributeDesignatorType designator = match.getAttributeDesignator();
+                            String attributeId = designator.getAttributeId();
+                            if ("RiskType".equals(attributeId)) {
+                                policyAdapter.setRiskType(value);
+                            } else if ("RiskLevel".equals(attributeId)) {
+                                policyAdapter.setRiskLevel(value);
+                            } else if ("guard".equals(attributeId)) {
+                                policyAdapter.setGuard(value);
+                            } else if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
+                                PolicyController controller = new PolicyController();
+                                String newDate = controller.convertDate(value);
+                                policyAdapter.setTtlDate(newDate);
+                            }
+                        }));
     }
 
     private void setPolicyAdapterNameValue(final PolicyRestAdapter policyAdapter) {
         // policy name value is the policy name without any prefix and extensions.
-        String policyNameValue = policyAdapter.getPolicyName()
-            .substring(policyAdapter.getPolicyName().indexOf("BRMS_Raw_") + 9);
+        String policyNameValue =
+                policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("BRMS_Raw_") + 9);
         if (logger.isDebugEnabled()) {
             logger.debug("Prepopulating form data for BRMS RAW Policy selected:" + policyAdapter.getPolicyName());
         }
@@ -140,28 +138,28 @@ public class CreateBRMSRawController {
 
     private void setPolicyAdapterAttributes(final PolicyRestAdapter policyAdapter, final PolicyType policy) {
         ArrayList<Object> attributeList = new ArrayList<>();
-        AdviceExpressionsType expressionTypes = ((RuleType) policy
-            .getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().get(0)).getAdviceExpressions();
+        AdviceExpressionsType expressionTypes =
+                ((RuleType) policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().get(0))
+                        .getAdviceExpressions();
         for (AdviceExpressionType adviceExpression : expressionTypes.getAdviceExpression()) {
             for (AttributeAssignmentExpressionType attributeAssignment : adviceExpression
-                .getAttributeAssignmentExpression()) {
+                    .getAttributeAssignmentExpression()) {
                 if (attributeAssignment.getAttributeId().startsWith("key:")) {
                     Map<String, String> attribute = new HashMap<>();
                     String key = attributeAssignment.getAttributeId().replace("key:", "");
                     attribute.put("key", key);
-                    JAXBElement<AttributeValueType> attributeValue = (JAXBElement<AttributeValueType>) attributeAssignment
-                        .getExpression();
+                    JAXBElement<AttributeValueType> attributeValue =
+                            (JAXBElement<AttributeValueType>) attributeAssignment.getExpression();
                     String value = (String) attributeValue.getValue().getContent().get(0);
                     attribute.put("value", value);
                     attributeList.add(attribute);
                 } else if (attributeAssignment.getAttributeId().startsWith("dependencies:")) {
                     ArrayList<String> dependencies = new ArrayList<>(Arrays
-                        .asList(attributeAssignment.getAttributeId().replace("dependencies:", "").split(",")));
+                            .asList(attributeAssignment.getAttributeId().replace("dependencies:", "").split(",")));
                     dependencies.remove("");
                     policyAdapter.setBrmsDependency(dependencies);
                 } else if (attributeAssignment.getAttributeId().startsWith("controller:")) {
-                    policyAdapter
-                        .setBrmsController(attributeAssignment.getAttributeId().replace("controller:", ""));
+                    policyAdapter.setBrmsController(attributeAssignment.getAttributeId().replace("controller:", ""));
                 }
             }
             policyAdapter.setAttributes(attributeList);

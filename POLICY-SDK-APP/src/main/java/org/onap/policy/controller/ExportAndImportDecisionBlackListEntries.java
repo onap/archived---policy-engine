@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,8 +39,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -65,7 +67,6 @@ import org.onap.portalsdk.core.web.support.JsonMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 
 /**
  * This class is used to import and export the black list entries which were used in the Decision Blacklist Guard YAML
@@ -126,7 +127,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
             String formatedDate = dateFormat.format(date);
 
             String fileName = "BlackList_Scope_" + adapter.getDomainDir() + "_Name_" + adapter.getPolicyName()
-            + "_Version_" + root.get("version").toString() + "_Date_" + formatedDate + ".xls";
+                    + "_Version_" + root.get("version").toString() + "_Date_" + formatedDate + ".xls";
 
             String deleteCheckPath = tmpFile + File.separator + fileName;
             File deleteCheck = new File(deleteCheckPath);

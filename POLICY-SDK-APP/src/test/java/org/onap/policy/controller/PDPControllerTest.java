@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -19,15 +19,19 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.controller;
 
 import static org.junit.Assert.assertTrue;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -86,8 +90,7 @@ public class PDPControllerTest extends Mockito {
         when(controller.getRoles("Test")).thenReturn(rolesdata);
         pdpController.getPDPGroupEntityData(request, response);
         try {
-            assertTrue(response.getContentAsString() != null
-                    && response.getContentAsString().contains("data"));
+            assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("data"));
         } catch (UnsupportedEncodingException e) {
             logger.error("Exception Occured" + e);
         }

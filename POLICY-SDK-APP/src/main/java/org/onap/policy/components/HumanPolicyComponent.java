@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Bell Canada
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +39,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.bind.JAXBElement;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -57,6 +59,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
+
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -94,7 +97,6 @@ public class HumanPolicyComponent {
     public static final String RULE_VARIABLE = "var:";
     public static final String EMPTY_STRING = "";
     private static final String ENTER = "ENTER";
-
 
     private static HtmlProcessor htmlProcessor;
 
@@ -357,7 +359,6 @@ class HtmlProcessor extends SimpleCallback {
         String id = "-";
         String version = "-";
 
-
         if (policySet.getPolicyCombiningAlgId() != null)
             combiningAlgorithm = extractLastIdentifier(policySet.getPolicyCombiningAlgId(), ":");
 
@@ -366,7 +367,6 @@ class HtmlProcessor extends SimpleCallback {
 
         if (policySet.getVersion() != null)
             version = policySet.getVersion();
-
 
         htmlOut.println("<" + htmlListElement + "><b>Policy Set ID</b>: <i>" + id + "</i>  (v" + version + ") " + "</"
                 + htmlListElement + ">");
@@ -441,7 +441,6 @@ class HtmlProcessor extends SimpleCallback {
         String id = "-";
         String version = "-";
 
-
         if (policy.getRuleCombiningAlgId() != null)
             combiningAlgorithm = extractLastIdentifier(policy.getRuleCombiningAlgId(), ":");
 
@@ -476,7 +475,6 @@ class HtmlProcessor extends SimpleCallback {
             htmlOut.println("<p>The result is " + algoDesc + ": </p>");
         }
     }
-
 
     @Override
     public CallbackResult onPreVisitRule(PolicyType parent, RuleType rule) {

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * POLICY-SDK-APP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -19,17 +19,21 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.controller;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -59,8 +63,7 @@ public class PolicyRolesControllerTest {
         HttpSession mockSession = mock(HttpSession.class);
         User user = new User();
         user.setOrgUserId("Test");
-        Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name")))
-                .thenReturn(user);
+        Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name"))).thenReturn(user);
         Mockito.when(request.getSession(false)).thenReturn(mockSession);
 
         logger.info("setUp: exit");
@@ -70,8 +73,7 @@ public class PolicyRolesControllerTest {
     public void testGetPolicyRolesEntityData() {
         try {
             controller.getPolicyRolesEntityData(request, response);
-            assertTrue(response.getContentAsString() != null
-                    && response.getContentAsString().contains("rolesDatas"));
+            assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("rolesDatas"));
         } catch (UnsupportedEncodingException e) {
             logger.error("Exception Occured" + e);
             fail();
@@ -82,8 +84,7 @@ public class PolicyRolesControllerTest {
     public void testGetPolicyScopesEntityData() {
         try {
             controller.getPolicyScopesEntityData(request, response);
-            assertTrue(response.getContentAsString() != null
-                    && response.getContentAsString().contains("scopeDatas"));
+            assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("scopeDatas"));
         } catch (UnsupportedEncodingException e) {
             logger.error("Exception Occured" + e);
             fail();
@@ -100,8 +101,7 @@ public class PolicyRolesControllerTest {
             when(request.getReader()).thenReturn(br);
             controller.SaveRolesEntityData(request, response);
             logger.info("response.getContentAsString(): " + response.getContentAsString());
-            assertTrue(response.getContentAsString() != null
-                    && response.getContentAsString().contains("rolesDatas"));
+            assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("rolesDatas"));
         } catch (Exception e) {
             fail("Exception: " + e);
         }
