@@ -70,6 +70,24 @@
       "revId": "641c98802b3471c37a8a90136ea355f0cc83b536",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b75533c8_b85eb8e7",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyNotificationMail.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-07T13:16:06Z",
+      "side": 1,
+      "message": "Oh, good point.  In that case, just ignore me.",
+      "parentUuid": "4521eb51_ff943068",
+      "revId": "641c98802b3471c37a8a90136ea355f0cc83b536",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
