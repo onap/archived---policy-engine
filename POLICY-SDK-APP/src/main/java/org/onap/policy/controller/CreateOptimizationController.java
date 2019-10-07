@@ -52,7 +52,8 @@ import java.util.zip.ZipFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import lombok.Getter;
+import lombok.Setter;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
@@ -893,7 +894,8 @@ public class CreateOptimizationController extends RestrictedBaseController {
     }
 }
 
-
+@Getter
+@Setter
 class OptimizationObject {
 
     private String service;
@@ -906,95 +908,5 @@ class OptimizationObject {
     private String riskType;
     private String riskLevel;
     private String guard = null;
-
-    public String getGuard() {
-        return guard;
-    }
-
-    public void setGuard(String guard) {
-        this.guard = guard;
-    }
-
-    public String getRiskType() {
-        return riskType;
-    }
-
-    public void setRiskType(String riskType) {
-        this.riskType = riskType;
-    }
-
-    public String getRiskLevel() {
-        return riskLevel;
-    }
-
-    public void setRiskLevel(String riskLevel) {
-        this.riskLevel = riskLevel;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
-
-    public String getPolicyScope() {
-        return policyScope;
-    }
-
-    public void setPolicyScope(String policyScope) {
-        this.policyScope = policyScope;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
     private Object content;
-
-    public String getPolicyName() {
-        return policyName;
-    }
-
-    public void setPolicyName(String policyName) {
-        this.policyName = policyName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Object getContent() {
-        return content;
-    }
-
-    public void setContent(Object content) {
-        this.content = content;
-    }
-
-    public String getService() {
-        return service;
-    }
-
-    public void setService(String service) {
-        this.service = service;
-    }
-
-    public String getTemplateVersion() {
-        return templateVersion;
-    }
-
-    public void setTemplateVersion(String templateVersion) {
-        this.templateVersion = templateVersion;
-    }
-
 }

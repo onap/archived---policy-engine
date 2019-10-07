@@ -34,7 +34,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -191,43 +192,11 @@ public class PolicyRolesController extends RestrictedBaseController {
     }
 }
 
-
+@Setter
+@Getter
 class ReadScopes {
     private int id;
     private UserInfo loginId;
     private String role;
     private List<String> scope;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public UserInfo getLoginId() {
-        return loginId;
-    }
-
-    public void setLoginId(UserInfo loginId) {
-        this.loginId = loginId;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public List<String> getScope() {
-        return scope;
-    }
-
-    public void setScope(List<String> scope) {
-        this.scope = scope;
-    }
-
 }

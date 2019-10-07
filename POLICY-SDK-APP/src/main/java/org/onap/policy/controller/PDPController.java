@@ -37,7 +37,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONObject;
 import org.onap.policy.admin.RESTfulPAPEngine;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -409,43 +410,11 @@ public class PDPController extends RestrictedBaseController {
     }
 }
 
-
+@Getter
+@Setter
 class PdpData {
     String id;
     int jmxPort;
     String name;
     String description;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public int getJmxPort() {
-        return jmxPort;
-    }
-
-    public void setJmxPort(int jmxPort) {
-        this.jmxPort = jmxPort;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
 }
