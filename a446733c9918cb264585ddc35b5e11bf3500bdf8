@@ -22,6 +22,40 @@
       "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1fbc08b1_9c88da72",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/CheckPdpPropertiesTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-10-08T22:04:26Z",
+      "side": 1,
+      "message": "Clear all used properties at end to leave in in original state before test, can other tests see these properties?",
+      "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3832467_88f9e959",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/CheckPdpPropertiesTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-10-08T22:04:26Z",
+      "side": 1,
+      "message": "same question",
+      "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
