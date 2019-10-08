@@ -49,6 +49,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XACMLRestProperties;
@@ -67,7 +68,7 @@ import org.onap.policy.xacml.std.pap.StdPDPStatus;
 
 /**
  * Implementation of the PAPEngine interface that communicates with a PAP engine in a remote servlet through a RESTful
- * interface
+ * interface.
  *
  *
  */
@@ -75,25 +76,29 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
     private static final Logger LOGGER = FlexLogger.getLogger(RESTfulPAPEngine.class);
 
     private static final String GROUP_ID = "groupId=";
+    private static final String UNABLE_MSG = "Unable to PUT policy '";
+    private static final String EXCEPTION_MSG = "', e:";
+    private static final String ERROR_MSG = "error";
+    private static final String PDPID_MSG = "pdpId=";
 
     //
     // URL of the PAP Servlet that this Admin Console talks to
     //
-    private String papServletURLString;
+    private String papServletUrlString;
 
     /**
-     * Set up link with PAP Servlet and get our initial set of Groups
+     * Set up link with PAP Servlet and get our initial set of Groups.
      *
      * @throws PAPException When failing to register with PAP
      */
-    public RESTfulPAPEngine(String myURLString) throws PAPException {
+    public RESTfulPAPEngine(String myUrlString) throws PAPException {
         //
         // Get our URL to the PAP servlet
         //
-        this.papServletURLString = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
-        if (this.papServletURLString == null || this.papServletURLString.length() == 0) {
-            String message =
-                    "The property 'POLICYENGINE_ADMIN_ACTIVE' was not set during installation.  Admin Console cannot call PAP.";
+        this.papServletUrlString = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
+        if (StringUtils.isBlank(this.papServletUrlString)) {
+            String message = "The property 'POLICYENGINE_ADMIN_ACTIVE' was not set during installation. "
+                    + "Admin Console cannot call PAP.";
             LOGGER.error(message);
             throw new PAPException(message);
         }
@@ -101,14 +106,14 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
         //
         // register this Admin Console with the PAP Servlet to get updates
         //
-        Object newURL = sendToPAP("PUT", null, null, null, "adminConsoleURL=" + myURLString);
-        if (newURL != null) {
+        Object newUrl = sendToPap("PUT", null, null, null, "adminConsoleURL=" + myUrlString);
+        if (newUrl != null) {
             // assume this was a re-direct and try again
-            LOGGER.warn("Redirecting to '" + newURL + "'");
-            this.papServletURLString = (String) newURL;
-            newURL = sendToPAP("PUT", null, null, null, "adminConsoleURL=" + myURLString);
-            if (newURL != null) {
-                LOGGER.error("Failed to redirect to " + this.papServletURLString);
+            LOGGER.warn("Redirecting to '" + newUrl + "'");
+            this.papServletUrlString = (String) newUrl;
+            newUrl = sendToPap("PUT", null, null, null, "adminConsoleURL=" + myUrlString);
+            if (newUrl != null) {
+                LOGGER.error("Failed to redirect to " + this.papServletUrlString);
                 throw new PAPException("Failed to register with PAP");
             }
         }
@@ -120,25 +125,25 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 
     @Override
     public OnapPDPGroup getDefaultGroup() throws PAPException {
-        return (OnapPDPGroup) sendToPAP("GET", null, null, StdPDPGroup.class, GROUP_ID, "default=");
+        return (OnapPDPGroup) sendToPap("GET", null, null, StdPDPGroup.class, GROUP_ID, "default=");
     }
 
     @Override
     public void setDefaultGroup(OnapPDPGroup group) throws PAPException {
-        sendToPAP("POST", null, null, null, GROUP_ID + group.getId(), "default=true");
+        sendToPap("POST", null, null, null, GROUP_ID + group.getId(), "default=true");
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public Set<OnapPDPGroup> getOnapPDPGroups() throws PAPException {
         Set<OnapPDPGroup> newGroupSet;
-        newGroupSet = (Set<OnapPDPGroup>) this.sendToPAP("GET", null, Set.class, StdPDPGroup.class, GROUP_ID);
+        newGroupSet = (Set<OnapPDPGroup>) this.sendToPap("GET", null, Set.class, StdPDPGroup.class, GROUP_ID);
         return Collections.unmodifiableSet(newGroupSet);
     }
 
     @Override
     public OnapPDPGroup getGroup(String id) throws PAPException {
-        return (OnapPDPGroup) sendToPAP("GET", null, null, StdPDPGroup.class, GROUP_ID + id);
+        return (OnapPDPGroup) sendToPap("GET", null, null, StdPDPGroup.class, GROUP_ID + id);
     }
 
     @Override
@@ -152,17 +157,10 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
             throw new PAPException("Unable to send name or description to PAP: " + e.getMessage() + e);
         }
 
-        this.sendToPAP("POST", null, null, null, GROUP_ID, "groupName=" + escapedName,
+        this.sendToPap("POST", null, null, null, GROUP_ID, "groupName=" + escapedName,
                 "groupDescription=" + escapedDescription);
     }
 
-    /**
-     * Update the configuration on the PAP for a single Group.
-     *
-     * @param group
-     * @return
-     * @throws PAPException
-     */
     @Override
     public void updateGroup(OnapPDPGroup group) throws PAPException {
         try {
@@ -178,9 +176,9 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
             // However, the policy files are (probably!) not too huge, and this is a good way to ensure that any
             // corrupted files on the PAP get refreshed.
             // now update the group object on the PAP
-            sendToPAP("PUT", group, null, null, GROUP_ID + group.getId());
+            sendToPap("PUT", group, null, null, GROUP_ID + group.getId());
         } catch (Exception e) {
-            String message = "Unable to PUT policy '" + group.getId() + "', e:" + e;
+            String message = UNABLE_MSG + group.getId() + EXCEPTION_MSG + e;
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + message, e);
             throw new PAPException(message);
         }
@@ -195,9 +193,9 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
     @Override
     public void updateGroup(OnapPDPGroup group, String userName) throws PAPException {
         try {
-            sendToPAP("PUT", group, null, null, GROUP_ID + group.getId(), "userId=" + userName);
+            sendToPap("PUT", group, null, null, GROUP_ID + group.getId(), "userId=" + userName);
         } catch (Exception e) {
-            String message = "Unable to PUT policy '" + group.getId() + "', e:" + e;
+            String message = UNABLE_MSG + group.getId() + EXCEPTION_MSG + e;
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + message, e);
             throw new PAPException(message);
         }
@@ -209,7 +207,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
         if (newGroup != null) {
             moveToGroupString = "movePDPsToGroupId=" + newGroup.getId();
         }
-        sendToPAP("DELETE", null, null, null, GROUP_ID + group.getId(), moveToGroupString);
+        sendToPap("DELETE", null, null, null, GROUP_ID + group.getId(), moveToGroupString);
     }
 
     @Override
@@ -218,46 +216,53 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
     }
 
     public OnapPDPGroup getPDPGroup(String pdpId) throws PAPException {
-        return (OnapPDPGroup) sendToPAP("GET", null, null, StdPDPGroup.class, GROUP_ID, "pdpId=" + pdpId,
+        return (OnapPDPGroup) sendToPap("GET", null, null, StdPDPGroup.class, GROUP_ID, PDPID_MSG + pdpId,
                 "getPDPGroup=");
     }
 
     @Override
     public OnapPDP getPDP(String pdpId) throws PAPException {
-        return (OnapPDP) sendToPAP("GET", null, null, StdPDP.class, GROUP_ID, "pdpId=" + pdpId);
+        return (OnapPDP) sendToPap("GET", null, null, StdPDP.class, GROUP_ID, PDPID_MSG + pdpId);
     }
 
     @Override
     public void newPDP(String id, OnapPDPGroup group, String name, String description, int jmxport)
             throws PAPException {
-        StdPDP newPDP = new StdPDP(id, name, description, jmxport);
-        sendToPAP("PUT", newPDP, null, null, GROUP_ID + group.getId(), "pdpId=" + id);
+        StdPDP newPdp = new StdPDP(id, name, description, jmxport);
+        sendToPap("PUT", newPdp, null, null, GROUP_ID + group.getId(), PDPID_MSG + id);
     }
 
     @Override
     public void movePDP(OnapPDP pdp, OnapPDPGroup newGroup) throws PAPException {
-        sendToPAP("POST", null, null, null, GROUP_ID + newGroup.getId(), "pdpId=" + pdp.getId());
+        sendToPap("POST", null, null, null, GROUP_ID + newGroup.getId(), PDPID_MSG + pdp.getId());
     }
 
     @Override
     public void updatePDP(OnapPDP pdp) throws PAPException {
         OnapPDPGroup group = getPDPGroup(pdp);
-        sendToPAP("PUT", pdp, null, null, GROUP_ID + group.getId(), "pdpId=" + pdp.getId());
+        sendToPap("PUT", pdp, null, null, GROUP_ID + group.getId(), PDPID_MSG + pdp.getId());
     }
 
     @Override
     public void removePDP(OnapPDP pdp) throws PAPException {
         OnapPDPGroup group = getPDPGroup(pdp);
-        sendToPAP("DELETE", null, null, null, GROUP_ID + group.getId(), "pdpId=" + pdp.getId());
+        sendToPap("DELETE", null, null, null, GROUP_ID + group.getId(), PDPID_MSG + pdp.getId());
     }
 
-    // Validate the Policy Data
+    /**
+     * validatePolicyRequest Creates a pap policy and then send to pap.
+     * 
+     * @param policyAdapter Input Adapter
+     * @param policyType Type of Policy
+     * @return true if validated
+     * @throws PAPException exception if invalid
+     */
     public boolean validatePolicyRequest(PolicyRestAdapter policyAdapter, String policyType) throws PAPException {
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(policyAdapter.getPolicyName(), policyAdapter.getConfigBodyData(),
+        StdPAPPolicy newPapPolicy = new StdPAPPolicy(policyAdapter.getPolicyName(), policyAdapter.getConfigBodyData(),
                 policyAdapter.getConfigType(), "Base");
 
         // send JSON object to PAP
-        return (Boolean) sendToPAP("PUT", newPAPPolicy, null, null, "operation=validate", "apiflag=admin",
+        return (Boolean) sendToPap("PUT", newPapPolicy, null, null, "operation=validate", "apiflag=admin",
                 "policyType=" + policyType);
     }
 
@@ -279,18 +284,17 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
      * Copy a single Policy file from the input stream to the PAP Servlet. Either this works (silently) or it throws an
      * exception.
      *
-     * @param policyId
-     * @param group
-     * @param policy
-     * @return
-     * @throws PAPException
+     * @param policyId ID of policy
+     * @param group PDP Group
+     * @param policy Input stream of policy
+     * @throws PAPException exception
      */
     public void copyFile(String policyId, OnapPDPGroup group, InputStream policy) throws PAPException {
         // send the policy file to the PAP Servlet
         try {
-            sendToPAP("POST", policy, null, null, GROUP_ID + group.getId(), "policyId=" + policyId);
+            sendToPap("POST", policy, null, null, GROUP_ID + group.getId(), "policyId=" + policyId);
         } catch (Exception e) {
-            String message = "Unable to PUT policy '" + policyId + "', e:" + e;
+            String message = UNABLE_MSG + policyId + EXCEPTION_MSG + e;
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + message, e);
             throw new PAPException(message);
         }
@@ -304,7 +308,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
         try (InputStream is = new FileInputStream(new File(policy.getLocation()))) {
             copyFile(policy.getId(), group, is);
         } catch (Exception e) {
-            String message = "Unable to PUT policy '" + policy.getId() + "', e:" + e;
+            String message = UNABLE_MSG + policy.getId() + EXCEPTION_MSG + e;
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + message, e);
             throw new PAPException(message);
         }
@@ -319,13 +323,13 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
      * Special operation - Similar to the normal PAP operations but this one contacts the PDP directly to get detailed
      * status info.
      *
-     * @param pdp
-     * @return
-     * @throws PAPException
+     * @param pdp PDP to get status
+     * @return PDPStatus object
+     * @throws PAPException Exception
      */
     @Override
     public PDPStatus getStatus(OnapPDP pdp) throws PAPException {
-        return (StdPDPStatus) sendToPAP("GET", pdp, null, StdPDPStatus.class);
+        return (StdPDPStatus) sendToPap("GET", pdp, null, StdPDPStatus.class);
     }
 
     //
@@ -335,21 +339,22 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
     /**
      * Send a request to the PAP Servlet and get the response.
      *
-     * The content is either an InputStream to be copied to the Request OutputStream OR it is an object that is to be
+     * <p>The content is either an InputStream to be copied to the Request OutputStream OR it is an object that is to be
      * encoded into JSON and pushed into the Request OutputStream.
      *
-     * The Request parameters may be encoded in multiple "name=value" sets, or parameters may be combined by the caller.
+     * <p>The Request parameters may be encoded in multiple "name=value" sets, or parameters may be 
+     * combined by the caller.
      *
-     * @param method
+     * @param method method
      * @param content - EITHER an InputStream OR an Object to be encoded in JSON
-     * @param collectionTypeClass
-     * @param responseContentClass
-     * @param parameters
-     * @return
-     * @throws PAPException
+     * @param collectionTypeClass Collection
+     * @param responseContentClass Response Content
+     * @param parameters List of parameters
+     * @return Object
+     * @throws PAPException exception
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private Object sendToPAP(String method, Object content, Class collectionTypeClass, Class responseContentClass,
+    private Object sendToPap(String method, Object content, Class collectionTypeClass, Class responseContentClass,
             String... parameters) throws PAPException {
         HttpURLConnection connection = null;
         String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
@@ -362,28 +367,28 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
         Object contentObj = content;
         LOGGER.info("Encoding for the PAP is: " + encoding);
         try {
-            String fullURL = papServletURLString;
+            String fullUrl = papServletUrlString;
             if (parameters != null && parameters.length > 0) {
                 StringBuilder queryString = new StringBuilder();
                 Arrays.stream(parameters).map(p -> "&" + p).forEach(queryString::append);
-                fullURL += "?" + queryString.substring(1);
+                fullUrl += "?" + queryString.substring(1);
             }
 
             // special case - Status (actually the detailed status) comes from the PDP directly, not the PAP
             if ("GET".equals(method) && (contentObj instanceof OnapPDP) && responseContentClass == StdPDPStatus.class) {
                 // Adjust the url and properties appropriately
                 String pdpID = ((OnapPDP) contentObj).getId();
-                fullURL = pdpID + "?type=Status";
+                fullUrl = pdpID + "?type=Status";
                 contentObj = null;
-                if (CheckPDP.validateID(pdpID)) {
-                    encoding = CheckPDP.getEncoding(pdpID);
+                if (CheckPdpProperties.validateId(pdpID)) {
+                    encoding = CheckPdpProperties.getEncoding(pdpID);
                 }
             }
 
             //
             // Open up the connection
             //
-            connection = (HttpURLConnection) makeConnection(fullURL);
+            connection = (HttpURLConnection) makeConnection(fullUrl);
             //
             // Setup our method and headers
             //
@@ -433,9 +438,9 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
                     String finalPolicyPath = connection.getHeaderField("finalPolicyPath");
                     successMap.put("success", finalPolicyPath);
                     return successMap;
-                } else if ("error".equalsIgnoreCase(isSuccess)) {
+                } else if (ERROR_MSG.equalsIgnoreCase(isSuccess)) {
                     LOGGER.info("There was an error while creating the policy!");
-                    successMap.put("error", "error");
+                    successMap.put(ERROR_MSG, ERROR_MSG);
                     return successMap;
                 } else {
                     // get the response content into a String
@@ -456,19 +461,19 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
                 }
             } else if (connection.getResponseCode() >= 300 && connection.getResponseCode() <= 399) {
                 // redirection
-                String newURL = connection.getHeaderField("Location");
-                if (newURL == null) {
+                String newUrl = connection.getHeaderField("Location");
+                if (newUrl == null) {
                     LOGGER.error(
                             "No Location header to redirect to when response code=" + connection.getResponseCode());
                     throw new IOException(
                             "No redirect Location header when response code=" + connection.getResponseCode());
                 }
-                int qIndex = newURL.indexOf('?');
-                if (qIndex > 0) {
-                    newURL = newURL.substring(0, qIndex);
+                int qindex = newUrl.indexOf('?');
+                if (qindex > 0) {
+                    newUrl = newUrl.substring(0, qindex);
                 }
-                LOGGER.info("Redirect seen.  Redirecting " + fullURL + " to " + newURL);
-                return newURL;
+                LOGGER.info("Redirect seen.  Redirecting " + fullUrl + " to " + newUrl);
+                return newUrl;
             } else {
                 LOGGER.warn("Unexpected response code: " + connection.getResponseCode() + "  message: "
                         + connection.getResponseMessage());
@@ -529,7 +534,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 
     // these may be overridden by junit tests
 
-    protected URLConnection makeConnection(String fullURL) throws IOException {
-        return new URL(fullURL).openConnection();
+    protected URLConnection makeConnection(String fullUrl) throws IOException {
+        return new URL(fullUrl).openConnection();
     }
 }

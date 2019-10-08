@@ -22,8 +22,8 @@
 
 package org.onap.policy.admin;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.Assert.assertNull;
 
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
@@ -38,19 +38,14 @@ import java.net.URLConnection;
 import javax.servlet.http.HttpServletResponse;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 
 public class RESTfulPAPEngineTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     private RESTfulPAPEngine engine = null;
     private String name = "testName";
@@ -64,8 +59,18 @@ public class RESTfulPAPEngineTest {
     OnapPDP pdp = Mockito.mock(OnapPDP.class);
     InputStream policy;
 
+    /**
+     * BeforeClass does some simple code coverage and sets up the
+     * XACML properties.
+     */
     @BeforeClass
     public static void setUpBeforeClass() {
+        //
+        // Test constructor with bad URL
+        //
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            new RESTfulPAPEngine(null));
+        
         XACMLProperties.reloadProperties();
     }
 
@@ -74,22 +79,22 @@ public class RESTfulPAPEngineTest {
         XACMLProperties.reloadProperties();
     }
 
-    @Before
-    public void runConstructor() throws Exception {
+    private void setupConnection(int responseCode) throws Exception {
         // Mock connection
         HttpURLConnection connection = Mockito.mock(HttpURLConnection.class);
-        Mockito.when(connection.getResponseCode()).thenReturn(HttpServletResponse.SC_NO_CONTENT);
-
+        Mockito.when(connection.getResponseCode()).thenReturn(responseCode);
+        Mockito.when(connection.getHeaderField("Location")).thenReturn("localhost:5678");
+        
         // Set the system property temporarily
         String systemKey = "xacml.properties";
-        String oldProperty = System.getProperty(systemKey);
+        final String oldProperty = System.getProperty(systemKey);
         System.setProperty(systemKey, "src/test/resources/xacml.admin.properties");
 
         // Test constructor
         String urlName = "localhost:1234";
         engine = new RESTfulPAPEngine(urlName) {
             @Override
-            protected URLConnection makeConnection(String fullURL) throws IOException {
+            protected URLConnection makeConnection(String fullUrl) throws IOException {
                 return connection;
             }
         };
@@ -106,75 +111,68 @@ public class RESTfulPAPEngineTest {
     }
 
     @Test
-    public void testGroups() throws Exception {
+    public void testAllTheExceptions() throws Exception {
+        setupConnection(HttpServletResponse.SC_NO_CONTENT);
+        
         engine.setDefaultGroup(group);
-        assertEquals(engine.getDefaultGroup(), null);
+        assertNull(engine.getDefaultGroup());
         engine.newGroup(name, description);
         engine.removeGroup(group, newGroup);
-        assertEquals(engine.getPDPGroup(pdp), null);
-        assertEquals(engine.getPDPGroup(id), null);
-        assertEquals(engine.getPDP(id), null);
-        assertEquals(engine.getStatus(pdp), null);
+        assertNull(engine.getPDPGroup(pdp));
+        assertNull(engine.getPDPGroup(id));
+        assertNull(engine.getPDP(id));
+        assertNull(engine.getStatus(pdp));
 
-        thrown.expect(NullPointerException.class);
-        engine.getOnapPDPGroups();
-        fail("Expecting an exception.");
-    }
+        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() ->
+            engine.getOnapPDPGroups()
+        );
 
-    @Test
-    public void testUpdateGroup() throws PAPException {
-        thrown.expect(PAPException.class);
-        engine.updateGroup(group);
-        fail("Expecting an exception.");
-    }
-
-    @Test
-    public void testPDP() throws PAPException {
-        assertEquals(engine.getGroup(name), null);
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            engine.updateGroup(group)
+        );
+        
+        assertNull(engine.getGroup(name));
         engine.movePDP(pdp, newGroup);
 
-        thrown.expect(PAPException.class);
-        engine.newPDP(id, newGroup, name, description, jmxport);
-        fail("Expecting an exception.");
-    }
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            engine.newPDP(id, newGroup, name, description, jmxport)
+        );
+    
+        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() ->
+            engine.updatePDP(pdp)
+        );
 
-    @Test
-    public void testUpdatePDP() throws PAPException {
-        thrown.expect(NullPointerException.class);
-        engine.updatePDP(pdp);
-        fail("Expecting an exception.");
-    }
+        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() ->
+            engine.removePDP(pdp)
+        );
 
-    @Test
-    public void testRemovePDP() throws PAPException {
-        thrown.expect(NullPointerException.class);
-        engine.removePDP(pdp);
-        fail("Expecting an exception.");
-    }
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            engine.validatePolicyRequest(new PolicyRestAdapter(), policyType)
+        );
 
-    @Test
-    public void testValidatePolicy() throws PAPException {
-        PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            engine.publishPolicy(id, name, false, policy, newGroup)
+        );
 
-        thrown.expect(PAPException.class);
-        engine.validatePolicyRequest(policyAdapter, policyType);
-        fail("Expecting an exception.");
-    }
-
-    @Test
-    public void testPublishPolicy() throws PAPException {
-        thrown.expect(PAPException.class);
-        engine.publishPolicy(id, name, false, policy, newGroup);
-        fail("Expecting an exception.");
-    }
-
-    @Test
-    public void testCopy() throws PAPException {
         engine.copyFile(id, newGroup, policy);
         PDPPolicy pdpPolicy = Mockito.mock(PDPPolicy.class);
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            engine.copyPolicy(pdpPolicy, newGroup)
+        );
 
-        thrown.expect(PAPException.class);
-        engine.copyPolicy(pdpPolicy, newGroup);
-        fail("Expecting an exception.");
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            engine.removePolicy(null, group)
+        );
+
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            engine.copyPolicy(null, null)
+        );
+        
+        //
+        // Change the mockito to take a different path
+        //
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            setupConnection(HttpServletResponse.SC_FOUND)
+        );
     }
 }

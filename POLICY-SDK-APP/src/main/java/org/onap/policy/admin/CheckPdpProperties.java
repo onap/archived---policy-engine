@@ -51,19 +51,19 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
  * may be ok for a highly controlled production environment in which nothing changes, but not a very good
  * implementation.
  *
- * The reset() method has been added to assist with the above problem in order to acquire >80% JUnit code coverage.
+ * <p>The reset() method has been added to assist with the above problem in order to acquire >80% JUnit code coverage.
  *
- * This static class doesn't really check a PDP, it simply loads a properties file and tried to ensure that a valid URL
- * exists for a PDP along with user/password.
+ * <p>This static class doesn't really check a PDP, it simply loads a properties file and tried to ensure 
+ * that a valid URL exists for a PDP along with user/password.
  */
-public class CheckPDP {
+public class CheckPdpProperties {
 
     private static Path pdpPath = null;
     private static Long oldModified = null;
     private static HashMap<String, String> pdpMap = null;
-    private static final Logger LOGGER = FlexLogger.getLogger(CheckPDP.class);
+    private static final Logger LOGGER = FlexLogger.getLogger(CheckPdpProperties.class);
 
-    private CheckPDP() {
+    private CheckPdpProperties() {
         // default constructor
     }
 
@@ -77,7 +77,13 @@ public class CheckPDP {
         pdpMap = null;
     }
 
-    public static boolean validateID(String id) {
+    /**
+     * validateId - validates that the ID is in the properties.
+     * 
+     * @param id Input ID
+     * @return true it is in the properties
+     */
+    public static boolean validateId(String id) {
         // ReadFile
         try {
             readFile();
@@ -107,7 +113,7 @@ public class CheckPDP {
             if (!pdpPath.toString().endsWith(".properties") || !pdpPath.toFile().exists()) {
                 LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "File doesn't exist in the specified Path : "
                         + pdpPath.toString());
-                CheckPDP.reset();
+                CheckPdpProperties.reset();
                 return;
             }
             readProps();
@@ -134,18 +140,18 @@ public class CheckPDP {
             List<String> sorted = new ArrayList(unsorted);
             Collections.sort(sorted);
             for (String propKey : sorted) {
-                loadPDPProperties(propKey, pdpProp);
+                loadPdpProperties(propKey, pdpProp);
             }
         } catch (IOException e) {
             LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
         }
         if (pdpMap == null || pdpMap.isEmpty()) {
             LOGGER.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Cannot Proceed without PDP_URLs");
-            CheckPDP.reset();
+            CheckPdpProperties.reset();
         }
     }
 
-    private static void loadPDPProperties(String propKey, Properties pdpProp) {
+    private static void loadPdpProperties(String propKey, Properties pdpProp) {
         if (propKey.startsWith("PDP_URL")) {
             String checkVal = pdpProp.getProperty(propKey);
             if (checkVal == null) {
@@ -156,14 +162,14 @@ public class CheckPDP {
                 int pdpCount = 0;
                 while (pdpCount < pdpDefault.size()) {
                     String pdpVal = pdpDefault.get(pdpCount);
-                    readPDPParam(pdpVal);
+                    readPdpParam(pdpVal);
                     pdpCount++;
                 }
             }
         }
     }
 
-    private static void readPDPParam(String pdpVal) {
+    private static void readPdpParam(String pdpVal) {
         if (pdpVal.contains(",")) {
             List<String> pdpValues = new ArrayList<>(Arrays.asList(pdpVal.split("\\s*,\\s*")));
             if (pdpValues.size() == 3) {
@@ -182,6 +188,13 @@ public class CheckPDP {
         }
     }
 
+    /**
+     * getEncoding reads in the PDP properties and returns an encoding
+     * for the given pdp.
+     * 
+     * @param pdpID Input PDP Id
+     * @return String encoding
+     */
     public static String getEncoding(String pdpID) {
         try {
             readFile();
