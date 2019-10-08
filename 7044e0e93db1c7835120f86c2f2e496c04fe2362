@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "754cc480_e9861567",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/CheckPdpProperties.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-08T18:47:54Z",
+      "side": 1,
+      "message": "will remove this.",
+      "range": {
+        "startLine": 82,
+        "startChar": 5,
+        "endLine": 82,
+        "endChar": 7
+      },
+      "revId": "7044e0e93db1c7835120f86c2f2e496c04fe2362",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87e72aa6_f5210b77",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/CheckPdpPropertiesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-08T18:47:54Z",
+      "side": 1,
+      "message": "Renamed - so keep the license as history.",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 27
+      },
+      "revId": "7044e0e93db1c7835120f86c2f2e496c04fe2362",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f87741a9_047348cc",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/CheckPdpPropertiesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-08T18:47:54Z",
+      "side": 1,
+      "message": "I\u0027ll remove this - not sure where that got added.",
+      "range": {
+        "startLine": 42,
+        "startChar": 81,
+        "endLine": 42,
+        "endChar": 89
+      },
+      "revId": "7044e0e93db1c7835120f86c2f2e496c04fe2362",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
