@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "4d0414f8_b251525a",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/CheckPdpPropertiesTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-09T12:36:32Z",
+      "side": 1,
+      "message": "Nothing is being set here - checking for a value that doesn\u0027t exist. Only reads are occurring. Minor bump in code coverage, but I\u0027m just cleaning things up.",
+      "parentUuid": "1fbc08b1_9c88da72",
+      "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f3832467_88f9e959",
         "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/CheckPdpPropertiesTest.java",
         "patchSetId": 2
@@ -53,6 +71,24 @@
       "writtenOn": "2019-10-08T22:04:26Z",
       "side": 1,
       "message": "same question",
+      "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6bb27ff_894ce384",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/CheckPdpPropertiesTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-09T12:36:32Z",
+      "side": 1,
+      "message": "same thing here - only reads are occurring. No properties have changed. The tests overall need to use a temporary directory and copy properties there in order to get any traction on coverage.",
+      "parentUuid": "f3832467_88f9e959",
       "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
