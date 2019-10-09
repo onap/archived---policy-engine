@@ -2,6 +2,57 @@
   "comments": [
     {
       "key": {
+        "uuid": "9532a4c1_45e40336",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/CheckPdpProperties.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-09T15:08:56Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "719cf86a_b86957e9",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-09T15:08:56Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce23b86c_85857aee",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-09T15:08:56Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14ddd044_f0415756",
         "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/CheckPdpPropertiesTest.java",
         "patchSetId": 2
