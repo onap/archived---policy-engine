@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "25c0393e_5aa81d05",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/CheckPdpProperties.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-09T17:01:35Z",
+      "side": 1,
+      "message": "I would think eclipse would remove them when the file is saved.  Maybe need to turn on \"remove trailing spaces when saving\"?",
+      "parentUuid": "583e62b7_a16d09dc",
+      "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "719cf86a_b86957e9",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
         "patchSetId": 2
@@ -83,6 +101,24 @@
       "side": 1,
       "message": "This one I did when I fixed the 120 characters after adding the \u003cp\u003e. Will fix in next submission.",
       "parentUuid": "ce23b86c_85857aee",
+      "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7daa24c_ddd896fa",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-09T17:01:35Z",
+      "side": 1,
+      "message": "Every time I autoformat, eclipse formats these lines in a way that makes checkstyle unhappy, requiring me to go back and manually correct them.  If you\u0027ve found a way to make this work in eclipse, let me know.  In the mean time, I\u0027ve started using \"\u003cp/\u003e\", which formats better in eclipse AND seems to make checkstyle happy.",
+      "parentUuid": "9a9865aa_55b7e0dd",
       "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
