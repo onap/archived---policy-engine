@@ -125,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "60b58fa9_97e58178",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-09T18:23:04Z",
+      "side": 1,
+      "message": "I didnt\u0027 have autoformat on in my eclipse settings. But I think its a code template that needs to be adjusted.",
+      "parentUuid": "c7daa24c_ddd896fa",
+      "revId": "a446733c9918cb264585ddc35b5e11bf3500bdf8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14ddd044_f0415756",
         "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/CheckPdpPropertiesTest.java",
         "patchSetId": 2
