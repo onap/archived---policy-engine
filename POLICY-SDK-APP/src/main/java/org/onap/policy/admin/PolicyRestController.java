@@ -124,27 +124,33 @@ public class PolicyRestController extends RestrictedBaseController {
         PolicyRestController.commonClassDao = commonClassDao;
     }
 
+    /**
+     * policyCreationController.
+     *
+     * @param request Request
+     * @param response Response
+     */
     @RequestMapping(value = {"/policycreation/save_policy"}, method = {RequestMethod.POST})
     public void policyCreationController(HttpServletRequest request, HttpServletResponse response) {
         String userId = UserUtils.getUserSession(request).getOrgUserId();
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         try {
-            updateAndSendToPAP(request, response, userId, mapper);
+            updateAndSendToPap(request, response, userId, mapper);
         } catch (Exception e) {
             policyLogger.error("Exception Occured while saving policy", e);
         }
     }
 
-    private void updateAndSendToPAP(HttpServletRequest request, HttpServletResponse response, String userId,
+    private void updateAndSendToPap(HttpServletRequest request, HttpServletResponse response, String userId,
             ObjectMapper mapper) throws IOException {
         JsonNode root = mapper.readTree(request.getReader());
         policyLogger.info(
-                "****************************************Logging UserID while Create/Update Policy**************************************************");
+                "********************Logging UserID while Create/Update Policy***********************************");
         policyLogger.info(USER_ID + userId + "Policy Data Object:  "
                 + root.get(PolicyController.getPolicydata()).get("policy").toString());
         policyLogger.info(
-                "***********************************************************************************************************************************");
+                "************************************************************************************************");
 
         PolicyRestAdapter policyData = mapper.readValue(
                 root.get(PolicyController.getPolicydata()).get("policy").toString(), PolicyRestAdapter.class);
@@ -167,15 +173,15 @@ public class PolicyRestController extends RestrictedBaseController {
         String result;
         String body = PolicyUtils.objectToJsonString(policyData);
         String uri = request.getRequestURI();
-        ResponseEntity<?> responseEntity = sendToPAP(body, uri, HttpMethod.POST);
+        ResponseEntity<?> responseEntity = sendToPap(body, uri, HttpMethod.POST);
         if (responseEntity != null && responseEntity.getBody().equals(HttpServletResponse.SC_CONFLICT)) {
             result = "PolicyExists";
         } else if (responseEntity != null) {
             result = responseEntity.getBody().toString();
             String policyName = responseEntity.getHeaders().get(POLICY_NAME).get(0);
             if (policyData.isEditPolicy() && SUCCESS.equalsIgnoreCase(result)) {
-                PolicyNotificationMail email = new PolicyNotificationMail();
-                String mode = "EditPolicy";
+                final PolicyNotificationMail email = new PolicyNotificationMail();
+                final String mode = "EditPolicy";
                 String watchPolicyName = policyName.replace(XML, "");
                 String version = watchPolicyName.substring(watchPolicyName.lastIndexOf('.') + 1);
                 watchPolicyName =
@@ -198,8 +204,8 @@ public class PolicyRestController extends RestrictedBaseController {
 
         PrintWriter out = response.getWriter();
         String responseString = mapper.writeValueAsString(result);
-        JSONObject j = new JSONObject("{policyData: " + responseString + "}");
-        out.write(j.toString());
+        JSONObject json = new JSONObject("{policyData: " + responseString + "}");
+        out.write(json.toString());
     }
 
     private void modifyPolicyData(JsonNode root, PolicyRestAdapter policyData) {
@@ -228,7 +234,7 @@ public class PolicyRestController extends RestrictedBaseController {
         }
     }
 
-    private ResponseEntity<?> sendToPAP(String body, String requestURI, HttpMethod method) {
+    private ResponseEntity<?> sendToPap(String body, String requestUri, HttpMethod method) {
         String papUrl = PolicyController.getPapUrl();
         String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
         String papPass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
@@ -242,7 +248,7 @@ public class PolicyRestController extends RestrictedBaseController {
         HttpEntity<?> requestEntity = new HttpEntity<>(body, headers);
         ResponseEntity<?> result = null;
         HttpClientErrorException exception = null;
-        String uri = requestURI;
+        String uri = requestUri;
         if (uri.startsWith("/")) {
             uri = uri.substring(uri.indexOf('/') + 1);
         }
@@ -279,8 +285,7 @@ public class PolicyRestController extends RestrictedBaseController {
         return result;
     }
 
-    private String callPAP(HttpServletRequest request, String method, String uriValue) {
-        String uri = uriValue;
+    private String callPap(HttpServletRequest request, String method, String uriValue) {
         String papUrl = PolicyController.getPapUrl();
         String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
         PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY));
@@ -296,6 +301,7 @@ public class PolicyRestController extends RestrictedBaseController {
         List<FileItem> items;
         FileItem item = null;
         File file = null;
+        String uri = uriValue;
         if (uri.contains(IMPORT_DICTIONARY)) {
             try {
                 items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -323,7 +329,7 @@ public class PolicyRestController extends RestrictedBaseController {
                 return doConnect(connection);
             }
 
-            checkURI(request, uri, connection, item);
+            checkUri(request, uri, connection, item);
 
             return doConnect(connection);
         } catch (Exception e) {
@@ -350,7 +356,7 @@ public class PolicyRestController extends RestrictedBaseController {
         return null;
     }
 
-    private void checkURI(HttpServletRequest request, String uri, HttpURLConnection connection, FileItem item)
+    private void checkUri(HttpServletRequest request, String uri, HttpURLConnection connection, FileItem item)
             throws IOException {
         String boundary;
         if (!(uri.endsWith("set_BRMSParamData") || uri.contains(IMPORT_DICTIONARY))) {
@@ -424,11 +430,17 @@ public class PolicyRestController extends RestrictedBaseController {
         return null;
     }
 
+    /**
+     * getDictionaryController.
+     *
+     * @param request Request
+     * @param response Response
+     */
     @RequestMapping(value = {"/getDictionary/*"}, method = {RequestMethod.GET})
     public void getDictionaryController(HttpServletRequest request, HttpServletResponse response) {
         String uri = request.getRequestURI().replace("/getDictionary", "");
         String body;
-        ResponseEntity<?> responseEntity = sendToPAP(null, uri, HttpMethod.GET);
+        ResponseEntity<?> responseEntity = sendToPap(null, uri, HttpMethod.GET);
         if (responseEntity != null) {
             body = responseEntity.getBody().toString();
         } else {
@@ -441,6 +453,13 @@ public class PolicyRestController extends RestrictedBaseController {
         }
     }
 
+    /**
+     * saveDictionaryController.
+     *
+     * @param request Request
+     * @param response Response
+     * @throws IOException IO Exception
+     */
     @RequestMapping(value = {"/saveDictionary/*/*"}, method = {RequestMethod.POST})
     public void saveDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String userId = "";
@@ -455,12 +474,12 @@ public class PolicyRestController extends RestrictedBaseController {
         }
 
         policyLogger.info(
-                "****************************************Logging UserID while Saving Dictionary*****************************************************");
+                "********************Logging UserID while Saving Dictionary**************************************");
         policyLogger.info(USER_ID + userId);
         policyLogger.info(
-                "***********************************************************************************************************************************");
+                "************************************************************************************************");
 
-        String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
+        String body = callPap(request, "POST", uri.replaceFirst("/", "").trim());
         if (body != null && !body.isEmpty()) {
             response.getWriter().write(body);
         } else {
@@ -468,6 +487,13 @@ public class PolicyRestController extends RestrictedBaseController {
         }
     }
 
+    /**
+     * deletetDictionaryController.
+     *
+     * @param request Request
+     * @param response Response
+     * @throws IOException IO Exception
+     */
     @RequestMapping(value = {"/deleteDictionary/*/*"}, method = {RequestMethod.POST})
     public void deletetDictionaryController(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -479,12 +505,12 @@ public class PolicyRestController extends RestrictedBaseController {
 
         String userId = UserUtils.getUserSession(request).getOrgUserId();
         policyLogger.info(
-                "****************************************Logging UserID while Deleting Dictionary*****************************************************");
+                "**********************Logging UserID while Deleting Dictionary*************************************");
         policyLogger.info(USER_ID + userId);
         policyLogger.info(
-                "*************************************************************************************************************************************");
+                "***************************************************************************************************");
 
-        String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
+        String body = callPap(request, "POST", uri.replaceFirst("/", "").trim());
         if (body != null && !body.isEmpty()) {
             response.getWriter().write(body);
         } else {
@@ -492,6 +518,14 @@ public class PolicyRestController extends RestrictedBaseController {
         }
     }
 
+    /**
+     * searchDictionaryController.
+     *
+     * @param request Request
+     * @param response Response
+     * @return ModelAndView object
+     * @throws IOException IO Exception
+     */
     @RequestMapping(value = {"/searchDictionary"}, method = {RequestMethod.POST})
     public ModelAndView searchDictionaryController(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -502,7 +536,7 @@ public class PolicyRestController extends RestrictedBaseController {
         }
         uri = ONAP + uri.substring(uri.indexOf('/'));
         try {
-            String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
+            String body = callPap(request, "POST", uri.replaceFirst("/", "").trim());
             if (body.contains("CouldNotConnectException")) {
                 List<String> data = new ArrayList<>();
                 data.add("Elastic Search Server is down");
@@ -522,11 +556,19 @@ public class PolicyRestController extends RestrictedBaseController {
         response.setCharacterEncoding(PolicyController.getCharacterencoding());
         response.setContentType(PolicyController.getContenttype());
         PrintWriter out = response.getWriter();
-        JSONObject j = new JSONObject("{result: " + resultList + "}");
-        out.write(j.toString());
+        JSONObject json = new JSONObject("{result: " + resultList + "}");
+        out.write(json.toString());
         return null;
     }
 
+    /**
+     * searchPolicy.
+     *
+     * @param request request
+     * @param response response
+     * @return ModelAndView object
+     * @throws IOException IO exception
+     */
     @RequestMapping(value = {"/searchPolicy"}, method = {RequestMethod.POST})
     public ModelAndView searchPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Object resultList;
@@ -535,7 +577,7 @@ public class PolicyRestController extends RestrictedBaseController {
             uri = uri.substring(uri.indexOf('/') + 1);
         }
         uri = ONAP + uri.substring(uri.indexOf('/'));
-        String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
+        String body = callPap(request, "POST", uri.replaceFirst("/", "").trim());
 
         JSONObject json = new JSONObject(body);
         try {
@@ -554,20 +596,28 @@ public class PolicyRestController extends RestrictedBaseController {
         request.setCharacterEncoding(UTF_8);
 
         PrintWriter out = response.getWriter();
-        JSONObject j = new JSONObject("{result: " + resultList + "}");
-        out.write(j.toString());
+        JSONObject json2 = new JSONObject("{result: " + resultList + "}");
+        out.write(json2.toString());
         return null;
     }
 
     public void deleteElasticData(String fileName) {
         String uri = "searchPolicy?action=delete&policyName='" + fileName + "'";
-        callPAP(null, "POST", uri.trim());
+        callPap(null, "POST", uri.trim());
     }
 
-    public String notifyOtherPAPSToUpdateConfigurations(String mode, String newName, String oldName) {
+    /**
+     * notifyOtherPAPSToUpdateConfigurations.
+     *
+     * @param mode Mode
+     * @param newName New Name
+     * @param oldName Old Name
+     * @return String
+     */
+    public String notifyOtherPapsToUpdateConfigurations(String mode, String newName, String oldName) {
         String uri =
                 "onap/notifyOtherPAPs?action=" + mode + "&newPolicyName=" + newName + "&oldPolicyName=" + oldName + "";
-        return callPAP(null, "POST", uri.trim());
+        return callPap(null, "POST", uri.trim());
     }
 
 }

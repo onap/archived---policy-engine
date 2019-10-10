@@ -45,6 +45,12 @@ public class PolicyUserInfoController extends RestrictedBaseController {
 
     private static final Logger LOGGER = FlexLogger.getLogger(PolicyUserInfoController.class);
 
+    /**
+     * getPolicyUserInfo - fills the HTTP response with user information.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(value = "/get_PolicyUserInfo", method = RequestMethod.GET)
     public void getPolicyUserInfo(HttpServletRequest request, HttpServletResponse response) {
         JsonMessage msg;
@@ -54,8 +60,8 @@ public class PolicyUserInfoController extends RestrictedBaseController {
             ObjectMapper mapper = new ObjectMapper();
             model.put("userid", userId);
             msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            JSONObject json = new JSONObject(msg);
+            response.getWriter().write(json.toString());
         } catch (Exception e) {
             LOGGER.error("Exception Occurred" + e);
         }

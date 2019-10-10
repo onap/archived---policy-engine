@@ -22,6 +22,9 @@
 
 package org.onap.policy.admin;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -39,6 +42,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.controller.CreateFirewallController;
+import org.onap.policy.controller.PolicyController;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionList;
 import org.onap.policy.rest.jpa.AddressGroup;
@@ -69,10 +73,15 @@ public class PolicyRestControllerTest {
     private List<Object> tagListData;
     private List<Object> termListData;
 
+    /**
+     * Before.
+     *
+     * @throws Exception exception
+     */
     @Before
     public void setUp() throws Exception {
         commonClassDao = mock(CommonClassDao.class);
-        HttpSession mockSession = mock(HttpSession.class);
+        final HttpSession mockSession = mock(HttpSession.class);
         request = mock(HttpServletRequest.class);
         response = new MockHttpServletResponse();
         User user = new User();
@@ -212,6 +221,10 @@ public class PolicyRestControllerTest {
 
     @Test
     public final void testPolicyCreationController() {
+        assertNull(PolicyRestController.getCommonClassDao());
+        PolicyRestController.setCommonClassDao(commonClassDao);
+        assertNotNull(PolicyRestController.getCommonClassDao());
+
         PolicyRestController controller = new PolicyRestController();
         BufferedReader reader = new BufferedReader(new StringReader(clRequestString));
         try {
@@ -222,6 +235,7 @@ public class PolicyRestControllerTest {
         }
         PolicyRestController controller1 = new PolicyRestController();
         CreateFirewallController.setCommonClassDao(commonClassDao);
+        assertNotNull(CreateFirewallController.getCommonClassDao());
         BufferedReader reader1 = new BufferedReader(new StringReader(fwRequestString));
         try {
             Mockito.when(request.getReader()).thenReturn(reader1);
@@ -242,6 +256,27 @@ public class PolicyRestControllerTest {
     }
 
     @Test
+    public final void testSearchPolicy() throws IOException {
+        PolicyController.setjUnit(true);
+        PolicyController.setPapUrl("http://localhost:8070/pap/");
+        PolicyRestController controller = new PolicyRestController();
+        BufferedReader reader = new BufferedReader(new StringReader("{\"foo\":\"bar\"}"));
+        Mockito.when(request.getReader()).thenReturn(reader);
+        Mockito.when(request.getRequestURI()).thenReturn("/pap/foo/");
+        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() ->
+            controller.searchPolicy(request, response));
+    }
+
+    @Test
+    public final void testSearchDictionaryController() throws IOException {
+        PolicyRestController controller = new PolicyRestController();
+        BufferedReader reader = new BufferedReader(new StringReader("{\"foo\":\"bar\"}"));
+        Mockito.when(request.getReader()).thenReturn(reader);
+        Mockito.when(request.getRequestURI()).thenReturn("/pap/foo/");
+        assertNull(controller.searchDictionaryController(request, response));
+    }
+
+    @Test
     public final void testDeleteElasticData() {
         PolicyRestController controller = new PolicyRestController();
         try {
@@ -249,5 +284,12 @@ public class PolicyRestControllerTest {
         } catch (Exception e) {
             fail();
         }
+    }
+
+    @Test
+    public final void testNotifyOtherPaps() {
+        PolicyRestController controller = new PolicyRestController();
+        String strReturn = controller.notifyOtherPapsToUpdateConfigurations("mode", "newName", "oldName");
+        assertNull(strReturn);
     }
 }

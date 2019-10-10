@@ -150,7 +150,18 @@ public class PolicyManagerServlet extends HttpServlet {
     private static String testUserId = null;
 
     private enum Mode {
-        LIST, RENAME, COPY, DELETE, EDITFILE, ADDFOLDER, DESCRIBEPOLICYFILE, VIEWPOLICY, ADDSUBSCOPE, SWITCHVERSION, EXPORT, SEARCHLIST
+        LIST,
+        RENAME,
+        COPY,
+        DELETE,
+        EDITFILE,
+        ADDFOLDER,
+        DESCRIBEPOLICYFILE,
+        VIEWPOLICY,
+        ADDSUBSCOPE,
+        SWITCHVERSION,
+        EXPORT,
+        SEARCHLIST
     }
 
     private static PolicyController policyController;
@@ -187,10 +198,10 @@ public class PolicyManagerServlet extends HttpServlet {
         //
         // Initialize ClosedLoop JSON
         //
-        PolicyManagerServlet.initializeJSONLoad();
+        PolicyManagerServlet.initializeJsonLoad();
     }
 
-    private static void initializeJSONLoad() {
+    private static void initializeJsonLoad() {
         Path closedLoopJsonLocation = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_ADMIN_CLOSEDLOOP));
         String location = closedLoopJsonLocation.toString();
         if (!location.endsWith("json")) {
@@ -233,9 +244,9 @@ public class PolicyManagerServlet extends HttpServlet {
     }
 
     // Set Error Message for Exception
-    private void setError(Exception t, HttpServletResponse response) throws IOException {
+    private void setError(Exception exception, HttpServletResponse response) throws IOException {
         try {
-            JSONObject responseJsonObject = error(t.getMessage());
+            JSONObject responseJsonObject = error(exception.getMessage());
             response.setContentType(CONTENTTYPE);
             PrintWriter out = response.getWriter();
             out.print(responseJsonObject);
@@ -307,17 +318,17 @@ public class PolicyManagerServlet extends HttpServlet {
             return;
         }
         try {
-            JSONObject jObj = new JSONObject(sb.toString());
-            JSONObject params = jObj.getJSONObject("params");
+            JSONObject jsonObject = new JSONObject(sb.toString());
+            JSONObject params = jsonObject.getJSONObject("params");
             Mode mode = Mode.valueOf(params.getString("mode"));
 
             String userId = UserUtils.getUserSession(request).getOrgUserId();
             LOGGER.info(
-                    "****************************************Logging UserID while doing actions on Editor tab*******************************************");
+                    "********************Logging UserID while doing actions on Editor tab****************************");
             LOGGER.info(
                     "UserId:  " + userId + "Action Mode:  " + mode.toString() + "Action Params: " + params.toString());
             LOGGER.info(
-                    "***********************************************************************************************************************************");
+                    "************************************************************************************************");
             responseJsonObject = operateBasedOnMode(mode, params, request);
         } catch (Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Exception Occured While Processing Json" + e);
@@ -387,9 +398,9 @@ public class PolicyManagerServlet extends HttpServlet {
         PolicyController controller = getPolicyControllerInstance();
         List<JSONObject> resultList = new ArrayList<>();
         try {
-            if (!lookupPolicyData(request, policyData, policyList, controller, resultList))
+            if (!lookupPolicyData(request, policyData, policyList, controller, resultList)) {
                 return error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
-
+            }
         } catch (Exception e) {
             LOGGER.error(
                     "Exception occured while reading policy Data from Policy Version table for Policy Search Data" + e);
@@ -423,12 +434,12 @@ public class PolicyManagerServlet extends HttpServlet {
                 parsePolicyList(resultList, controller, policyName, version);
             }
         } else {
-            getPolicyDataForSUPERRoles(policyData, controller, resultList, roles, scopes);
+            getPolicyDataForSuperRoles(policyData, controller, resultList, roles, scopes);
         }
         return true;
     }
 
-    private void getPolicyDataForSUPERRoles(List<Object> policyData, PolicyController controller,
+    private void getPolicyDataForSuperRoles(List<Object> policyData, PolicyController controller,
             List<JSONObject> resultList, List<String> roles, Set<String> scopes) {
         if (roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR) || roles.contains(SUPERGUEST)) {
             policyData = controller.getData(PolicyVersion.class);
@@ -456,8 +467,8 @@ public class PolicyManagerServlet extends HttpServlet {
     }
 
     private void updateResultList(List<Object> policyData, List<JSONObject> resultList) {
-        for (Object aPolicyData : policyData) {
-            PolicyVersion policy = (PolicyVersion) aPolicyData;
+        for (Object data : policyData) {
+            PolicyVersion policy = (PolicyVersion) data;
             JSONObject el = new JSONObject();
             el.put(NAME, policy.getPolicyName().replace(File.separator, FORWARD_SLASH));
             el.put(DATE, policy.getModifiedDate());
@@ -498,8 +509,8 @@ public class PolicyManagerServlet extends HttpServlet {
     private void addScope(Set<String> scopes, String scope) {
         List<Object> scopesList = queryPolicyEditorScopes(scope);
         if (!scopesList.isEmpty()) {
-            for (Object aScopesList : scopesList) {
-                PolicyEditorScopes tempScope = (PolicyEditorScopes) aScopesList;
+            for (Object scopeItem : scopesList) {
+                PolicyEditorScopes tempScope = (PolicyEditorScopes) scopeItem;
                 scopes.add(tempScope.getScopeName());
             }
         }
@@ -533,11 +544,11 @@ public class PolicyManagerServlet extends HttpServlet {
             return error("The Version shouldn't be greater than Highest Value");
         }
         activePolicy = policyName + "." + activeVersion + ".xml";
-        String[] splitDBCheckName = modifyPolicyName(activePolicy);
+        String[] splitDbCheckName = modifyPolicyName(activePolicy);
         String peQuery = "FROM PolicyEntity where policyName = :splitDBCheckName_1 and scope = :splitDBCheckName_0";
         SimpleBindings policyParams = new SimpleBindings();
-        policyParams.put("splitDBCheckName_1", splitDBCheckName[1]);
-        policyParams.put("splitDBCheckName_0", splitDBCheckName[0]);
+        policyParams.put("splitDBCheckName_1", splitDbCheckName[1]);
+        policyParams.put("splitDBCheckName_0", splitDbCheckName[0]);
         List<Object> policyEntity = controller.getDataByQuery(peQuery, policyParams);
         PolicyEntity pentity = (PolicyEntity) policyEntity.get(0);
         if (pentity.isDeleted()) {
@@ -550,8 +561,8 @@ public class PolicyManagerServlet extends HttpServlet {
         if (policyName.contains(BACKSLASH)) {
             policyName = policyName.replace(File.separator, BACKSLASH);
         }
-        policyName = splitDBCheckName[0].replace(".", File.separator) + File.separator + policyName;
-        String watchPolicyName = policyName;
+        policyName = splitDbCheckName[0].replace(".", File.separator) + File.separator + policyName;
+        final String watchPolicyName = policyName;
         if (policyName.contains(FORWARD_SLASH)) {
             policyName = policyName.replace(FORWARD_SLASH, File.separator);
         }
@@ -573,7 +584,6 @@ public class PolicyManagerServlet extends HttpServlet {
 
     // Describe Policy
     private JSONObject describePolicy(JSONObject params) throws ServletException {
-        JSONObject object;
         String path = params.getString("path");
         String policyName;
         if (path.startsWith(FORWARD_SLASH)) {
@@ -615,7 +625,7 @@ public class PolicyManagerServlet extends HttpServlet {
         } catch (IOException e) {
             LOGGER.error("Exception Occured while Describing the Policy" + e);
         }
-        object = HumanPolicyComponent.DescribePolicy(temp);
+        JSONObject object = HumanPolicyComponent.DescribePolicy(temp);
         try {
             Files.delete(temp.toPath());
         } catch (IOException e) {
@@ -682,7 +692,7 @@ public class PolicyManagerServlet extends HttpServlet {
         if (roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR) || roles.contains(SUPERGUEST)) {
             List<Object> scopesList = queryPolicyEditorScopes(null);
             scopesList.stream().map(list -> (PolicyEditorScopes) list).filter(
-                    scope -> !(scope.getScopeName().contains(File.separator)) && !scopes.contains(scope.getScopeName()))
+                scope -> !(scope.getScopeName().contains(File.separator)) && !scopes.contains(scope.getScopeName()))
                     .forEach(scope -> {
                         JSONObject el = new JSONObject();
                         el.put(NAME, scope.getScopeName());
@@ -731,7 +741,7 @@ public class PolicyManagerServlet extends HttpServlet {
     // Get Active Policy List based on Scope Selection from Policy Version table
     private void activePolicyList(String inScopeName, List<JSONObject> resultList, List<String> roles,
             Set<String> scopes, Map<String, String> roleByScope) {
-        PolicyController controller = getPolicyControllerInstance();
+        final PolicyController controller = getPolicyControllerInstance();
         String scopeName = inScopeName;
         if (scopeName.contains(FORWARD_SLASH)) {
             scopeName = scopeName.replace(FORWARD_SLASH, File.separator);
@@ -855,8 +865,8 @@ public class PolicyManagerServlet extends HttpServlet {
 
     private JSONObject handlePolicyRename(JSONObject params, HttpServletRequest request) throws ServletException {
         boolean isActive = false;
-        List<String> policyActiveInPDP = new ArrayList<>();
-        Set<String> scopeOfPolicyActiveInPDP = new HashSet<>();
+        List<String> policyActiveInPdp = new ArrayList<>();
+        Set<String> scopeOfPolicyActiveInPdp = new HashSet<>();
         String userId = UserUtils.getUserSession(request).getOrgUserId();
         String oldPath = params.getString("path");
         String newPath = params.getString("newPath");
@@ -905,19 +915,19 @@ public class PolicyManagerServlet extends HttpServlet {
                 JSONObject result = policyRename(policyOldPath, policyNewPath, userId);
                 if (!(Boolean) (result.getJSONObject("result").get(SUCCESS))) {
                     isActive = true;
-                    policyActiveInPDP.add(policyOldPath);
+                    policyActiveInPdp.add(policyOldPath);
                     String scope = policyOldPath.substring(0, policyOldPath.lastIndexOf('/'));
-                    scopeOfPolicyActiveInPDP.add(scope.replace(FORWARD_SLASH, File.separator));
+                    scopeOfPolicyActiveInPdp.add(scope.replace(FORWARD_SLASH, File.separator));
                 }
             }
-            boolean rename = activePolicies.size() != policyActiveInPDP.size();
-            if (policyActiveInPDP.isEmpty()) {
+            boolean rename = activePolicies.size() != policyActiveInPdp.size();
+            if (policyActiveInPdp.isEmpty()) {
                 renameScope(scopesList, scopeName, newScopeName, controller);
             } else if (rename) {
                 renameScope(scopesList, scopeName, newScopeName, controller);
                 UserInfo userInfo = new UserInfo();
                 userInfo.setUserLoginId(userId);
-                scopeOfPolicyActiveInPDP.forEach(scope -> {
+                scopeOfPolicyActiveInPdp.forEach(scope -> {
                     PolicyEditorScopes editorScopeEntity = new PolicyEditorScopes();
                     editorScopeEntity.setScopeName(scope.replace(BACKSLASH, BACKSLASH_8TIMES));
                     editorScopeEntity.setUserCreatedBy(userInfo);
@@ -927,7 +937,7 @@ public class PolicyManagerServlet extends HttpServlet {
             }
             if (isActive) {
                 return error("The Following policies rename failed. Since they are active in PDP Groups"
-                        + policyActiveInPDP);
+                        + policyActiveInPdp);
             }
         }
         return success();
@@ -963,7 +973,7 @@ public class PolicyManagerServlet extends HttpServlet {
             String newpolicyName = newPath.replace("/", ".");
             String[] newPolicySplit = modifyPolicyName(newPath);
 
-            String[] oldPolicySplit = modifyPolicyName(oldPath);
+            final String[] oldPolicySplit = modifyPolicyName(oldPath);
 
             // Check PolicyEntity table with newPolicy Name
             String policyEntityquery =
@@ -986,7 +996,7 @@ public class PolicyManagerServlet extends HttpServlet {
             List<Object> oldEntityData = controller.getDataByQuery(oldPolicyEntityQuery, params);
             if (oldEntityData.isEmpty()) {
                 return error(
-                        "Policy rename failed due to policy not able to retrieve from database. Please, contact super-admin.");
+                    "Policy rename failed due to policy not able to retrieve from database. Contact super-admin.");
             }
 
             StringBuilder groupQuery = new StringBuilder();
@@ -1095,7 +1105,7 @@ public class PolicyManagerServlet extends HttpServlet {
             controller.updateData(entity);
 
             PolicyRestController restController = new PolicyRestController();
-            restController.notifyOtherPAPSToUpdateConfigurations("rename", newConfigurationName, oldConfigurationName);
+            restController.notifyOtherPapsToUpdateConfigurations("rename", newConfigurationName, oldConfigurationName);
             PolicyVersion versionEntity =
                     (PolicyVersion) controller.getEntityItem(PolicyVersion.class, "policyName", oldPolicyName);
             versionEntity.setPolicyName(policyName);
@@ -1184,7 +1194,7 @@ public class PolicyManagerServlet extends HttpServlet {
 
         // Notify others paps regarding clone policy.
         PolicyRestController restController = new PolicyRestController();
-        restController.notifyOtherPAPSToUpdateConfigurations("clonePolicy", newConfigurationName, null);
+        restController.notifyOtherPapsToUpdateConfigurations("clonePolicy", newConfigurationName, null);
     }
 
     // Clone the Policy
@@ -1202,8 +1212,6 @@ public class PolicyManagerServlet extends HttpServlet {
                     .replace(FORWARD_SLASH, File.separator);
 
             String newPolicyName = newPath.replace(FORWARD_SLASH, ".");
-
-            String originalPolicyName = oldPath.replace(FORWARD_SLASH, ".");
 
             String newPolicyCheck = newPolicyName;
             if (newPolicyCheck.contains(CONFIG2)) {
@@ -1225,7 +1233,9 @@ public class PolicyManagerServlet extends HttpServlet {
                 return error("Policy Clone Failed. The Name contains special characters.");
             }
 
-            String[] oldPolicySplit = modifyPolicyName(originalPolicyName);
+            String originalPolicyName = oldPath.replace(FORWARD_SLASH, ".");
+
+            final String[] oldPolicySplit = modifyPolicyName(originalPolicyName);
 
             PolicyController controller = getPolicyControllerInstance();
 
@@ -1337,15 +1347,15 @@ public class PolicyManagerServlet extends HttpServlet {
                     controller.watchPolicyFunction(versionEntity, policyNamewithExtension, "DeleteAll");
                     if (pdpCheck) {
                         // Delete from policyVersion table
-                        String getActivePDPPolicyVersion = activePolicyName.replace(".xml", "");
-                        getActivePDPPolicyVersion =
-                                getActivePDPPolicyVersion.substring(getActivePDPPolicyVersion.lastIndexOf('.') + 1);
-                        String policyVersionQuery = UPDATE_POLICY_VERSION_SET_ACTIVE_VERSION + getActivePDPPolicyVersion
-                                + "' , highest_version='" + getActivePDPPolicyVersion + "'  where policy_name ='"
+                        String getActivePdpPolicyVersion = activePolicyName.replace(".xml", "");
+                        getActivePdpPolicyVersion =
+                                getActivePdpPolicyVersion.substring(getActivePdpPolicyVersion.lastIndexOf('.') + 1);
+                        String policyVersionQuery = UPDATE_POLICY_VERSION_SET_ACTIVE_VERSION + getActivePdpPolicyVersion
+                                + "' , highest_version='" + getActivePdpPolicyVersion + "'  where policy_name ='"
                                 + policyNamewithoutExtension.replace(BACKSLASH, ESCAPE_BACKSLASH) + "' and id >0";
                         controller.executeQuery(policyVersionQuery);
                         return error(
-                                "Policies with Same name has been deleted. Except the Active Policy in PDP.     PolicyName: "
+                            "Policies with Same name has been deleted. Except the Active Policy in PDP. PolicyName: "
                                         + activePolicyName);
                     } else {
                         // No Active Policy in PDP. So, deleting all entries from policyVersion table
@@ -1359,7 +1369,8 @@ public class PolicyManagerServlet extends HttpServlet {
                     String currentVersionScope =
                             policyNamewithExtension.substring(0, policyNamewithExtension.lastIndexOf(File.separator))
                                     .replace(File.separator, ".");
-                    query = "FROM PolicyEntity where policyName = :currentVersionPolicyName and scope = :currentVersionScope";
+                    query = "FROM PolicyEntity where policyName = :currentVersionPolicyName and "
+                            + "scope = :currentVersionScope";
 
                     SimpleBindings peParams = new SimpleBindings();
                     peParams.put("currentVersionPolicyName", currentVersionPolicyName);
@@ -1425,7 +1436,7 @@ public class PolicyManagerServlet extends HttpServlet {
                     }
                 }
             } else {
-                List<String> activePoliciesInPDP = new ArrayList<>();
+                List<String> activePoliciesInPdp = new ArrayList<>();
                 if (policyEntityObjects.isEmpty()) {
                     String policyScopeQuery = "delete PolicyEditorScopes where SCOPENAME like '"
                             + path.replace(BACKSLASH, ESCAPE_BACKSLASH) + PERCENT_AND_ID_GT_0;
@@ -1440,7 +1451,7 @@ public class PolicyManagerServlet extends HttpServlet {
                     List<Object> groupobject = controller.getDataByQuery(groupEntityQuery, geParams);
                     if (!groupobject.isEmpty()) {
                         pdpCheck = true;
-                        activePoliciesInPDP.add(policyEntity.getScope() + "." + policyEntity.getPolicyName());
+                        activePoliciesInPdp.add(policyEntity.getScope() + "." + policyEntity.getPolicyName());
                     } else {
                         // Delete the entity from Elastic Search Database
                         String searchFileName = policyEntity.getScope() + "." + policyEntity.getPolicyName();
@@ -1452,13 +1463,13 @@ public class PolicyManagerServlet extends HttpServlet {
                             Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator
                                     + policyEntity.getConfigurationData().getConfigurationName()));
                             controller.deleteData(policyEntity.getConfigurationData());
-                            restController.notifyOtherPAPSToUpdateConfigurations(DELETE, null,
+                            restController.notifyOtherPapsToUpdateConfigurations(DELETE, null,
                                     policyEntity.getConfigurationData().getConfigurationName());
                         } else if (policyNamewithoutExtension.contains(ACTION2)) {
                             Files.deleteIfExists(Paths.get(PolicyController.getActionHome() + File.separator
                                     + policyEntity.getActionBodyEntity().getActionBodyName()));
                             controller.deleteData(policyEntity.getActionBodyEntity());
-                            restController.notifyOtherPAPSToUpdateConfigurations(DELETE, null,
+                            restController.notifyOtherPapsToUpdateConfigurations(DELETE, null,
                                     policyEntity.getActionBodyEntity().getActionBodyName());
                         }
                     }
@@ -1475,22 +1486,22 @@ public class PolicyManagerServlet extends HttpServlet {
                 controller.watchPolicyFunction(entity, path, "DeleteScope");
                 if (pdpCheck) {
                     // Add Active Policies List to PolicyVersionTable
-                    for (String anActivePoliciesInPDP : activePoliciesInPDP) {
-                        String activePDPPolicyName = anActivePoliciesInPDP.replace(".xml", "");
-                        int activePDPPolicyVersion = Integer
-                                .parseInt(activePDPPolicyName.substring(activePDPPolicyName.lastIndexOf('.') + 1));
-                        activePDPPolicyName = activePDPPolicyName.substring(0, activePDPPolicyName.lastIndexOf('.'))
+                    for (String anActivePoliciesInPdp : activePoliciesInPdp) {
+                        String activePdpPolicyName = anActivePoliciesInPdp.replace(".xml", "");
+                        int activePdpPolicyVersion = Integer
+                                .parseInt(activePdpPolicyName.substring(activePdpPolicyName.lastIndexOf('.') + 1));
+                        activePdpPolicyName = activePdpPolicyName.substring(0, activePdpPolicyName.lastIndexOf('.'))
                                 .replace(".", File.separator);
-                        PolicyVersion insertActivePDPVersion = new PolicyVersion();
-                        insertActivePDPVersion.setPolicyName(activePDPPolicyName);
-                        insertActivePDPVersion.setHigherVersion(activePDPPolicyVersion);
-                        insertActivePDPVersion.setActiveVersion(activePDPPolicyVersion);
-                        insertActivePDPVersion.setCreatedBy(userId);
-                        insertActivePDPVersion.setModifiedBy(userId);
-                        controller.saveData(insertActivePDPVersion);
+                        PolicyVersion insertActivePdpVersion = new PolicyVersion();
+                        insertActivePdpVersion.setPolicyName(activePdpPolicyName);
+                        insertActivePdpVersion.setHigherVersion(activePdpPolicyVersion);
+                        insertActivePdpVersion.setActiveVersion(activePdpPolicyVersion);
+                        insertActivePdpVersion.setCreatedBy(userId);
+                        insertActivePdpVersion.setModifiedBy(userId);
+                        controller.saveData(insertActivePdpVersion);
                     }
                     return error("All the Policies has been deleted in Scope. Except the following list of Policies:"
-                            + activePoliciesInPDP);
+                            + activePoliciesInPdp);
                 } else {
                     String policyScopeQuery = "delete PolicyEditorScopes where SCOPENAME like '"
                             + path.replace(BACKSLASH, ESCAPE_BACKSLASH) + PERCENT_AND_ID_GT_0;
@@ -1517,13 +1528,13 @@ public class PolicyManagerServlet extends HttpServlet {
             Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator
                     + policyEntity.getConfigurationData().getConfigurationName()));
             controller.deleteData(policyEntity.getConfigurationData());
-            restController.notifyOtherPAPSToUpdateConfigurations(DELETE, null,
+            restController.notifyOtherPapsToUpdateConfigurations(DELETE, null,
                     policyEntity.getConfigurationData().getConfigurationName());
         } else if (policyNamewithoutExtension.contains(ACTION2)) {
             Files.deleteIfExists(Paths.get(PolicyController.getActionHome() + File.separator
                     + policyEntity.getActionBodyEntity().getActionBodyName()));
             controller.deleteData(policyEntity.getActionBodyEntity());
-            restController.notifyOtherPAPSToUpdateConfigurations(DELETE, null,
+            restController.notifyOtherPapsToUpdateConfigurations(DELETE, null,
                     policyEntity.getActionBodyEntity().getActionBodyName());
         }
     }
@@ -1532,8 +1543,8 @@ public class PolicyManagerServlet extends HttpServlet {
     private JSONObject editFile(JSONObject params) throws ServletException {
         // get content
         try {
-            PolicyController controller = getPolicyControllerInstance();
-            String mode = params.getString("mode");
+            final PolicyController controller = getPolicyControllerInstance();
+            final String mode = params.getString("mode");
             String path = params.getString("path");
             LOGGER.debug("editFile path: {}" + path);
 

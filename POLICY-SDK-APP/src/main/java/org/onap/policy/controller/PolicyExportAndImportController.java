@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -117,7 +117,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 
     /**
      * This is for downloading existing policy.
-     * 
+     *
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @throws IOException error out
@@ -180,8 +180,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
             PrintWriter out = response.getWriter();
             String successMap = file.substring(file.lastIndexOf("webapps") + 8);
             String responseString = mapper.writeValueAsString(successMap);
-            JSONObject j = new JSONObject("{data: " + responseString + "}");
-            out.write(j.toString());
+            JSONObject json = new JSONObject("{data: " + responseString + "}");
+            out.write(json.toString());
         } catch (Exception e) {
             logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Exception Occured while Exporting Policies" + e);
         }
@@ -250,7 +250,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 
     /**
      * This is to upload a policy and save it to database.
-     * 
+     *
      * @param file String
      * @param request HttpServletRequest
      * @return JSONObject
@@ -358,7 +358,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 
     /**
      * This is to validate all matching required fields.
-     * 
+     *
      * @param policyName String
      * @param jsonString String
      * @return String
@@ -769,7 +769,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
             saveVersion(policyEntity, scope, userId); //
             // Notify Other paps regarding Export Policy.
             PolicyRestController restController = new PolicyRestController();
-            restController.notifyOtherPAPSToUpdateConfigurations("exportPolicy", configName, null);
+            restController.notifyOtherPapsToUpdateConfigurations("exportPolicy", configName, null);
         }
     }
 }

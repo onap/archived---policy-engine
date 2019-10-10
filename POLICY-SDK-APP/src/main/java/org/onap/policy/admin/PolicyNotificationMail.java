@@ -9,9 +9,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,7 +48,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 /**
- * Send policy notification mail depending on the mode for every policy being watched
+ * Send policy notification mail depending on the mode for every policy being watched.
  */
 @Configurable
 public class PolicyNotificationMail {
@@ -61,6 +61,11 @@ public class PolicyNotificationMail {
     private static final String DELETED_BY = "Deleted By : ";
     private static Logger policyLogger = FlexLogger.getLogger(PolicyNotificationMail.class);
 
+    /**
+     * javaMailSenderImpl.
+     *
+     * @return JavaMailSenderImpl object
+     */
     @Bean
     public JavaMailSenderImpl javaMailSenderImpl() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -199,14 +204,14 @@ public class PolicyNotificationMail {
 
     /**
      * For every policy being watched and when the policy name is one of the Config_, Action_ or Decision_,
-     * send the notification
-     * 
-     * @param mode
-     * @param policyNotificationDao
-     * @param subject
-     * @param message
-     * @param checkPolicyName
-     * @param watchList
+     * send the notification.
+     *
+     * @param mode String for the mode
+     * @param policyNotificationDao CommonClassDao
+     * @param subject String subject
+     * @param message String message
+     * @param checkPolicyName String check policy name
+     * @param watchList List of watch objects
      */
     private void composeAndSendMail(String mode, CommonClassDao policyNotificationDao, String subject, String message,
             String checkPolicyName, List<Object> watchList) {
@@ -215,7 +220,7 @@ public class PolicyNotificationMail {
         for (Object watch : watchList) {
             WatchPolicyNotificationTable list = (WatchPolicyNotificationTable) watch;
             String watchPolicyName = list.getPolicyName();
-            // this conditino check for specific stringin policy name being watched and
+            // this condition check for specific stringin policy name being watched and
             // also if the policy being checked is different from the watched ones,
             // then there is no need to send mail, hence continue with next policy in the loop
             if ((watchPolicyName.contains("Config_") || watchPolicyName.contains("Action_")
