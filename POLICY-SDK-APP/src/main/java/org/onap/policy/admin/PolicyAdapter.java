@@ -43,6 +43,12 @@ public class PolicyAdapter {
 
     private static final Logger LOGGER = FlexLogger.getLogger(PolicyAdapter.class);
 
+    /**
+     * configure.
+     *
+     * @param policyAdapter PolicyRestAdapter object
+     * @param entity PolicyEntity object
+     */
     public void configure(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         String policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf('_'));
         String configPolicyName = getConfigPolicyName(policyAdapter);
@@ -107,6 +113,11 @@ public class PolicyAdapter {
         }
     }
 
+    /**
+     * getInstance.
+     *
+     * @return Returns a PolicyAdapter instance
+     */
     public static PolicyAdapter getInstance() {
         try {
             Class<?> policyAdapter = Class.forName(

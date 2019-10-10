@@ -769,7 +769,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
             saveVersion(policyEntity, scope, userId); //
             // Notify Other paps regarding Export Policy.
             PolicyRestController restController = new PolicyRestController();
-            restController.notifyOtherPAPSToUpdateConfigurations("exportPolicy", configName, null);
+            restController.notifyOtherPapsToUpdateConfigurations("exportPolicy", configName, null);
         }
     }
 }

@@ -251,7 +251,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 
     /**
      * validatePolicyRequest Creates a pap policy and then send to pap.
-     * 
+     *
      * @param policyAdapter Input Adapter
      * @param policyType Type of Policy
      * @return true if validated
@@ -342,7 +342,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
      * <p>The content is either an InputStream to be copied to the Request OutputStream OR it is an object that is to be
      * encoded into JSON and pushed into the Request OutputStream.
      *
-     * <p>The Request parameters may be encoded in multiple "name=value" sets, or parameters may be 
+     * <p>The Request parameters may be encoded in multiple "name=value" sets, or parameters may be
      * combined by the caller.
      *
      * @param method method

@@ -191,7 +191,7 @@ public class CheckPdpProperties {
     /**
      * getEncoding reads in the PDP properties and returns an encoding
      * for the given pdp.
-     * 
+     *
      * @param pdpID Input PDP Id
      * @return String encoding
      */
