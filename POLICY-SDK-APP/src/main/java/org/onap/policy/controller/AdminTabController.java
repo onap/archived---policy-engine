@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,6 +107,8 @@ public class AdminTabController extends RestrictedBaseController {
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView saveAdminTabLockdownValue(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+        response.setCharacterEncoding(CHARACTER_ENCODING);
+        request.setCharacterEncoding(CHARACTER_ENCODING);
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -123,20 +124,14 @@ public class AdminTabController extends RestrictedBaseController {
             globalRole.setRole("super-admin");
             commonClassDao.update(globalRole);
 
-            response.setCharacterEncoding(CHARACTER_ENCODING);
             response.setContentType("application / json");
-            request.setCharacterEncoding(CHARACTER_ENCODING);
 
             String responseString = mapper.writeValueAsString(commonClassDao.getData(GlobalRoleSettings.class));
 
             response.getWriter().write(new JSONObject("{descriptiveScopeDictionaryDatas: " + responseString
                     + "}").toString());
-
-            return null;
         } catch (Exception e) {
             LOGGER.error("Exception Occured" + e);
-            response.setCharacterEncoding(CHARACTER_ENCODING);
-            request.setCharacterEncoding(CHARACTER_ENCODING);
             response.getWriter().write(PolicyUtils.CATCH_EXCEPTION);
         }
         return null;
