@@ -45,7 +45,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 public class AutoPushControllerTest {
-    private PolicyController controller = new PolicyController();;
+    private PolicyController controller = new PolicyController();
     private AutoPushController apController = new AutoPushController();
 
     @Rule
@@ -93,22 +93,22 @@ public class AutoPushControllerTest {
         Mockito.when(UserUtils.getUserSession(Mockito.any())).thenReturn(user);
 
         // Mock policy controller
-        PolicyController pController = Mockito.mock(PolicyController.class);
-        PowerMockito.whenNew(PolicyController.class).withNoArguments().thenReturn(pController);
-        Mockito.when(pController.getRoles(Mockito.any())).thenReturn(null);
+        PolicyController policyController = Mockito.mock(PolicyController.class);
+        PowerMockito.whenNew(PolicyController.class).withNoArguments().thenReturn(policyController);
+        Mockito.when(policyController.getRoles(Mockito.any())).thenReturn(null);
 
         // Test group container
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
         apController.getPolicyGroupContainerData(request, response);
-        assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+        assertEquals(HttpServletResponse.SC_OK, response.getStatusCode());
 
         // Test push
         apController.pushPolicyToPDPGroup(request, response);
-        assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+        assertEquals(HttpServletResponse.SC_OK, response.getStatusCode());
 
         // Test remove
         apController.removePDPGroup(request, response);
-        assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+        assertEquals(HttpServletResponse.SC_OK, response.getStatusCode());
     }
 }

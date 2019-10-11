@@ -22,6 +22,7 @@
 
 package org.onap.policy.controller;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -54,6 +55,11 @@ public class AdminTabControllerTest {
     private HttpServletRequest request;
     private MockHttpServletResponse response;
 
+    /**
+     * Before.
+     *
+     * @throws Exception Exception
+     */
     @Before
     public void setUp() throws Exception {
 
@@ -82,6 +88,7 @@ public class AdminTabControllerTest {
     @Test
     public void testGetAdminRole() {
         AdminTabController admin = new AdminTabController();
+        assertNotNull(AdminTabController.getCommonClassDao());
         try {
             admin.getAdminTabEntityData(request, response);
             assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("lockdowndata"));

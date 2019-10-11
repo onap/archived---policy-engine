@@ -80,26 +80,28 @@ public class CreatePolicyController extends RestrictedBaseController {
         policyAdapter.setPolicyDescription(description);
         // Get the target data under policy.
         TargetType target = policy.getTarget();
-        if (target != null && target.getAnyOf() != null) {
+        //
+        // NOTE: target.getAnyOf() will NEVER return null
+        //
+        if (target != null) {
             // Under target we have AnyOFType
             List<AnyOfType> anyOfList = target.getAnyOf();
             Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
             while (iterAnyOf.hasNext()) {
                 AnyOfType anyOf = iterAnyOf.next();
                 // Under AnyOFType we have AllOFType
+                //
+                // NOTE: anyOf.getAllOf() will NEVER return null
+                //
                 List<AllOfType> allOfList = anyOf.getAllOf();
-                if (allOfList == null) {
-                    continue;
-                }
                 Iterator<AllOfType> iterAllOf = allOfList.iterator();
                 int index = 0;
                 while (iterAllOf.hasNext()) {
                     AllOfType allOf = iterAllOf.next();
                     // Under AllOFType we have Match
+                    // NOTE: allOf.getMatch() will NEVER be NULL
+                    //
                     List<MatchType> matchList = allOf.getMatch();
-                    if (matchList == null) {
-                        continue;
-                    }
                     Iterator<MatchType> iterMatch = matchList.iterator();
                     while (iterMatch.hasNext()) {
                         MatchType match = iterMatch.next();
