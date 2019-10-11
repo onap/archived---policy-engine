@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa11518a_6f42266f",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/CreateNewOptimizationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2019-10-11T18:16:58Z",
+      "side": 1,
+      "message": "Good to remove space.",
+      "revId": "da0cf11b93e26f871c1ef8655d7b454cc40885aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df241ae5_c35b6ff3",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/CreateNewOptimizationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2019-10-11T18:16:58Z",
+      "side": 1,
+      "message": "Same here.",
+      "revId": "da0cf11b93e26f871c1ef8655d7b454cc40885aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
