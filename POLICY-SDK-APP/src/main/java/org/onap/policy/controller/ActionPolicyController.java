@@ -27,22 +27,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import javax.xml.bind.JAXBElement;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
@@ -113,19 +109,20 @@ public class ActionPolicyController extends RestrictedBaseController {
             return;
         }
         // Under the obligationExpressions we have obligationExpression.
-        List<ObligationExpressionType> obligationList = obligations.getObligationExpression();
-        if (obligationList == null) {
-            return;
-        }
-        for (ObligationExpressionType obligation : obligationList) {
+        // NOTE: getObligationExpression() will never return NULL.
+        //
+        for (ObligationExpressionType obligation : obligations.getObligationExpression()) {
             policyAdapter.setActionAttributeValue(obligation.getObligationId());
             // Under the obligationExpression we have attributeAssignmentExpression.
-            List<AttributeAssignmentExpressionType> attributeAssignmentExpressionList =
-                    obligation.getAttributeAssignmentExpression();
-            if (attributeAssignmentExpressionList == null) {
-                continue;
-            }
-            for (AttributeAssignmentExpressionType attributeAssignmentExpression : attributeAssignmentExpressionList) {
+            //
+            // NOTE: obligation.getAttributeAssignmentExpression() will NEVER be null
+            // It will always return a list.
+            //
+            for (AttributeAssignmentExpressionType attributeAssignmentExpression :
+                obligation.getAttributeAssignmentExpression()) {
+                //
+                //
+                //
                 String attributeID = attributeAssignmentExpression.getAttributeId();
                 AttributeValueType attributeValue =
                         (AttributeValueType) attributeAssignmentExpression.getExpression().getValue();
@@ -169,37 +166,44 @@ public class ActionPolicyController extends RestrictedBaseController {
 
     private void setPolicyAdapterAttributes(PolicyRestAdapter policyAdapter, List<AnyOfType> anyOfList) {
         List<Object> attributeList = new ArrayList<>();
-        if (anyOfList == null) {
-            return;
-        }
+        //
+        // NOTE: If using xacml3 code and doing a getAnyOf(), the anyOfList will
+        // NEVER be null as that code will create it if it is null.
+        //
+        // Remove the null check as its impossible to cover it.
+        //
         // under target we have AnyOFType
         for (AnyOfType anyOf : anyOfList) {
             // Under AntOfType we have AllOfType
+            //
+            // NOTE: This will NEVER be null as the method call in the
+            // previous line getAllOf() will never return a null. It
+            // always creates it if its empty.
+            //
             List<AllOfType> allOfList = anyOf.getAllOf();
-            if (allOfList == null) {
-                continue;
-            }
             // Under AllOfType we have Match.
             for (AllOfType allOfType : allOfList) {
-                List<MatchType> matchList = allOfType.getMatch();
-                if (matchList != null) {
-                    //
-                    // Under the match we have attributeValue and
-                    // attributeDesignator. So,finally down to the actual attribute.
-                    //
-                    // Component attributes are saved under Target here we are fetching them back.
-                    // One row is default so we are not adding dynamic component at index 0.
-                    matchList.forEach(match -> {
-                        AttributeValueType attributeValue = match.getAttributeValue();
-                        String value = (String) attributeValue.getContent().get(0);
-                        AttributeDesignatorType designator = match.getAttributeDesignator();
-                        String attributeId = designator.getAttributeId();
-                        Map<String, String> attribute = new HashMap<>();
-                        attribute.put("key", attributeId);
-                        attribute.put("value", value);
-                        attributeList.add(attribute);
-                    });
-                }
+                //
+                // NOTE: allOfType.getMatch() will NEVER be null as the method
+                // call getMatch will always return something. If its
+                // not there it will create it.
+                //
+                //
+                // Under the match we have attributeValue and
+                // attributeDesignator. So,finally down to the actual attribute.
+                //
+                // Component attributes are saved under Target here we are fetching them back.
+                // One row is default so we are not adding dynamic component at index 0.
+                allOfType.getMatch().forEach(match -> {
+                    AttributeValueType attributeValue = match.getAttributeValue();
+                    String value = (String) attributeValue.getContent().get(0);
+                    AttributeDesignatorType designator = match.getAttributeDesignator();
+                    String attributeId = designator.getAttributeId();
+                    Map<String, String> attribute = new HashMap<>();
+                    attribute.put("key", attributeId);
+                    attribute.put("value", value);
+                    attributeList.add(attribute);
+                });
                 policyAdapter.setAttributes(attributeList);
             }
         }
@@ -214,7 +218,8 @@ public class ActionPolicyController extends RestrictedBaseController {
                 LOGGER.debug("Prepopulating rule algoirthm: " + index);
             }
             // Check to see if Attribute Value exists, if yes then it is not a compound rule
-            if (jaxbElement.getValue() instanceof AttributeValueType) {
+            if (jaxbElement.getValue() instanceof AttributeValueType
+                    || jaxbElement.getValue() instanceof AttributeDesignatorType) {
                 prePopulateRuleAlgorithms(index, actionApply, jaxbActionTypes);
                 ruleAlgorithmTracker.addLast(index);
                 isCompoundRule = false;
@@ -282,11 +287,18 @@ public class ActionPolicyController extends RestrictedBaseController {
             String attributeValue = (String) actionConditionAttributeValue.getContent().get(0);
             ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_2, attributeValue);
 
-            ApplyType innerActionApply = (ApplyType) jaxbActionTypes.get(1).getValue();
-            List<JAXBElement<?>> jaxbInnerActionTypes = innerActionApply.getExpression();
-            AttributeDesignatorType attributeDesignator =
-                    (AttributeDesignatorType) jaxbInnerActionTypes.get(0).getValue();
-            ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, attributeDesignator.getAttributeId());
+            //
+            // This is making a BIG assumption here that there exists an innerApply. This IF
+            // statement was added to support JUnit code coverage. For lack of any example of what
+            // this policy should actually look like.
+            //
+            if (jaxbActionTypes.size() > 1) {
+                ApplyType innerActionApply = (ApplyType) jaxbActionTypes.get(1).getValue();
+                List<JAXBElement<?>> jaxbInnerActionTypes = innerActionApply.getExpression();
+                AttributeDesignatorType attributeDesignator =
+                        (AttributeDesignatorType) jaxbInnerActionTypes.get(0).getValue();
+                ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, attributeDesignator.getAttributeId());
+            }
         }
         ruleAlgorithmList.add(ruleMap);
     }
