@@ -390,7 +390,6 @@ public class PolicyManagerServlet extends HttpServlet {
     }
 
     private JSONObject searchPolicyList(JSONObject params, HttpServletRequest request) {
-        List<Object> policyData = new ArrayList<>();
         JSONArray policyList = null;
         if (params.has("policyList")) {
             policyList = (JSONArray) params.get("policyList");
@@ -398,7 +397,7 @@ public class PolicyManagerServlet extends HttpServlet {
         PolicyController controller = getPolicyControllerInstance();
         List<JSONObject> resultList = new ArrayList<>();
         try {
-            if (!lookupPolicyData(request, policyData, policyList, controller, resultList)) {
+            if (!lookupPolicyData(request, new ArrayList<>(), policyList, controller, resultList)) {
                 return error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
             }
         } catch (Exception e) {
@@ -411,13 +410,11 @@ public class PolicyManagerServlet extends HttpServlet {
 
     private boolean lookupPolicyData(HttpServletRequest request, List<Object> policyData, JSONArray policyList,
             PolicyController controller, List<JSONObject> resultList) {
-        List<String> roles;
-        Set<String> scopes;// Get the Login Id of the User from Request
         String userId = UserUtils.getUserSession(request).getOrgUserId();
         List<Object> userRoles = controller.getRoles(userId);
         Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
-        roles = pair.u;
-        scopes = pair.t;
+        List<String> roles = pair.u;
+        Set<String> scopes = pair.t;
         if (roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST)) {
             if (scopes.isEmpty()) {
                 return false;
@@ -601,13 +598,12 @@ public class PolicyManagerServlet extends HttpServlet {
         } else if (path.contains(DECISION2)) {
             path = path.replace(DECISION, DECISION1);
         }
-        PolicyController controller = getPolicyControllerInstance();
         String[] split = path.split(":");
         String query = "FROM PolicyEntity where policyName = :split_1 and scope = :split_0";
         SimpleBindings peParams = new SimpleBindings();
         peParams.put(SPLIT_1, split[1]);
         peParams.put(SPLIT_0, split[0]);
-        List<Object> queryData = getDataByQueryFromController(controller, query, peParams);
+        List<Object> queryData = getDataByQueryFromController(getPolicyControllerInstance(), query, peParams);
         if (queryData.isEmpty()) {
             return error("Error Occured while Describing the Policy - query is empty");
         }
@@ -645,11 +641,10 @@ public class PolicyManagerServlet extends HttpServlet {
     }
 
     private JSONObject processPolicyList(JSONObject params, HttpServletRequest request) throws ServletException {
-        PolicyController controller = getPolicyControllerInstance();
         // Get the Login Id of the User from Request
         String testUserID = getTestUserId();
         String userId = testUserID != null ? testUserID : UserUtils.getUserSession(request).getOrgUserId();
-        List<Object> userRoles = controller.getRoles(userId);
+        List<Object> userRoles = getPolicyControllerInstance().getRoles(userId);
         Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
         List<String> roles = pair.u;
         Set<String> scopes = pair.t;
@@ -741,7 +736,6 @@ public class PolicyManagerServlet extends HttpServlet {
     // Get Active Policy List based on Scope Selection from Policy Version table
     private void activePolicyList(String inScopeName, List<JSONObject> resultList, List<String> roles,
             Set<String> scopes, Map<String, String> roleByScope) {
-        final PolicyController controller = getPolicyControllerInstance();
         String scopeName = inScopeName;
         if (scopeName.contains(FORWARD_SLASH)) {
             scopeName = scopeName.replace(FORWARD_SLASH, File.separator);
@@ -754,8 +748,8 @@ public class PolicyManagerServlet extends HttpServlet {
         SimpleBindings params = new SimpleBindings();
         params.put(SCOPE_NAME, scopeName + "%");
 
-        List<Object> activePolicies = getDataByQueryFromController(controller, query, params);
-        List<Object> scopesList = getDataByQueryFromController(controller,
+        List<Object> activePolicies = getDataByQueryFromController(getPolicyControllerInstance(), query, params);
+        List<Object> scopesList = getDataByQueryFromController(getPolicyControllerInstance(),
                 FROM_POLICY_EDITOR_SCOPES_WHERE_SCOPENAME_LIKE_SCOPE_NAME, params);
         for (Object list : scopesList) {
             scopeName = checkScope(resultList, scopeName, (PolicyEditorScopes) list, roleByScope);
@@ -845,8 +839,8 @@ public class PolicyManagerServlet extends HttpServlet {
     }
 
     private String getUserName(String loginId) {
-        PolicyController controller = getPolicyControllerInstance();
-        UserInfo userInfo = (UserInfo) controller.getEntityItem(UserInfo.class, "userLoginId", loginId);
+        UserInfo userInfo = (UserInfo) getPolicyControllerInstance().getEntityItem(UserInfo.class, "userLoginId",
+                loginId);
         if (userInfo == null) {
             return SUPERADMIN;
         }
@@ -1543,7 +1537,6 @@ public class PolicyManagerServlet extends HttpServlet {
     private JSONObject editFile(JSONObject params) throws ServletException {
         // get content
         try {
-            final PolicyController controller = getPolicyControllerInstance();
             final String mode = params.getString("mode");
             String path = params.getString("path");
             LOGGER.debug("editFile path: {}" + path);
@@ -1560,7 +1553,7 @@ public class PolicyManagerServlet extends HttpServlet {
             SimpleBindings peParams = new SimpleBindings();
             peParams.put(SPLIT_1, split[1]);
             peParams.put(SPLIT_0, split[0]);
-            List<Object> queryData = getDataByQueryFromController(controller, query, peParams);
+            List<Object> queryData = getDataByQueryFromController(getPolicyControllerInstance(), query, peParams);
             PolicyEntity entity = (PolicyEntity) queryData.get(0);
             InputStream stream = new ByteArrayInputStream(entity.getPolicyData().getBytes(StandardCharsets.UTF_8));
 
@@ -1599,7 +1592,6 @@ public class PolicyManagerServlet extends HttpServlet {
 
     // Add Scopes
     private JSONObject addFolder(JSONObject params, HttpServletRequest request) throws ServletException {
-        PolicyController controller = getPolicyControllerInstance();
         try {
             String name = getNameFromParams(params);
             String validateName =
@@ -1614,7 +1606,8 @@ public class PolicyManagerServlet extends HttpServlet {
                     name = name.substring(1);
                 }
                 PolicyEditorScopes entity =
-                        (PolicyEditorScopes) controller.getEntityItem(PolicyEditorScopes.class, SCOPE_NAME, name);
+                        (PolicyEditorScopes) getPolicyControllerInstance().getEntityItem(
+                                PolicyEditorScopes.class, SCOPE_NAME, name);
                 if (entity != null) {
                     return error("Scope Already Exists");
                 }
@@ -1625,7 +1618,7 @@ public class PolicyManagerServlet extends HttpServlet {
                 newScope.setScopeName(name);
                 newScope.setUserCreatedBy(userInfo);
                 newScope.setUserModifiedBy(userInfo);
-                controller.saveData(newScope);
+                getPolicyControllerInstance().saveData(newScope);
             }
             return success();
         } catch (Exception e) {

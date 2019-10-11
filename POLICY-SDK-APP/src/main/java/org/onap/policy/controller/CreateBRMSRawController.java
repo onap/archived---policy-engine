@@ -53,7 +53,6 @@ public class CreateBRMSRawController {
 
     protected PolicyRestAdapter policyAdapter = null;
 
-    @SuppressWarnings("unchecked")
     public void prePopulateBRMSRawPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 
         if (policyAdapter.getPolicyData() instanceof PolicyType) {
@@ -136,6 +135,7 @@ public class CreateBRMSRawController {
         policyAdapter.setPolicyDescription(description);
     }
 
+    @SuppressWarnings("unchecked")
     private void setPolicyAdapterAttributes(final PolicyRestAdapter policyAdapter, final PolicyType policy) {
         ArrayList<Object> attributeList = new ArrayList<>();
         AdviceExpressionsType expressionTypes =

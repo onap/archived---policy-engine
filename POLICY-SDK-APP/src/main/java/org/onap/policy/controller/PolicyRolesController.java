@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -82,9 +82,7 @@ public class PolicyRolesController extends RestrictedBaseController {
             Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("rolesDatas", mapper.writeValueAsString(commonClassDao.getUserRoles()));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
             LOGGER.error("Exception Occured" + e);
         }
@@ -116,11 +114,11 @@ public class PolicyRolesController extends RestrictedBaseController {
                 }
             }
             LOGGER.info(
-                    "****************************************Logging UserID for Roles Function********************************************************");
+                    "*************************Logging UserID for Roles Function***********************************");
             LOGGER.info("UserId:  " + userId + "Updating the Scope for following user" + adapter.getLoginId()
                     + "ScopeNames" + adapter.getScope());
             LOGGER.info(
-                    "*********************************************************************************************************************************");
+                    "*********************************************************************************************");
             UserInfo userInfo = new UserInfo();
             userInfo.setUserLoginId(adapter.getLoginId().getUserName());
             userInfo.setUserName(adapter.getLoginId().getUserName());
@@ -129,11 +127,11 @@ public class PolicyRolesController extends RestrictedBaseController {
             if (adapter.getId() == 0 && "mechid".equals(adapter.getRole())) {
                 // Save new mechid scopes entity data.
                 LOGGER.info(
-                        "****************************************Logging UserID for New Mechid Function***************************************************");
+                        "*********************Logging UserID for New Mechid Function********************************");
                 LOGGER.info("UserId:" + userId + "Adding new mechid-scopes for following user" + adapter.getLoginId()
                         + "ScopeNames " + adapter.getScope());
                 LOGGER.info(
-                        "*********************************************************************************************************************************");
+                        "*******************************************************************************************");
                 // First add the mechid to userinfo
                 commonClassDao.save(userInfo);
                 checkNew = true;
@@ -153,12 +151,8 @@ public class PolicyRolesController extends RestrictedBaseController {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application / json");
             request.setCharacterEncoding("UTF-8");
-
-            PrintWriter out = response.getWriter();
-            String responseString = mapper.writeValueAsString(commonClassDao.getUserRoles());
-            JSONObject j = new JSONObject("{rolesDatas: " + responseString + "}");
-
-            out.write(j.toString());
+            response.getWriter().write(new JSONObject("{rolesDatas: "
+                + mapper.writeValueAsString(commonClassDao.getUserRoles()) + "}").toString());
         } catch (Exception e) {
             LOGGER.error("Exception Occured" + e);
         }
@@ -183,9 +177,7 @@ public class PolicyRolesController extends RestrictedBaseController {
             mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
             List<String> scopesData = commonClassDao.getDataByColumn(PolicyEditorScopes.class, "scopeName");
             model.put("scopeDatas", mapper.writeValueAsString(scopesData));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
             LOGGER.error("Exception Occured" + e);
         }

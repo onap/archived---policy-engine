@@ -122,7 +122,7 @@ public class DashboardController extends RestrictedBaseController {
 
     /**
      * This method is to retrieve all the data of last 30 days from PolicyEntity table as default.
-     * 
+     *
      * @param request object
      * @param response object contains retrieved data
      */
@@ -137,9 +137,7 @@ public class DashboardController extends RestrictedBaseController {
             mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
             addPolicyCrudInfoToTable();
             model.put("papStatusCRUDData", mapper.writeValueAsString(policyStatusCrudData));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
             policyLogger.error(exceptionOccured, e);
         }
@@ -147,7 +145,7 @@ public class DashboardController extends RestrictedBaseController {
 
     /**
      * This method retrieves data based on input criteria.
-     * 
+     *
      * @param request object
      * @param response object contains retrieved data
      */
@@ -188,9 +186,7 @@ public class DashboardController extends RestrictedBaseController {
             getPolicyData(lscope, lstage, isDelected, ttlDateAfter, ttlDateBefore);
             Map<String, Object> model = new HashMap<>();
             model.put("policyStatusCRUDData", mapper.writeValueAsString(policyStatusCrudData));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
             response.setCharacterEncoding("UTF-8");
             PrintWriter out = response.getWriter();
@@ -201,7 +197,7 @@ public class DashboardController extends RestrictedBaseController {
 
     /**
      * This method is to retrieve data from PolicyEntity table.
-     * 
+     *
      * @param request object
      * @param response object contains retrieved data
      */
@@ -215,14 +211,18 @@ public class DashboardController extends RestrictedBaseController {
             ObjectMapper mapper = new ObjectMapper();
             mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
             model.put("pdpStatusCRUDData", mapper.writeValueAsString(pdpStatusCrudData));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
             policyLogger.error(exceptionOccured, e);
         }
     }
 
+    /**
+     * getData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(
             value = {"/get_DashboardLoggingData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
@@ -232,14 +232,18 @@ public class DashboardController extends RestrictedBaseController {
             Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("availableLoggingDatas", mapper.writeValueAsString(systemDAO.getLoggingData()));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
             policyLogger.error(exceptionOccured + e);
         }
     }
 
+    /**
+     * getSystemAlertData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(
             value = {"/get_DashboardSystemAlertData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
@@ -249,14 +253,18 @@ public class DashboardController extends RestrictedBaseController {
             Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("systemAlertsTableDatas", mapper.writeValueAsString(systemDAO.getSystemAlertData()));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
             policyLogger.error(exceptionOccured + e);
         }
     }
 
+    /**
+     * getPAPStatusData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(
             value = {"/get_DashboardPAPStatusData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
@@ -268,21 +276,25 @@ public class DashboardController extends RestrictedBaseController {
             mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
             addPAPToTable();
             model.put("papTableDatas", mapper.writeValueAsString(papStatusData));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
             policyLogger.error(exceptionOccured + e);
         }
     }
 
+    /**
+     * getPDPStatusData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(
             value = {"/get_DashboardPDPStatusData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPDPStatusData(HttpServletRequest request, HttpServletResponse response) {
         try {
-            Map<String, Object> model = new HashMap<>();
+            final Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
             PolicyController controller = getPolicyControllerInstance();
@@ -290,29 +302,32 @@ public class DashboardController extends RestrictedBaseController {
             addPDPToTable();
             model.put("pdpTableDatas", mapper.writeValueAsString(pdpStatusData));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(msg).toString());
         } catch (Exception e) {
             policyLogger.error(exceptionOccured + e);
         }
     }
 
+    /**
+     * getPolicyActivityData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(
             value = {"/get_DashboardPolicyActivityData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPolicyActivityData(HttpServletRequest request, HttpServletResponse response) {
         try {
-            Map<String, Object> model = new HashMap<>();
+            final Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
             PolicyController controller = getPolicyControllerInstance();
             this.pdpConatiner = new PDPGroupContainer(controller.getPapEngine());
             addPolicyToTable();
             model.put("policyActivityTableDatas", mapper.writeValueAsString(policyActivityData));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
             policyLogger.error(exceptionOccured + e);
         }
@@ -336,9 +351,9 @@ public class DashboardController extends RestrictedBaseController {
             papStatus = "CANNOT_CONNECT";
             policyLogger.error("Error getting PAP status, PAP not responding to requests", e1);
         }
-        String papURL = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
+        String papUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
         JSONObject object = new JSONObject();
-        object.put("system", papURL);
+        object.put("system", papUrl);
         object.put("status", papStatus);
         List<Object> data = commonClassDao.getDataByQuery("from PolicyEntity", new SimpleBindings());
         object.put("noOfPolicy", data.size());
@@ -346,8 +361,8 @@ public class DashboardController extends RestrictedBaseController {
         papStatusData.add(0, object);
     }
 
-    /*
-     * Add the PAP Policy information to the PAP Table
+    /**
+     * Add the PAP Policy information to the PAP Table.
      */
     public void addPolicyCrudInfoToTable() {
         policyStatusCrudData = new ArrayList<>();
@@ -370,7 +385,7 @@ public class DashboardController extends RestrictedBaseController {
             object.put(scope, ((PolicyEntity) data).getScope());
             object.put("policyName", ((PolicyEntity) data).getPolicyName());
             object.put("version", ((PolicyEntity) data).getVersion());
-            if (isPushedToPDP(((PolicyEntity) data).getPolicyId())) {
+            if (isPushedToPdp(((PolicyEntity) data).getPolicyId())) {
                 object.put(stage, "PDP");
             } else {
                 object.put(stage, "PAP");
@@ -396,13 +411,13 @@ public class DashboardController extends RestrictedBaseController {
     /*
      * Add the PDP Policy information to the PDP Table
      */
-    private boolean isPushedToPDP(long policyId) {
+    private boolean isPushedToPdp(long policyId) {
         try {
             String groupEntityquery = "from PolicyGroupEntity where policyid = :policyEntityId";
             SimpleBindings geParams = new SimpleBindings();
             geParams.put("policyEntityId", policyId);
             List<Object> groupobject = commonClassDao.getDataByQuery(groupEntityquery, geParams);
-            if (groupobject != null && groupobject.size() > 0) {
+            if (groupobject != null && ! groupobject.isEmpty()) {
                 return true;
             }
         } catch (Exception e) {
@@ -488,7 +503,7 @@ public class DashboardController extends RestrictedBaseController {
         object.put(scope, data.getScope());
         object.put("policyName", data.getPolicyName());
         object.put("version", data.getVersion());
-        if (isPushedToPDP(data.getPolicyId())) {
+        if (isPushedToPdp(data.getPolicyId())) {
             object.put(stage, "PDP");
         } else {
             object.put(stage, "PAP");
@@ -512,7 +527,7 @@ public class DashboardController extends RestrictedBaseController {
     }
 
     /**
-     * Add PDP Information to the PDP Table
+     * Add PDP Information to the PDP Table.
      *
      */
     public void addPDPToTable() {
@@ -525,7 +540,7 @@ public class DashboardController extends RestrictedBaseController {
             for (PDP pdp : group.getPdps()) {
                 naCount = -1;
                 if ("UP_TO_DATE".equals(pdp.getStatus().getStatus().toString()) && ((OnapPDP) pdp).getJmxPort() != 0) {
-                    String pdpIpAddress = parseIPSystem(pdp.getId());
+                    String pdpIpAddress = parseIpSystem(pdp.getId());
                     int port = ((OnapPDP) pdp).getJmxPort();
                     if (port != 0) {
                         policyLogger.debug("Getting JMX Response Counts from " + pdpIpAddress + " at JMX port " + port);
@@ -562,7 +577,7 @@ public class DashboardController extends RestrictedBaseController {
         }
     }
 
-    private static String parseIPSystem(String line) {
+    private static String parseIpSystem(String line) {
         Pattern pattern = Pattern.compile("://(.+?):");
         Matcher ip = pattern.matcher(line);
         if (ip.find()) {
@@ -579,12 +594,12 @@ public class DashboardController extends RestrictedBaseController {
 
         policyLogger.debug("Create an RMI connector client and connect it to the JMX connector server");
         HashMap map = null;
-        try (JMXConnector jmxConnection = JMXConnectorFactory.newJMXConnector(createConnectionURL(host, port), map)) {
+        try (JMXConnector jmxConnection = JMXConnectorFactory.newJMXConnector(createConnectionUrl(host, port), map)) {
             jmxConnection.connect();
-            Object o = jmxConnection.getMBeanServerConnection()
+            Object obj = jmxConnection.getMBeanServerConnection()
                     .getAttribute(new ObjectName("PdpRest:type=PdpRestMonitor"), jmxAttribute);
-            policyLogger.debug("pdpEvaluationNA value retreived: " + o);
-            return (long) o;
+            policyLogger.debug("pdpEvaluationNA value retreived: " + obj);
+            return (long) obj;
         } catch (MalformedURLException e) {
             policyLogger.error("MalformedURLException for JMX connection", e);
         } catch (IOException e) {
@@ -605,7 +620,7 @@ public class DashboardController extends RestrictedBaseController {
         return -1;
     }
 
-    private static JMXServiceURL createConnectionURL(String host, int port) throws MalformedURLException {
+    private static JMXServiceURL createConnectionUrl(String host, int port) throws MalformedURLException {
         return new JMXServiceURL("rmi", "", 0, "/jndi/rmi://" + host + ":" + port + "/jmxrmi");
     }
 
@@ -633,8 +648,8 @@ public class DashboardController extends RestrictedBaseController {
                 // Add rows to the Policy Table
                 policyList = null;
                 if ("UP_TO_DATE".equals(pdp.getStatus().getStatus().toString()) && ((OnapPDP) pdp).getJmxPort() != 0) {
-                    String pdpIpAddress = parseIPSystem(pdp.getId());
-                    policyList = getPolicy(pdpIpAddress, ((OnapPDP) pdp).getJmxPort(), "policyCount");
+                    String pdpIpAddress = parseIpSystem(pdp.getId());
+                    policyList = getPolicy(pdpIpAddress, ((OnapPDP) pdp).getJmxPort());
                 }
                 if (policyList != null && policyList.toString().length() > 3) {
                     String[] splitPolicy = policyList.toString().split(",");
@@ -650,19 +665,15 @@ public class DashboardController extends RestrictedBaseController {
                         }
                     }
                 } else {
+                    JSONObject object = new JSONObject();
                     if (policyList != null) {
-                        JSONObject object = new JSONObject();
                         object.put("policyId", "Unable to retrieve policy information");
-                        object.put("fireCount", "NA");
-                        object.put("system", pdp.getId());
-                        policyActivityData.add(object);
                     } else {
-                        JSONObject object = new JSONObject();
                         object.put("policyId", "Unable to access PDP JMX Server");
-                        object.put("fireCount", "NA");
-                        object.put("system", pdp.getId());
-                        policyActivityData.add(object);
                     }
+                    object.put("fireCount", "NA");
+                    object.put("system", pdp.getId());
+                    policyActivityData.add(object);
                 }
             }
         }
@@ -672,16 +683,16 @@ public class DashboardController extends RestrictedBaseController {
      * Contact JMX Connector Sever and return the list of {policy id , count}
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private Object getPolicy(String host, int port, String jmxAttribute) {
+    private Object getPolicy(String host, int port) {
         policyLogger
                 .debug("Create an RMI connector client and connect it to the JMX connector server for Policy: " + host);
         HashMap map = null;
-        try (JMXConnector jmxConnection = JMXConnectorFactory.newJMXConnector(createConnectionURL(host, port), map)) {
+        try (JMXConnector jmxConnection = JMXConnectorFactory.newJMXConnector(createConnectionUrl(host, port), map)) {
             jmxConnection.connect();
-            Object o = jmxConnection.getMBeanServerConnection()
+            Object obj = jmxConnection.getMBeanServerConnection()
                     .getAttribute(new ObjectName("PdpRest:type=PdpRestMonitor"), "policyMap");
-            policyLogger.debug("policyMap value retreived: " + o);
-            return o;
+            policyLogger.debug("policyMap value retreived: " + obj);
+            return obj;
         } catch (MalformedURLException e) {
             policyLogger.error("MalformedURLException for JMX connection", e);
         } catch (IOException e) {
@@ -711,8 +722,7 @@ public class DashboardController extends RestrictedBaseController {
 
     private static Integer countPolicyID(String line) {
         String[] splitLine = line.split("=");
-        String sCount = splitLine[1].replace("}", "");
-        return Integer.parseInt(sCount);
+        return Integer.parseInt(splitLine[1].replace("}", ""));
     }
 
 }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,7 @@
 package org.onap.policy.controller;
 
 /*
- * 
+ *
  * */
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -58,6 +58,14 @@ public class PolicyNotificationController extends RestrictedBaseController {
     @Autowired
     CommonClassDao commonClassDao;
 
+    /**
+     * watchPolicy.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return ModelAndView
+     * @throws IOException IOException
+     */
     @RequestMapping(value = {"/watchPolicy"}, method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView watchPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException {
         StringBuilder path = new StringBuilder();
@@ -114,11 +122,8 @@ public class PolicyNotificationController extends RestrictedBaseController {
             response.setContentType("application / json");
             request.setCharacterEncoding("UTF-8");
 
-            PrintWriter out = response.getWriter();
-            String responseString = mapper.writeValueAsString(responseValue);
-            JSONObject j = new JSONObject("{watchData: " + responseString + "}");
-            out.write(j.toString());
-            return null;
+            response.getWriter().write(new JSONObject("{watchData: "
+                    + mapper.writeValueAsString(responseValue) + "}").toString());
         } catch (Exception e) {
             response.setCharacterEncoding("UTF-8");
             request.setCharacterEncoding("UTF-8");

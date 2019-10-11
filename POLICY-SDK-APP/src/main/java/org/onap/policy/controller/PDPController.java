@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -83,6 +83,11 @@ public class PDPController extends RestrictedBaseController {
         this.policyController = policyController;
     }
 
+    /**
+     * refreshGroups.
+     *
+     * @param request HttpServletRequest
+     */
     public synchronized void refreshGroups(HttpServletRequest request) {
         synchronized (this.groups) {
             this.groups.clear();
@@ -98,7 +103,7 @@ public class PDPController extends RestrictedBaseController {
                 scopes = pair.t;
 
                 if (!junit && controller.getPapEngine() == null) {
-                    setPAPEngine(request);
+                    setPapEngine(request);
                 }
                 if (roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR) || roles.contains(SUPERGUEST)) {
                     if (!junit) {
@@ -148,35 +153,44 @@ public class PDPController extends RestrictedBaseController {
         }
     }
 
-    private void setPAPEngine(HttpServletRequest request) {
-        String myRequestURL = request.getRequestURL().toString();
+    private void setPapEngine(HttpServletRequest request) {
         try {
             //
             // Set the URL for the RESTful PAP Engine
             //
-            PolicyController.setPapEngine((PAPPolicyEngine) new RESTfulPAPEngine(myRequestURL));
+            PolicyController.setPapEngine(new RESTfulPAPEngine(request.getRequestURL().toString()));
         } catch (Exception e) {
             policyLogger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Exception Occured while loading PAP", e);
         }
     }
 
+    /**
+     * getPDPGroupEntityData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(
             value = {"/get_PDPGroupData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPDPGroupEntityData(HttpServletRequest request, HttpServletResponse response) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
             refreshGroups(request);
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(
+                    new ObjectMapper().writeValueAsString(groups))).toString());
         } catch (Exception e) {
             policyLogger.error(
                     XACMLErrorConstants.ERROR_DATA_ISSUE + "Error Occured while retrieving the PDP Group data" + e);
         }
     }
 
+    /**
+     * savePDPGroup.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(
             value = {"/pdp_Group/save_pdp_group"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
@@ -190,10 +204,10 @@ public class PDPController extends RestrictedBaseController {
 
             String userId = UserUtils.getUserSession(request).getOrgUserId();
             policyLogger.info(
-                    "****************************************Logging UserID for Save PDP Group Function*****************************************");
+                    "*******************Logging UserID for Save PDP Group Function*******************************");
             policyLogger.info("UserId:  " + userId + "PDP Group Data:  " + root.get("pdpGroupData").toString());
             policyLogger.info(
-                    "***************************************************************************************************************************");
+                    "********************************************************************************************");
 
             StdPDPGroup pdpGroupData = mapper
                     .readValue(root.get("pdpGroupData").toString().replace("groupName", "name"), StdPDPGroup.class);
@@ -214,11 +228,8 @@ public class PDPController extends RestrictedBaseController {
             response.setContentType("application / json");
             request.setCharacterEncoding("UTF-8");
 
-            PrintWriter out = response.getWriter();
             refreshGroups(request);
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-            JSONObject j = new JSONObject(msg);
-            out.write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(groups))).toString());
         } catch (Exception e) {
             policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error Occured while Saving the PDP Group" + e);
             response.setCharacterEncoding("UTF-8");
@@ -234,6 +245,12 @@ public class PDPController extends RestrictedBaseController {
         }
     }
 
+    /**
+     * removePDPGroup.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(
             value = {"/pdp_Group/remove_pdp_group"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
@@ -247,10 +264,10 @@ public class PDPController extends RestrictedBaseController {
 
             String userId = UserUtils.getUserSession(request).getOrgUserId();
             policyLogger.info(
-                    "****************************************Logging UserID for Remove PDP Group Function*****************************************");
+                    "*********************Logging UserID for Remove PDP Group Function*******************************");
             policyLogger.info("UserId:  " + userId + "PDP Group Data:  " + root.get("pdpGroupData").toString());
             policyLogger.info(
-                    "*****************************************************************************************************************************");
+                    "************************************************************************************************");
 
             StdPDPGroup pdpGroupData = mapper.readValue(root.get("pdpGroupData").toString(), StdPDPGroup.class);
             if ("Default".equals(pdpGroupData.getName())) {
@@ -262,13 +279,8 @@ public class PDPController extends RestrictedBaseController {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application / json");
             request.setCharacterEncoding("UTF-8");
-
-            PrintWriter out = response.getWriter();
-
             refreshGroups(request);
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-            JSONObject j = new JSONObject(msg);
-            out.write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(groups))).toString());
         } catch (Exception e) {
             policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error Occured while Removing the PDP Group" + e);
             PrintWriter out;
@@ -283,6 +295,12 @@ public class PDPController extends RestrictedBaseController {
         }
     }
 
+    /**
+     * savePDPToGroup.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(
             value = {"/pdp_Group/save_pdpTogroup"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
@@ -299,11 +317,11 @@ public class PDPController extends RestrictedBaseController {
 
             String userId = UserUtils.getUserSession(request).getOrgUserId();
             policyLogger.info(
-                    "****************************************Logging UserID while Saving  pdp in  PDP Group*****************************************");
+                    "*************Logging UserID while Saving  pdp in  PDP Group***********************************");
             policyLogger.info("UserId:  " + userId + "PDP Group Data:  " + root.get("pdpInGroup").toString()
                     + "Active Group Data: " + root.get("activePDP").toString());
             policyLogger.info(
-                    "*******************************************************************************************************************************");
+                    "**********************************************************************************************");
 
             try {
 
@@ -322,12 +340,8 @@ public class PDPController extends RestrictedBaseController {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application / json");
             request.setCharacterEncoding("UTF-8");
-
-            PrintWriter out = response.getWriter();
             refreshGroups(request);
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-            JSONObject j = new JSONObject(msg);
-            out.write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(groups))).toString());
         } catch (Exception e) {
             policyLogger
                     .error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error Occured while Creating Pdp in PDP Group" + e);
@@ -343,6 +357,12 @@ public class PDPController extends RestrictedBaseController {
         }
     }
 
+    /**
+     * removePDPFromGroup.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(
             value = {"/pdp_Group/remove_pdpFromGroup"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
@@ -353,36 +373,31 @@ public class PDPController extends RestrictedBaseController {
             JsonNode root = mapper.readTree(request.getReader());
             PolicyController controller = getPolicyControllerInstance();
             this.container = new PDPGroupContainer(controller.getPapEngine());
-            StdPDP deletePdp = mapper.readValue(root.get("data").toString(), StdPDP.class);
-            StdPDPGroup activeGroupData = mapper.readValue(root.get("activePDP").toString(), StdPDPGroup.class);
 
             String userId = UserUtils.getUserSession(request).getOrgUserId();
             policyLogger.info(
-                    "****************************************Logging UserID while Removing  pdp from  PDP Group*****************************************");
+                    "********************Logging UserID while Removing  pdp from  PDP Group**************************");
             policyLogger.info("UserId:  " + userId + "Delete PDP Group Data:  " + root.get("data").toString()
                     + "Active Group Data: " + root.get("activePDP").toString());
             policyLogger.info(
-                    "***********************************************************************************************************************************");
+                    "************************************************************************************************");
 
+            StdPDP deletePdp = mapper.readValue(root.get("data").toString(), StdPDP.class);
+            StdPDPGroup activeGroupData = mapper.readValue(root.get("activePDP").toString(), StdPDPGroup.class);
             this.container.removePDP(deletePdp, activeGroupData);
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application / json");
             request.setCharacterEncoding("UTF-8");
 
-            PrintWriter out = response.getWriter();
             refreshGroups(request);
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-            JSONObject j = new JSONObject(msg);
-            out.write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(groups))).toString());
         } catch (Exception e) {
             policyLogger.error(
                     XACMLErrorConstants.ERROR_DATA_ISSUE + "Error Occured while Removing Pdp from PDP Group" + e);
-            PrintWriter out;
             try {
                 response.setCharacterEncoding("UTF-8");
                 request.setCharacterEncoding("UTF-8");
-                out = response.getWriter();
-                out.write(e.getMessage());
+                response.getWriter().write(e.getMessage());
             } catch (Exception e1) {
                 policyLogger.error("Exception Occured" + e1);
             }

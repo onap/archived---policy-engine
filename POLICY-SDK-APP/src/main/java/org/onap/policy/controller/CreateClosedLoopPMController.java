@@ -64,7 +64,7 @@ public class CreateClosedLoopPMController {
             setPolicyAdapterNameValueAndDescription(policyAdapter, policy);
 
             // Set PolicyAdapter JsonBodyData
-            setClosedLoopJSONFile(policyAdapter, entity);
+            setClosedLoopJsonFile(policyAdapter, entity);
 
             // Get the target data under policy.
             TargetType target = policy.getTarget();
@@ -95,11 +95,10 @@ public class CreateClosedLoopPMController {
         policyAdapter.setPolicyDescription(description);
     }
 
-    private void setClosedLoopJSONFile(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-        ObjectMapper mapper = new ObjectMapper();
+    private void setClosedLoopJsonFile(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         try {
             ClosedLoopPMBody closedLoopBody =
-                    mapper.readValue(entity.getConfigurationData().getConfigBody(), ClosedLoopPMBody.class);
+                    new ObjectMapper().readValue(entity.getConfigurationData().getConfigBody(), ClosedLoopPMBody.class);
             policyAdapter.setJsonBodyData(closedLoopBody);
         } catch (IOException e) {
             LOGGER.error("Exception Occured" + e);

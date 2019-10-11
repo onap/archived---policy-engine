@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -104,6 +103,12 @@ public class CreateBRMSParamController extends RestrictedBaseController {
     private static String brmsTemplateVlaue = "<$%BRMSParamTemplate=";
     private static String string = "String";
 
+    /**
+     * getBRMSParamPolicyRuleData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(value = {"/policyController/getBRMSTemplateData.htm"}, method = {RequestMethod.POST})
     public void getBRMSParamPolicyRuleData(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -117,10 +122,8 @@ public class CreateBRMSParamController extends RestrictedBaseController {
             response.setContentType(PolicyController.getContenttype());
             request.setCharacterEncoding(PolicyController.getCharacterencoding());
 
-            PrintWriter out = response.getWriter();
-            String responseString = mapper.writeValueAsString(dynamicLayoutMap);
-            JSONObject j = new JSONObject("{policyData: " + responseString + "}");
-            out.write(j.toString());
+            response.getWriter().write(new JSONObject("{policyData: " + mapper.writeValueAsString(dynamicLayoutMap)
+                + "}").toString());
         } catch (Exception e) {
             policyLogger.error("Exception Occured while getting BRMS Rule data", e);
         }
@@ -129,8 +132,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
     private String findRule(String ruleTemplate) {
         List<Object> datas = commonClassDao.getDataById(BRMSParamTemplate.class, "ruleName", ruleTemplate);
         if (CollectionUtils.isNotEmpty(datas)) {
-            BRMSParamTemplate bRMSParamTemplate = (BRMSParamTemplate) datas.get(0);
-            return bRMSParamTemplate.getRule();
+            return ((BRMSParamTemplate) datas.get(0)).getRule();
         }
         return null;
     }
@@ -273,7 +275,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 
             // Generate Param UI
             try {
-                paramUIGenerate(policyAdapter, entity);
+                paramUiGenerate(policyAdapter, entity);
             } catch (Exception e) {
                 policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage() + e);
             }
@@ -283,7 +285,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
             if (policyAdapter.getDynamicLayoutMap().size() > 0) {
                 LinkedHashMap<String, String> drlRule = policyAdapter.getDynamicLayoutMap().keySet().stream()
                         .collect(Collectors.toMap(String::toString,
-                                keyValue -> policyAdapter.getDynamicLayoutMap().get(keyValue), (a, b) -> b,
+                            keyValue -> policyAdapter.getDynamicLayoutMap().get(keyValue), (a, b) -> b,
                                 LinkedHashMap::new));
                 policyAdapter.setRuleData(drlRule);
             }
@@ -328,11 +330,10 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 
     private void setDataToAdapterFromTarget(TargetType target, PolicyRestAdapter policyAdapter) {
         // Under target we have AnyOFType
-        List<AnyOfType> anyOfList = target.getAnyOf();
-        if (anyOfList == null) {
+        if (target.getAnyOf() == null) {
             return;
         }
-        anyOfList.stream().map(AnyOfType::getAllOf).filter(Objects::nonNull).flatMap(Collection::stream)
+        target.getAnyOf().stream().map(AnyOfType::getAllOf).filter(Objects::nonNull).flatMap(Collection::stream)
                 .forEach(allOf -> setDataToAdapterFromMatchList(allOf.getMatch(), policyAdapter));
     }
 
@@ -367,7 +368,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
     }
 
     // This method generates the UI from rule configuration
-    private void paramUIGenerate(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
+    private void paramUiGenerate(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         String data = entity.getConfigurationData().getConfigBody();
         if (data == null) {
             return;
@@ -473,7 +474,12 @@ public class CreateBRMSParamController extends RestrictedBaseController {
         return line;
     }
 
-    // set View Rule
+    /**
+     * setViewRule.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @SuppressWarnings("unchecked")
     @RequestMapping(value = {"/policyController/ViewBRMSParamPolicyRule.htm"}, method = {RequestMethod.POST})
     public void setViewRule(HttpServletRequest request, HttpServletResponse response) {
@@ -492,7 +498,8 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 
             String body = findRule(policyData.getRuleName()) + "\n";
             StringBuilder generatedMetadata = new StringBuilder().append(
-                    "/* Autogenerated Code Please Don't change/remove this comment section. This is for the UI purpose. \n\t ")
+                    "/* Autogenerated Code Please Don't change/remove this comment section. "
+                            + "This is for the UI purpose. \n\t ")
                     .append(brmsTemplateVlaue).append(policyData.getRuleName()).append("%$> \n */ \n");
 
             if (policyData.getDynamicLayoutMap().size() > 0) {
@@ -517,26 +524,22 @@ public class CreateBRMSParamController extends RestrictedBaseController {
             // Finding all the keys in the Map data-structure.
             Set<String> keySet = copyMap.keySet();
             Iterator<String> iterator = keySet.iterator();
-            Pattern p;
-            Matcher m;
             while (iterator.hasNext()) {
                 // Converting the first character of the key into a lower case.
                 String input = iterator.next();
                 String output = Character.toLowerCase(input.charAt(0)) + (input.length() > 1 ? input.substring(1) : "");
                 // Searching for a pattern in the String using the key.
-                p = Pattern.compile("\\$\\{" + output + "\\}");
-                m = p.matcher(body);
+                Pattern pattern = Pattern.compile("\\$\\{" + output + "\\}");
+                Matcher matcher = pattern.matcher(body);
                 // Replacing the value with the inputs provided by the user in the editor.
-                body = m.replaceAll(copyMap.get(input));
+                body = matcher.replaceAll(copyMap.get(input));
             }
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application / json");
             request.setCharacterEncoding("UTF-8");
 
-            PrintWriter out = response.getWriter();
-            String responseString = mapper.writeValueAsString(body);
-            JSONObject j = new JSONObject("{policyData: " + responseString + "}");
-            out.write(j.toString());
+            response.getWriter().write(new JSONObject("{policyData: " + mapper.writeValueAsString(body)
+                + "}").toString());
         } catch (Exception e) {
             policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
         }
