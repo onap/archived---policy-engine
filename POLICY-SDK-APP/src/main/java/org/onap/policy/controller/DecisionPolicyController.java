@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -83,7 +83,13 @@ public class DecisionPolicyController extends RestrictedBaseController {
         // This constructor is empty
     }
 
-    public void rawXACMLPolicy(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
+    /**
+     * rawXacmlPolicy. Should this method be private?
+     *
+     * @param policyAdapter PolicyRestAdapter
+     * @param entity PolicyEntity
+     */
+    public void rawXacmlPolicy(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         try (InputStream policyXmlStream = XACMLPolicyWriter.getXmlAsInputStream(policyAdapter.getPolicyData())) {
             String name = StringUtils.substringAfter(entity.getPolicyName(), "Decision_");
             policyAdapter.setPolicyName(name.substring(0, name.indexOf('.')));
@@ -94,6 +100,12 @@ public class DecisionPolicyController extends RestrictedBaseController {
         }
     }
 
+    /**
+     * prePopulateDecisionPolicyData.
+     *
+     * @param policyAdapter PolicyRestAdapter
+     * @param entity PolicyEntity
+     */
     @SuppressWarnings("unchecked")
     public void prePopulateDecisionPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         List<Object> attributeList = new ArrayList<>();
@@ -109,7 +121,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
         }
 
         if (rawPolicyCheck) {
-            rawXACMLPolicy(policyAdapter, entity);
+            rawXacmlPolicy(policyAdapter, entity);
         } else {
             RainyDayParams rainydayParams = new RainyDayParams();
             Object policyData = policyAdapter.getPolicyData();
@@ -143,45 +155,46 @@ public class DecisionPolicyController extends RestrictedBaseController {
                         AnyOfType anyOf = iterAnyOf.next();
                         // Under AntOfType we have AllOfType
                         List<AllOfType> allOfList = anyOf.getAllOf();
-                        if (allOfList != null) {
-                            Iterator<AllOfType> iterAllOf = allOfList.iterator();
-                            while (iterAllOf.hasNext()) {
-                                AllOfType allOf = iterAllOf.next();
-                                // Under AllOfType we have Mathch.
-                                List<MatchType> matchList = allOf.getMatch();
-                                int index = 0;
-                                if (matchList != null) {
-                                    Iterator<MatchType> iterMatch = matchList.iterator();
-                                    while (iterMatch.hasNext()) {
-                                        MatchType match = iterMatch.next();
-                                        //
-                                        // Under the match we have attributevalue and
-                                        // attributeDesignator. So,finally down to the actual attribute.
-                                        //
-                                        AttributeValueType attributeValue = match.getAttributeValue();
-                                        String value = (String) attributeValue.getContent().get(0);
-                                        if (value != null) {
-                                            value = value.replaceAll("\\(\\?i\\)", "");
-                                        }
-                                        AttributeDesignatorType designator = match.getAttributeDesignator();
-                                        String attributeId = designator.getAttributeId();
-                                        // First match in the target is OnapName, so set that value.
-                                        if ("ONAPName".equals(attributeId)) {
-                                            policyAdapter.setOnapName(value);
-                                        }
-                                        // Component attributes are saved under Target here we are fetching them back.
-                                        // One row is default so we are not adding dynamic component at index 0.
-                                        if (index >= 1) {
-                                            Map<String, String> attribute = new HashMap<>();
-                                            attribute.put("key", attributeId);
-                                            attribute.put("value", value);
-                                            attributeList.add(attribute);
-                                        }
-                                        index++;
+                        if (allOfList == null) {
+                            continue;
+                        }
+                        Iterator<AllOfType> iterAllOf = allOfList.iterator();
+                        while (iterAllOf.hasNext()) {
+                            AllOfType allOf = iterAllOf.next();
+                            // Under AllOfType we have Mathch.
+                            List<MatchType> matchList = allOf.getMatch();
+                            int index = 0;
+                            if (matchList != null) {
+                                Iterator<MatchType> iterMatch = matchList.iterator();
+                                while (iterMatch.hasNext()) {
+                                    MatchType match = iterMatch.next();
+                                    //
+                                    // Under the match we have attributevalue and
+                                    // attributeDesignator. So,finally down to the actual attribute.
+                                    //
+                                    AttributeValueType attributeValue = match.getAttributeValue();
+                                    String value = (String) attributeValue.getContent().get(0);
+                                    if (value != null) {
+                                        value = value.replaceAll("\\(\\?i\\)", "");
                                     }
+                                    AttributeDesignatorType designator = match.getAttributeDesignator();
+                                    String attributeId = designator.getAttributeId();
+                                    // First match in the target is OnapName, so set that value.
+                                    if ("ONAPName".equals(attributeId)) {
+                                        policyAdapter.setOnapName(value);
+                                    }
+                                    // Component attributes are saved under Target here we are fetching them back.
+                                    // One row is default so we are not adding dynamic component at index 0.
+                                    if (index >= 1) {
+                                        Map<String, String> attribute = new HashMap<>();
+                                        attribute.put("key", attributeId);
+                                        attribute.put("value", value);
+                                        attributeList.add(attribute);
+                                    }
+                                    index++;
                                 }
-                                policyAdapter.setAttributes(attributeList);
                             }
+                            policyAdapter.setAttributes(attributeList);
                         }
                     }
                     // Setting rainy day attributes to the parameters object if they exist

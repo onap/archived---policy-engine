@@ -53,7 +53,7 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
  *
  * <p>The reset() method has been added to assist with the above problem in order to acquire >80% JUnit code coverage.
  *
- * <p>This static class doesn't really check a PDP, it simply loads a properties file and tried to ensure 
+ * <p>This static class doesn't really check a PDP, it simply loads a properties file and tried to ensure
  * that a valid URL exists for a PDP along with user/password.
  */
 public class CheckPdpProperties {
@@ -209,8 +209,7 @@ public class CheckPdpProperties {
                 LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
             }
             return encoding;
-        } else {
-            return null;
         }
+        return null;
     }
 }

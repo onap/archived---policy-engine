@@ -164,8 +164,8 @@ public class PolicyController extends RestrictedBaseController {
         return jUnit;
     }
 
-    public static void setjUnit(boolean jUnit) {
-        PolicyController.jUnit = jUnit;
+    public static void setjUnit(boolean isJunit) {
+        PolicyController.jUnit = isJunit;
     }
 
     @Autowired
@@ -321,9 +321,7 @@ public class PolicyController extends RestrictedBaseController {
             ObjectMapper mapper = new ObjectMapper();
             model.put("functionDefinitionDatas",
                     mapper.writeValueAsString(commonClassDao.getDataByColumn(FunctionDefinition.class, "shortname")));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
             policyLogger.error(
                     XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while retriving the Function Definition data" + e);
@@ -378,9 +376,7 @@ public class PolicyController extends RestrictedBaseController {
             Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("userRolesDatas", mapper.writeValueAsString(getRolesOfUser(userId)));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
             policyLogger.error("Exception Occured" + e);
         }
@@ -601,11 +597,11 @@ public class PolicyController extends RestrictedBaseController {
     /**
      * Switch Version Policy Content.
      *
-     * @param pName which is used to find associated versions.
+     * @param thePolicyName which is used to find associated versions.
      * @return list of available versions based on policy name.
      */
-    public JSONObject switchVersionPolicyContent(String pName) {
-        String policyName = pName;
+    public JSONObject switchVersionPolicyContent(String thePolicyName) {
+        String policyName = thePolicyName;
         String dbCheckName = policyName.replace("/", ".");
         if (dbCheckName.contains("Config_")) {
             dbCheckName = dbCheckName.replace(".Config_", ":Config_");
@@ -621,14 +617,13 @@ public class PolicyController extends RestrictedBaseController {
         SimpleBindings params = new SimpleBindings();
         params.put("splitDBCheckName1", splitDbCheckName[1] + "%");
         params.put("splitDBCheckName0", splitDbCheckName[0]);
-        List<Object> policyEntity = commonClassDao.getDataByQuery(query, params);
         List<String> av = new ArrayList<>();
-        for (Object entity : policyEntity) {
-            PolicyEntity pEntity = (PolicyEntity) entity;
-            String removeExtension = pEntity.getPolicyName().replace(".xml", "");
+        for (Object entity : commonClassDao.getDataByQuery(query, params)) {
+            PolicyEntity policyEntity = (PolicyEntity) entity;
+            String removeExtension = policyEntity.getPolicyName().replace(".xml", "");
             String version = removeExtension.substring(removeExtension.lastIndexOf('.') + 1);
-            String userName = getUserId(pEntity, "@ModifiedBy:");
-            av.add(version + " | " + pEntity.getModifiedDate() + " | " + userName);
+            String userName = getUserId(policyEntity, "@ModifiedBy:");
+            av.add(version + " | " + policyEntity.getModifiedDate() + " | " + userName);
         }
         if (policyName.contains("/")) {
             policyName = policyName.replace("/", File.separator);
@@ -642,13 +637,20 @@ public class PolicyController extends RestrictedBaseController {
         return el;
     }
 
+    /**
+     * getUserId.
+     *
+     * @param data PolicyEntity
+     * @param value String
+     * @return String
+     */
     public String getUserId(PolicyEntity data, String value) {
         String userId = "";
-        String uValue = value;
+        String userValue = value; // Why?
         String description = getDescription(data);
-        if (description.contains(uValue)) {
-            userId = description.substring(description.indexOf(uValue) + uValue.length(),
-                    description.lastIndexOf(uValue));
+        if (description.contains(userValue)) {
+            userId = description.substring(description.indexOf(userValue) + userValue.length(),
+                    description.lastIndexOf(userValue));
         }
         UserInfo userInfo = (UserInfo) getEntityItem(UserInfo.class, "userLoginId", userId);
         if (userInfo == null) {
@@ -657,6 +659,12 @@ public class PolicyController extends RestrictedBaseController {
         return userInfo.getUserName();
     }
 
+    /**
+     * getDescription.
+     *
+     * @param data PolicyEntity
+     * @return String
+     */
     public String getDescription(PolicyEntity data) {
         InputStream stream = new ByteArrayInputStream(data.getPolicyData().getBytes(StandardCharsets.UTF_8));
         Object policy = XACMLPolicyScanner.readPolicy(stream);
@@ -664,13 +672,19 @@ public class PolicyController extends RestrictedBaseController {
             return ((PolicySetType) policy).getDescription();
         } else if (policy instanceof PolicyType) {
             return ((PolicyType) policy).getDescription();
-        } else {
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Expecting a PolicySet/Policy/Rule object. Got: "
-                    + policy.getClass().getCanonicalName());
-            return null;
         }
+        PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Expecting a PolicySet/Policy/Rule object. Got: "
+                + policy.getClass().getCanonicalName());
+        return null;
     }
 
+    /**
+     * getUserInfo.
+     *
+     * @param data PolicyEntity
+     * @param activePolicies list of active policies
+     * @return array of String
+     */
     public String[] getUserInfo(PolicyEntity data, List<PolicyVersion> activePolicies) {
         String policyName = data.getScope().replace(".", File.separator) + File.separator
                 + data.getPolicyName().substring(0, data.getPolicyName().indexOf('.'));
@@ -963,13 +977,13 @@ public class PolicyController extends RestrictedBaseController {
     /**
      * Function to convert date.
      *
-     * @param dateTTL input date value.
+     * @param dateTimeToLive input date value.
      * @return
      */
-    public String convertDate(String dateTTL) {
+    public String convertDate(String dateTimeToLive) {
         String formateDate = null;
-        if (dateTTL.contains("-")) {
-            formateDate = dateTTL.replace("-", "/");
+        if (dateTimeToLive.contains("-")) {
+            formateDate = dateTimeToLive.replace("-", "/");
         }
         return formateDate;
     }

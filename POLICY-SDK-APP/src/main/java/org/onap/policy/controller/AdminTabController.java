@@ -74,6 +74,12 @@ public class AdminTabController extends RestrictedBaseController {
         AdminTabController.commonClassDao = commonClassDao;
     }
 
+    /**
+     * getAdminTabEntityData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(
             value = {"/get_LockDownData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.GET},
@@ -83,14 +89,20 @@ public class AdminTabController extends RestrictedBaseController {
             Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("lockdowndata", mapper.writeValueAsString(commonClassDao.getData(GlobalRoleSettings.class)));
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
             LOGGER.error("Exception Occured" + e);
         }
     }
 
+    /**
+     * saveAdminTabLockdownValue.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return ModelAndView object
+     * @throws IOException IOException
+     */
     @RequestMapping(
             value = {"/adminTabController/save_LockDownValue.htm"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
@@ -101,10 +113,10 @@ public class AdminTabController extends RestrictedBaseController {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             String userId = UserUtils.getUserSession(request).getOrgUserId();
             LOGGER.info(
-                    "****************************************Logging UserID for Application Lockdown Function*****************************************");
+                    "********************Logging UserID for Application Lockdown Function**************************");
             LOGGER.info("UserId:  " + userId);
             LOGGER.info(
-                    "*********************************************************************************************************************************");
+                    "**********************************************************************************************");
             JsonNode root = mapper.readTree(request.getReader());
             GlobalRoleSettings globalRole =
                     mapper.readValue(root.get("lockdowndata").toString(), GlobalRoleSettings.class);
@@ -115,19 +127,17 @@ public class AdminTabController extends RestrictedBaseController {
             response.setContentType("application / json");
             request.setCharacterEncoding(CHARACTER_ENCODING);
 
-            PrintWriter out = response.getWriter();
             String responseString = mapper.writeValueAsString(commonClassDao.getData(GlobalRoleSettings.class));
-            JSONObject j = new JSONObject("{descriptiveScopeDictionaryDatas: " + responseString + "}");
 
-            out.write(j.toString());
+            response.getWriter().write(new JSONObject("{descriptiveScopeDictionaryDatas: " + responseString
+                    + "}").toString());
 
             return null;
         } catch (Exception e) {
             LOGGER.error("Exception Occured" + e);
             response.setCharacterEncoding(CHARACTER_ENCODING);
             request.setCharacterEncoding(CHARACTER_ENCODING);
-            PrintWriter out = response.getWriter();
-            out.write(PolicyUtils.CATCH_EXCEPTION);
+            response.getWriter().write(PolicyUtils.CATCH_EXCEPTION);
         }
         return null;
     }

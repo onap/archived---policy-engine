@@ -91,6 +91,9 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/")
 public class CreateOptimizationController extends RestrictedBaseController {
     private static final Logger LOGGER = FlexLogger.getLogger(CreateOptimizationController.class);
+
+    private static final int BUFFER = 2048;
+
     private static CommonClassDao commonClassDao;
 
     public static CommonClassDao getCommonClassDao() {
@@ -178,7 +181,7 @@ public class CreateOptimizationController extends RestrictedBaseController {
         }
         LOGGER.info("input json: " + json);
         LOGGER.info("input jsonContent: " + jsonContent);
-        String cleanJson = msController.cleanUPJson(json);
+        String cleanJson = msController.cleanUpJson(json);
 
         // --- reset empty value back after called cleanUPJson method and before calling removeNullAttributes
         String tempJson =
@@ -189,6 +192,14 @@ public class CreateOptimizationController extends RestrictedBaseController {
         return policyAdapter;
     }
 
+    /**
+     * getOptimizationTemplateData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return ModelAndView
+     * @throws IOException IOException
+     */
     @RequestMapping(
             value = {"/policyController/getOptimizationTemplateData.htm"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
@@ -200,10 +211,10 @@ public class CreateOptimizationController extends RestrictedBaseController {
         JsonNode root = mapper.readTree(request.getReader());
 
         String value = root.get("policyData").toString().replaceAll("^\"|\"$", "");
-        String servicename = value.toString().split("-v")[0];
+        String servicename = value.split("-v")[0];
         String version = null;
-        if (value.toString().contains("-v")) {
-            version = value.toString().split("-v")[1];
+        if (value.contains("-v")) {
+            version = value.split("-v")[1];
         }
 
         OptimizationModels returnModel = getAttributeObject(servicename, version);
@@ -230,8 +241,7 @@ public class CreateOptimizationController extends RestrictedBaseController {
         // Get all keys with "MANY-true" defined in their value from subAttribute
         Set<String> allkeys = null;
         if (returnModel.getSubattributes() != null && !returnModel.getSubattributes().isEmpty()) {
-            JSONObject json = new JSONObject(returnModel.getSubattributes());
-            getAllKeys(json);
+            getAllKeys(new JSONObject(returnModel.getSubattributes()));
             allkeys = allManyTrueKeys;
             allManyTrueKeys = new HashSet<>();
             LOGGER.info("allkeys : " + allkeys);
@@ -284,19 +294,18 @@ public class CreateOptimizationController extends RestrictedBaseController {
         response.setContentType(APPLICATIONJSON);
         request.setCharacterEncoding(UTF8);
         List<Object> list = new ArrayList<>();
-        PrintWriter out = response.getWriter();
         String responseString = mapper.writeValueAsString(returnModel);
-        JSONObject j = null;
+        JSONObject json = null;
         if ("".equals(nameOfTrueKeys)) {
-            j = new JSONObject("{optimizationModelData: " + responseString + ",jsonValue: " + jsonModel
+            json = new JSONObject("{optimizationModelData: " + responseString + ",jsonValue: " + jsonModel
                     + ",dataOrderInfo:" + dataOrderInfo + ",headDefautlsData:" + headDefautlsData + "}");
         } else {
-            j = new JSONObject("{optimizationModelData: " + responseString + ",jsonValue: " + jsonModel
+            json = new JSONObject("{optimizationModelData: " + responseString + ",jsonValue: " + jsonModel
                     + ",allManyTrueKeys: " + allManyTrueKeys + ",dataOrderInfo:" + dataOrderInfo + ",headDefautlsData:"
                     + headDefautlsData + "}");
         }
-        list.add(j);
-        out.write(list.toString());
+        list.add(json);
+        response.getWriter().write(list.toString());
         return null;
     }
 
@@ -419,10 +428,12 @@ public class CreateOptimizationController extends RestrictedBaseController {
     private Set<String> getAllKeys(JSONArray arr, Set<String> keys) {
         for (int i = 0; i < arr.length(); i++) {
             Object obj = arr.get(i);
-            if (obj instanceof JSONObject)
+            if (obj instanceof JSONObject) {
                 keys.addAll(getAllKeys(arr.getJSONObject(i)));
-            if (obj instanceof JSONArray)
+            }
+            if (obj instanceof JSONArray) {
                 keys.addAll(getAllKeys(arr.getJSONArray(i)));
+            }
         }
 
         return keys;
@@ -437,15 +448,25 @@ public class CreateOptimizationController extends RestrictedBaseController {
                 LOGGER.info("obj : " + obj);
                 allManyTrueKeys.add(key);
             }
-            if (obj instanceof JSONObject)
+            if (obj instanceof JSONObject) {
                 keys.addAll(getAllKeys(json.getJSONObject(key)));
-            if (obj instanceof JSONArray)
+            }
+            if (obj instanceof JSONArray) {
                 keys.addAll(getAllKeys(json.getJSONArray(key)));
+            }
         }
 
         return keys;
     }
 
+    /**
+     * getModelServiceVersionData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return ModelAndView
+     * @throws IOException IOException
+     */
     @RequestMapping(
             value = {"/policyController/getModelServiceVersionData.htm"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
@@ -455,19 +476,16 @@ public class CreateOptimizationController extends RestrictedBaseController {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JsonNode root = mapper.readTree(request.getReader());
 
-        String value = root.get("policyData").toString().replaceAll("^\"|\"$", "");
-        String servicename = value.split("-v")[0];
-        Set<String> returnList = getVersionList(servicename);
+        final String value = root.get("policyData").toString().replaceAll("^\"|\"$", "");
+        final String servicename = value.split("-v")[0];
 
         response.setCharacterEncoding(UTF8);
         response.setContentType(APPLICATIONJSON);
         request.setCharacterEncoding(UTF8);
         List<Object> list = new ArrayList<>();
-        PrintWriter out = response.getWriter();
-        String responseString = mapper.writeValueAsString(returnList);
-        JSONObject j = new JSONObject("{optimizationModelVersionData: " + responseString + "}");
-        list.add(j);
-        out.write(list.toString());
+        list.add(new JSONObject("{optimizationModelVersionData: "
+                + mapper.writeValueAsString(getVersionList(servicename)) + "}"));
+        response.getWriter().write(list.toString());
         return null;
     }
 
@@ -512,76 +530,87 @@ public class CreateOptimizationController extends RestrictedBaseController {
                 modelName);
     }
 
+    /**
+     * prePopulatePolicyData.
+     *
+     * @param policyAdapter PolicyRestAdapter
+     * @param entity PolicyEntity
+     */
     public void prePopulatePolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-        if (policyAdapter.getPolicyData() instanceof PolicyType) {
-            Object policyData = policyAdapter.getPolicyData();
-            PolicyType policy = (PolicyType) policyData;
-            policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
-            String policyNameValue =
-                    policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("OOF_") + 4);
-            policyAdapter.setPolicyName(policyNameValue);
-            String description = "";
-            try {
-                description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
-            } catch (Exception e) {
-                LOGGER.error("Error while collecting the description tag in " + policyNameValue, e);
-                description = policy.getDescription();
+        if (! (policyAdapter.getPolicyData() instanceof PolicyType)) {
+            return;
+        }
+        Object policyData = policyAdapter.getPolicyData();
+        PolicyType policy = (PolicyType) policyData;
+        policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
+        String policyNameValue =
+                policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("OOF_") + 4);
+        policyAdapter.setPolicyName(policyNameValue);
+        String description = "";
+        try {
+            description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
+        } catch (Exception e) {
+            LOGGER.error("Error while collecting the description tag in " + policyNameValue, e);
+            description = policy.getDescription();
+        }
+        policyAdapter.setPolicyDescription(description);
+        // Get the target data under policy.
+        TargetType target = policy.getTarget();
+        if (target == null) {
+            return;
+        }
+        // Under target we have AnyOFType
+        List<AnyOfType> anyOfList = target.getAnyOf();
+        if (anyOfList == null) {
+            return;
+        }
+        Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
+        while (iterAnyOf.hasNext()) {
+            AnyOfType anyOf = iterAnyOf.next();
+            // Under AnyOFType we have AllOFType
+            List<AllOfType> allOfList = anyOf.getAllOf();
+            if (allOfList == null) {
+                continue;
             }
-            policyAdapter.setPolicyDescription(description);
-            // Get the target data under policy.
-            TargetType target = policy.getTarget();
-            if (target != null) {
-                // Under target we have AnyOFType
-                List<AnyOfType> anyOfList = target.getAnyOf();
-                if (anyOfList != null) {
-                    Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
-                    while (iterAnyOf.hasNext()) {
-                        AnyOfType anyOf = iterAnyOf.next();
-                        // Under AnyOFType we have AllOFType
-                        List<AllOfType> allOfList = anyOf.getAllOf();
-                        if (allOfList != null) {
-                            Iterator<AllOfType> iterAllOf = allOfList.iterator();
-                            while (iterAllOf.hasNext()) {
-                                AllOfType allOf = iterAllOf.next();
-                                // Under AllOFType we have Match
-                                List<MatchType> matchList = allOf.getMatch();
-                                if (matchList != null) {
-                                    Iterator<MatchType> iterMatch = matchList.iterator();
-                                    while (matchList.size() > 1 && iterMatch.hasNext()) {
-                                        MatchType match = iterMatch.next();
-                                        //
-                                        // Under the match we have attribute value and
-                                        // attributeDesignator. So,finally down to the actual attribute.
-                                        //
-                                        AttributeValueType attributeValue = match.getAttributeValue();
-                                        String value = (String) attributeValue.getContent().get(0);
-                                        AttributeDesignatorType designator = match.getAttributeDesignator();
-                                        String attributeId = designator.getAttributeId();
-                                        // First match in the target is OnapName, so set that value.
-                                        if ("ONAPName".equals(attributeId)) {
-                                            policyAdapter.setOnapName(value);
-                                        }
-                                        if ("RiskType".equals(attributeId)) {
-                                            policyAdapter.setRiskType(value);
-                                        }
-                                        if ("RiskLevel".equals(attributeId)) {
-                                            policyAdapter.setRiskLevel(value);
-                                        }
-                                        if ("guard".equals(attributeId)) {
-                                            policyAdapter.setGuard(value);
-                                        }
-                                        if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
-                                            PolicyController controller = new PolicyController();
-                                            String newDate = controller.convertDate(value);
-                                            policyAdapter.setTtlDate(newDate);
-                                        }
-                                    }
-                                    readFile(policyAdapter, entity);
-                                }
-                            }
-                        }
+            Iterator<AllOfType> iterAllOf = allOfList.iterator();
+            while (iterAllOf.hasNext()) {
+                AllOfType allOf = iterAllOf.next();
+                // Under AllOFType we have Match
+                List<MatchType> matchList = allOf.getMatch();
+                if (matchList == null) {
+                    continue;
+                }
+                Iterator<MatchType> iterMatch = matchList.iterator();
+                while (matchList.size() > 1 && iterMatch.hasNext()) {
+                    MatchType match = iterMatch.next();
+                    //
+                    // Under the match we have attribute value and
+                    // attributeDesignator. So,finally down to the actual attribute.
+                    //
+                    AttributeValueType attributeValue = match.getAttributeValue();
+                    String value = (String) attributeValue.getContent().get(0);
+                    AttributeDesignatorType designator = match.getAttributeDesignator();
+                    String attributeId = designator.getAttributeId();
+                    // First match in the target is OnapName, so set that value.
+                    if ("ONAPName".equals(attributeId)) {
+                        policyAdapter.setOnapName(value);
+                    }
+                    if ("RiskType".equals(attributeId)) {
+                        policyAdapter.setRiskType(value);
+                    }
+                    if ("RiskLevel".equals(attributeId)) {
+                        policyAdapter.setRiskLevel(value);
+                    }
+                    if ("guard".equals(attributeId)) {
+                        policyAdapter.setGuard(value);
+                    }
+                    if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
+                        PolicyController controller = new PolicyController();
+                        String newDate = controller.convertDate(value);
+                        policyAdapter.setTtlDate(newDate);
                     }
                 }
+                readFile(policyAdapter, entity);
             }
         }
     }
@@ -617,6 +646,14 @@ public class CreateOptimizationController extends RestrictedBaseController {
 
     }
 
+    /**
+     * setModelData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @throws IOException IOException
+     * @throws FileUploadException FileUploadException
+     */
     @RequestMapping(
             value = {"/oof_dictionary/set_ModelData"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
@@ -661,16 +698,10 @@ public class CreateOptimizationController extends RestrictedBaseController {
         }
 
         if (!errorMsg.isEmpty()) {
-
-            PrintWriter out = response.getWriter();
-
             response.setCharacterEncoding(UTF8);
             response.setContentType(APPLICATIONJSON);
             request.setCharacterEncoding(UTF8);
-
-            JSONObject j = new JSONObject();
-            j.put("errorMsg", errorMsg);
-            out.write(j.toString());
+            response.getWriter().write(new JSONObject().put("errorMsg", errorMsg).toString());
             return;
         }
 
@@ -737,20 +768,18 @@ public class CreateOptimizationController extends RestrictedBaseController {
 
         }
 
-        PrintWriter out = response.getWriter();
-
         response.setCharacterEncoding(UTF8);
         response.setContentType(APPLICATIONJSON);
         request.setCharacterEncoding(UTF8);
 
         ObjectMapper mapper = new ObjectMapper();
-        JSONObject j = new JSONObject();
-        j.put("classListDatas", modelList);
-        j.put("modelDatas", mapper.writeValueAsString(classMap));
-        j.put("modelType", modelType);
-        j.put("dataOrderInfo", modelUtil.getDataOrderInfo());
+        JSONObject json = new JSONObject();
+        json.put("classListDatas", modelList);
+        json.put("modelDatas", mapper.writeValueAsString(classMap));
+        json.put("modelType", modelType);
+        json.put("dataOrderInfo", modelUtil.getDataOrderInfo());
 
-        out.write(j.toString());
+        response.getWriter().write(json.toString());
     }
 
     /*
@@ -758,7 +787,6 @@ public class CreateOptimizationController extends RestrictedBaseController {
      */
     @SuppressWarnings("rawtypes")
     private void extractFolder(String zipFile) {
-        int BUFFER = 2048;
         File file = new File(zipFile);
 
         try (ZipFile zip = new ZipFile(file)) {
@@ -823,8 +851,7 @@ public class CreateOptimizationController extends RestrictedBaseController {
     private List<File> listModelFiles(String directoryName) {
         File fileDirectory = new File(directoryName);
         List<File> resultList = new ArrayList<>();
-        File[] fList = fileDirectory.listFiles();
-        for (File file : fList) {
+        for (File file : fileDirectory.listFiles()) {
             if (file.isFile()) {
                 resultList.add(file);
             } else if (file.isDirectory()) {
@@ -837,9 +864,9 @@ public class CreateOptimizationController extends RestrictedBaseController {
 
     private List<String> createList() {
         List<String> list = new ArrayList<>();
-        for (Entry<String, MSAttributeObject> cMap : classMap.entrySet()) {
-            if (cMap.getValue().isPolicyTempalate()) {
-                list.add(cMap.getKey());
+        for (Entry<String, MSAttributeObject> entrySet : classMap.entrySet()) {
+            if (entrySet.getValue().isPolicyTempalate()) {
+                list.add(entrySet.getKey());
             }
 
         }

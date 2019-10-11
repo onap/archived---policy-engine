@@ -69,28 +69,25 @@ public class PolicyAdapter {
     }
 
     private String getConfigPolicyName(PolicyRestAdapter policyAdapter) {
-        String configPolicyName = null;
         if (policyAdapter.getPolicyName().startsWith("Config_PM")) {
-            configPolicyName = "ClosedLoop_PM";
+            return "ClosedLoop_PM";
         } else if (policyAdapter.getPolicyName().startsWith("Config_Fault")) {
-            configPolicyName = "ClosedLoop_Fault";
+            return "ClosedLoop_Fault";
         } else if (policyAdapter.getPolicyName().startsWith("Config_FW")) {
-            configPolicyName = "Firewall Config";
+            return "Firewall Config";
         } else if (policyAdapter.getPolicyName().startsWith("Config_BRMS_Raw")) {
-            configPolicyName = "BRMS_Raw";
+            return "BRMS_Raw";
         } else if (policyAdapter.getPolicyName().startsWith("Config_BRMS_Param")) {
-            configPolicyName = "BRMS_Param";
+            return "BRMS_Param";
         } else if (policyAdapter.getPolicyName().startsWith("Config_MS")) {
-            configPolicyName = "Micro Service";
+            return "Micro Service";
         } else if (policyAdapter.getPolicyName().startsWith("Config_OOF")) {
-            configPolicyName = "Optimization";
+            return "Optimization";
         } else if (policyAdapter.getPolicyName().startsWith("Action")
                 || policyAdapter.getPolicyName().startsWith("Decision")) {
-            // No configPolicyName is applicable
-        } else {
-            configPolicyName = "Base";
+            return null;
         }
-        return configPolicyName;
+        return "Base";
     }
 
     private void prePopulatePolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {

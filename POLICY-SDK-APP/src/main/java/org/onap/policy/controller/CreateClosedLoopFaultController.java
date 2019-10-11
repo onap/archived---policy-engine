@@ -24,7 +24,6 @@ package org.onap.policy.controller;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -91,17 +90,24 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
         // Empty constructor
     }
 
+    /**
+     * setDataToPolicyRestAdapter.
+     *
+     * @param policyData PolicyRestAdapter
+     * @param root JsonNode
+     * @return PolicyRestAdapter
+     */
     public PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter policyData, JsonNode root) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            ClosedLoopFaultTrapDatas trapDatas =
+            final ClosedLoopFaultTrapDatas trapDatas =
                     mapper.readValue(root.get("trapData").toString(), ClosedLoopFaultTrapDatas.class);
-            ClosedLoopFaultTrapDatas faultDatas =
+            final ClosedLoopFaultTrapDatas faultDatas =
                     mapper.readValue(root.get("faultData").toString(), ClosedLoopFaultTrapDatas.class);
-            ClosedLoopGridJSONData policyJsonData =
-                    mapper.readValue(root.get("policyData").get("policy").toString(), ClosedLoopGridJSONData.class);
-            ClosedLoopFaultBody jsonBody = mapper.readValue(
+            final ClosedLoopGridJsonData policyJsonData =
+                    mapper.readValue(root.get("policyData").get("policy").toString(), ClosedLoopGridJsonData.class);
+            final ClosedLoopFaultBody jsonBody = mapper.readValue(
                     root.get("policyData").get("policy").get("jsonBodyData").toString(), ClosedLoopFaultBody.class);
 
             // Build trapSignatureDatas list from faultData
@@ -118,10 +124,10 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
                 triggerSignatures.setTrapMaxAge(Integer.parseInt(policyData.getTrapMaxAge()));
                 ClosedLoopFaultTriggerUISignatures uiTriggerSignatures = new ClosedLoopFaultTriggerUISignatures();
                 if (!trapSignatureDatas.isEmpty()) {
-                    uiTriggerSignatures.setSignatures(getUITriggerSignature(TRAP, trapSignatureDatas.get(0)));
+                    uiTriggerSignatures.setSignatures(getUiTriggerSignature(TRAP, trapSignatureDatas.get(0)));
                     if (!policyJsonData.getConnecttriggerSignatures().isEmpty()) {
                         uiTriggerSignatures
-                                .setConnectSignatures(getUIConnectTraps(policyJsonData.getConnecttriggerSignatures()));
+                                .setConnectSignatures(getUiConnectTraps(policyJsonData.getConnecttriggerSignatures()));
                     }
                 }
                 jsonBody.setTriggerSignaturesUsedForUI(uiTriggerSignatures);
@@ -144,19 +150,17 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
                 faultSignatures.setTimeWindow(Integer.parseInt(policyData.getVerificationclearTimeOut()));
                 ClosedLoopFaultTriggerUISignatures uifaultSignatures = new ClosedLoopFaultTriggerUISignatures();
                 if (!faultSignatureDatas.isEmpty()) {
-                    uifaultSignatures.setSignatures(getUITriggerSignature(FAULT, faultSignatureDatas.get(0)));
+                    uifaultSignatures.setSignatures(getUiTriggerSignature(FAULT, faultSignatureDatas.get(0)));
                     if (!policyJsonData.getConnectVerificationSignatures().isEmpty()) {
                         uifaultSignatures.setConnectSignatures(
-                                getUIConnectTraps(policyJsonData.getConnectVerificationSignatures()));
+                                getUiConnectTraps(policyJsonData.getConnectVerificationSignatures()));
                     }
                 }
                 jsonBody.setVerificationSignaturesUsedForUI(uifaultSignatures);
                 jsonBody.setVerificationTimeWindowUsedForUI(Integer.parseInt(policyData.getVerificationclearTimeOut()));
             }
             jsonBody.setVerificationSignatures(faultSignatures);
-            ObjectWriter om = new ObjectMapper().writer();
-            String json = om.writeValueAsString(jsonBody);
-            policyData.setJsonBody(json);
+            policyData.setJsonBody(new ObjectMapper().writer().writeValueAsString(jsonBody));
 
         } catch (Exception e) {
             policyLogger.error("Exception Occured while setting data to Adapter", e);
@@ -165,7 +169,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
     }
 
     // TODO: Can getResultBody() and getFaultBody() be merged?
-    private String getResultBody(final ClosedLoopGridJSONData policyJsonData, final List<Object> trapSignatureDatas) {
+    private String getResultBody(final ClosedLoopGridJsonData policyJsonData, final List<Object> trapSignatureDatas) {
         StringBuilder resultBody = new StringBuilder();
         if (!policyJsonData.getConnecttriggerSignatures().isEmpty()) {
             resultBody.append("(");
@@ -182,7 +186,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
         return resultBody.toString();
     }
 
-    private String getFaultBody(final ClosedLoopGridJSONData policyJsonData, final List<Object> faultSignatureDatas) {
+    private String getFaultBody(final ClosedLoopGridJsonData policyJsonData, final List<Object> faultSignatureDatas) {
         StringBuilder faultBody = new StringBuilder();
         if (!policyJsonData.getConnectVerificationSignatures().isEmpty()) {
             faultBody.append("(");
@@ -341,7 +345,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
                 attributesStr = attributesStr + "(" + readAttributes(objectList, iy) + ")";
             } catch (NumberFormatException e) {
                 try {
-                    trap1Attrib = getVarbindOID(trap1Attrib);
+                    trap1Attrib = getVarbindOid(trap1Attrib);
                     attributesStr = attributesStr + "(" + URLEncoder.encode(trap1Attrib, ENC_UTF_8) + ")";
                 } catch (UnsupportedEncodingException e1) {
                     policyLogger.error("Caused Exception while Encoding Varbind Dictionary Values", e1);
@@ -349,7 +353,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
             }
         } else {
             try {
-                trap1Attrib = getVarbindOID(trap1Attrib);
+                trap1Attrib = getVarbindOid(trap1Attrib);
                 attributesStr = attributesStr + "(" + URLEncoder.encode(trap1Attrib, ENC_UTF_8) + ")";
             } catch (UnsupportedEncodingException e) {
                 policyLogger.error("Caused Exception while Encoding Varbind Dictionary Values", e);
@@ -358,7 +362,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
         return attributesStr;
     }
 
-    private String getVarbindOID(String attrib) {
+    private String getVarbindOid(String attrib) {
         VarbindDictionary varbindId;
         try {
             varbindId =
@@ -372,7 +376,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
 
     // connect traps data set to JSON Body as String
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private String getUIConnectTraps(List<Object> connectTrapSignatures) {
+    private String getUiConnectTraps(List<Object> connectTrapSignatures) {
         StringBuilder resultBody = new StringBuilder();
         String connectMainBody = "";
         for (Object connectTrapSignature : connectTrapSignatures) {
@@ -413,7 +417,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
     }
 
     // get Trigger signature from JSON body
-    private String getUITriggerSignature(String trap, Object object2) {
+    private String getUiTriggerSignature(String trap, Object object2) {
         ClosedLoopFaultTrapDatas trapDatas = (ClosedLoopFaultTrapDatas) object2;
         List<Object> attributeList = new ArrayList<>();
         // Read the Trap
@@ -474,6 +478,12 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
         return triggerBody.toString();
     }
 
+    /**
+     * prePopulateClosedLoopFaultPolicyData.
+     *
+     * @param policyAdapter PolicyRestAdapter
+     * @param entity PolicyEntity
+     */
     public void prePopulateClosedLoopFaultPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         if (policyAdapter.getPolicyData() instanceof PolicyType) {
             PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
@@ -482,7 +492,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
             setPolicyAdapterPolicyNameAndDescription(policyAdapter, policy);
 
             // Set PolicyAdapter JsonBodyData, timeout settings
-            setClosedLoopJSONFile(policyAdapter, entity);
+            setClosedLoopJsonFile(policyAdapter, entity);
 
             // Get the target data under policy.
             TargetType target = policy.getTarget();
@@ -550,11 +560,11 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
         policyAdapter.setPolicyDescription(description);
     }
 
-    private void setClosedLoopJSONFile(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-        ObjectMapper mapper = new ObjectMapper();
+    private void setClosedLoopJsonFile(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         try {
             ClosedLoopFaultBody closedLoopBody =
-                    mapper.readValue(entity.getConfigurationData().getConfigBody(), ClosedLoopFaultBody.class);
+                    new ObjectMapper().readValue(entity.getConfigurationData().getConfigBody(),
+                            ClosedLoopFaultBody.class);
             if ("ACTIVE".equalsIgnoreCase(closedLoopBody.getClosedLoopPolicyStatus())) {
                 closedLoopBody.setClosedLoopPolicyStatus("Active");
             } else {
@@ -580,7 +590,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
 
 @Getter
 @Setter
-class ClosedLoopGridJSONData {
+class ClosedLoopGridJsonData {
 
     private String clearTimeOut;
     private String trapMaxAge;

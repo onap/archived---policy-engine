@@ -8,9 +8,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
@@ -66,6 +65,11 @@ public class ActionPolicyController extends RestrictedBaseController {
         // Default Constructor
     }
 
+    /**
+     * prePopulateActionPolicyData.
+     *
+     * @param policyAdapter PolicyRestAdapter
+     */
     public void prePopulateActionPolicyData(PolicyRestAdapter policyAdapter) {
         ruleAlgorithmList = new ArrayList<>();
         performer.put("PDP", "PDPAction");
@@ -152,11 +156,10 @@ public class ActionPolicyController extends RestrictedBaseController {
         policyAdapter.setPolicyDescription(description);
     }
 
-    private void setPolicyAdapterRuleAlgorithmschoices(PolicyRestAdapter policyAdapter, RuleType o) {
-        ConditionType condition = o.getCondition();
-        if (condition != null) {
+    private void setPolicyAdapterRuleAlgorithmschoices(PolicyRestAdapter policyAdapter, RuleType ruleType) {
+        if (ruleType.getCondition() != null) {
             int index = 0;
-            ApplyType actionApply = (ApplyType) condition.getExpression().getValue();
+            ApplyType actionApply = (ApplyType) ruleType.getCondition().getExpression().getValue();
             ruleAlgorithmTracker = new LinkedList<>();
             // Populating Rule Algorithms starting from compound.
             prePopulateCompoundRuleAlgorithm(index, actionApply);

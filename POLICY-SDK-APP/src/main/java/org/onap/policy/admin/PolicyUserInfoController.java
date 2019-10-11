@@ -53,15 +53,12 @@ public class PolicyUserInfoController extends RestrictedBaseController {
      */
     @RequestMapping(value = "/get_PolicyUserInfo", method = RequestMethod.GET)
     public void getPolicyUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        JsonMessage msg;
         try {
             String userId = UserUtils.getUserSession(request).getOrgUserId();
             Map<String, Object> model = new HashMap<>();
-            ObjectMapper mapper = new ObjectMapper();
             model.put("userid", userId);
-            msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject json = new JSONObject(msg);
-            response.getWriter().write(json.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(
+                    new ObjectMapper().writeValueAsString(model))).toString());
         } catch (Exception e) {
             LOGGER.error("Exception Occurred" + e);
         }

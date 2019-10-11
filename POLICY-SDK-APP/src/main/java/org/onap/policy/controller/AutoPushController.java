@@ -32,7 +32,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -99,6 +98,9 @@ public class AutoPushController extends RestrictedBaseController {
         this.policyController = policyController;
     }
 
+    /**
+     * refreshGroups.
+     */
     public synchronized void refreshGroups() {
         synchronized (this.groups) {
             this.groups.clear();
@@ -124,6 +126,12 @@ public class AutoPushController extends RestrictedBaseController {
         return scopes;
     }
 
+    /**
+     * getPolicyGroupContainerData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @RequestMapping(
             value = {"/get_AutoPushPoliciesContainerData"},
             method = {RequestMethod.GET},
@@ -169,18 +177,25 @@ public class AutoPushController extends RestrictedBaseController {
             ObjectMapper mapper = new ObjectMapper();
             model.put("policydatas", mapper.writeValueAsString(data));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-            JSONObject j = new JSONObject(msg);
-            response.getWriter().write(j.toString());
+            response.getWriter().write(new JSONObject(msg).toString());
         } catch (Exception e) {
             logger.error("Exception Occurred" + e);
         }
     }
 
+    /**
+     * pushPolicyToPDPGroup.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return ModelAndView
+     * @throws IOException IOException
+     */
     @RequestMapping(value = {"/auto_Push/PushPolicyToPDP.htm"}, method = {RequestMethod.POST})
     public ModelAndView pushPolicyToPDPGroup(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         try {
-            ArrayList<Object> selectedPDPS = new ArrayList<>();
+            ArrayList<Object> selectedPdps = new ArrayList<>();
             ArrayList<String> selectedPoliciesInUI = new ArrayList<>();
             PolicyController controller = getPolicyControllerInstance();
             this.groups.addAll(controller.getPapEngine().getOnapPDPGroups());
@@ -191,17 +206,17 @@ public class AutoPushController extends RestrictedBaseController {
 
             String userId = UserUtils.getUserSession(request).getOrgUserId();
             logger.info(
-                    "****************************************Logging UserID while Pushing  Policy to PDP Group*****************************************");
+                    "**********************Logging UserID while Pushing  Policy to PDP Group***********************");
             logger.info("UserId:  " + userId + "Push Policy Data:  " + root.get("pushTabData").toString());
             logger.info(
-                    "***********************************************************************************************************************************");
+                    "**********************************************************************************************");
 
             AutoPushTabAdapter adapter = mapper.readValue(root.get("pushTabData").toString(), AutoPushTabAdapter.class);
             for (Object pdpGroupId : adapter.getPdpDatas()) {
-                LinkedHashMap<?, ?> selectedPDP = (LinkedHashMap<?, ?>) pdpGroupId;
+                LinkedHashMap<?, ?> selectedPdp = (LinkedHashMap<?, ?>) pdpGroupId;
                 for (OnapPDPGroup pdpGroup : this.groups) {
-                    if (pdpGroup.getId().equals(selectedPDP.get("id"))) {
-                        selectedPDPS.add(pdpGroup);
+                    if (pdpGroup.getId().equals(selectedPdp.get("id"))) {
+                        selectedPdps.add(pdpGroup);
                     }
                 }
             }
@@ -213,7 +228,7 @@ public class AutoPushController extends RestrictedBaseController {
                 selectedPoliciesInUI.add(policyName);
             }
 
-            for (Object pdpDestinationGroupId : selectedPDPS) {
+            for (Object pdpDestinationGroupId : selectedPdps) {
                 Set<PDPPolicy> currentPoliciesInGroup = new HashSet<>();
                 Set<PDPPolicy> selectedPolicies = new HashSet<>();
                 for (String policyId : selectedPoliciesInUI) {
@@ -259,10 +274,9 @@ public class AutoPushController extends RestrictedBaseController {
                     BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
                     bw.write(policyEntity.getPolicyData());
                     bw.close();
-                    URI selectedURI = temp.toURI();
                     try {
                         // Create the policy
-                        selectedPolicy = new StdPDPPolicy(name, true, id, selectedURI);
+                        selectedPolicy = new StdPDPPolicy(name, true, id, temp.toURI());
                     } catch (IOException e) {
                         logger.error("Unable to create policy '" + name + "': " + e.getMessage(), e);
                     }
@@ -328,8 +342,7 @@ public class AutoPushController extends RestrictedBaseController {
                 PrintWriter out = response.getWriter();
                 refreshGroups();
                 JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-                JSONObject j = new JSONObject(msg);
-                out.write(j.toString());
+                out.write(new JSONObject(msg).toString());
                 //
                 // Why is this here? This defeats the purpose of the loop??
                 // Sonar says to remove it or make it conditional
@@ -339,13 +352,15 @@ public class AutoPushController extends RestrictedBaseController {
         } catch (Exception e) {
             response.setCharacterEncoding(UTF8);
             request.setCharacterEncoding(UTF8);
-            PrintWriter out = response.getWriter();
             logger.error(e);
-            out.write(PolicyUtils.CATCH_EXCEPTION);
+            response.getWriter().write(PolicyUtils.CATCH_EXCEPTION);
         }
         return null;
     }
 
+    /**
+     * removePDPGroup.
+     */
     @SuppressWarnings("unchecked")
     @RequestMapping(value = {"/auto_Push/remove_GroupPolicies.htm"}, method = {RequestMethod.POST})
     public ModelAndView removePDPGroup(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -355,16 +370,16 @@ public class AutoPushController extends RestrictedBaseController {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
-            StdPDPGroup group = mapper.readValue(root.get("activePdpGroup").toString(), StdPDPGroup.class);
-            JsonNode removePolicyData = root.get("data");
+            final StdPDPGroup group = mapper.readValue(root.get("activePdpGroup").toString(), StdPDPGroup.class);
+            final JsonNode removePolicyData = root.get("data");
 
             String userId = UserUtils.getUserSession(request).getOrgUserId();
             logger.info(
-                    "****************************************Logging UserID while Removing Policy from PDP Group*****************************************");
+                    "**********************Logging UserID while Removing Policy from PDP Group*********************");
             logger.info("UserId:  " + userId + "PDP Group Data:  " + root.get("activePdpGroup").toString()
                     + "Remove Policy Data: " + root.get("data"));
             logger.info(
-                    "***********************************************************************************************************************************");
+                    "**********************************************************************************************");
 
             policyContainer = new PDPPolicyContainer(group);
             if (removePolicyData.size() > 0) {
@@ -388,18 +403,13 @@ public class AutoPushController extends RestrictedBaseController {
 
             PrintWriter out = response.getWriter();
             refreshGroups();
-            JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-            JSONObject j = new JSONObject(msg);
-
-            out.write(j.toString());
-
+            out.write(new JSONObject(new JsonMessage(mapper.writeValueAsString(groups))).toString());
             return null;
         } catch (Exception e) {
             response.setCharacterEncoding(UTF8);
             request.setCharacterEncoding(UTF8);
-            PrintWriter out = response.getWriter();
             logger.error(e);
-            out.write(PolicyUtils.CATCH_EXCEPTION);
+            response.getWriter().write(PolicyUtils.CATCH_EXCEPTION);
         }
         return null;
     }

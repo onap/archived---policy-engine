@@ -563,6 +563,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
         return false;
     }
 
+    @SuppressWarnings("rawtypes")
     private boolean isContinue(List<String> roles, String scope, UserInfo userInfo, Set scopes) {
         if (roles.contains(admin) || roles.contains(editor)) {
             if (scopes.isEmpty()) {

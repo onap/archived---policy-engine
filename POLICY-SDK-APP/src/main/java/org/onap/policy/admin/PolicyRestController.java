@@ -132,11 +132,10 @@ public class PolicyRestController extends RestrictedBaseController {
      */
     @RequestMapping(value = {"/policycreation/save_policy"}, method = {RequestMethod.POST})
     public void policyCreationController(HttpServletRequest request, HttpServletResponse response) {
-        String userId = UserUtils.getUserSession(request).getOrgUserId();
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         try {
-            updateAndSendToPap(request, response, userId, mapper);
+            updateAndSendToPap(request, response, UserUtils.getUserSession(request).getOrgUserId(), mapper);
         } catch (Exception e) {
             policyLogger.error("Exception Occured while saving policy", e);
         }
@@ -171,9 +170,8 @@ public class PolicyRestController extends RestrictedBaseController {
         policyData.setUserId(userId);
 
         String result;
-        String body = PolicyUtils.objectToJsonString(policyData);
-        String uri = request.getRequestURI();
-        ResponseEntity<?> responseEntity = sendToPap(body, uri, HttpMethod.POST);
+        ResponseEntity<?> responseEntity = sendToPap(PolicyUtils.objectToJsonString(policyData),
+                request.getRequestURI(), HttpMethod.POST);
         if (responseEntity != null && responseEntity.getBody().equals(HttpServletResponse.SC_CONFLICT)) {
             result = "PolicyExists";
         } else if (responseEntity != null) {
@@ -236,10 +234,10 @@ public class PolicyRestController extends RestrictedBaseController {
 
     private ResponseEntity<?> sendToPap(String body, String requestUri, HttpMethod method) {
         String papUrl = PolicyController.getPapUrl();
-        String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
         String papPass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
-        Base64.Encoder encoder = Base64.getEncoder();
-        String encoding = encoder.encodeToString((papID + ":" + papPass).getBytes(StandardCharsets.UTF_8));
+        String encoding = Base64.getEncoder().encodeToString(
+                (XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)
+                + ":" + papPass).getBytes(StandardCharsets.UTF_8));
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTHORIZATION, BASIC + encoding);
         headers.set(CONTENT_TYPE, PolicyController.getContenttype());
@@ -286,25 +284,23 @@ public class PolicyRestController extends RestrictedBaseController {
     }
 
     private String callPap(HttpServletRequest request, String method, String uriValue) {
-        String papUrl = PolicyController.getPapUrl();
-        String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
         PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY));
         String papPass = PeCryptoUtils.decrypt((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)));
 
         Base64.Encoder encoder = Base64.getEncoder();
-        String encoding = encoder.encodeToString((papID + ":" + papPass).getBytes(StandardCharsets.UTF_8));
+        String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)
+                + ":" + papPass).getBytes(StandardCharsets.UTF_8));
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTHORIZATION, BASIC + encoding);
         headers.set(CONTENT_TYPE, PolicyController.getContenttype());
 
         HttpURLConnection connection = null;
-        List<FileItem> items;
         FileItem item = null;
         File file = null;
         String uri = uriValue;
         if (uri.contains(IMPORT_DICTIONARY)) {
             try {
-                items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+                List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
                 item = items.get(0);
                 file = new File(item.getName());
                 String newFile = file.toString();
@@ -315,7 +311,7 @@ public class PolicyRestController extends RestrictedBaseController {
         }
 
         try {
-            URL url = new URL(papUrl + uri);
+            URL url = new URL(PolicyController.getPapUrl() + uri);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(method);
             connection.setUseCaches(false);
@@ -358,7 +354,6 @@ public class PolicyRestController extends RestrictedBaseController {
 
     private void checkUri(HttpServletRequest request, String uri, HttpURLConnection connection, FileItem item)
             throws IOException {
-        String boundary;
         if (!(uri.endsWith("set_BRMSParamData") || uri.contains(IMPORT_DICTIONARY))) {
             connection.setRequestProperty(CONTENT_TYPE, PolicyController.getContenttype());
             ObjectMapper mapper = new ObjectMapper();
@@ -385,7 +380,7 @@ public class PolicyRestController extends RestrictedBaseController {
                 IOUtils.copy(request.getInputStream(), os);
             }
         } else {
-            boundary = "===" + System.currentTimeMillis() + "===";
+            String boundary = "===" + System.currentTimeMillis() + "===";
             connection.setRequestProperty(CONTENT_TYPE, "multipart/form-data; boundary=" + boundary);
             try (OutputStream os = connection.getOutputStream()) {
                 if (item != null) {
@@ -407,8 +402,7 @@ public class PolicyRestController extends RestrictedBaseController {
 
     private String doConnect(final HttpURLConnection connection) throws IOException {
         connection.connect();
-        int responseCode = connection.getResponseCode();
-        if (responseCode == 200) {
+        if (connection.getResponseCode() == 200) {
             // get the response content into a String
             String responseJson = null;
             // read the inputStream into a buffer (trick found online scans entire input looking for end-of-file)
@@ -438,9 +432,9 @@ public class PolicyRestController extends RestrictedBaseController {
      */
     @RequestMapping(value = {"/getDictionary/*"}, method = {RequestMethod.GET})
     public void getDictionaryController(HttpServletRequest request, HttpServletResponse response) {
-        String uri = request.getRequestURI().replace("/getDictionary", "");
         String body;
-        ResponseEntity<?> responseEntity = sendToPap(null, uri, HttpMethod.GET);
+        ResponseEntity<?> responseEntity = sendToPap(null, request.getRequestURI().replace("/getDictionary", ""),
+                HttpMethod.GET);
         if (responseEntity != null) {
             body = responseEntity.getBody().toString();
         } else {
@@ -542,8 +536,7 @@ public class PolicyRestController extends RestrictedBaseController {
                 data.add("Elastic Search Server is down");
                 resultList = data;
             } else {
-                JSONObject json = new JSONObject(body);
-                resultList = json.get("policyresult");
+                resultList = new JSONObject(body).get("policyresult");
             }
         } catch (Exception e) {
             policyLogger.error(
@@ -555,9 +548,7 @@ public class PolicyRestController extends RestrictedBaseController {
 
         response.setCharacterEncoding(PolicyController.getCharacterencoding());
         response.setContentType(PolicyController.getContenttype());
-        PrintWriter out = response.getWriter();
-        JSONObject json = new JSONObject("{result: " + resultList + "}");
-        out.write(json.toString());
+        response.getWriter().write(new JSONObject("{result: " + resultList + "}").toString());
         return null;
     }
 
@@ -595,9 +586,7 @@ public class PolicyRestController extends RestrictedBaseController {
         response.setContentType("application / json");
         request.setCharacterEncoding(UTF_8);
 
-        PrintWriter out = response.getWriter();
-        JSONObject json2 = new JSONObject("{result: " + resultList + "}");
-        out.write(json2.toString());
+        response.getWriter().write(new JSONObject("{result: " + resultList + "}").toString());
         return null;
     }
 
