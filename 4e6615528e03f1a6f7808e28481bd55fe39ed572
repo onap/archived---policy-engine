@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e52db5e2_00175914",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-11T18:59:01Z",
+      "side": 1,
+      "message": "Added this check here - if there are any examples of these Policies somewhere, perhaps someone could email it to me so I can re-formulate the test.",
+      "range": {
+        "startLine": 221,
+        "startChar": 11,
+        "endLine": 222,
+        "endChar": 83
+      },
+      "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
