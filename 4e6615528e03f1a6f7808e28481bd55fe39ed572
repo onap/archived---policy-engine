@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "7152dc43_93833e7a",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T13:38:30Z",
+      "side": 1,
+      "message": "personally, I think a \"for\" loop makes a little more sense here, given the amount of code in the lambda expression",
+      "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e52db5e2_00175914",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
         "patchSetId": 4
@@ -22,6 +39,74 @@
       "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3f8d277_c8867dff",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T13:38:30Z",
+      "side": 1,
+      "message": "need to check inner.isEmpty()?",
+      "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3570b0a_acee230f",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreatePolicyController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T13:38:30Z",
+      "side": 1,
+      "message": "use a \"for\" loop?",
+      "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e032bc4e_b5aa38bb",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreatePolicyController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T13:38:30Z",
+      "side": 1,
+      "message": "use a \"for\" loop?",
+      "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "790b71e0_107334a9",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreatePolicyController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T13:38:30Z",
+      "side": 1,
+      "message": "checkstyle: rename \"o\"",
+      "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
