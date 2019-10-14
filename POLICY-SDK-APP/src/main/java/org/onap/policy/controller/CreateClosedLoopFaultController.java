@@ -485,30 +485,31 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
      * @param entity PolicyEntity
      */
     public void prePopulateClosedLoopFaultPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-        if (policyAdapter.getPolicyData() instanceof PolicyType) {
-            PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
-
-            // Set PolicyAdapter policyName, description
-            setPolicyAdapterPolicyNameAndDescription(policyAdapter, policy);
-
-            // Set PolicyAdapter JsonBodyData, timeout settings
-            setClosedLoopJsonFile(policyAdapter, entity);
-
-            // Get the target data under policy.
-            TargetType target = policy.getTarget();
-            if (target == null) {
-                return;
-            }
-
-            // Under target we have AnyOFType
-            List<AnyOfType> anyOfList = target.getAnyOf();
-            if (anyOfList == null) {
-                return;
-            }
-
-            // Set PolicyAdapter OnapNameField, riskType, riskLevel, guard, ttlDate from match attributes
-            setPolicyAdapterMatchAttributes(policyAdapter, anyOfList);
+        if (! (policyAdapter.getPolicyData() instanceof PolicyType)) {
+            return;
         }
+        PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
+
+        // Set PolicyAdapter policyName, description
+        setPolicyAdapterPolicyNameAndDescription(policyAdapter, policy);
+
+        // Set PolicyAdapter JsonBodyData, timeout settings
+        setClosedLoopJsonFile(policyAdapter, entity);
+
+        // Get the target data under policy.
+        TargetType target = policy.getTarget();
+        if (target == null) {
+            return;
+        }
+
+        // Under target we have AnyOFType
+        List<AnyOfType> anyOfList = target.getAnyOf();
+        if (anyOfList == null) {
+            return;
+        }
+
+        // Set PolicyAdapter OnapNameField, riskType, riskLevel, guard, ttlDate from match attributes
+        setPolicyAdapterMatchAttributes(policyAdapter, anyOfList);
     }
 
     private void setPolicyAdapterMatchAttributes(PolicyRestAdapter policyAdapter, List<AnyOfType> anyOfList) {

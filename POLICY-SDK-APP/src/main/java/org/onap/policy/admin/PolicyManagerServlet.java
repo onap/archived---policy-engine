@@ -413,8 +413,8 @@ public class PolicyManagerServlet extends HttpServlet {
         String userId = UserUtils.getUserSession(request).getOrgUserId();
         List<Object> userRoles = controller.getRoles(userId);
         Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
-        List<String> roles = pair.u;
-        Set<String> scopes = pair.t;
+        List<String> roles = pair.theU;
+        Set<String> scopes = pair.theT;
         if (roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST)) {
             if (scopes.isEmpty()) {
                 return false;
@@ -646,8 +646,8 @@ public class PolicyManagerServlet extends HttpServlet {
         String userId = testUserID != null ? testUserID : UserUtils.getUserSession(request).getOrgUserId();
         List<Object> userRoles = getPolicyControllerInstance().getRoles(userId);
         Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
-        List<String> roles = pair.u;
-        Set<String> scopes = pair.t;
+        List<String> roles = pair.theU;
+        Set<String> scopes = pair.theT;
         Map<String, String> roleByScope = org.onap.policy.utils.UserUtils.getRoleByScope(userRoles);
 
         List<JSONObject> resultList = new ArrayList<>();

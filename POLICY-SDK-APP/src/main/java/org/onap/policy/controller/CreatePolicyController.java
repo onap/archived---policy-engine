@@ -22,7 +22,6 @@ package org.onap.policy.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -85,26 +84,17 @@ public class CreatePolicyController extends RestrictedBaseController {
         //
         if (target != null) {
             // Under target we have AnyOFType
-            List<AnyOfType> anyOfList = target.getAnyOf();
-            Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
-            while (iterAnyOf.hasNext()) {
-                AnyOfType anyOf = iterAnyOf.next();
+            for (AnyOfType anyOf : target.getAnyOf()) {
                 // Under AnyOFType we have AllOFType
                 //
                 // NOTE: anyOf.getAllOf() will NEVER return null
                 //
-                List<AllOfType> allOfList = anyOf.getAllOf();
-                Iterator<AllOfType> iterAllOf = allOfList.iterator();
                 int index = 0;
-                while (iterAllOf.hasNext()) {
-                    AllOfType allOf = iterAllOf.next();
+                for (AllOfType allOf : anyOf.getAllOf()) {
                     // Under AllOFType we have Match
                     // NOTE: allOf.getMatch() will NEVER be NULL
                     //
-                    List<MatchType> matchList = allOf.getMatch();
-                    Iterator<MatchType> iterMatch = matchList.iterator();
-                    while (iterMatch.hasNext()) {
-                        MatchType match = iterMatch.next();
+                    for (MatchType match : allOf.getMatch()) {
                         //
                         // Under the match we have attribute value and
                         // attributeDesignator. So,finally down to the actual attribute.
@@ -149,10 +139,10 @@ public class CreatePolicyController extends RestrictedBaseController {
             policyAdapter.setAttributes(attributeList);
         }
         List<Object> ruleList = policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
-        for (Object o : ruleList) {
-            if (o instanceof RuleType) {
+        for (Object object : ruleList) {
+            if (object instanceof RuleType) {
                 // get the condition data under the rule for rule Algorithms.
-                policyAdapter.setRuleID(((RuleType) o).getRuleId());
+                policyAdapter.setRuleID(((RuleType) object).getRuleId());
             }
         }
     }

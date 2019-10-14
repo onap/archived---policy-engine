@@ -37,7 +37,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -347,39 +346,39 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         // for Triggers
         ObjectMapper mapper = new ObjectMapper();
         JsonNode tempJsonNode = mapper.readTree(cleanJson);
-        if (ruleCheck) {
-            ObjectNode finalJson = (ObjectNode) tempJsonNode;
-            JsonNode object = tempJsonNode.get("content");
-            String primaryKey1 = model.getRuleFormation();
-            String[] primaryKeyForSignatures = primaryKey1.split("@");
-            for (String primaryKeyForSignature : primaryKeyForSignatures) {
-                String primarykeyAlarm = primaryKeyForSignature.substring(0, primaryKeyForSignature.indexOf('.'));
-                JsonNode triggerSig = object.get(primarykeyAlarm);
-                sigRules = new HashMap<>();
-                String parseKey = primaryKeyForSignature.substring(primaryKeyForSignature.indexOf('.') + 1);
-                StringBuilder sb = null;
-                if (triggerSig instanceof ArrayNode) {
-                    for (int i = 0; i < triggerSig.size(); i++) {
-                        sb = new StringBuilder();
-                        parseData(triggerSig.get(i), parseKey);
-                        sb.append("(");
-                        List<?> keyList = new ArrayList<>(sigRules.keySet());
-                        for (int j = keyList.size() - 1; j >= 0; j--) {
-                            String key = (String) keyList.get(j);
-                            String jsonNode = sigRules.get(key);
-                            constructRule(sb, jsonNode, sigRules);
-                        }
-                        sb.append(")").toString();
-                        putRuletoJson(tempJsonNode, i, sb, parseKey, primarykeyAlarm);
-                        sigRules = new HashMap<>();
-                    }
-                } else {
-                    sb = new StringBuilder();
-                    parseData(triggerSig, parseKey);
-                }
-            }
-            policyAdapter.setJsonBody(finalJson.toString());
+        if (! ruleCheck) {
+            return policyAdapter;
         }
+        ObjectNode finalJson = (ObjectNode) tempJsonNode;
+        JsonNode object = tempJsonNode.get("content");
+        String primaryKey1 = model.getRuleFormation();
+        String[] primaryKeyForSignatures = primaryKey1.split("@");
+        for (String primaryKeyForSignature : primaryKeyForSignatures) {
+            String primarykeyAlarm = primaryKeyForSignature.substring(0, primaryKeyForSignature.indexOf('.'));
+            JsonNode triggerSig = object.get(primarykeyAlarm);
+            sigRules = new HashMap<>();
+            String parseKey = primaryKeyForSignature.substring(primaryKeyForSignature.indexOf('.') + 1);
+            StringBuilder sb = null;
+            if (triggerSig instanceof ArrayNode) {
+                for (int i = 0; i < triggerSig.size(); i++) {
+                    sb = new StringBuilder();
+                    parseData(triggerSig.get(i), parseKey);
+                    sb.append("(");
+                    List<?> keyList = new ArrayList<>(sigRules.keySet());
+                    for (int j = keyList.size() - 1; j >= 0; j--) {
+                        String key = (String) keyList.get(j);
+                        String jsonNode = sigRules.get(key);
+                        constructRule(sb, jsonNode, sigRules);
+                    }
+                    sb.append(")").toString();
+                    putRuletoJson(tempJsonNode, i, sb, parseKey, primarykeyAlarm);
+                    sigRules = new HashMap<>();
+                }
+            } else {
+                parseData(triggerSig, parseKey);
+            }
+        }
+        policyAdapter.setJsonBody(finalJson.toString());
         return policyAdapter;
     }
 
@@ -925,7 +924,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             allMnyTrueKeys = allkeys.toString();
         }
 
-        String jsonModel = createMicroSeriveJson(returnModel, allkeys);
+        String jsonModel = createMicroSeriveJson(returnModel);
 
         JSONObject jsonObject = new JSONObject(jsonModel);
 
@@ -983,7 +982,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private String createMicroSeriveJson(MicroServiceModels returnModel, Set<String> allkeys) {
+    private String createMicroSeriveJson(MicroServiceModels returnModel) {
         Map<String, String> attributeMap = new HashMap<>();
         Map<String, String> refAttributeMap = new HashMap<>();
         String attribute = returnModel.getAttributes();
@@ -1294,28 +1293,18 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         if (target == null) {
             return;
         }
-        // Under target we have AnyOFType
-        List<AnyOfType> anyOfList = target.getAnyOf();
-        if (anyOfList == null) {
-            return;
-        }
-        Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
-        while (iterAnyOf.hasNext()) {
-            AnyOfType anyOf = iterAnyOf.next();
-            // Under AnyOFType we have AllOFType
-            List<AllOfType> allOfList = anyOf.getAllOf();
-            if (allOfList == null) {
-                continue;
-            }
-            Iterator<AllOfType> iterAllOf = allOfList.iterator();
-            while (iterAllOf.hasNext()) {
-                AllOfType allOf = iterAllOf.next();
+        for (AnyOfType anyOf : target.getAnyOf()) {
+            for (AllOfType allOf : anyOf.getAllOf()) {
                 // Under AllOFType we have Match
                 List<MatchType> matchList = allOf.getMatch();
                 if (matchList == null) {
                     continue;
                 }
                 Iterator<MatchType> iterMatch = matchList.iterator();
+                //
+                // Can someone please explain why the matchList MUST have
+                // more than 1 matches???
+                //
                 while (matchList.size() > 1 && iterMatch.hasNext()) {
                     MatchType match = iterMatch.next();
                     //
@@ -1558,9 +1547,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             response.setContentType("application / json");
             request.setCharacterEncoding("UTF-8");
 
-            JSONObject j = new JSONObject();
-            j.put("errorMsg", errorMsg);
-            response.getWriter().write(j.toString());
+            JSONObject json = new JSONObject();
+            json.put("errorMsg", errorMsg);
+            response.getWriter().write(json.toString());
             return;
         }
 
@@ -1593,7 +1582,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             classMap = new LinkedHashMap<>();
             for (File file : fileList) {
                 if (!file.isDirectory() && file.getName().endsWith(".xmi")) {
-                    retreiveDependency(file.toString(), true);
+                    retrieveDependency(file.toString());
                 }
             }
 
@@ -1657,7 +1646,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
      */
     @SuppressWarnings("rawtypes")
     private void extractFolder(String zipFile) {
-        int buffer = 2048;
+        final int buffer = 2048;
         File file = new File(zipFile);
 
         try (ZipFile zip = new ZipFile(file)) {
@@ -1705,7 +1694,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         }
     }
 
-    private void retreiveDependency(String workingFile, Boolean modelClass) {
+    private void retrieveDependency(String workingFile) {
 
         MSModelUtils utils = new MSModelUtils(PolicyController.getMsOnapName(), PolicyController.getMsPolicyName());
         Map<String, MSAttributeObject> tempMap;
@@ -1714,9 +1703,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
         classMap.putAll(tempMap);
         LOGGER.info(tempMap);
-
-        return;
-
     }
 
     private List<File> listModelFiles(String directoryName) {
@@ -1797,7 +1783,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
     }
 
 }
-
 
 @Getter
 @Setter

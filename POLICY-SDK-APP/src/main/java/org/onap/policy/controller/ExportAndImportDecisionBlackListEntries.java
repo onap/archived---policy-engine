@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -85,7 +85,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
     /**
      * This method is used to Export the Black List entries data from Decision BlackList Guard YAML Policy. So, user can
      * update the file on adding or removing the entries, for updating the policies or using in other Environments.
-     * 
+     *
      * @param request the request contains the policy data. So, based on that we can populate and read and write the
      *        entries.
      * @param response after reading and writing the blacklist list entries to file, the file is copied to tmp directory
@@ -118,7 +118,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
 
             /*
              * Export FileName is the combination of BlacList+Scope+PolicyName+Version+PolicyCreatedDate.
-             * 
+             *
              */
 
             SimpleDateFormat parseFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -164,7 +164,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
     /**
      * This method is used to import the BlackList excel file into the system. Which is used to create Decision
      * Blacklist Guard YAML Policy.
-     * 
+     *
      * @param request the HTTP request contains file upload stream form GUI.
      * @param response the response is send to the GUI after reading the file input stream.
      */
@@ -182,9 +182,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
             } else {
                 readItems(items, errorLogs, model);
             }
-            JsonMessage msg = new JsonMessage(mapper.toJson(model));
-            JSONObject jsonResposne = new JSONObject(msg);
-            response.getWriter().write(jsonResposne.toString());
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.toJson(model))).toString());
         } catch (FileUploadException | IOException e) {
             policyLogger.error("Exception Occured while importing the BlackListEntry", e);
         }
@@ -192,7 +190,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
 
     /**
      * This method is used to read the first item, as we expect only one entry in the file upload.
-     * 
+     *
      * @param items The file entries which were uploaded from GUI.
      * @param errorLogs on adding all incorrect entries, we can let user know what need to fixed.
      * @param model Map which stores key value (blacklist and append list data)
@@ -219,7 +217,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
 
     /**
      * This method is used to read the workbook in xls file item.
-     * 
+     *
      * @param fileName fileName as input parameter
      * @param errorLogs on adding all incorrect entries, we can let user know what need to fixed.
      * @param model Map which stores key value (blacklist and append list data)
@@ -247,7 +245,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
 
     /**
      * This method is used to read all the rows from imported Excel sheet and set to respective objects.
-     * 
+     *
      * @param rowIterator Excel Sheet rows are passed as input parameters.
      * @param blackListEntries the data is set to this object, which is going to be added.
      * @param appendBlackListEntries the data is set to this object which is going to be removed.
@@ -267,7 +265,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
 
     /**
      * This method is used to read all the cells in the row.
-     * 
+     *
      * @param cellIterator iterating the cells and will parse based on the cell type.
      * @param blackListEntries the data is set to this object, which is going to be added.
      * @param appendBlackListEntries the data is set to this object which is going to be removed.
@@ -301,7 +299,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
 
     /**
      * This method is used to read the Action cell entry.
-     * 
+     *
      * @param cell reading the action entry cell.
      * @param lineNo counts the number of the cell.
      * @param errorLogs on adding all incorrect entries, we can let user know what need to fixed.
@@ -329,7 +327,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
 
     /**
      * This method is used to read the BlackList cell entry.
-     * 
+     *
      * @param cell reading the blacklist entry cell.
      * @param lineNo counts the number of the cell.
      * @param errorLogs on adding all incorrect entries, we can let user know what need to fixed.
@@ -354,7 +352,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
 
     /**
      * This method is used to add the data to blacklist and append list after parsing each and every row.
-     * 
+     *
      * @param actionEntry it has the input to add or not and holds either 0 or 1.
      * @param blackListEntries list to add blacklist entries based on action entry = 1.
      * @param appendBlackListEntries list to add append list entries based on action entry = 0.
@@ -371,7 +369,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
 
     /**
      * This method is used to identify the header of the cell.
-     * 
+     *
      * @param cell Excel sheet cell is passed as input parameter.
      * @return the column header name value
      */

@@ -268,8 +268,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
         // Check if the Role and Scope Size are Null get the values from db.
         List<Object> userRoles = controller.getRoles(userId);
         Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
-        List<String> roles = pair.u;
-        Set<String> scopes = pair.t;
+        List<String> roles = pair.theU;
+        Set<String> scopes = pair.theT;
 
         try (FileInputStream excelFile = new FileInputStream(new File(file));
                 HSSFWorkbook workbook = new HSSFWorkbook(excelFile)) {

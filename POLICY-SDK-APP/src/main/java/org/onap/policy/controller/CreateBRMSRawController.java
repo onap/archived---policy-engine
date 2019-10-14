@@ -55,36 +55,37 @@ public class CreateBRMSRawController {
 
     public void prePopulateBRMSRawPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 
-        if (policyAdapter.getPolicyData() instanceof PolicyType) {
-            PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
-            policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
-
-            // Set PolicyAdapter name value
-            setPolicyAdapterNameValue(policyAdapter);
-
-            // Set PolicyAdapter description.
-            setPolicyAdapterDescription(policyAdapter, policy);
-
-            // Set PolicyAdapter attributes.
-            setPolicyAdapterAttributes(policyAdapter, policy);
-
-            // Set PolicyAdapter configBodyData
-            policyAdapter.setConfigBodyData(entity.getConfigurationData().getConfigBody());
-
-            // Get the target data under policy.
-            TargetType target = policy.getTarget();
-            if (target == null) {
-                return;
-            }
-            // Under target we have AnyOFType
-            List<AnyOfType> anyOfList = target.getAnyOf();
-            if (anyOfList == null) {
-                return;
-            }
-
-            // Set PolicyAdapter riskType, riskLevel, guard, ttlDate from match attributes
-            setPolicyAdapterMatchAttributes(policyAdapter, policy.getTarget().getAnyOf());
+        if (! (policyAdapter.getPolicyData() instanceof PolicyType)) {
+            return;
         }
+        PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
+        policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
+
+        // Set PolicyAdapter name value
+        setPolicyAdapterNameValue(policyAdapter);
+
+        // Set PolicyAdapter description.
+        setPolicyAdapterDescription(policyAdapter, policy);
+
+        // Set PolicyAdapter attributes.
+        setPolicyAdapterAttributes(policyAdapter, policy);
+
+        // Set PolicyAdapter configBodyData
+        policyAdapter.setConfigBodyData(entity.getConfigurationData().getConfigBody());
+
+        // Get the target data under policy.
+        TargetType target = policy.getTarget();
+        if (target == null) {
+            return;
+        }
+        // Under target we have AnyOFType
+        List<AnyOfType> anyOfList = target.getAnyOf();
+        if (anyOfList == null) {
+            return;
+        }
+
+        // Set PolicyAdapter riskType, riskLevel, guard, ttlDate from match attributes
+        setPolicyAdapterMatchAttributes(policyAdapter, policy.getTarget().getAnyOf());
     }
 
     private void setPolicyAdapterMatchAttributes(PolicyRestAdapter policyAdapter, List<AnyOfType> anyOfList) {

@@ -435,7 +435,7 @@ public class PolicyController extends RestrictedBaseController {
             } else {
                 userRoles = getRoles(userId);
                 Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
-                roles = pair.u;
+                roles = pair.theU;
                 if (!roles.contains(filteredRole)) {
                     savePolicyRoles(name, filteredRole, userId);
                 }
@@ -981,10 +981,10 @@ public class PolicyController extends RestrictedBaseController {
      * @return
      */
     public String convertDate(String dateTimeToLive) {
-        String formateDate = null;
+        String formatDate = null;
         if (dateTimeToLive.contains("-")) {
-            formateDate = dateTimeToLive.replace("-", "/");
+            formatDate = dateTimeToLive.replace("-", "/");
         }
-        return formateDate;
+        return formatDate;
     }
 }

@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -144,6 +143,13 @@ public class CreateOptimizationController extends RestrictedBaseController {
     private Map<String, LinkedList<String>> arrayTextList = new HashMap<>();
     CreateDcaeMicroServiceController msController = new CreateDcaeMicroServiceController();
 
+    /**
+     * setDataToPolicyRestAdapter.
+     *
+     * @param policyData PolicyRestAdapter
+     * @param root JsonNode
+     * @return PolicyRestAdapter
+     */
     public PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter policyData, JsonNode root) {
         String jsonContent = null;
         try {
@@ -559,30 +565,9 @@ public class CreateOptimizationController extends RestrictedBaseController {
         if (target == null) {
             return;
         }
-        // Under target we have AnyOFType
-        List<AnyOfType> anyOfList = target.getAnyOf();
-        if (anyOfList == null) {
-            return;
-        }
-        Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
-        while (iterAnyOf.hasNext()) {
-            AnyOfType anyOf = iterAnyOf.next();
-            // Under AnyOFType we have AllOFType
-            List<AllOfType> allOfList = anyOf.getAllOf();
-            if (allOfList == null) {
-                continue;
-            }
-            Iterator<AllOfType> iterAllOf = allOfList.iterator();
-            while (iterAllOf.hasNext()) {
-                AllOfType allOf = iterAllOf.next();
-                // Under AllOFType we have Match
-                List<MatchType> matchList = allOf.getMatch();
-                if (matchList == null) {
-                    continue;
-                }
-                Iterator<MatchType> iterMatch = matchList.iterator();
-                while (matchList.size() > 1 && iterMatch.hasNext()) {
-                    MatchType match = iterMatch.next();
+        for (AnyOfType anyOf : target.getAnyOf()) {
+            for (AllOfType allOf : anyOf.getAllOf()) {
+                for (MatchType match : allOf.getMatch()) {
                     //
                     // Under the match we have attribute value and
                     // attributeDesignator. So,finally down to the actual attribute.
@@ -843,9 +828,6 @@ public class CreateOptimizationController extends RestrictedBaseController {
 
         classMap.putAll(tempMap);
         LOGGER.info(tempMap);
-
-        return;
-
     }
 
     private List<File> listModelFiles(String directoryName) {

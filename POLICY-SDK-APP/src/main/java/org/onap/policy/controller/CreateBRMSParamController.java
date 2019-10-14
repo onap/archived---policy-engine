@@ -251,48 +251,49 @@ public class CreateBRMSParamController extends RestrictedBaseController {
      */
     public void prePopulateBRMSParamPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         dynamicLayoutMap = new HashMap<>();
-        if (policyAdapter.getPolicyData() instanceof PolicyType) {
-            PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
-            policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
-            // policy name value is the policy name without any prefix and
-            // Extensions.
-            String policyNameValue =
-                    policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("BRMS_Param_") + 11);
-            if (policyLogger.isDebugEnabled()) {
-                policyLogger
-                        .debug("Prepopulating form data for BRMS RAW Policy selected:" + policyAdapter.getPolicyName());
-            }
-            policyAdapter.setPolicyName(policyNameValue);
-            String description;
-            try {
-                description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
-            } catch (Exception e) {
-                policyLogger.info("Error getting description: " + e);
-                description = policy.getDescription();
-            }
-            policyAdapter.setPolicyDescription(description);
-            setDataAdapterFromAdviceExpressions(policy, policyAdapter);
+        if (! (policyAdapter.getPolicyData() instanceof PolicyType)) {
+            return;
+        }
+        PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
+        policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
+        // policy name value is the policy name without any prefix and
+        // Extensions.
+        String policyNameValue =
+                policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("BRMS_Param_") + 11);
+        if (policyLogger.isDebugEnabled()) {
+            policyLogger
+                    .debug("Prepopulating form data for BRMS RAW Policy selected:" + policyAdapter.getPolicyName());
+        }
+        policyAdapter.setPolicyName(policyNameValue);
+        String description;
+        try {
+            description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
+        } catch (Exception e) {
+            policyLogger.info("Error getting description: " + e);
+            description = policy.getDescription();
+        }
+        policyAdapter.setPolicyDescription(description);
+        setDataAdapterFromAdviceExpressions(policy, policyAdapter);
 
-            // Generate Param UI
-            try {
-                paramUiGenerate(policyAdapter, entity);
-            } catch (Exception e) {
-                policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage() + e);
-            }
+        // Generate Param UI
+        try {
+            paramUiGenerate(policyAdapter, entity);
+        } catch (Exception e) {
+            policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage() + e);
+        }
 
-            // Get the target data under policy.
-            policyAdapter.setDynamicLayoutMap(dynamicLayoutMap);
-            if (policyAdapter.getDynamicLayoutMap().size() > 0) {
-                LinkedHashMap<String, String> drlRule = policyAdapter.getDynamicLayoutMap().keySet().stream()
-                        .collect(Collectors.toMap(String::toString,
-                            keyValue -> policyAdapter.getDynamicLayoutMap().get(keyValue), (a, b) -> b,
-                                LinkedHashMap::new));
-                policyAdapter.setRuleData(drlRule);
-            }
-            TargetType target = policy.getTarget();
-            if (target != null) {
-                setDataToAdapterFromTarget(target, policyAdapter);
-            }
+        // Get the target data under policy.
+        policyAdapter.setDynamicLayoutMap(dynamicLayoutMap);
+        if (policyAdapter.getDynamicLayoutMap().size() > 0) {
+            LinkedHashMap<String, String> drlRule = policyAdapter.getDynamicLayoutMap().keySet().stream()
+                    .collect(Collectors.toMap(String::toString,
+                        keyValue -> policyAdapter.getDynamicLayoutMap().get(keyValue), (a, b) -> b,
+                            LinkedHashMap::new));
+            policyAdapter.setRuleData(drlRule);
+        }
+        TargetType target = policy.getTarget();
+        if (target != null) {
+            setDataToAdapterFromTarget(target, policyAdapter);
         }
     }
 
