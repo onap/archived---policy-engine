@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "c87a3785_5ba046e8",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1660,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T14:04:33Z",
+      "side": 1,
+      "message": "sure",
+      "parentUuid": "91f9d537_63fa2950",
+      "revId": "f36e53a3637e1204a42491ec0eeed7b3c763f681",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c36d7856_538a9f55",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DashboardController.java",
         "patchSetId": 2
@@ -89,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "285b68d0_c37c678c",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DashboardController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T14:04:33Z",
+      "side": 1,
+      "message": "if checkstyle is OK with the space, then I agree, it\u0027s more visible this way (though eclipse will remove it if someone reformats the code)",
+      "parentUuid": "f620134b_a220d8e2",
+      "revId": "f36e53a3637e1204a42491ec0eeed7b3c763f681",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fdd7666e_94965676",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyController.java",
         "patchSetId": 2
@@ -118,6 +154,24 @@
       "side": 1,
       "message": "Ok - can I get this also in the next review?",
       "parentUuid": "fdd7666e_94965676",
+      "revId": "f36e53a3637e1204a42491ec0eeed7b3c763f681",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bac1ff7_61af9121",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 984,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T14:04:33Z",
+      "side": 1,
+      "message": "sure",
+      "parentUuid": "cf2fcc52_0946f0a8",
       "revId": "f36e53a3637e1204a42491ec0eeed7b3c763f681",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
