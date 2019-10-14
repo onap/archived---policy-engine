@@ -2,6 +2,91 @@
   "comments": [
     {
       "key": {
+        "uuid": "9a7ec59f_974c2f19",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/components/HumanPolicyComponent.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "looks like a bug here - should probably have saved the original targetInHuman and then passed that in 784",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6e1e52c_eb58caaf",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/components/HumanPolicyComponent.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 784,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "should use individual append() calls instead of string concatenation",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d1d0729_78276ffa",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/components/HumanPolicyComponent.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 952,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "separate append() calls",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4bf31cf_d138e8f9",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/components/HumanPolicyComponent.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "put the \" \" into line 951 to avoid concatenation here",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95725ec0_a911ec0b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "use an EntrySet here to avoid the look-up at line 245",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9e8daa01_c5c90862",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
         "patchSetId": 2
@@ -22,6 +107,81 @@
       "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9d0fb2c_43ed3e56",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "Looks right to me :-)",
+      "parentUuid": "9e8daa01_c5c90862",
+      "range": {
+        "startLine": 258,
+        "startChar": 1,
+        "endLine": 258,
+        "endChar": 23
+      },
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23d05582_efb47ad1",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1305,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "can\u0027t help you there - added Praveen so maybe he can explain",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a4cd573_00f630b1",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1319,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "this should be done using a \"switch\" statement, after verifying that attributeId !\u003d null.  Either that, or all of the if\u0027s should be turned into else-if\u0027s",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5545a73_5e924dd6",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateFirewallController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "use StringUtils.isBlank()",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -48,6 +208,30 @@
     },
     {
       "key": {
+        "uuid": "143946d1_bf4ab20b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateFirewallController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "question is: what happens if it\u0027s null?  will things continue to work ok?  If not, then I\u0027d remove it.  Another question for Praveen...",
+      "parentUuid": "e998b942_67d1f329",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 0
+      },
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bd7ea54b_7185c3e8",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
         "patchSetId": 2
@@ -62,6 +246,91 @@
       "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d77e15c4_4838d756",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "do map.get(\"key\") once and cache the result.  Make this into a \"switch\" statement after checking for null",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd0a5bec_0cac87c5",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "do this once and cache the result:\n  ((RuleType) object).getAdviceExpressions()\n    .getAdviceExpression().get(0).getAdviceId())\n\nmaybe use a switch statement",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a49f7e2_2c77dda6",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "cache map.get(\"key\") and maybe use a switch statement",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dd41724a_b02ddd5e",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "use \"for\" instead of iterator",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75fb4edd_c9371548",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/utils/UserUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T19:15:17Z",
+      "side": 1,
+      "message": "think I prefer what the other \"Pair\" implementations use: first/second, key/value, left/right",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
