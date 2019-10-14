@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e8daa01_c5c90862",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-14T18:31:29Z",
+      "side": 1,
+      "message": "Hopefully I got this right.",
+      "range": {
+        "startLine": 258,
+        "startChar": 1,
+        "endLine": 258,
+        "endChar": 23
+      },
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e998b942_67d1f329",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateFirewallController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-14T18:31:29Z",
+      "side": 1,
+      "message": "Here\u0027s another head scratcher.",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 0
+      },
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd7ea54b_7185c3e8",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-14T18:31:29Z",
+      "side": 1,
+      "message": "This file was scary.",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

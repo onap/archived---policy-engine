@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0c5a9570_4742e1c7",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/model/PDPGroupContainer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-14T18:31:29Z",
+      "side": 0,
+      "message": "Moved this up in the code to be next to similar method.",
+      "range": {
+        "startLine": 431,
+        "startChar": 1,
+        "endLine": 441,
+        "endChar": 13
+      },
+      "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
