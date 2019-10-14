@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "91f9d537_63fa2950",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1660,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-14T14:00:10Z",
+      "side": 1,
+      "message": "Can I get this in the next review I am putting in? It has sonar cleanup etc.",
+      "parentUuid": "f2229f1c_924548a2",
+      "revId": "f36e53a3637e1204a42491ec0eeed7b3c763f681",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c36d7856_538a9f55",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DashboardController.java",
         "patchSetId": 2
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "f620134b_a220d8e2",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DashboardController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-14T14:00:10Z",
+      "side": 1,
+      "message": "No checkstyle was complaining about not using isEmpty. There is no new checkstyle for the space. I like to add it because visually it\u0027s hard to see (at least for me) when its butted up against the variable. But someone may argue the opposite. I folks want the space removed I don\u0027t care and can do that in the next review.",
+      "parentUuid": "c36d7856_538a9f55",
+      "revId": "f36e53a3637e1204a42491ec0eeed7b3c763f681",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fdd7666e_94965676",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyController.java",
         "patchSetId": 2
@@ -64,6 +100,24 @@
       "writtenOn": "2019-10-11T14:52:31Z",
       "side": 1,
       "message": "\"formate\" \u003d\u003e \"format\"",
+      "revId": "f36e53a3637e1204a42491ec0eeed7b3c763f681",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf2fcc52_0946f0a8",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 984,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-14T14:00:10Z",
+      "side": 1,
+      "message": "Ok - can I get this also in the next review?",
+      "parentUuid": "fdd7666e_94965676",
       "revId": "f36e53a3637e1204a42491ec0eeed7b3c763f681",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
