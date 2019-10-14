@@ -53,32 +53,28 @@ public class CreateClosedLoopPMController {
     protected PolicyRestAdapter policyAdapter = null;
 
     public void prePopulateClosedLoopPMPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-        if (policyAdapter.getPolicyData() instanceof PolicyType) {
-            Object policyData = policyAdapter.getPolicyData();
-            PolicyType policy = (PolicyType) policyData;
-
-            // Set oldPolicyFileName to PolicyAdapter
-            policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
-
-            // Set policyNameValue and description to PolicyAdapter
-            setPolicyAdapterNameValueAndDescription(policyAdapter, policy);
-
-            // Set PolicyAdapter JsonBodyData
-            setClosedLoopJsonFile(policyAdapter, entity);
-
-            // Get the target data under policy.
-            TargetType target = policy.getTarget();
-            if (target == null) {
-                return;
-            }
-            // Under target we have AnyOFType
-            List<AnyOfType> anyOfList = target.getAnyOf();
-            if (anyOfList == null) {
-                return;
-            }
-            // Set PolicyAdapter OnapNameField, riskType, riskLevel, guard, ttlDate, ServiceType from match attributes
-            setPolicyAdapterMatchAttributes(policyAdapter, anyOfList);
+        if (! (policyAdapter.getPolicyData() instanceof PolicyType)) {
+            return;
         }
+        Object policyData = policyAdapter.getPolicyData();
+        PolicyType policy = (PolicyType) policyData;
+
+        // Set oldPolicyFileName to PolicyAdapter
+        policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
+
+        // Set policyNameValue and description to PolicyAdapter
+        setPolicyAdapterNameValueAndDescription(policyAdapter, policy);
+
+        // Set PolicyAdapter JsonBodyData
+        setClosedLoopJsonFile(policyAdapter, entity);
+
+        // Get the target data under policy.
+        TargetType target = policy.getTarget();
+        if (target == null) {
+            return;
+        }
+        // Set PolicyAdapter OnapNameField, riskType, riskLevel, guard, ttlDate, ServiceType from match attributes
+        setPolicyAdapterMatchAttributes(policyAdapter, target.getAnyOf());
     }
 
     private void setPolicyAdapterNameValueAndDescription(PolicyRestAdapter policyAdapter, PolicyType policy) {

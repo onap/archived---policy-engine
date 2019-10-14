@@ -64,6 +64,11 @@ public class CommonClassDaoImplTest {
     Server server;
     CommonClassDaoImpl commonClassDao;
 
+    /**
+     * setUp.
+     *
+     * @throws Exception Exception
+     */
     @Before
     public void setUp() throws Exception {
         try {
@@ -148,17 +153,17 @@ public class CommonClassDaoImplTest {
         try {
             // Add data
             UserInfo userinfo = new UserInfo();
-            String loginId_userName = "Test";
-            userinfo.setUserLoginId(loginId_userName);
-            userinfo.setUserName(loginId_userName);
+            String loginIdUserName = "Test";
+            userinfo.setUserLoginId(loginIdUserName);
+            userinfo.setUserName(loginIdUserName);
             commonClassDao.save(userinfo);
 
             List<Object> dataCur = commonClassDao.getDataByQuery("from UserInfo", new SimpleBindings());
 
             assertEquals(1, dataCur.size());
             UserInfo cur = (UserInfo) dataCur.get(0);
-            assertEquals(loginId_userName, cur.getUserLoginId());
-            assertEquals(loginId_userName, cur.getUserName());
+            assertEquals(loginIdUserName, cur.getUserLoginId());
+            assertEquals(loginIdUserName, cur.getUserName());
 
             assertFalse(dataCur.isEmpty());
 
@@ -190,7 +195,7 @@ public class CommonClassDaoImplTest {
             assertTrue(1 == dataCur.size());
             assertTrue(dataCur.get(0) instanceof PolicyEntity);
             assertEquals(name, ((PolicyEntity) dataCur.get(0)).getPolicyName());
-            assertEquals(pe, ((PolicyEntity) dataCur.get(0)));
+            assertEquals(pe, (dataCur.get(0)));
 
         } catch (Exception e) {
             logger.debug("Exception Occured" + e);
@@ -229,7 +234,7 @@ public class CommonClassDaoImplTest {
             List<Object> dataCur = commonClassDao.getDataByQuery(query, params);
 
             assertTrue(1 == dataCur.size());
-            assertEquals(pv, (PolicyVersion) dataCur.get(0));
+            assertEquals(pv, dataCur.get(0));
 
         } catch (Exception e) {
             logger.debug("Exception Occured" + e);
@@ -244,11 +249,11 @@ public class CommonClassDaoImplTest {
         try {
             // Add data
             WatchPolicyNotificationTable watch = new WatchPolicyNotificationTable();
-            String policyFileName = "banana";
             watch.setLoginIds("Test");
             watch.setPolicyName("bananaWatch");
             commonClassDao.save(watch);
 
+            String policyFileName = "banana";
             if (policyFileName.contains("/")) {
                 policyFileName = policyFileName.substring(0, policyFileName.indexOf("/"));
                 policyFileName = policyFileName.replace("/", File.separator);
@@ -268,7 +273,7 @@ public class CommonClassDaoImplTest {
             // Assertions
             assertTrue(dataCur.size() == 1);
             assertTrue(dataCur.get(0) instanceof WatchPolicyNotificationTable);
-            assertEquals(watch, (WatchPolicyNotificationTable) dataCur.get(0));
+            assertEquals(watch, dataCur.get(0));
 
         } catch (Exception e) {
             logger.debug("Exception Occured" + e);
@@ -294,19 +299,19 @@ public class CommonClassDaoImplTest {
             commonClassDao.save(pe);
 
             String dbCheckName = "dummyScope:action";
-            String[] splitDBCheckName = dbCheckName.split(":");
 
             // Current Implementation
             String query = "FROM PolicyEntity where policyName like :splitDBCheckName1 and scope = :splitDBCheckName0";
             SimpleBindings params = new SimpleBindings();
-            params.put("splitDBCheckName1", splitDBCheckName[1] + "%");
-            params.put("splitDBCheckName0", splitDBCheckName[0]);
+            String[] splitDbCheckName = dbCheckName.split(":");
+            params.put("splitDBCheckName1", splitDbCheckName[1] + "%");
+            params.put("splitDBCheckName0", splitDbCheckName[0]);
             List<Object> dataCur = commonClassDao.getDataByQuery(query, params);
 
             // Assertions
             assertTrue(dataCur.size() == 1);
             assertTrue(dataCur.get(0) instanceof PolicyEntity);
-            assertEquals(pe, (PolicyEntity) dataCur.get(0));
+            assertEquals(pe, dataCur.get(0));
 
         } catch (Exception e) {
             logger.debug("Exception Occured" + e);
@@ -337,7 +342,7 @@ public class CommonClassDaoImplTest {
             // Assertions
             assertTrue(dataCur.size() == 1);
             assertTrue(dataCur.get(0) instanceof WatchPolicyNotificationTable);
-            assertEquals(watch, (WatchPolicyNotificationTable) dataCur.get(0));
+            assertEquals(watch, dataCur.get(0));
 
         } catch (Exception e) {
             logger.debug("Exception Occured" + e);
@@ -381,8 +386,8 @@ public class CommonClassDaoImplTest {
 
             if (dataCur.size() >= 1) {
                 assertTrue(dataCur.get(0) instanceof WatchPolicyNotificationTable);
-                assertFalse(watch.equals((WatchPolicyNotificationTable) dataCur.get(0)));
-                assertFalse(watch.equals((WatchPolicyNotificationTable) dataCur.get(0)));
+                assertFalse(watch.equals(dataCur.get(0)));
+                assertFalse(watch.equals(dataCur.get(0)));
             }
         } catch (Exception e) {
             logger.debug("Exception Occured" + e);

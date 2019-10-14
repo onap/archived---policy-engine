@@ -31,7 +31,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -339,15 +338,9 @@ public class AutoPushController extends RestrictedBaseController {
                 response.setContentType("application / json");
                 request.setCharacterEncoding(UTF8);
 
-                PrintWriter out = response.getWriter();
                 refreshGroups();
-                JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-                out.write(new JSONObject(msg).toString());
-                //
-                // Why is this here? This defeats the purpose of the loop??
-                // Sonar says to remove it or make it conditional
-                //
-                return null;
+                response.getWriter().write(new JSONObject(
+                        new JsonMessage(mapper.writeValueAsString(groups))).toString());
             }
         } catch (Exception e) {
             response.setCharacterEncoding(UTF8);
@@ -401,10 +394,8 @@ public class AutoPushController extends RestrictedBaseController {
             response.setContentType("application / json");
             request.setCharacterEncoding(UTF8);
 
-            PrintWriter out = response.getWriter();
             refreshGroups();
-            out.write(new JSONObject(new JsonMessage(mapper.writeValueAsString(groups))).toString());
-            return null;
+            response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(groups))).toString());
         } catch (Exception e) {
             response.setCharacterEncoding(UTF8);
             request.setCharacterEncoding(UTF8);

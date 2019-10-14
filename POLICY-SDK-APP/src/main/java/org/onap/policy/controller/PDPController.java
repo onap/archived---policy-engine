@@ -47,7 +47,6 @@ import org.onap.policy.model.PDPGroupContainer;
 import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
-import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
 import org.onap.policy.xacml.std.pap.StdPDP;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
@@ -99,8 +98,8 @@ public class PDPController extends RestrictedBaseController {
                 String userId = isJunit() ? "Test" : UserUtils.getUserSession(request).getOrgUserId();
                 List<Object> userRoles = controller.getRoles(userId);
                 Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
-                roles = pair.u;
-                scopes = pair.t;
+                roles = pair.second;
+                scopes = pair.first;
 
                 if (!junit && controller.getPapEngine() == null) {
                     setPapEngine(request);

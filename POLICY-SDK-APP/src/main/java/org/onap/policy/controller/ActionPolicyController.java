@@ -34,6 +34,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
@@ -71,36 +72,37 @@ public class ActionPolicyController extends RestrictedBaseController {
         performer.put("PDP", "PDPAction");
         performer.put("PEP", "PEPAction");
 
-        if (policyAdapter.getPolicyData() instanceof PolicyType) {
-            PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
+        if (! (policyAdapter.getPolicyData() instanceof PolicyType)) {
+            return;
+        }
+        PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
 
-            // 1. Set policy-name, policy-filename and description to Policy Adapter
-            setPolicyAdapterPolicyNameAndDesc(policyAdapter, policy);
+        // 1. Set policy-name, policy-filename and description to Policy Adapter
+        setPolicyAdapterPolicyNameAndDesc(policyAdapter, policy);
 
-            // 2a. Get the target data under policy for Action.
-            TargetType target = policy.getTarget();
-            if (target == null) {
-                return;
+        // 2a. Get the target data under policy for Action.
+        TargetType target = policy.getTarget();
+        if (target == null) {
+            return;
+        }
+
+        // 2b. Set attributes to Policy Adapter
+        setPolicyAdapterAttributes(policyAdapter, target.getAnyOf());
+
+        List<Object> ruleList = policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
+        // Under rule we have Condition and obligation.
+        for (Object o : ruleList) {
+            if (!(o instanceof RuleType)) {
+                continue;
             }
+            // 3. Set rule-algorithm choices to Policy Adapter
+            setPolicyAdapterRuleAlgorithmschoices(policyAdapter, (RuleType) o);
 
-            // 2b. Set attributes to Policy Adapter
-            setPolicyAdapterAttributes(policyAdapter, target.getAnyOf());
+            // 4a. Get the Obligation data under the rule for Form elements.
+            ObligationExpressionsType obligations = ((RuleType) o).getObligationExpressions();
 
-            List<Object> ruleList = policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
-            // Under rule we have Condition and obligation.
-            for (Object o : ruleList) {
-                if (!(o instanceof RuleType)) {
-                    continue;
-                }
-                // 3. Set rule-algorithm choices to Policy Adapter
-                setPolicyAdapterRuleAlgorithmschoices(policyAdapter, (RuleType) o);
-
-                // 4a. Get the Obligation data under the rule for Form elements.
-                ObligationExpressionsType obligations = ((RuleType) o).getObligationExpressions();
-
-                // 4b. Set action attribute-value and action-performer to Policy Adapter
-                setPolicyAdapterActionData(policyAdapter, obligations);
-            }
+            // 4b. Set action attribute-value and action-performer to Policy Adapter
+            setPolicyAdapterActionData(policyAdapter, obligations);
         }
     }
 
@@ -194,7 +196,7 @@ public class ActionPolicyController extends RestrictedBaseController {
                 //
                 // Component attributes are saved under Target here we are fetching them back.
                 // One row is default so we are not adding dynamic component at index 0.
-                allOfType.getMatch().forEach(match -> {
+                for (MatchType match : allOfType.getMatch()) {
                     AttributeValueType attributeValue = match.getAttributeValue();
                     String value = (String) attributeValue.getContent().get(0);
                     AttributeDesignatorType designator = match.getAttributeDesignator();
@@ -203,7 +205,7 @@ public class ActionPolicyController extends RestrictedBaseController {
                     attribute.put("key", attributeId);
                     attribute.put("value", value);
                     attributeList.add(attribute);
-                });
+                }
                 policyAdapter.setAttributes(attributeList);
             }
         }
@@ -226,34 +228,33 @@ public class ActionPolicyController extends RestrictedBaseController {
                 index++;
             }
         }
-        if (isCompoundRule) {
-            // As it's compound rule, Get the Apply types
-            for (JAXBElement<?> jaxbElement : jaxbActionTypes) {
-                ApplyType innerActionApply = (ApplyType) jaxbElement.getValue();
-                index = prePopulateCompoundRuleAlgorithm(index, innerActionApply);
-            }
-            // Populate combo box
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Prepopulating Compound rule algorithm: " + index);
-            }
-            Map<String, String> rule = new HashMap<>();
-            for (String key : PolicyController.getDropDownMap().keySet()) {
-                String keyValue = PolicyController.getDropDownMap().get(key);
-                if (keyValue.equals(actionApply.getFunctionId())) {
-                    rule.put("dynamicRuleAlgorithmCombo", key);
-                }
-            }
-            rule.put("id", "A" + (index + 1));
-            // Populate Key and values for Compound Rule
-            rule.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, "A" + (ruleAlgorithmTracker.getLast() + 1));
-            ruleAlgorithmTracker.removeLast();
-            rule.put(DYNAMIC_RULE_ALGORITHM_FIELD_2, "A" + (ruleAlgorithmTracker.getLast() + 1));
-            ruleAlgorithmTracker.removeLast();
-            ruleAlgorithmTracker.addLast(index);
-            ruleAlgorithmList.add(rule);
-            index++;
+        if (!isCompoundRule) {
+            return index;
         }
-        return index;
+        // As it's compound rule, Get the Apply types
+        for (JAXBElement<?> jaxbElement : jaxbActionTypes) {
+            ApplyType innerActionApply = (ApplyType) jaxbElement.getValue();
+            index = prePopulateCompoundRuleAlgorithm(index, innerActionApply);
+        }
+        // Populate combo box
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Prepopulating Compound rule algorithm: " + index);
+        }
+        Map<String, String> rule = new HashMap<>();
+        for ( Entry<String, String> entrySet : PolicyController.getDropDownMap().entrySet()) {
+            if (entrySet.getValue().equals(actionApply.getFunctionId())) {
+                rule.put("dynamicRuleAlgorithmCombo", entrySet.getKey());
+            }
+        }
+        rule.put("id", "A" + (index + 1));
+        // Populate Key and values for Compound Rule
+        rule.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, "A" + (ruleAlgorithmTracker.getLast() + 1));
+        ruleAlgorithmTracker.removeLast();
+        rule.put(DYNAMIC_RULE_ALGORITHM_FIELD_2, "A" + (ruleAlgorithmTracker.getLast() + 1));
+        ruleAlgorithmTracker.removeLast();
+        ruleAlgorithmTracker.addLast(index);
+        ruleAlgorithmList.add(rule);
+        return ++index;
     }
 
     private void prePopulateRuleAlgorithms(int index, ApplyType actionApply, List<JAXBElement<?>> jaxbActionTypes) {
@@ -295,9 +296,11 @@ public class ActionPolicyController extends RestrictedBaseController {
             if (jaxbActionTypes.size() > 1) {
                 ApplyType innerActionApply = (ApplyType) jaxbActionTypes.get(1).getValue();
                 List<JAXBElement<?>> jaxbInnerActionTypes = innerActionApply.getExpression();
-                AttributeDesignatorType attributeDesignator =
+                if (! jaxbInnerActionTypes.isEmpty()) {
+                    AttributeDesignatorType attributeDesignator =
                         (AttributeDesignatorType) jaxbInnerActionTypes.get(0).getValue();
-                ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, attributeDesignator.getAttributeId());
+                    ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, attributeDesignator.getAttributeId());
+                }
             }
         }
         ruleAlgorithmList.add(ruleMap);
