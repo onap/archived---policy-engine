@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,18 +36,18 @@ public final class UserUtils {
     }
 
     public static class Pair<T, U> {
-        public final T t;
-        public final U u;
+        public final T theT;
+        public final U theU;
 
-        public Pair(T t, U u) {
-            this.t = t;
-            this.u = u;
+        public Pair(T inT, U inU) {
+            this.theT = inT;
+            this.theU = inU;
         }
     }
 
     /**
      * Check Role and its Scopes.
-     * 
+     *
      * @param userRoles list of UserRoles.
      * @return return role and scope from UserRole Object.
      */
@@ -76,7 +76,7 @@ public final class UserUtils {
 
     /**
      * Get Role by Scope based on UserRole Object.
-     * 
+     *
      * @param userRoles list of UserRoles.
      * @return return the map<scope, role>.
      */
@@ -95,7 +95,7 @@ public final class UserUtils {
 
     /**
      * Read non super role scopes and add to map.
-     * 
+     *
      * @param userRole Role Object.
      * @param rolesList roleList Object.
      * @return return the map<scope, role>.
@@ -116,7 +116,7 @@ public final class UserUtils {
 
     /**
      * Trim Scope Value.
-     * 
+     *
      * @param scope string scope name.
      * @return trim scope.
      */

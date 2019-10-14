@@ -1657,7 +1657,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
      */
     @SuppressWarnings("rawtypes")
     private void extractFolder(String zipFile) {
-        int buffer = 2048;
+        final int buffer = 2048;
         File file = new File(zipFile);
 
         try (ZipFile zip = new ZipFile(file)) {

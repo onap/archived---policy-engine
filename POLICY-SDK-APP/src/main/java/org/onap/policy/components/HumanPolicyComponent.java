@@ -8,9 +8,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -106,9 +106,16 @@ public class HumanPolicyComponent {
         // Default Constructor
     }
 
+    /**
+     * DescribePolicy.
+     *
+     * @param policyFile File
+     * @return JSONObject
+     */
     public static JSONObject DescribePolicy(final File policyFile) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(ENTER);
+        }
 
         HumanPolicyComponent.policyFile = policyFile;
         return humanPolicyLayout();
@@ -116,8 +123,9 @@ public class HumanPolicyComponent {
     }
 
     private static JSONObject humanPolicyLayout() {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(ENTER);
+        }
 
         try {
             String html = processPolicy();
@@ -137,8 +145,9 @@ public class HumanPolicyComponent {
         }
         try (FileInputStream pIS = new FileInputStream(policyFile)) {
             Object policy = XACMLPolicyScanner.readPolicy(pIS);
-            if (policy == null)
+            if (policy == null) {
                 throw new IllegalArgumentException("Policy File " + policyFile.getName() + " cannot be unmarshalled");
+            }
 
             HumanPolicyComponent.htmlProcessor = new HtmlProcessor(HumanPolicyComponent.policyFile, policy);
 
@@ -146,8 +155,9 @@ public class HumanPolicyComponent {
             XACMLPolicyScanner xacmlScanner = new XACMLPolicyScanner(policyPath, htmlProcessor);
             xacmlScanner.scan();
             String html = htmlProcessor.html();
-            if (LOGGER.isDebugEnabled())
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug(policyPath + System.lineSeparator() + html);
+            }
 
             return html;
 
@@ -167,6 +177,7 @@ class HtmlProcessor extends SimpleCallback {
 
     private static final String ENTER = "ENTER";
     private static Map<String, String> function2human;
+
     static {
         function2human = new HashMap<>();
         function2human.put(HumanPolicyComponent.FUNCTION_STRING_EQUAL, "equal");
@@ -177,6 +188,7 @@ class HtmlProcessor extends SimpleCallback {
     }
 
     private static Map<String, String> combiningAlgo2human;
+
     static {
         combiningAlgo2human = new HashMap<>();
         combiningAlgo2human.put("deny-overrides", "to deny if any $placeholder$ below evaluates to <i>deny</i>");
@@ -205,8 +217,9 @@ class HtmlProcessor extends SimpleCallback {
     private final Object rootPolicyObject;
 
     public HtmlProcessor(File policyFile, Object policyObject) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(ENTER);
+        }
 
         if (policyFile == null) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Null Policy File");
@@ -261,6 +274,8 @@ class HtmlProcessor extends SimpleCallback {
     }
 
     /**
+     * getAttributeIdentifiersMap.
+     *
      * @return the attributeIdentifiersMap
      */
     public Map<String, AttributeIdentifiers> getAttributeIdentifiersMap() {
@@ -269,8 +284,9 @@ class HtmlProcessor extends SimpleCallback {
 
     @Override
     public void onFinishScan(Object root) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(ENTER);
+        }
 
         if (rootPolicyObject instanceof PolicySetType) {
             htmlOut.println("</dl>");
@@ -308,43 +324,52 @@ class HtmlProcessor extends SimpleCallback {
 
     @Override
     public CallbackResult onPreVisitPolicySet(PolicySetType parent, PolicySetType policySet) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("PolicySet: " + policySet.getPolicySetId() + " Version: " + policySet.getVersion());
+        }
 
-        if (parent != null && LOGGER.isTraceEnabled())
+        if (parent != null && LOGGER.isTraceEnabled()) {
             LOGGER.trace("PolicySet: " + policySet.getPolicySetId() + "Parent PolicySet: " + parent.getPolicySetId()
                     + " Version: " + parent.getVersion());
+        }
 
         String description = policySet.getDescription();
-        if (description != null && LOGGER.isTraceEnabled())
+        if (description != null && LOGGER.isTraceEnabled()) {
             LOGGER.trace("PolicySet: " + policySet.getPolicySetId() + " Description: " + policySet.getDescription());
+        }
 
-        if (parent == null) // root
+        if (parent == null) { // root
             policySet(policySet, "dl");
-        else
+        } else {
             policySet(policySet, "li");
+        }
 
-        if (!policySet.getPolicySetOrPolicyOrPolicySetIdReference().isEmpty())
+        if (!policySet.getPolicySetOrPolicyOrPolicySetIdReference().isEmpty()) {
             htmlOut.println("<ol>");
+        }
 
         return super.onPreVisitPolicySet(parent, policySet);
     }
 
     @Override
     public CallbackResult onPostVisitPolicySet(PolicySetType parent, PolicySetType policySet) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("PolicySet: " + policySet.getPolicySetId() + " Version: " + policySet.getVersion());
+        }
 
-        if (parent != null && LOGGER.isTraceEnabled())
+        if (parent != null && LOGGER.isTraceEnabled()) {
             LOGGER.trace("PolicySet: " + policySet.getPolicySetId() + "Parent PolicySet: " + parent.getPolicySetId()
                     + " Version: " + parent.getVersion());
+        }
 
         String description = policySet.getDescription();
-        if (description != null && LOGGER.isTraceEnabled())
+        if (description != null && LOGGER.isTraceEnabled()) {
             LOGGER.trace("PolicySet: " + policySet.getPolicySetId() + " Description: " + policySet.getDescription());
+        }
 
-        if (!policySet.getPolicySetOrPolicyOrPolicySetIdReference().isEmpty())
+        if (!policySet.getPolicySetOrPolicyOrPolicySetIdReference().isEmpty()) {
             htmlOut.println("</ol>");
+        }
 
         htmlOut.println("<p></p>");
 
@@ -352,21 +377,25 @@ class HtmlProcessor extends SimpleCallback {
     }
 
     public void policySet(PolicySetType policySet, String htmlListElement) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("PolicySet: " + policySet.getPolicySetId());
+        }
 
         String combiningAlgorithm = "-";
         String id = "-";
         String version = "-";
 
-        if (policySet.getPolicyCombiningAlgId() != null)
+        if (policySet.getPolicyCombiningAlgId() != null) {
             combiningAlgorithm = extractLastIdentifier(policySet.getPolicyCombiningAlgId(), ":");
+        }
 
-        if (policySet.getPolicySetId() != null)
+        if (policySet.getPolicySetId() != null) {
             id = extractLastIdentifier(policySet.getPolicySetId(), ":");
+        }
 
-        if (policySet.getVersion() != null)
+        if (policySet.getVersion() != null) {
             version = policySet.getVersion();
+        }
 
         htmlOut.println("<" + htmlListElement + "><b>Policy Set ID</b>: <i>" + id + "</i>  (v" + version + ") " + "</"
                 + htmlListElement + ">");
@@ -378,8 +407,7 @@ class HtmlProcessor extends SimpleCallback {
             htmlOut.print("<p>");
             htmlOut.print("This policy set applies to requests with attributes ");
 
-            List<AnyOfType> anyOf_s = policySet.getTarget().getAnyOf();
-            target(anyOf_s);
+            target(policySet.getTarget().getAnyOf());
             htmlOut.println(".</p>");
         }
 
@@ -398,57 +426,68 @@ class HtmlProcessor extends SimpleCallback {
 
     @Override
     public CallbackResult onPreVisitPolicy(PolicySetType parent, PolicyType policy) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("PolicySet: " + policy.getPolicyId() + " Version: " + policy.getVersion());
+        }
 
-        if (parent != null && LOGGER.isTraceEnabled())
+        if (parent != null && LOGGER.isTraceEnabled()) {
             LOGGER.trace("PolicySet: " + policy.getPolicyId() + "Parent PolicySet: " + parent.getPolicySetId()
                     + " Version: " + parent.getVersion());
+        }
 
         String description = policy.getDescription();
-        if (description != null && LOGGER.isTraceEnabled())
+        if (description != null && LOGGER.isTraceEnabled()) {
             LOGGER.trace("PolicySet: " + policy.getPolicyId() + " Description: " + policy.getDescription());
+        }
 
         policy(policy);
 
-        if (!policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().isEmpty())
+        if (!policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().isEmpty()) {
             htmlOut.println("<ol type=\"i\">");
+        }
 
         return super.onPreVisitPolicy(parent, policy);
     }
 
     @Override
     public CallbackResult onPostVisitPolicy(PolicySetType parent, PolicyType policy) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("PolicySet: " + policy.getPolicyId() + " Version: " + policy.getVersion());
+        }
 
-        if (parent != null && LOGGER.isTraceEnabled())
+        if (parent != null && LOGGER.isTraceEnabled()) {
             LOGGER.trace("PolicySet: " + policy.getPolicyId() + "Parent PolicySet: " + parent.getPolicySetId()
                     + " Version: " + parent.getVersion());
+        }
 
-        if (!policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().isEmpty())
+        if (!policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().isEmpty()) {
             htmlOut.println("</ol>");
+        }
 
         htmlOut.println("<p></p>");
         return super.onPostVisitPolicy(parent, policy);
     }
 
     public void policy(PolicyType policy) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("Policy: " + policy.getPolicyId());
+        }
 
         String combiningAlgorithm = "-";
         String id = "-";
         String version = "-";
 
-        if (policy.getRuleCombiningAlgId() != null)
+        if (policy.getRuleCombiningAlgId() != null) {
             combiningAlgorithm = extractLastIdentifier(policy.getRuleCombiningAlgId(), ":");
+        }
 
-        if (policy.getPolicyId() != null)
+        if (policy.getPolicyId() != null) {
             id = extractLastIdentifier(policy.getPolicyId(), ":");
+        }
 
-        if (policy.getVersion() != null)
+        if (policy.getVersion() != null) {
             version = policy.getVersion();
+        }
 
         htmlOut.println("<li><b>Policy ID</b>: <i>" + id + "</i>  (v" + version + ") " + "</li>");
 
@@ -459,8 +498,7 @@ class HtmlProcessor extends SimpleCallback {
             htmlOut.print("<p>");
             htmlOut.print("This policy applies to requests with attributes ");
 
-            List<AnyOfType> anyOf_s = policy.getTarget().getAnyOf();
-            target(anyOf_s);
+            target(policy.getTarget().getAnyOf());
             htmlOut.println(".</p>");
         }
 
@@ -478,11 +516,13 @@ class HtmlProcessor extends SimpleCallback {
 
     @Override
     public CallbackResult onPreVisitRule(PolicyType parent, RuleType rule) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("Rule: " + rule.getRuleId());
+        }
 
-        if (parent != null && LOGGER.isTraceEnabled())
+        if (parent != null && LOGGER.isTraceEnabled()) {
             LOGGER.trace("Parent Policy: " + parent.getPolicyId() + " Version: " + parent.getVersion());
+        }
 
         String description = rule.getDescription();
         if (description != null && LOGGER.isTraceEnabled()) {
@@ -496,23 +536,21 @@ class HtmlProcessor extends SimpleCallback {
 
     @Override
     public CallbackResult onPostVisitRule(PolicyType parent, RuleType rule) {
-        if (LOGGER.isTraceEnabled())
-            LOGGER.trace("Rule: " + rule.getRuleId());
 
-        if (parent != null && LOGGER.isTraceEnabled())
+        if (parent != null && LOGGER.isTraceEnabled()) {
             LOGGER.trace("Parent Policy: " + parent.getPolicyId() + " Version: " + parent.getVersion());
+        }
 
         return super.onPostVisitRule(parent, rule);
     }
 
     public void rule(RuleType rule) {
-        if (LOGGER.isTraceEnabled())
-            LOGGER.trace("Rule: " + rule.getRuleId());
 
         String id = "-";
 
-        if (rule.getRuleId() != null)
+        if (rule.getRuleId() != null) {
             id = extractLastIdentifier(rule.getRuleId(), ":");
+        }
 
         htmlOut.println("<li><b>Rule ID</b>: <i>" + id + "</i></li>");
 
@@ -524,9 +562,8 @@ class HtmlProcessor extends SimpleCallback {
         if (rule.getTarget() == null || rule.getTarget().getAnyOf() == null || rule.getTarget().getAnyOf().isEmpty()) {
             htmlOut.print(" for all requests");
         } else {
-            List<AnyOfType> anyOf_s = rule.getTarget().getAnyOf();
             htmlOut.print(" for requests with attributes ");
-            target(anyOf_s);
+            target(rule.getTarget().getAnyOf());
         }
 
         if (rule.getCondition() != null) {
@@ -538,8 +575,9 @@ class HtmlProcessor extends SimpleCallback {
 
         if (rule.getAdviceExpressions() != null) {
             advice(rule.getAdviceExpressions());
-            if (rule.getObligationExpressions() != null)
+            if (rule.getObligationExpressions() != null) {
                 htmlOut.println(" and ");
+            }
         }
 
         if (rule.getObligationExpressions() != null) {
@@ -550,8 +588,9 @@ class HtmlProcessor extends SimpleCallback {
     }
 
     private void advice(AdviceExpressionsType adviceExpressions) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(ENTER);
+        }
 
         List<AdviceExpressionType> ae = adviceExpressions.getAdviceExpression();
         for (AdviceExpressionType expression : ae) {
@@ -567,8 +606,9 @@ class HtmlProcessor extends SimpleCallback {
     }
 
     private void obligation(ObligationExpressionsType obligationExpressions) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(ENTER);
+        }
 
         List<ObligationExpressionType> oe = obligationExpressions.getObligationExpression();
         for (ObligationExpressionType expression : oe) {
@@ -584,11 +624,14 @@ class HtmlProcessor extends SimpleCallback {
     }
 
     /**
-     * @param assignments
+     * processAttributeAssignments.
+     *
+     * @param assignments List of AttributeAssignmentExpressionType
      */
     private void processAttributeAssignments(List<AttributeAssignmentExpressionType> assignments) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(ENTER);
+        }
 
         for (AttributeAssignmentExpressionType assignment : assignments) {
             String succintIdentifier = extractLastIdentifier(assignment.getCategory(), ":") + ":"
@@ -618,8 +661,9 @@ class HtmlProcessor extends SimpleCallback {
                 for (Object c : avt.getContent()) {
                     countContent++;
                     htmlOut.print("<i>" + c + "</i>");
-                    if (countContent < numContent)
+                    if (countContent < numContent) {
                         htmlOut.print(" or ");
+                    }
                 }
                 htmlOut.println("</li>");
             } else if (assignmentObject instanceof AttributeDesignatorType
@@ -632,118 +676,118 @@ class HtmlProcessor extends SimpleCallback {
     }
 
     /**
-     * 
-     * @param anyOfList
+     * target.
+     *
+     * @param anyOfList List of AnyOfType's
      */
     public void target(List<AnyOfType> anyOfList) {
-        if (LOGGER.isTraceEnabled())
+        if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(ENTER);
+        }
 
-        if (anyOfList != null) {
-            Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
-            StringBuilder targetInHuman = new StringBuilder();
-            while (iterAnyOf.hasNext()) {
-                AnyOfType anyOf = iterAnyOf.next();
-                List<AllOfType> allOfList = anyOf.getAllOf();
-                if (allOfList != null) {
-                    Iterator<AllOfType> iterAllOf = allOfList.iterator();
-                    while (iterAllOf.hasNext()) {
-                        AllOfType allOf = iterAllOf.next();
-                        List<MatchType> matchList = allOf.getMatch();
-                        if (matchList != null) {
-                            Iterator<MatchType> iterMatch = matchList.iterator();
-                            if (matchList.size() > 1)
-                                targetInHuman.append("(");
-                            while (iterMatch.hasNext()) {
-                                MatchType match = iterMatch.next();
-                                //
-                                // Finally down to the actual attribute
-                                //
-                                StdAttribute attribute = null;
-                                AttributeValueType value = match.getAttributeValue();
-                                String attributeDataType;
-                                if (match.getAttributeDesignator() != null && value != null) {
-                                    AttributeDesignatorType designator = match.getAttributeDesignator();
-                                    attribute = new StdAttribute(new IdentifierImpl(designator.getCategory()),
-                                            new IdentifierImpl(designator.getAttributeId()),
-                                            new StdAttributeValue<List<?>>(new IdentifierImpl(value.getDataType()),
-                                                    value.getContent()),
-                                            designator.getIssuer(), false);
-                                    attributeDataType = designator.getDataType();
-                                } else if (match.getAttributeSelector() != null && value != null) {
-                                    AttributeSelectorType selector = match.getAttributeSelector();
-                                    attribute = new StdAttribute(new IdentifierImpl(selector.getCategory()),
-                                            new IdentifierImpl(selector.getContextSelectorId()),
-                                            new StdAttributeValue<List<?>>(new IdentifierImpl(value.getDataType()),
-                                                    value.getContent()),
-                                            null, false);
-                                    attributeDataType = selector.getDataType();
-                                } else {
-                                    LOGGER.warn("NULL designator/selector or value for match.");
-                                    attributeDataType = "NA";
-                                }
+        if (anyOfList == null) {
+            return;
+        }
+        Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
+        StringBuilder targetInHuman = new StringBuilder();
+        while (iterAnyOf.hasNext()) {
+            AnyOfType anyOf = iterAnyOf.next();
+            List<AllOfType> allOfList = anyOf.getAllOf();
+            Iterator<AllOfType> iterAllOf = allOfList.iterator();
+            while (iterAllOf.hasNext()) {
+                AllOfType allOf = iterAllOf.next();
+                List<MatchType> matchList = allOf.getMatch();
+                Iterator<MatchType> iterMatch = matchList.iterator();
+                if (matchList.size() > 1) {
+                    targetInHuman.append("(");
+                }
+                while (iterMatch.hasNext()) {
+                    MatchType match = iterMatch.next();
+                    //
+                    // Finally down to the actual attribute
+                    //
+                    StdAttribute attribute = null;
+                    AttributeValueType value = match.getAttributeValue();
+                    String attributeDataType;
+                    if (match.getAttributeDesignator() != null && value != null) {
+                        AttributeDesignatorType designator = match.getAttributeDesignator();
+                        attribute = new StdAttribute(new IdentifierImpl(designator.getCategory()),
+                                new IdentifierImpl(designator.getAttributeId()),
+                                new StdAttributeValue<List<?>>(new IdentifierImpl(value.getDataType()),
+                                        value.getContent()),
+                                designator.getIssuer(), false);
+                        attributeDataType = designator.getDataType();
+                    } else if (match.getAttributeSelector() != null && value != null) {
+                        AttributeSelectorType selector = match.getAttributeSelector();
+                        attribute = new StdAttribute(new IdentifierImpl(selector.getCategory()),
+                                new IdentifierImpl(selector.getContextSelectorId()),
+                                new StdAttributeValue<List<?>>(new IdentifierImpl(value.getDataType()),
+                                        value.getContent()),
+                                null, false);
+                        attributeDataType = selector.getDataType();
+                    } else {
+                        LOGGER.warn("NULL designator/selector or value for match.");
+                        attributeDataType = "NA";
+                    }
 
-                                String functionName = getHumanFunction(match.getMatchId());
-                                if (attribute != null) {
-                                    String succintIdentifier = extractLastIdentifier(
-                                            attribute.getCategory().stringValue(), ":") + ":"
-                                            + extractLastIdentifier(attribute.getAttributeId().stringValue(), ":");
-                                    AttributeIdentifiers ai =
-                                            new AttributeIdentifiers(attribute.getCategory().stringValue(),
-                                                    attributeDataType, attribute.getAttributeId().stringValue());
-                                    this.attributeIdentifiersMap.put(succintIdentifier, ai);
+                    String functionName = getHumanFunction(match.getMatchId());
+                    if (attribute != null) {
+                        String succintIdentifier = extractLastIdentifier(
+                                attribute.getCategory().stringValue(), ":") + ":"
+                                + extractLastIdentifier(attribute.getAttributeId().stringValue(), ":");
+                        AttributeIdentifiers ai =
+                                new AttributeIdentifiers(attribute.getCategory().stringValue(),
+                                        attributeDataType, attribute.getAttributeId().stringValue());
+                        this.attributeIdentifiersMap.put(succintIdentifier, ai);
 
-                                    targetInHuman.append("<i><a href=\"#" + succintIdentifier + "\">"
-                                            + succintIdentifier + "</a></i> " + functionName + " ");
+                        targetInHuman.append("<i><a href=\"#" + succintIdentifier + "\">"
+                                + succintIdentifier + "</a></i> " + functionName + " ");
 
-                                    int numAttributes = attribute.getValues().size();
-                                    int count = 0;
-                                    for (AttributeValue<?> v : attribute.getValues()) {
-                                        count++;
-                                        if (v.getValue() instanceof Collection<?>) {
-                                            Collection<?> value_s = (Collection<?>) v.getValue();
-                                            int numValues = value_s.size();
-                                            int countValues = 0;
-                                            for (Object o : value_s) {
-                                                countValues++;
-                                                targetInHuman.append(" <I>" + o + "</I>");
-                                                if (countValues < numValues) {
-                                                    targetInHuman.append(", or");
-                                                }
-                                            }
-                                        } else {
-                                            targetInHuman.append(" <I>" + v.getValue() + "</I>");
-                                            if (count < numAttributes) {
-                                                targetInHuman.append(", or ");
-                                            }
-                                        }
+                        int numAttributes = attribute.getValues().size();
+                        int count = 0;
+                        for (AttributeValue<?> v : attribute.getValues()) {
+                            count++;
+                            if (v.getValue() instanceof Collection<?>) {
+                                Collection<?> collectionValues = (Collection<?>) v.getValue();
+                                int numValues = collectionValues.size();
+                                int countValues = 0;
+                                for (Object o : collectionValues) {
+                                    countValues++;
+                                    targetInHuman.append(" <I>" + o + "</I>");
+                                    if (countValues < numValues) {
+                                        targetInHuman.append(", or");
                                     }
                                 }
-
-                                if (iterMatch.hasNext()) {
-                                    targetInHuman.append(" and ");
+                            } else {
+                                targetInHuman.append(" <I>" + v.getValue() + "</I>");
+                                if (count < numAttributes) {
+                                    targetInHuman.append(", or ");
                                 }
-                            } // end iterMatch
-                            if (matchList.size() > 1) {
-                                targetInHuman.append(")");
                             }
                         }
-                        if (iterAllOf.hasNext()) {
-                            targetInHuman.append(" or ");
-                        }
-                    } // end iterAllOf
-                }
-                if (iterAnyOf.hasNext()) {
-                    targetInHuman = new StringBuilder();
-                    targetInHuman.append("(" + targetInHuman + ")" + " or ");
-                } else {
-                    if (anyOfList.size() > 1) {
-                        targetInHuman.append(")");
                     }
+
+                    if (iterMatch.hasNext()) {
+                        targetInHuman.append(" and ");
+                    }
+                } // end iterMatch
+                if (matchList.size() > 1) {
+                    targetInHuman.append(")");
                 }
-            } // end iterAnyOf
-            htmlOut.println(targetInHuman);
+            }
+            if (iterAllOf.hasNext()) {
+                targetInHuman.append(" or ");
+            }
+        } // end iterAllOf
+        if (iterAnyOf.hasNext()) {
+            targetInHuman = new StringBuilder();
+            targetInHuman.append("(" + targetInHuman + ")" + " or ");
+        } else {
+            if (anyOfList.size() > 1) {
+                targetInHuman.append(")");
+            }
         }
+        htmlOut.println(targetInHuman);
     }
 
     private String getHumanFunction(String matchId) {
@@ -813,12 +857,12 @@ class HtmlProcessor extends SimpleCallback {
                 } else {
                     StringBuilder forResult = new StringBuilder();
                     for (JAXBElement<?> e : exps) {
-                        Object v = e.getValue();
+                        Object theValue = e.getValue();
                         if (LOGGER.isDebugEnabled()) {
-                            LOGGER.debug("one-and-only children: " + v);
+                            LOGGER.debug("one-and-only children: " + theValue);
                         }
-                        if (v != null) {
-                            forResult.append(stringifyExpression(v));
+                        if (theValue != null) {
+                            forResult.append(stringifyExpression(theValue));
                         }
                     }
                     return forResult.toString();
@@ -838,8 +882,8 @@ class HtmlProcessor extends SimpleCallback {
                 }
                 StringBuilder applySubresult = new StringBuilder();
                 for (JAXBElement<?> e : apply.getExpression()) {
-                    Object v = e.getValue();
-                    if (v != null) {
+                    Object theValue = e.getValue();
+                    if (theValue != null) {
                         applySubresult.append(this.stringifyExpression(e.getValue()));
                     }
                 }
@@ -904,11 +948,11 @@ class HtmlProcessor extends SimpleCallback {
         if (expression instanceof AttributeValueType) {
             AttributeValueType avt = (AttributeValueType) expression;
             List<Object> content = avt.getContent();
-            StringBuilder value_s = new StringBuilder();
+            StringBuilder stringValue = new StringBuilder();
             for (Object o : content) {
-                value_s.append(" " + o.toString());
+                stringValue.append(" " + o.toString());
             }
-            return " " + value_s.toString();
+            return " " + stringValue.toString();
         }
         if (expression instanceof VariableReferenceType) {
             //

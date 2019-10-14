@@ -34,6 +34,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
@@ -194,7 +195,7 @@ public class ActionPolicyController extends RestrictedBaseController {
                 //
                 // Component attributes are saved under Target here we are fetching them back.
                 // One row is default so we are not adding dynamic component at index 0.
-                allOfType.getMatch().forEach(match -> {
+                for (MatchType match : allOfType.getMatch()) {
                     AttributeValueType attributeValue = match.getAttributeValue();
                     String value = (String) attributeValue.getContent().get(0);
                     AttributeDesignatorType designator = match.getAttributeDesignator();
@@ -203,7 +204,7 @@ public class ActionPolicyController extends RestrictedBaseController {
                     attribute.put("key", attributeId);
                     attribute.put("value", value);
                     attributeList.add(attribute);
-                });
+                }
                 policyAdapter.setAttributes(attributeList);
             }
         }
@@ -295,9 +296,11 @@ public class ActionPolicyController extends RestrictedBaseController {
             if (jaxbActionTypes.size() > 1) {
                 ApplyType innerActionApply = (ApplyType) jaxbActionTypes.get(1).getValue();
                 List<JAXBElement<?>> jaxbInnerActionTypes = innerActionApply.getExpression();
-                AttributeDesignatorType attributeDesignator =
+                if (! jaxbInnerActionTypes.isEmpty()) {
+                    AttributeDesignatorType attributeDesignator =
                         (AttributeDesignatorType) jaxbInnerActionTypes.get(0).getValue();
-                ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, attributeDesignator.getAttributeId());
+                    ruleMap.put(DYNAMIC_RULE_ALGORITHM_FIELD_1, attributeDesignator.getAttributeId());
+                }
             }
         }
         ruleAlgorithmList.add(ruleMap);

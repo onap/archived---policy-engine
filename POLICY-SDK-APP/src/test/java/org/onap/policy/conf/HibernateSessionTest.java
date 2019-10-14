@@ -31,6 +31,10 @@ import org.mockito.Mockito;
 import org.onap.policy.controller.PolicyController;
 
 public class HibernateSessionTest {
+
+    /**
+     * setup.
+     */
     @Before
     public void setup() {
         PolicyController.setLogdbUrl("testURL");

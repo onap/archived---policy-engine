@@ -113,6 +113,9 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier
         return itemId instanceof OnapPDPGroup;
     }
 
+    /**
+     * refreshGroups.
+     */
     public synchronized void refreshGroups() {
         synchronized (this.groups) {
             this.groups.clear();
@@ -134,6 +137,11 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier
         return Collections.unmodifiableList(this.groups);
     }
 
+    /**
+     * makeDefault.
+     *
+     * @param group OnapPDPGroup
+     */
     public void makeDefault(OnapPDPGroup group) {
         try {
             this.papEngine.setDefaultGroup(group);
@@ -144,6 +152,13 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier
         return;
     }
 
+    /**
+     * removeGroup.
+     *
+     * @param group OnapPDPGroup
+     * @param newGroup OnapPDPGroup
+     * @throws PAPException PAPException
+     */
     public void removeGroup(OnapPDPGroup group, OnapPDPGroup newGroup) throws PAPException {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("removeGroup: " + group + " new group for PDPs: " + newGroup);
@@ -159,6 +174,13 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier
         }
     }
 
+    /**
+     * removePDP.
+     *
+     * @param pdp OnapPDP
+     * @param group OnapPDPGroup
+     * @throws PAPException PAPException
+     */
     public void removePDP(OnapPDP pdp, OnapPDPGroup group) throws PAPException {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("removePDP: " + pdp + " from group: " + group);
@@ -171,6 +193,11 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier
         }
     }
 
+    /**
+     * updatePDP.
+     *
+     * @param pdp OnapPDP
+     */
     public void updatePDP(OnapPDP pdp) {
         try {
             papEngine.updatePDP(pdp);
@@ -179,6 +206,11 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier
         }
     }
 
+    /**
+     * updateGroup.
+     *
+     * @param group OnapPDPGroup
+     */
     public void updateGroup(OnapPDPGroup group) {
         try {
             papEngine.updateGroup(group);
@@ -214,6 +246,17 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier
             LOGGER.trace("getItemIds: " + items);
         }
         return Collections.unmodifiableCollection(items);
+    }
+
+    @Override
+    public List<?> getItemIds(int startIndex, int numberOfItems) {
+        synchronized (this.groups) {
+            int endIndex = startIndex + numberOfItems;
+            if (endIndex > this.groups.size()) {
+                endIndex = this.groups.size() - 1;
+            }
+            return this.groups.subList(startIndex, endIndex);
+        }
     }
 
     @Override
@@ -269,6 +312,13 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier
         throw new UnsupportedOperationException("PDP Container cannot add a given item.");
     }
 
+    /**
+     * addNewGroup.
+     *
+     * @param name String
+     * @param description String
+     * @throws PAPException PAPException
+     */
     public void addNewGroup(String name, String description) throws PAPException {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("addNewGroup " + name + " " + description);
@@ -276,6 +326,16 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier
         this.papEngine.newGroup(name, description);
     }
 
+    /**
+     * addNewPDP.
+     *
+     * @param id String
+     * @param group OnapPDPGroup
+     * @param name String
+     * @param description String
+     * @param jmxport int
+     * @throws PAPException PAPException
+     */
     public void addNewPDP(String id, OnapPDPGroup group, String name, String description, int jmxport)
             throws PAPException {
         if (LOGGER.isTraceEnabled()) {
@@ -284,6 +344,12 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier
         this.papEngine.newPDP(id, group, name, description, jmxport);
     }
 
+    /**
+     * movePDP.
+     *
+     * @param pdp OnapPDP
+     * @param group OnapPDPGroup
+     */
     public void movePDP(OnapPDP pdp, OnapPDPGroup group) {
         try {
             this.papEngine.movePDP(pdp, group);
@@ -425,17 +491,6 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier
     @Override
     public Object getIdByIndex(int index) {
         return this.groups.get(index);
-    }
-
-    @Override
-    public List<?> getItemIds(int startIndex, int numberOfItems) {
-        synchronized (this.groups) {
-            int endIndex = startIndex + numberOfItems;
-            if (endIndex > this.groups.size()) {
-                endIndex = this.groups.size() - 1;
-            }
-            return this.groups.subList(startIndex, endIndex);
-        }
     }
 
     @Override

@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -144,6 +143,13 @@ public class CreateOptimizationController extends RestrictedBaseController {
     private Map<String, LinkedList<String>> arrayTextList = new HashMap<>();
     CreateDcaeMicroServiceController msController = new CreateDcaeMicroServiceController();
 
+    /**
+     * setDataToPolicyRestAdapter.
+     *
+     * @param policyData PolicyRestAdapter
+     * @param root JsonNode
+     * @return PolicyRestAdapter
+     */
     public PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter policyData, JsonNode root) {
         String jsonContent = null;
         try {

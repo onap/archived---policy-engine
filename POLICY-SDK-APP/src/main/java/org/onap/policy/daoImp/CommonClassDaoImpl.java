@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -221,8 +221,8 @@ public class CommonClassDaoImpl implements CommonClassDao {
         Transaction tx = session.beginTransaction();
         List<PolicyRoles> rolesData = null;
         try {
-            Criteria cr = session.createCriteria(PolicyRoles.class);
-            Disjunction disjunction = Restrictions.disjunction();
+            final Criteria cr = session.createCriteria(PolicyRoles.class);
+            final Disjunction disjunction = Restrictions.disjunction();
             Conjunction conjunction1 = Restrictions.conjunction();
             conjunction1.add(Restrictions.eq("role", "admin"));
             Conjunction conjunction2 = Restrictions.conjunction();
@@ -318,10 +318,12 @@ public class CommonClassDaoImpl implements CommonClassDao {
 
     @Override
     public void updateClAlarms(String arg0, String arg1) {
+        // why is there no code here?
     }
 
     @Override
     public void updateClYaml(String arg0, String arg1) {
+        // why is there no code here?
     }
 
     @Override
