@@ -59,6 +59,24 @@
     },
     {
       "key": {
+        "uuid": "4fe11dd3_0435d3b4",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-14T13:45:53Z",
+      "side": 1,
+      "message": "Better put that in - this whole code is weird. They clearly have a very specific use case for it.",
+      "parentUuid": "a3f8d277_c8867dff",
+      "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3570b0a_acee230f",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreatePolicyController.java",
         "patchSetId": 4
@@ -70,6 +88,24 @@
       "writtenOn": "2019-10-14T13:38:30Z",
       "side": 1,
       "message": "use a \"for\" loop?",
+      "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dee00f3_8c4de872",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreatePolicyController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-14T13:45:53Z",
+      "side": 1,
+      "message": "I could switch that if desired.",
+      "parentUuid": "c3570b0a_acee230f",
       "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -104,6 +140,24 @@
       "writtenOn": "2019-10-14T13:38:30Z",
       "side": 1,
       "message": "checkstyle: rename \"o\"",
+      "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f69ad84_6db821d0",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreatePolicyController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-14T13:45:53Z",
+      "side": 1,
+      "message": "weird - didn\u0027t catch that.",
+      "parentUuid": "790b71e0_107334a9",
       "revId": "4e6615528e03f1a6f7808e28481bd55fe39ed572",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
