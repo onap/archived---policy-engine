@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "52b732b5_ffa6e907",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/components/HumanPolicyComponent.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-15T01:14:48Z",
+      "side": 1,
+      "message": "There are a bazillion trace logging statements - can we remove them? Seems like they were for debugging.",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9a7ec59f_974c2f19",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/components/HumanPolicyComponent.java",
         "patchSetId": 2
@@ -13,6 +30,24 @@
       "writtenOn": "2019-10-14T19:15:17Z",
       "side": 1,
       "message": "looks like a bug here - should probably have saved the original targetInHuman and then passed that in 784",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2e43546_0572b9f3",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/components/HumanPolicyComponent.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-15T01:14:48Z",
+      "side": 1,
+      "message": "Can Utkarsh or Praveen confirm?",
+      "parentUuid": "9a7ec59f_974c2f19",
       "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -50,6 +85,29 @@
       "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43a168a3_f0a403a4",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/components/HumanPolicyComponent.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 952,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-15T01:14:48Z",
+      "side": 1,
+      "message": "checkstyle didn\u0027t flag this. hmm.",
+      "range": {
+        "startLine": 952,
+        "startChar": 24,
+        "endLine": 952,
+        "endChar": 25
+      },
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     },
     {
       "key": {
@@ -168,6 +226,24 @@
     },
     {
       "key": {
+        "uuid": "e1182dee_ce8ba9ec",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1319,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-15T01:14:48Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0a4cd573_00f630b1",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f5545a73_5e924dd6",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateFirewallController.java",
         "patchSetId": 2
@@ -179,6 +255,24 @@
       "writtenOn": "2019-10-14T19:15:17Z",
       "side": 1,
       "message": "use StringUtils.isBlank()",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f9c6903_3f24e3f8",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateFirewallController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-15T01:14:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5545a73_5e924dd6",
       "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -232,6 +326,30 @@
     },
     {
       "key": {
+        "uuid": "aa0227e6_a8ef2f00",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateFirewallController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-15T01:14:48Z",
+      "side": 1,
+      "message": "Praveen...",
+      "parentUuid": "143946d1_bf4ab20b",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 0
+      },
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bd7ea54b_7185c3e8",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
         "patchSetId": 2
@@ -266,6 +384,24 @@
     },
     {
       "key": {
+        "uuid": "8d692baa_908db9b8",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-15T01:14:48Z",
+      "side": 1,
+      "message": "I don\u0027t like switches, because sonar will ask for a default.",
+      "parentUuid": "d77e15c4_4838d756",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd0a5bec_0cac87c5",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
         "patchSetId": 2
@@ -277,6 +413,24 @@
       "writtenOn": "2019-10-14T19:15:17Z",
       "side": 1,
       "message": "do this once and cache the result:\n  ((RuleType) object).getAdviceExpressions()\n    .getAdviceExpression().get(0).getAdviceId())\n\nmaybe use a switch statement",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "158f652c_a0d00624",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-15T01:14:48Z",
+      "side": 1,
+      "message": "I don\u0027t want to change this code right now - just doing sonar stuff. This whole file is scary.",
+      "parentUuid": "cd0a5bec_0cac87c5",
       "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -311,6 +465,24 @@
       "writtenOn": "2019-10-14T19:15:17Z",
       "side": 1,
       "message": "use \"for\" instead of iterator",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a939d8c3_f54815f1",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-15T01:14:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dd41724a_b02ddd5e",
       "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
