@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "101e2450_b5373cc0",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/components/HumanPolicyComponent.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 784,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-15T13:34:06Z",
+      "side": 1,
+      "message": "still awaiting feedback from Utkarsh or Praveen",
+      "revId": "0950d79047d3404c15b4dd30cffeb81346565f64",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
