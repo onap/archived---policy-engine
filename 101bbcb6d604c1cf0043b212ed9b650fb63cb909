@@ -402,6 +402,24 @@
     },
     {
       "key": {
+        "uuid": "59a26ef0_b384513d",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-15T13:34:06Z",
+      "side": 1,
+      "message": "I think I just add:\n\n  default:\n    // nothing else to do\n    break;",
+      "parentUuid": "8d692baa_908db9b8",
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd0a5bec_0cac87c5",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
         "patchSetId": 2
