@@ -350,6 +350,30 @@
     },
     {
       "key": {
+        "uuid": "633dec7e_7771c317",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateFirewallController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-10-15T14:23:14Z",
+      "side": 1,
+      "message": "don\u0027t see the need to set it again, can be removed.",
+      "parentUuid": "aa0227e6_a8ef2f00",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 0
+      },
+      "revId": "101bbcb6d604c1cf0043b212ed9b650fb63cb909",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bd7ea54b_7185c3e8",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DecisionPolicyController.java",
         "patchSetId": 2
