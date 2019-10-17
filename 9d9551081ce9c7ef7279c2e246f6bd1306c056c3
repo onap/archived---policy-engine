@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d6b50da_03bd8bb9",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PeCryptoUtils.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-17T20:50:56Z",
+      "side": 1,
+      "message": "meant:\n\n  return encryptCache.computeIfAbsent(value, cryptoUtils::encrypt);",
+      "revId": "9d9551081ce9c7ef7279c2e246f6bd1306c056c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
