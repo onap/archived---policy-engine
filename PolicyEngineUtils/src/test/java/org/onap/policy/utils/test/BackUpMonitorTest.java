@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,11 +35,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.junit.After;
@@ -55,7 +58,6 @@ import org.onap.policy.utils.BackUpMonitor;
 import org.onap.policy.utils.BackUpMonitor.ResourceNode;
 import org.onap.policy.utils.BackUpMonitorException;
 import org.onap.policy.utils.PolicyUtils;
-
 
 public class BackUpMonitorTest {
     @Test(expected = PersistenceException.class)
