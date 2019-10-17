@@ -20,25 +20,22 @@
 
 package org.onap.policy.utils;
 
-import java.security.GeneralSecurityException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.commons.lang3.StringUtils;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.common.utils.security.CryptoUtils;
 
 public class PeCryptoUtils {
 
-    private static Logger logger = FlexLogger.getLogger(PeCryptoUtils.class);
     private static final String PROP_AES_KEY = "org.onap.policy.encryption.aes.key";
     private static CryptoUtils cryptoUtils = null;
     private static String secretKey = System.getenv("AES_ENCRYPTION_KEY");
     private static final Map<String, String> decryptCache = new ConcurrentHashMap<>();
     private static final Map<String, String> encryptCache = new ConcurrentHashMap<>();
 
-
-    private PeCryptoUtils() {}
+    private PeCryptoUtils() {
+    }
 
     /**
      * Inits the aes key.
@@ -71,12 +68,7 @@ public class PeCryptoUtils {
         }
 
         return encryptCache.computeIfAbsent(value, k -> {
-            try {
-                return cryptoUtils.encrypt(k);
-            } catch (GeneralSecurityException e) {
-                logger.error("Could not decrypt value - exception: ", e);
-                return value;
-            }
+            return cryptoUtils.encrypt(k);
         });
     }
 
@@ -91,12 +83,7 @@ public class PeCryptoUtils {
             return value;
         }
         return decryptCache.computeIfAbsent(value, k -> {
-            try {
-                return cryptoUtils.decrypt(k);
-            } catch (GeneralSecurityException e) {
-                logger.error("Could not decrypt value - exception: ", e);
-                return value;
-            }
+            return cryptoUtils.decrypt(k);
         });
     }
 }
