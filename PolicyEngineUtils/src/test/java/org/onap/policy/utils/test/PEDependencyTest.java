@@ -30,9 +30,9 @@ import org.junit.Test;
 import org.onap.policy.api.PEDependency;
 
 public class PEDependencyTest {
-    
+
     @Test
-    public void pojoTests(){
+    public void pojoTests() {
         PEDependency pe = new PEDependency();
         pe.setArtifactId("test");
         pe.setGroupId("test");

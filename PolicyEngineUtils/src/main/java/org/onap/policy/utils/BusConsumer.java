@@ -24,6 +24,7 @@ package org.onap.policy.utils;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Properties;
+
 import org.onap.dmaap.mr.client.MRClient.MRApiException;
 import org.onap.dmaap.mr.client.impl.MRConsumerImpl;
 import org.onap.dmaap.mr.test.clients.ProtocolTypeConstants;
@@ -67,15 +68,12 @@ public interface BusConsumer {
          * @param fetchTimeout Fetch Timeout
          * @param fetchLimit Fetch Limit
          */
-        public DmaapConsumerWrapper(List<String> servers, String topic,
-            String aafLogin, String aafPassword,
-            String consumerGroup, String consumerInstance,
-            int fetchTimeout, int fetchLimit) throws MalformedURLException {
+        public DmaapConsumerWrapper(List<String> servers, String topic, String aafLogin, String aafPassword,
+                String consumerGroup, String consumerInstance, int fetchTimeout, int fetchLimit)
+                throws MalformedURLException {
 
-            this(new MRConsumerImpl(servers, topic,
-                consumerGroup, consumerInstance,
-                fetchTimeout, fetchLimit,
-                null, aafLogin, aafPassword), aafLogin, aafPassword, servers.get(0));
+            this(new MRConsumerImpl(servers, topic, consumerGroup, consumerInstance, fetchTimeout, fetchLimit, null,
+                    aafLogin, aafPassword), aafLogin, aafPassword, servers.get(0));
 
         }
 
@@ -114,14 +112,11 @@ public interface BusConsumer {
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
-            builder.
-                append("DmaapConsumerWrapper [").
-                append("consumer.getAuthDate()=").append(consumer.getAuthDate()).
-                append(", consumer.getAuthKey()=").append(consumer.getAuthKey()).
-                append(", consumer.getHost()=").append(consumer.getHost()).
-                append(", consumer.getProtocolFlag()=").append(consumer.getProtocolFlag()).
-                append(", consumer.getUsername()=").append(consumer.getUsername()).
-                append("]");
+            builder.append("DmaapConsumerWrapper [").append("consumer.getAuthDate()=").append(consumer.getAuthDate())
+                    .append(", consumer.getAuthKey()=").append(consumer.getAuthKey()).append(", consumer.getHost()=")
+                    .append(consumer.getHost()).append(", consumer.getProtocolFlag()=")
+                    .append(consumer.getProtocolFlag()).append(", consumer.getUsername()=")
+                    .append(consumer.getUsername()).append("]");
             return builder.toString();
         }
     }

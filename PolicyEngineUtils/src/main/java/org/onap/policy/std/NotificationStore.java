@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+
 import org.onap.policy.api.LoadedPolicy;
 import org.onap.policy.api.NotificationType;
 import org.onap.policy.api.PDPNotification;
 import org.onap.policy.api.RemovedPolicy;
-
 
 /*
  * This Should Compare and save the Notifications from the beginning of Time. 
@@ -41,11 +41,11 @@ public class NotificationStore {
 
     private static StdPDPNotification notificationRecord = new StdPDPNotification();
 
-    private NotificationStore () {
+    private NotificationStore() {
         // Sonar prefers that we have an empty public constructor
         // as opposed to an implicit public constructor.
     }
-    
+
     public static StdPDPNotification getDeltaNotification(StdPDPNotification newNotification) {
         StdPDPNotification notificationDelta = new StdPDPNotification();
         ArrayList<StdRemovedPolicy> removedDelta = new ArrayList<>();
@@ -72,13 +72,15 @@ public class NotificationStore {
         // check for old removed policies.
         if (!newNotification.getRemovedPolicies().isEmpty()) {
             for (RemovedPolicy newRemovedPolicy : newNotification.getRemovedPolicies()) {
-                remove = updateRemovedPolicies(removedDelta, oldUpdatedLostPolicies, oldRemovedPolicies, oldUpdatedPolicies, remove, newRemovedPolicy);
+                remove = updateRemovedPolicies(removedDelta, oldUpdatedLostPolicies, oldRemovedPolicies,
+                        oldUpdatedPolicies, remove, newRemovedPolicy);
             }
         }
         // Check for old Updated Policies.
         if (!newNotification.getLoadedPolicies().isEmpty()) {
             for (LoadedPolicy newUpdatedPolicy : newNotification.getLoadedPolicies()) {
-                update = modifyUpdatedPolicies(updatedDelta, oldUpdatedLostPolicies, oldRemovedPolicies, oldUpdatedPolicies, update, newUpdatedPolicy);
+                update = modifyUpdatedPolicies(updatedDelta, oldUpdatedLostPolicies, oldRemovedPolicies,
+                        oldUpdatedPolicies, update, newUpdatedPolicy);
             }
             // Conversion of Update to Remove if that occurred.
             if (!oldUpdatedLostPolicies.isEmpty()) {
@@ -118,14 +120,15 @@ public class NotificationStore {
         return notificationDelta;
     }
 
-    private static Boolean modifyUpdatedPolicies(ArrayList<StdLoadedPolicy> updatedDelta, Collection<LoadedPolicy> oldUpdatedLostPolicies, Collection<RemovedPolicy> oldRemovedPolicies, Collection<LoadedPolicy> oldUpdatedPolicies, Boolean update, LoadedPolicy newUpdatedPolicy) {
+    private static Boolean modifyUpdatedPolicies(ArrayList<StdLoadedPolicy> updatedDelta,
+            Collection<LoadedPolicy> oldUpdatedLostPolicies, Collection<RemovedPolicy> oldRemovedPolicies,
+            Collection<LoadedPolicy> oldUpdatedPolicies, Boolean update, LoadedPolicy newUpdatedPolicy) {
         // Look for policies which are not in Update
         Boolean updated = true;
         String policyName = newUpdatedPolicy.getPolicyName();
         String ver = newUpdatedPolicy.getVersionNo();
         for (LoadedPolicy oldUpdatedPolicy : notificationRecord.getLoadedPolicies()) {
-            if (policyName.equals(oldUpdatedPolicy.getPolicyName())
-                && ver.equals(oldUpdatedPolicy.getVersionNo())) {
+            if (policyName.equals(oldUpdatedPolicy.getPolicyName()) && ver.equals(oldUpdatedPolicy.getVersionNo())) {
                 updated = false;
                 // Remove the policy from copy.
                 oldUpdatedLostPolicies.remove(oldUpdatedPolicy);
@@ -135,8 +138,7 @@ public class NotificationStore {
         }
         // Change the record if the policy has been Removed earlier.
         for (RemovedPolicy oldRemovedPolicy : notificationRecord.getRemovedPolicies()) {
-            if (oldRemovedPolicy.getPolicyName().equals(policyName)
-                && oldRemovedPolicy.getVersionNo().equals(ver)) {
+            if (oldRemovedPolicy.getPolicyName().equals(policyName) && oldRemovedPolicy.getVersionNo().equals(ver)) {
                 oldRemovedPolicies.remove(oldRemovedPolicy);
             }
         }
@@ -149,23 +151,23 @@ public class NotificationStore {
         return update;
     }
 
-    private static Boolean updateRemovedPolicies(ArrayList<StdRemovedPolicy> removedDelta, Collection<LoadedPolicy> oldUpdatedLostPolicies, Collection<RemovedPolicy> oldRemovedPolicies, Collection<LoadedPolicy> oldUpdatedPolicies, Boolean remove, RemovedPolicy newRemovedPolicy) {
-        //Look for policy Not in Remove
+    private static Boolean updateRemovedPolicies(ArrayList<StdRemovedPolicy> removedDelta,
+            Collection<LoadedPolicy> oldUpdatedLostPolicies, Collection<RemovedPolicy> oldRemovedPolicies,
+            Collection<LoadedPolicy> oldUpdatedPolicies, Boolean remove, RemovedPolicy newRemovedPolicy) {
+        // Look for policy Not in Remove
         Boolean removed = true;
         String policyName = newRemovedPolicy.getPolicyName();
         String ver = newRemovedPolicy.getVersionNo();
         for (RemovedPolicy oldRemovedPolicy : notificationRecord.getRemovedPolicies()) {
-            if (policyName.equals(oldRemovedPolicy.getPolicyName())
-                && ver.equals(oldRemovedPolicy.getVersionNo())) {
+            if (policyName.equals(oldRemovedPolicy.getPolicyName()) && ver.equals(oldRemovedPolicy.getVersionNo())) {
                 removed = false;
                 // Don't want a duplicate.
                 oldRemovedPolicies.remove(oldRemovedPolicy);
             }
         }
-        //We need to change our record we have an Update record of this remove.
+        // We need to change our record we have an Update record of this remove.
         for (LoadedPolicy oldUpdatedPolicy : notificationRecord.getLoadedPolicies()) {
-            if (policyName.equals(oldUpdatedPolicy.getPolicyName())
-                && ver.equals(oldUpdatedPolicy.getVersionNo())) {
+            if (policyName.equals(oldUpdatedPolicy.getPolicyName()) && ver.equals(oldUpdatedPolicy.getVersionNo())) {
                 oldUpdatedPolicies.remove(oldUpdatedPolicy);
                 oldUpdatedLostPolicies.remove(oldUpdatedPolicy);
             }
@@ -218,8 +220,8 @@ public class NotificationStore {
                 notificationRecord.setRemovedPolicies(removedPolicies);
                 notificationRecord.setLoadedPolicies(updatedPolicies);
             }
-            if (!notificationRecord.getLoadedPolicies().isEmpty() && !notificationRecord.getRemovedPolicies()
-                .isEmpty()) {
+            if (!notificationRecord.getLoadedPolicies().isEmpty()
+                    && !notificationRecord.getRemovedPolicies().isEmpty()) {
                 notificationRecord.setNotificationType(NotificationType.BOTH);
             } else if (!notificationRecord.getLoadedPolicies().isEmpty()) {
                 notificationRecord.setNotificationType(NotificationType.UPDATE);
@@ -229,7 +231,8 @@ public class NotificationStore {
         }
     }
 
-    private static void checkNewUpdatedPolicies(StdPDPNotification notification, HashSet<StdRemovedPolicy> removedPolicies, HashSet<StdLoadedPolicy> updatedPolicies) {
+    private static void checkNewUpdatedPolicies(StdPDPNotification notification,
+            HashSet<StdRemovedPolicy> removedPolicies, HashSet<StdLoadedPolicy> updatedPolicies) {
         for (LoadedPolicy newUpdatedPolicy : notification.getLoadedPolicies()) {
             // If it was removed earlier then we need to remove from our record
             Iterator<StdRemovedPolicy> oldRemovedPolicy = removedPolicies.iterator();
@@ -237,14 +240,13 @@ public class NotificationStore {
             String ver = newUpdatedPolicy.getVersionNo();
             while (oldRemovedPolicy.hasNext()) {
                 RemovedPolicy policy = oldRemovedPolicy.next();
-                if (policyName.equals(policy.getPolicyName())
-                    && ver.equals(policy.getVersionNo())) {
+                if (policyName.equals(policy.getPolicyName()) && ver.equals(policy.getVersionNo())) {
                     oldRemovedPolicy.remove();
                 }
             }
             // If it was previously updated need to Overwrite it to the record.
-            updatedPolicies.removeIf(policy -> policyName.equals(policy.getPolicyName())
-                && ver.equals(policy.getVersionNo()));
+            updatedPolicies
+                    .removeIf(policy -> policyName.equals(policy.getPolicyName()) && ver.equals(policy.getVersionNo()));
 
             StdLoadedPolicy sUPolicy = new StdLoadedPolicy();
             sUPolicy.setMatches(newUpdatedPolicy.getMatches());
@@ -255,7 +257,8 @@ public class NotificationStore {
         }
     }
 
-    private static void checkNewRemovedPolicies(StdPDPNotification notification, HashSet<StdRemovedPolicy> removedPolicies, HashSet<StdLoadedPolicy> updatedPolicies) {
+    private static void checkNewRemovedPolicies(StdPDPNotification notification,
+            HashSet<StdRemovedPolicy> removedPolicies, HashSet<StdLoadedPolicy> updatedPolicies) {
         for (RemovedPolicy newRemovedPolicy : notification.getRemovedPolicies()) {
             // If it was previously removed Overwrite it to the record.
             Iterator<StdRemovedPolicy> oldRemovedPolicy = removedPolicies.iterator();
@@ -263,14 +266,13 @@ public class NotificationStore {
             String ver = newRemovedPolicy.getVersionNo();
             while (oldRemovedPolicy.hasNext()) {
                 RemovedPolicy policy = oldRemovedPolicy.next();
-                if (policyName.equals(policy.getPolicyName())
-                    && ver.equals(policy.getVersionNo())) {
+                if (policyName.equals(policy.getPolicyName()) && ver.equals(policy.getVersionNo())) {
                     oldRemovedPolicy.remove();
                 }
             }
             // If it was added earlier then we need to remove from our record.
-            updatedPolicies.removeIf(policy -> policyName.equals(policy.getPolicyName())
-                && ver.equals(policy.getVersionNo()));
+            updatedPolicies
+                    .removeIf(policy -> policyName.equals(policy.getPolicyName()) && ver.equals(policy.getVersionNo()));
 
             StdRemovedPolicy sRPolicy = new StdRemovedPolicy();
             sRPolicy.setPolicyName(policyName);

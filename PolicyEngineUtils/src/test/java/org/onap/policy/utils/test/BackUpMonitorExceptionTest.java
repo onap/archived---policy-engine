@@ -21,35 +21,36 @@
 package org.onap.policy.utils.test;
 
 import java.io.IOException;
+
 import org.junit.Test;
 import org.onap.policy.utils.BackUpMonitorException;
 
 public class BackUpMonitorExceptionTest {
-  @Test(expected = BackUpMonitorException.class)
-  public void testException1() throws BackUpMonitorException {
-    throw new BackUpMonitorException();
-  }
+    @Test(expected = BackUpMonitorException.class)
+    public void testException1() throws BackUpMonitorException {
+        throw new BackUpMonitorException();
+    }
 
-  @Test(expected = BackUpMonitorException.class)
-  public void testException2() throws BackUpMonitorException {
-    throw new BackUpMonitorException("test");
-  }
+    @Test(expected = BackUpMonitorException.class)
+    public void testException2() throws BackUpMonitorException {
+        throw new BackUpMonitorException("test");
+    }
 
-  @Test(expected = BackUpMonitorException.class)
-  public void testException3() throws BackUpMonitorException {
-    Throwable cause = new IOException();
-    throw new BackUpMonitorException(cause);
-  }
+    @Test(expected = BackUpMonitorException.class)
+    public void testException3() throws BackUpMonitorException {
+        Throwable cause = new IOException();
+        throw new BackUpMonitorException(cause);
+    }
 
-  @Test(expected = BackUpMonitorException.class)
-  public void testException4() throws BackUpMonitorException {
-    Throwable cause = new IOException();
-    throw new BackUpMonitorException("test", cause);
-  }
+    @Test(expected = BackUpMonitorException.class)
+    public void testException4() throws BackUpMonitorException {
+        Throwable cause = new IOException();
+        throw new BackUpMonitorException("test", cause);
+    }
 
-  @Test(expected = BackUpMonitorException.class)
-  public void testException5() throws BackUpMonitorException {
-    Throwable cause = new IOException();
-    throw new BackUpMonitorException("test", cause, true, true);
-  }
+    @Test(expected = BackUpMonitorException.class)
+    public void testException5() throws BackUpMonitorException {
+        Throwable cause = new IOException();
+        throw new BackUpMonitorException("test", cause, true, true);
+    }
 }

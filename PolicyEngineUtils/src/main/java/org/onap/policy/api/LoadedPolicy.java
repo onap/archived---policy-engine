@@ -23,7 +23,7 @@ package org.onap.policy.api;
 import java.util.Map;
 
 /**
- * <code>LoadedPolicy</code> defines the Policy that has been Loaded into the PDP. 
+ * <code>LoadedPolicy</code> defines the Policy that has been Loaded into the PDP.
  *
  * @version 0.2
  */
@@ -44,7 +44,8 @@ public interface LoadedPolicy {
     String getVersionNo();
 
     /**
-     * Gets the <code>Map</code> of <code>String,String</code> format of the Matches if the policy Loaded is of Config Type.
+     * Gets the <code>Map</code> of <code>String,String</code> format of the Matches if the policy Loaded is of Config
+     * Type.
      *
      * @return the <code>Map</code> of <code>String,String</code> format of the matches in the policy.
      */

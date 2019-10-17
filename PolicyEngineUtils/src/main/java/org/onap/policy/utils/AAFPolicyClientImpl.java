@@ -18,6 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.utils;
 
 import java.security.Principal;
@@ -60,10 +61,10 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
      * CLIENT_ID, CLIENT_KEY and ENVIRONMENT
      *
      * @param properties
-     *            Properties with CLIENT_ID, CLIENT_KEY and ENVIRONMENT
+     *        Properties with CLIENT_ID, CLIENT_KEY and ENVIRONMENT
      * @return AAFClient instance.
      * @throws AAFPolicyException
-     *             Exceptions.
+     *         Exceptions.
      */
     public static synchronized AAFPolicyClientImpl getInstance(Properties properties) throws AAFPolicyException {
         if (instance == null) {
@@ -90,9 +91,9 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
      * Updates the Properties file in case if required.
      *
      * @param properties
-     *            Properties with CLIENT_ID, CLIENT_KEY and ENVIRONMENT
+     *        Properties with CLIENT_ID, CLIENT_KEY and ENVIRONMENT
      * @throws AAFPolicyException
-     *             exceptions if any.
+     *         exceptions if any.
      */
     @Override
     public void updateProperties(Properties properties) throws AAFPolicyException {
@@ -103,15 +104,15 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
      * Checks the Authentication and Permissions for the given values.
      *
      * @param userName
-     *            Username must be registered under the Name space.
+     *        Username must be registered under the Name space.
      * @param pass
-     *            Password pertaining to the Username.
+     *        Password pertaining to the Username.
      * @param type
-     *            Permissions Type.
+     *        Permissions Type.
      * @param instance
-     *            Permissions Instance.
+     *        Permissions Instance.
      * @param action
-     *            Permissions Action.
+     *        Permissions Action.
      * @return
      */
     @Override
@@ -123,9 +124,9 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
      * Checks the Authentication of the UserName and Password Given.
      *
      * @param userName
-     *            UserName
+     *        UserName
      * @param pass
-     *            Password.
+     *        Password.
      * @return True or False.
      */
     @Override
@@ -137,11 +138,11 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
             int i = 0;
             do {
                 String aafAuthResponse = aafAuthn.validate(userName, pass);
-                if (aafAuthResponse==null) {
+                if (aafAuthResponse == null) {
                     return true;
                 } else {
-                    logger.warn("User, " + userName + ", failed to authenticate with AAF. \n"
-                            + "AAF Response is " + aafAuthResponse);
+                    logger.warn("User, " + userName + ", failed to authenticate with AAF. \n" + "AAF Response is "
+                            + aafAuthResponse);
                 }
                 i++;
             } while (i < 2);
@@ -157,15 +158,15 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
      * Action.
      *
      * @param userName
-     *            UserName
+     *        UserName
      * @param pass
-     *            Password.
+     *        Password.
      * @param type
-     *            Permissions Type.
+     *        Permissions Type.
      * @param instance
-     *            Permissions Instance.
+     *        Permissions Instance.
      * @param action
-     *            Permissions Action.
+     *        Permissions Action.
      * @return True or False.
      */
     @Override
@@ -176,8 +177,8 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
             if (aafCon != null && aafLurPerm != null) {
                 try {
                     aafCon.basicAuth(userName, pass);
-                    AAFPermission perm = new AAFPermission(cadiprops.getProperty("policy.aaf.namespace"), type,
-                            instance, action);
+                    AAFPermission perm =
+                            new AAFPermission(cadiprops.getProperty("policy.aaf.namespace"), type, instance, action);
                     final Principal p = new UnAuthPrincipal(userName);
                     result = aafLurPerm.fish(p, perm);
                 } catch (CadiException e) {

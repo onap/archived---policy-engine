@@ -22,28 +22,28 @@ package org.onap.policy.std;
 
 import org.onap.policy.api.RemovedPolicy;
 
-public class StdRemovedPolicy implements RemovedPolicy{
-	private String policyName = null;
-	private String versionNo = null;
-	
-	@Override
-	public String getVersionNo() {
-		return this.versionNo;
-	}
-	
-	public void setVersionNo(String versionNo) {
-		this.versionNo = versionNo;
-	}
-	
-	@Override
-	public String getPolicyName() {
-		if(policyName!=null && policyName.contains(".xml")){
-			return policyName.substring(0, policyName.substring(0, policyName.lastIndexOf('.')).lastIndexOf('.'));
-		}
-		return this.policyName;
-	}
-	
-	public void setPolicyName(String policyName) {
-		this.policyName = policyName;
-	}
-}	
+public class StdRemovedPolicy implements RemovedPolicy {
+    private String policyName = null;
+    private String versionNo = null;
+
+    @Override
+    public String getVersionNo() {
+        return this.versionNo;
+    }
+
+    public void setVersionNo(String versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    @Override
+    public String getPolicyName() {
+        if (policyName != null && policyName.contains(".xml")) {
+            return policyName.substring(0, policyName.substring(0, policyName.lastIndexOf('.')).lastIndexOf('.'));
+        }
+        return this.policyName;
+    }
+
+    public void setPolicyName(String policyName) {
+        this.policyName = policyName;
+    }
+}

@@ -21,7 +21,7 @@
 package org.onap.policy.api;
 
 /**
- * <code>RemovedPolicy</code> defines the Policy that has been removed 
+ * <code>RemovedPolicy</code> defines the Policy that has been removed
  *
  * @version 0.1
  */

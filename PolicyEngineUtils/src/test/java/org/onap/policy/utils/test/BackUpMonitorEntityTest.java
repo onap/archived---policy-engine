@@ -22,31 +22,33 @@ package org.onap.policy.utils.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
 import java.util.Date;
+
 import org.junit.Test;
 import org.onap.policy.jpa.BackUpMonitorEntity;
 
 public class BackUpMonitorEntityTest {
-  @Test
-  public void testEntity() {
-    String value = "testVal";
-    Date date = new Date();
+    @Test
+    public void testEntity() {
+        String value = "testVal";
+        Date date = new Date();
 
-    BackUpMonitorEntity entity = new BackUpMonitorEntity();
-    assertNotNull(entity);
+        BackUpMonitorEntity entity = new BackUpMonitorEntity();
+        assertNotNull(entity);
 
-    entity.setResourceName(value);
-    entity.setResourceNodeName(value);
-    entity.setFlag(value);
-    entity.setNotificationRecord(value);
-    entity.prePersist();
-    entity.preUpdate();
-    entity.setTimeStamp(date);
+        entity.setResourceName(value);
+        entity.setResourceNodeName(value);
+        entity.setFlag(value);
+        entity.setNotificationRecord(value);
+        entity.prePersist();
+        entity.preUpdate();
+        entity.setTimeStamp(date);
 
-    assertEquals(value, entity.getResourceName());
-    assertEquals(value, entity.getResourceNodeName());
-    assertEquals(value, entity.getFlag());
-    assertEquals(value, entity.getNotificationRecord());
-    assertEquals(date, entity.getTimeStamp());
-  }
+        assertEquals(value, entity.getResourceName());
+        assertEquals(value, entity.getResourceNodeName());
+        assertEquals(value, entity.getFlag());
+        assertEquals(value, entity.getNotificationRecord());
+        assertEquals(date, entity.getTimeStamp());
+    }
 }

@@ -22,11 +22,12 @@ package org.onap.policy.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
 import java.security.GeneralSecurityException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
-
 
 public class PeCryptoUtilsTest {
     private final String pass = "policy_user";
@@ -36,7 +37,7 @@ public class PeCryptoUtilsTest {
 
     @Before
     public void reset() {
-        Whitebox.setInternalState( PeCryptoUtils.class, "cryptoUtils", (PeCryptoUtils)null);
+        Whitebox.setInternalState(PeCryptoUtils.class, "cryptoUtils", (PeCryptoUtils) null);
 
     }
 
@@ -55,8 +56,8 @@ public class PeCryptoUtilsTest {
         PeCryptoUtils.initAesKey(null);
         System.clearProperty(PROP_AES_KEY);
         assertEquals(pass, PeCryptoUtils.decrypt(encryptedPass));
-        Whitebox.setInternalState( PeCryptoUtils.class, "cryptoUtils", (PeCryptoUtils)null);
-        Whitebox.setInternalState( PeCryptoUtils.class, "secretKey", secretKey);
+        Whitebox.setInternalState(PeCryptoUtils.class, "cryptoUtils", (PeCryptoUtils) null);
+        Whitebox.setInternalState(PeCryptoUtils.class, "secretKey", secretKey);
         PeCryptoUtils.initAesKey(" ");
         assertEquals(pass, PeCryptoUtils.decrypt(pass));
     }

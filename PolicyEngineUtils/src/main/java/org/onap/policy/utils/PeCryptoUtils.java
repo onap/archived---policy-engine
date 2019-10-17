@@ -23,6 +23,7 @@ package org.onap.policy.utils;
 import java.security.GeneralSecurityException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -37,8 +38,8 @@ public class PeCryptoUtils {
     private static final Map<String, String> decryptCache = new ConcurrentHashMap<>();
     private static final Map<String, String> encryptCache = new ConcurrentHashMap<>();
 
-
-    private PeCryptoUtils() {}
+    private PeCryptoUtils() {
+    }
 
     /**
      * Inits the aes key.

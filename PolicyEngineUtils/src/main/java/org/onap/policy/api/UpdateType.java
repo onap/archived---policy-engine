@@ -21,7 +21,7 @@
 package org.onap.policy.api;
 
 /**
- * Enumeration of the Update Type that has occurred in the <code>UpdatedPolicy</code> of 
+ * Enumeration of the Update Type that has occurred in the <code>UpdatedPolicy</code> of
  * {@link org.onap.policy.api.LoadedPolicy}
  *
  * @version 0.1
@@ -44,6 +44,7 @@ public enum UpdateType {
 
     /**
      * Returns the <code>String</code> format of the Type for this <code>UpdateType</code>
+     * 
      * @return the <code>String</code> Type of <code>UpdateType</code>
      */
     @Override

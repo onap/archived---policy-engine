@@ -21,7 +21,7 @@
 package org.onap.policy.api;
 
 /**
- * Enumeration of the Update Type that has occurred in the <code>PDPNotification</code> of 
+ * Enumeration of the Update Type that has occurred in the <code>PDPNotification</code> of
  * {@link org.onap.policy.api.PDPNotification}
  *
  * @version 0.1
@@ -48,6 +48,7 @@ public enum NotificationType {
 
     /**
      * Returns the <code>String</code> format of the Type for this <code>UpdateType</code>
+     * 
      * @return the <code>String</code> Type of <code>UpdateType</code>
      */
     @Override

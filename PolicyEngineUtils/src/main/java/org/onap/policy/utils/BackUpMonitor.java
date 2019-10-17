@@ -21,6 +21,13 @@
 
 package org.onap.policy.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.diff.JsonDiff;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,13 +48,6 @@ import org.onap.policy.jpa.BackUpMonitorEntity;
 import org.onap.policy.std.NotificationStore;
 import org.onap.policy.std.StdPDPNotification;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jackson.JsonLoader;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
-import com.github.fge.jsonpatch.diff.JsonDiff;
-
 /**
  * BackUp Monitor checks Backup Status with the Database and maintains Redundancy for Gateway Applications.
  * 
@@ -58,7 +58,7 @@ public class BackUpMonitor {
     private static final String PING_INTERVAL = "ping_interval";
     private static final String MASTER = "MASTER";
     private static final String SLAVE = "SLAVE";
-    
+
     private static BackUpMonitor instance = null;
     private static String resourceName = null;
     private static String resourceNodeName = null;
@@ -85,7 +85,7 @@ public class BackUpMonitor {
             throws BackUpMonitorException {
         init(resourceName, resourceNodeName, handler);
         // Create Persistence Entity
-        if(!properties.containsKey(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML)){
+        if (!properties.containsKey(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML)) {
             properties.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistencePU.xml");
         }
         emf = Persistence.createEntityManagerFactory("PolicyEngineUtils", properties);
@@ -100,15 +100,15 @@ public class BackUpMonitor {
         // Start thread.
         startThread(new BMonitor());
     }
-    
+
     private static void startThread(BMonitor bMonitor) {
         t = new Thread(bMonitor);
         t.start();
     }
 
-    public static void stop() throws InterruptedException{
+    public static void stop() throws InterruptedException {
         stopFlag = true;
-        if(t!=null){
+        if (t != null) {
             t.interrupt();
             t.join();
         }
@@ -126,11 +126,11 @@ public class BackUpMonitor {
      * Gets the BackUpMonitor Instance if given proper resourceName and properties. Else returns null.
      * 
      * @param resourceNodeName
-     *            String format of the Resource Node to which the resource Belongs to.
+     *        String format of the Resource Node to which the resource Belongs to.
      * @param resourceName
-     *            String format of the ResourceName. This needs to be Unique.
+     *        String format of the ResourceName. This needs to be Unique.
      * @param properties
-     *            Properties format of the properties file.
+     *        Properties format of the properties file.
      * @return BackUpMonitor instance.
      */
     public static synchronized BackUpMonitor getInstance(String resourceNodeName, String resourceName,
@@ -164,8 +164,7 @@ public class BackUpMonitor {
             LOGGER.error("javax.persistence.jdbc.user property is empty");
             return false;
         }
-        if (properties.getProperty(PING_INTERVAL) == null
-                || "".equals(properties.getProperty(PING_INTERVAL).trim())) {
+        if (properties.getProperty(PING_INTERVAL) == null || "".equals(properties.getProperty(PING_INTERVAL).trim())) {
             LOGGER.info("ping_interval property not specified. Taking default value");
         } else {
             try {
@@ -261,7 +260,7 @@ public class BackUpMonitor {
             et.commit();
         } catch (Exception e) {
             LOGGER.error("failed Database Operation " + e.getMessage(), e);
-            if (et!=null && et.isActive()) {
+            if (et != null && et.isActive()) {
                 et.rollback();
             }
             throw new BackUpMonitorException(e);
@@ -338,8 +337,7 @@ public class BackUpMonitor {
                 if (masterEntities.size() == 1) {
                     singleMasterEntity(masterEntities, selfEntity);
                 } else {
-                    LOGGER.error(
-                            "Backup Monitor Issue, Masters out of sync, This will be fixed in next interval.");
+                    LOGGER.error("Backup Monitor Issue, Masters out of sync, This will be fixed in next interval.");
                 }
             }
         }
@@ -383,8 +381,7 @@ public class BackUpMonitor {
             if (currentEntity.getFlag().equalsIgnoreCase(MASTER)) {
                 if (masterEntity == null) {
                     masterEntity = currentEntity;
-                } else if (currentEntity.getTimeStamp().getTime() > masterEntity.getTimeStamp()
-                        .getTime()) {
+                } else if (currentEntity.getTimeStamp().getTime() > masterEntity.getTimeStamp().getTime()) {
                     // False Master, Update master to slave and take currentMaster as Master.
                     masterEntity.setFlag(SLAVE);
                     masterEntity.setTimeStamp(new Date());
@@ -443,7 +440,7 @@ public class BackUpMonitor {
      * Updates Notification in the Database while Performing the health check.
      * 
      * @param notification
-     *            String format of notification record to store in the Database.
+     *        String format of notification record to store in the Database.
      * @throws Exception
      */
     public synchronized void updateNotification() throws BackUpMonitorException {
@@ -454,8 +451,8 @@ public class BackUpMonitor {
     private static void callHandler(String notification) {
         if (handler != null) {
             try {
-                PDPNotification notificationObject = PolicyUtils.jsonStringToObject(notification,
-                        StdPDPNotification.class);
+                PDPNotification notificationObject =
+                        PolicyUtils.jsonStringToObject(notification, StdPDPNotification.class);
                 if (notificationObject.getNotificationType() != null) {
                     LOGGER.info("Performing Patched notification ");
                     performPatchNotification(notificationObject);
