@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineUtils
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,31 +22,33 @@ package org.onap.policy.utils.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
 import java.util.Date;
+
 import org.junit.Test;
 import org.onap.policy.jpa.BackUpMonitorEntity;
 
 public class BackUpMonitorEntityTest {
-  @Test
-  public void testEntity() {
-    String value = "testVal";
-    Date date = new Date();
+    @Test
+    public void testEntity() {
+        String value = "testVal";
 
-    BackUpMonitorEntity entity = new BackUpMonitorEntity();
-    assertNotNull(entity);
+        BackUpMonitorEntity entity = new BackUpMonitorEntity();
+        assertNotNull(entity);
 
-    entity.setResourceName(value);
-    entity.setResourceNodeName(value);
-    entity.setFlag(value);
-    entity.setNotificationRecord(value);
-    entity.prePersist();
-    entity.preUpdate();
-    entity.setTimeStamp(date);
+        entity.setResourceName(value);
+        entity.setResourceNodeName(value);
+        entity.setFlag(value);
+        entity.setNotificationRecord(value);
+        entity.prePersist();
+        entity.preUpdate();
+        Date date = new Date();
+        entity.setTimeStamp(date);
 
-    assertEquals(value, entity.getResourceName());
-    assertEquals(value, entity.getResourceNodeName());
-    assertEquals(value, entity.getFlag());
-    assertEquals(value, entity.getNotificationRecord());
-    assertEquals(date, entity.getTimeStamp());
-  }
+        assertEquals(value, entity.getResourceName());
+        assertEquals(value, entity.getResourceNodeName());
+        assertEquals(value, entity.getFlag());
+        assertEquals(value, entity.getNotificationRecord());
+        assertEquals(date, entity.getTimeStamp());
+    }
 }
