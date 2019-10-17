@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f40096ab_179b1240",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PeCryptoUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-17T20:39:13Z",
+      "side": 1,
+      "message": "was wondering about that.",
+      "parentUuid": "8b343659_662a3c4b",
+      "revId": "26419ad1d5b603f9e86a272b559e81cca84f01e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb251240_63a3b1c4",
         "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PeCryptoUtils.java",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "3e5bdbc3_af289c5b",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PeCryptoUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-17T20:39:13Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fb251240_63a3b1c4",
+      "revId": "26419ad1d5b603f9e86a272b559e81cca84f01e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4038e4fe_5cb78637",
         "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/AAFEnvironmentTest.java",
         "patchSetId": 4
@@ -47,6 +83,24 @@
       "writtenOn": "2019-10-17T19:14:01Z",
       "side": 1,
       "message": "delete this file - it adds no coverage and doesn\u0027t test anything useful",
+      "revId": "26419ad1d5b603f9e86a272b559e81cca84f01e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ec194649_0a9b045c",
+        "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/AAFEnvironmentTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-17T20:39:13Z",
+      "side": 1,
+      "message": "Ok well I did a local coverage scan on the sub-module and it wasn\u0027t covered. It is covered somewhere else but the point of JUnit is each file has its own JUnit to cover it as much as possible. Hard to do in this codebase.",
+      "parentUuid": "4038e4fe_5cb78637",
       "revId": "26419ad1d5b603f9e86a272b559e81cca84f01e1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
