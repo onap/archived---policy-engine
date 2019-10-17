@@ -2,15 +2,15 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineUtils
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,13 @@
  */
 
 package org.onap.policy.utils;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.diff.JsonDiff;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,16 +48,9 @@ import org.onap.policy.jpa.BackUpMonitorEntity;
 import org.onap.policy.std.NotificationStore;
 import org.onap.policy.std.StdPDPNotification;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jackson.JsonLoader;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
-import com.github.fge.jsonpatch.diff.JsonDiff;
-
 /**
  * BackUp Monitor checks Backup Status with the Database and maintains Redundancy for Gateway Applications.
- * 
+ *
  */
 public class BackUpMonitor {
     private static final Logger LOGGER = Logger.getLogger(BackUpMonitor.class.getName());
@@ -58,7 +58,7 @@ public class BackUpMonitor {
     private static final String PING_INTERVAL = "ping_interval";
     private static final String MASTER = "MASTER";
     private static final String SLAVE = "SLAVE";
-    
+
     private static BackUpMonitor instance = null;
     private static String resourceName = null;
     private static String resourceNodeName = null;
@@ -85,7 +85,7 @@ public class BackUpMonitor {
             throws BackUpMonitorException {
         init(resourceName, resourceNodeName, handler);
         // Create Persistence Entity
-        if(!properties.containsKey(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML)){
+        if (!properties.containsKey(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML)) {
             properties.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistencePU.xml");
         }
         emf = Persistence.createEntityManagerFactory("PolicyEngineUtils", properties);
@@ -100,15 +100,20 @@ public class BackUpMonitor {
         // Start thread.
         startThread(new BMonitor());
     }
-    
-    private static void startThread(BMonitor bMonitor) {
-        t = new Thread(bMonitor);
+
+    private static void startThread(BMonitor monitor) {
+        t = new Thread(monitor);
         t.start();
     }
 
-    public static void stop() throws InterruptedException{
+    /**
+     * Stop.
+     *
+     * @throws InterruptedException InterruptedException
+     */
+    public static void stop() throws InterruptedException {
         stopFlag = true;
-        if(t!=null){
+        if (t != null) {
             t.interrupt();
             t.join();
         }
@@ -124,13 +129,13 @@ public class BackUpMonitor {
 
     /**
      * Gets the BackUpMonitor Instance if given proper resourceName and properties. Else returns null.
-     * 
+     *
      * @param resourceNodeName
-     *            String format of the Resource Node to which the resource Belongs to.
+     *        String format of the Resource Node to which the resource Belongs to.
      * @param resourceName
-     *            String format of the ResourceName. This needs to be Unique.
+     *        String format of the ResourceName. This needs to be Unique.
      * @param properties
-     *            Properties format of the properties file.
+     *        Properties format of the properties file.
      * @return BackUpMonitor instance.
      */
     public static synchronized BackUpMonitor getInstance(String resourceNodeName, String resourceName,
@@ -164,8 +169,7 @@ public class BackUpMonitor {
             LOGGER.error("javax.persistence.jdbc.user property is empty");
             return false;
         }
-        if (properties.getProperty(PING_INTERVAL) == null
-                || "".equals(properties.getProperty(PING_INTERVAL).trim())) {
+        if (properties.getProperty(PING_INTERVAL) == null || "".equals(properties.getProperty(PING_INTERVAL).trim())) {
             LOGGER.info("ping_interval property not specified. Taking default value");
         } else {
             try {
@@ -186,8 +190,8 @@ public class BackUpMonitor {
     }
 
     /**
-     * Gets the Boolean value of Master(True) or Slave mode (False)
-     * 
+     * Gets the Boolean value of Master(True) or Slave mode (False).
+     *
      * @return Boolean flag which if True means that the operation needs to be performed(Master mode) or if false the
      *         operation is in slave mode.
      */
@@ -214,17 +218,17 @@ public class BackUpMonitor {
     }
 
     // Set Master
-    private static BackUpMonitorEntity setMaster(BackUpMonitorEntity bMEntity) {
-        bMEntity.setFlag(MASTER);
+    private static BackUpMonitorEntity setMaster(BackUpMonitorEntity entity) {
+        entity.setFlag(MASTER);
         setFlag(true);
-        return bMEntity;
+        return entity;
     }
 
     // Set Slave
-    private static BackUpMonitorEntity setSlave(BackUpMonitorEntity bMEntity) {
-        bMEntity.setFlag(SLAVE);
+    private static BackUpMonitorEntity setSlave(BackUpMonitorEntity entity) {
+        entity.setFlag(SLAVE);
         setFlag(false);
-        return bMEntity;
+        return entity;
     }
 
     // Check Database and set the Flag.
@@ -244,45 +248,45 @@ public class BackUpMonitor {
             } else if (resourceNodeName.equals(ResourceNode.BRMS.toString())) {
                 query.setParameter("nn", ResourceNode.BRMS.toString());
             }
-            List<?> bMList = query.getResultList();
-            if (bMList.isEmpty()) {
+            List<?> entityList = query.getResultList();
+            if (entityList.isEmpty()) {
                 // This is New. create an entry as Master.
                 LOGGER.info("Adding resource " + resourceName + " to Database");
-                BackUpMonitorEntity bMEntity = new BackUpMonitorEntity();
-                bMEntity.setResourceNodeName(resourceNodeName);
-                bMEntity.setResourceName(resourceName);
-                bMEntity = setMaster(bMEntity);
-                bMEntity.setTimeStamp(new Date());
-                em.persist(bMEntity);
+                BackUpMonitorEntity entity = new BackUpMonitorEntity();
+                entity.setResourceNodeName(resourceNodeName);
+                entity.setResourceName(resourceName);
+                entity = setMaster(entity);
+                entity.setTimeStamp(new Date());
+                em.persist(entity);
                 em.flush();
             } else {
-                checkOtherMaster(bMList);
+                checkOtherMaster(entityList);
             }
             et.commit();
         } catch (Exception e) {
             LOGGER.error("failed Database Operation " + e.getMessage(), e);
-            if (et!=null && et.isActive()) {
+            if (et != null && et.isActive()) {
                 et.rollback();
             }
             throw new BackUpMonitorException(e);
         }
     }
 
-    private void checkOtherMaster(List<?> bMList) {
+    private void checkOtherMaster(List<?> entityList) {
         // Check for other Master(s)
         ArrayList<BackUpMonitorEntity> masterEntities = new ArrayList<>();
         // Check for self.
         BackUpMonitorEntity selfEntity = null;
         // Check backup monitor entities.
-        for (int i = 0; i < bMList.size(); i++) {
-            BackUpMonitorEntity bMEntity = (BackUpMonitorEntity) bMList.get(i);
+        for (Object entity : entityList) {
+            BackUpMonitorEntity backupEntity = (BackUpMonitorEntity) entity;
             LOGGER.info("Refreshing Entity. ");
-            em.refresh(bMEntity);
-            if (bMEntity.getFlag().equalsIgnoreCase(MASTER)) {
-                masterEntities.add(bMEntity);
+            em.refresh(backupEntity);
+            if (backupEntity.getFlag().equalsIgnoreCase(MASTER)) {
+                masterEntities.add(backupEntity);
             }
-            if (bMEntity.getResourceName().equals(resourceName)) {
-                selfEntity = bMEntity;
+            if (backupEntity.getResourceName().equals(resourceName)) {
+                selfEntity = backupEntity;
             }
         }
         if (selfEntity != null) {
@@ -338,8 +342,7 @@ public class BackUpMonitor {
                 if (masterEntities.size() == 1) {
                     singleMasterEntity(masterEntities, selfEntity);
                 } else {
-                    LOGGER.error(
-                            "Backup Monitor Issue, Masters out of sync, This will be fixed in next interval.");
+                    LOGGER.error("Backup Monitor Issue, Masters out of sync, This will be fixed in next interval.");
                 }
             }
         }
@@ -365,7 +368,6 @@ public class BackUpMonitor {
                 em.persist(masterEntity);
                 em.flush();
                 // Lets Become Master.
-                selfEntity = setMaster(selfEntity);
                 LOGGER.info("Changing " + resourceName + " from slave to Master Mode");
                 selfEntity.setTimeStamp(new Date());
                 selfEntity.setNotificationRecord(notificationRecord);
@@ -383,8 +385,7 @@ public class BackUpMonitor {
             if (currentEntity.getFlag().equalsIgnoreCase(MASTER)) {
                 if (masterEntity == null) {
                     masterEntity = currentEntity;
-                } else if (currentEntity.getTimeStamp().getTime() > masterEntity.getTimeStamp()
-                        .getTime()) {
+                } else if (currentEntity.getTimeStamp().getTime() > masterEntity.getTimeStamp().getTime()) {
                     // False Master, Update master to slave and take currentMaster as Master.
                     masterEntity.setFlag(SLAVE);
                     masterEntity.setTimeStamp(new Date());
@@ -441,10 +442,8 @@ public class BackUpMonitor {
 
     /**
      * Updates Notification in the Database while Performing the health check.
-     * 
-     * @param notification
-     *            String format of notification record to store in the Database.
-     * @throws Exception
+     *
+     * @throws BackUpMonitorException BackUpMonitorException
      */
     public synchronized void updateNotification() throws BackUpMonitorException {
         checkDataBase();
@@ -454,8 +453,8 @@ public class BackUpMonitor {
     private static void callHandler(String notification) {
         if (handler != null) {
             try {
-                PDPNotification notificationObject = PolicyUtils.jsonStringToObject(notification,
-                        StdPDPNotification.class);
+                PDPNotification notificationObject =
+                        PolicyUtils.jsonStringToObject(notification, StdPDPNotification.class);
                 if (notificationObject.getNotificationType() != null) {
                     LOGGER.info("Performing Patched notification ");
                     performPatchNotification(notificationObject);

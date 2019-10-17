@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineUtils
  * ================================================================================
- * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,28 +20,20 @@
 
 package org.onap.policy.utils;
 
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import static org.junit.Assert.assertEquals;
 
-public class XMLErrorHandler implements ErrorHandler {
-    private static final Logger LOGGER = FlexLogger.getLogger(XMLErrorHandler.class);
+import org.junit.Test;
 
-    @Override
-    public void warning(SAXParseException exception) throws SAXException {
-        LOGGER.debug(exception);
-    }
+public class AAFEnvironmentTest {
 
-    @Override
-    public void error(SAXParseException exception) throws SAXException {
-        LOGGER.error(exception);
-    }
-
-    @Override
-    public void fatalError(SAXParseException exception) throws SAXException {
-        LOGGER.error(exception);
+    @Test
+    public void test() {
+        AAFEnvironment env = AAFEnvironment.DEVL;
+        assertEquals(AAFEnvironment.DEVL, env);
+        env = AAFEnvironment.PROD;
+        assertEquals(AAFEnvironment.PROD, env);
+        env = AAFEnvironment.TEST;
+        assertEquals(AAFEnvironment.TEST, env);
     }
 
 }
