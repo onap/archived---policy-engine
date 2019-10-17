@@ -122,6 +122,24 @@
       "revId": "26419ad1d5b603f9e86a272b559e81cca84f01e1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2443c002_ca11ec77",
+        "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/AAFEnvironmentTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-17T21:12:03Z",
+      "side": 1,
+      "message": "Hah! Sonar is fun.",
+      "parentUuid": "35149991_bfdf1b28",
+      "revId": "26419ad1d5b603f9e86a272b559e81cca84f01e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
