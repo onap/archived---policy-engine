@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b343659_662a3c4b",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PeCryptoUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-17T19:14:01Z",
+      "side": 1,
+      "message": "sonar: use cryptoUtils::encrypt",
+      "revId": "26419ad1d5b603f9e86a272b559e81cca84f01e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb251240_63a3b1c4",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PeCryptoUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-17T19:14:01Z",
+      "side": 1,
+      "message": "sonar: use cryptoUtils::decrypt",
+      "revId": "26419ad1d5b603f9e86a272b559e81cca84f01e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4038e4fe_5cb78637",
+        "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/AAFEnvironmentTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-17T19:14:01Z",
+      "side": 1,
+      "message": "delete this file - it adds no coverage and doesn\u0027t test anything useful",
+      "revId": "26419ad1d5b603f9e86a272b559e81cca84f01e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
