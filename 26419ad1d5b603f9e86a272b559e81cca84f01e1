@@ -104,6 +104,24 @@
       "revId": "26419ad1d5b603f9e86a272b559e81cca84f01e1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35149991_bfdf1b28",
+        "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/AAFEnvironmentTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-17T20:50:56Z",
+      "side": 1,
+      "message": "well that\u0027s absolutely absurd!  I agree about junits, but only when there is actual code.  This enum class has no \"code\", thus it\u0027s no different than defining a class containing only constants - there would be no point in testing that either.  Guess you might as well leave it in. :-(",
+      "parentUuid": "ec194649_0a9b045c",
+      "revId": "26419ad1d5b603f9e86a272b559e81cca84f01e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
