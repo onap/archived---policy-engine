@@ -28,7 +28,7 @@ import org.xml.sax.SAXParseException;
 
 public class XMLErrorHandler implements ErrorHandler {
     private static final Logger LOGGER = FlexLogger.getLogger(XMLErrorHandler.class);
-    
+
     @Override
     public void warning(SAXParseException exception) throws SAXException {
         LOGGER.debug(exception);

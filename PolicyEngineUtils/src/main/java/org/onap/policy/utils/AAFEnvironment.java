@@ -17,13 +17,12 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.utils;
 
 public enum AAFEnvironment {
-	/*
-	 * Enumeration for the Resource Node Naming. Add here if required. 
-	 */
-	DEVL,
-	TEST,
-	PROD
+    /*
+     * Enumeration for the Resource Node Naming. Add here if required.
+     */
+    DEVL, TEST, PROD
 }

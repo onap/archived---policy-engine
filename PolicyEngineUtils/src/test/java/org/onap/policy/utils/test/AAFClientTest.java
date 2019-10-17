@@ -33,22 +33,22 @@ import org.onap.policy.utils.AAFPolicyException;
 public class AAFClientTest {
     AAFPolicyClient afClient;
     String pass = "test";
-    
+
     @Before
-    public void setUp() throws AAFPolicyException{
+    public void setUp() throws AAFPolicyException {
         Properties props = new Properties();
         props.setProperty("ENVIRONMENT", "TEST");
         props.setProperty("aafClient.impl.className", AAFPolicyClientImpl.class.getName());
-        afClient  = AAFPolicyClient.getInstance(props);
+        afClient = AAFPolicyClient.getInstance(props);
     }
-    
+
     @Test
-    public void invalidClientTest() throws AAFPolicyException{
+    public void invalidClientTest() throws AAFPolicyException {
         assertFalse(afClient.checkAuth("test", pass));
         assertFalse(afClient.checkPerm("test", pass, "policy-engine.config", "*", "*"));
         Properties props = new Properties();
         props.setProperty("aafClient.impl.className", AAFPolicyClientImpl.class.getName());
-        afClient  = AAFPolicyClient.getInstance(props);
+        afClient = AAFPolicyClient.getInstance(props);
         assertFalse(afClient.checkAuth("test", pass));
         props.setProperty("ENVIRONMENT", "PROD");
         props.setProperty("aafClient.impl.className", AAFPolicyClientImpl.class.getName());
@@ -63,14 +63,14 @@ public class AAFClientTest {
         assertFalse(afClient.checkAuth("test", pass));
         assertFalse(afClient.checkAuthPerm("test", pass, "decision", "*", "read"));
     }
-    
+
     @Test(expected = AAFPolicyException.class)
-    public void invalidAAFInstance() throws AAFPolicyException{
+    public void invalidAAFInstance() throws AAFPolicyException {
         Properties props = new Properties();
         props.setProperty("aafClient.impl.className", "errorClass");
-        afClient  = AAFPolicyClient.getInstance(props);
+        afClient = AAFPolicyClient.getInstance(props);
     }
-    
+
     @Test(expected = AAFPolicyException.class)
     public void testPropNullException() throws AAFPolicyException {
         afClient.updateProperties(null);
@@ -80,9 +80,9 @@ public class AAFClientTest {
     public void testPropEmptyException() throws AAFPolicyException {
         afClient.updateProperties(new Properties());
     }
-    
+
     @Test(expected = AAFPolicyException.class)
-    public void testAAFException() throws AAFPolicyException{
+    public void testAAFException() throws AAFPolicyException {
         new AAFPolicyException();
         new AAFPolicyException("error", new Exception());
         throw new AAFPolicyException("error", new Exception(), false, false);

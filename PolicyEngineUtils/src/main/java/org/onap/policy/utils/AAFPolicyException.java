@@ -21,30 +21,30 @@
 package org.onap.policy.utils;
 
 /**
- * AAFPolicyException to show exception messages. 
+ * AAFPolicyException to show exception messages.
  * 
  */
 public class AAFPolicyException extends Exception {
-	private static final long serialVersionUID = 1910606668038621L;
-	
-	public AAFPolicyException() {
-		// Empty constructor.
-		// Nothing needs to be initialized in this exception class.
-	}
-	
-	public AAFPolicyException(String message) {
-		super(message);
-	}
-	
-	public AAFPolicyException(Throwable cause){
-		super(cause);
-	}
-	
-	public AAFPolicyException(String message, Throwable cause) {
-		super(message, cause);
-	}
-	
-	public AAFPolicyException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
+    private static final long serialVersionUID = 1910606668038621L;
+
+    public AAFPolicyException() {
+        // Empty constructor.
+        // Nothing needs to be initialized in this exception class.
+    }
+
+    public AAFPolicyException(String message) {
+        super(message);
+    }
+
+    public AAFPolicyException(Throwable cause) {
+        super(cause);
+    }
+
+    public AAFPolicyException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public AAFPolicyException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

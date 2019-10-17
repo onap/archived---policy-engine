@@ -2,15 +2,15 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineUtils
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.utils;
 
 import java.security.Principal;
@@ -38,7 +39,7 @@ import org.onap.aaf.cadi.principal.UnAuthPrincipal;
 /**
  * AAF Client: Generic AAF Client implementation to connect to AAF Resources to
  * validate permissions and authorization.
- * 
+ *
  */
 public class AAFPolicyClientImpl implements AAFPolicyClient {
     private static Logger logger = Logger.getLogger(AAFPolicyClientImpl.class.getName());
@@ -60,10 +61,10 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
      * CLIENT_ID, CLIENT_KEY and ENVIRONMENT
      *
      * @param properties
-     *            Properties with CLIENT_ID, CLIENT_KEY and ENVIRONMENT
+     *        Properties with CLIENT_ID, CLIENT_KEY and ENVIRONMENT
      * @return AAFClient instance.
      * @throws AAFPolicyException
-     *             Exceptions.
+     *         Exceptions.
      */
     public static synchronized AAFPolicyClientImpl getInstance(Properties properties) throws AAFPolicyException {
         if (instance == null) {
@@ -90,9 +91,9 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
      * Updates the Properties file in case if required.
      *
      * @param properties
-     *            Properties with CLIENT_ID, CLIENT_KEY and ENVIRONMENT
+     *        Properties with CLIENT_ID, CLIENT_KEY and ENVIRONMENT
      * @throws AAFPolicyException
-     *             exceptions if any.
+     *         exceptions if any.
      */
     @Override
     public void updateProperties(Properties properties) throws AAFPolicyException {
@@ -103,15 +104,15 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
      * Checks the Authentication and Permissions for the given values.
      *
      * @param userName
-     *            Username must be registered under the Name space.
+     *        Username must be registered under the Name space.
      * @param pass
-     *            Password pertaining to the Username.
+     *        Password pertaining to the Username.
      * @param type
-     *            Permissions Type.
+     *        Permissions Type.
      * @param instance
-     *            Permissions Instance.
+     *        Permissions Instance.
      * @param action
-     *            Permissions Action.
+     *        Permissions Action.
      * @return
      */
     @Override
@@ -123,9 +124,9 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
      * Checks the Authentication of the UserName and Password Given.
      *
      * @param userName
-     *            UserName
+     *        UserName
      * @param pass
-     *            Password.
+     *        Password.
      * @return True or False.
      */
     @Override
@@ -134,17 +135,18 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
             return false;
         }
         try {
-            int i = 0;
+            int index = 0;
             do {
                 String aafAuthResponse = aafAuthn.validate(userName, pass);
-                if (aafAuthResponse==null) {
+                if (aafAuthResponse == null) {
                     return true;
                 } else {
-                    logger.warn("User, " + userName + ", failed to authenticate with AAF. \n"
-                            + "AAF Response is " + aafAuthResponse);
+                    logger.warn("User, " + userName + ", failed to authenticate with AAF. \n" + "AAF Response is "
+                            + aafAuthResponse);
                 }
-                i++;
-            } while (i < 2);
+                index++;
+            }
+            while (index < 2);
         } catch (Exception e) {
             logger.error(e.getMessage() + e);
         }
@@ -157,27 +159,27 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
      * Action.
      *
      * @param userName
-     *            UserName
+     *        UserName
      * @param pass
-     *            Password.
+     *        Password.
      * @param type
-     *            Permissions Type.
+     *        Permissions Type.
      * @param instance
-     *            Permissions Instance.
+     *        Permissions Instance.
      * @param action
-     *            Permissions Action.
+     *        Permissions Action.
      * @return True or False.
      */
     @Override
     public boolean checkPerm(String userName, String pass, String type, String instance, String action) {
-        int i = 0;
+        int index = 0;
         Boolean result = false;
         do {
             if (aafCon != null && aafLurPerm != null) {
                 try {
                     aafCon.basicAuth(userName, pass);
-                    AAFPermission perm = new AAFPermission(cadiprops.getProperty("policy.aaf.namespace"), type,
-                            instance, action);
+                    AAFPermission perm =
+                            new AAFPermission(cadiprops.getProperty("policy.aaf.namespace"), type, instance, action);
                     final Principal p = new UnAuthPrincipal(userName);
                     result = aafLurPerm.fish(p, perm);
                 } catch (CadiException e) {
@@ -185,8 +187,9 @@ public class AAFPolicyClientImpl implements AAFPolicyClient {
                     aafLurPerm.destroy();
                 }
             }
-            i++;
-        } while (i < 2 && !result); // Try once more to check if this can be passed. AAF has some issues.
+            index++;
+        }
+        while (index < 2 && !result); // Try once more to check if this can be passed. AAF has some issues.
         return result;
     }
 

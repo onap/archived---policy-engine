@@ -29,10 +29,11 @@ package org.onap.policy.api;
 public interface NotificationHandler {
 
     /**
-     * <code>notificationReceived</code> method will be triggered automatically whenever a Notification is received by the PEP.
+     * <code>notificationReceived</code> method will be triggered automatically whenever a Notification is received by
+     * the PEP.
      *
      * @param notification <code>PDPNotification</code> of {@link org.onap.policy.api.PDPNotification}
-     * is the object that has information of the notification.
+     *        is the object that has information of the notification.
      */
     void notificationReceived(PDPNotification notification);
 }

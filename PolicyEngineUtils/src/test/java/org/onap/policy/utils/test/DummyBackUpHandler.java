@@ -23,16 +23,16 @@ package org.onap.policy.utils.test;
 import org.onap.policy.api.PDPNotification;
 import org.onap.policy.utils.BackUpHandler;
 
-public class DummyBackUpHandler implements BackUpHandler{
+public class DummyBackUpHandler implements BackUpHandler {
 
-	@Override
-	public void notificationReceived(PDPNotification notification) {
-		System.out.println("Received Notification from PDP. ");
-	}
+    @Override
+    public void notificationReceived(PDPNotification notification) {
+        System.out.println("Received Notification from PDP. ");
+    }
 
-	@Override
-	public void runOnNotification(PDPNotification notification) {
-		System.out.println("Running main Notification Function. ");
-	}
-	
+    @Override
+    public void runOnNotification(PDPNotification notification) {
+        System.out.println("Running main Notification Function. ");
+    }
+
 }

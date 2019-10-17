@@ -24,14 +24,13 @@ import java.util.Properties;
 
 import org.onap.aaf.cadi.PropAccess;
 
-
 /**
- * PolicyAccess used by AAF for logging purposes. 
- *  
+ * PolicyAccess used by AAF for logging purposes.
+ * 
  */
 public class PolicyAccess extends PropAccess {
-	public PolicyAccess (Properties props, Level level) {
-		super(props);
-		this.setLogLevel(level);
-	}
+    public PolicyAccess(Properties props, Level level) {
+        super(props);
+        this.setLogLevel(level);
+    }
 }

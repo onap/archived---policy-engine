@@ -23,7 +23,7 @@ package org.onap.policy.api;
 import java.util.Collection;
 
 /**
- * Defines the <code>Notification</code> event sent from PDP to Client PEP.  
+ * Defines the <code>Notification</code> event sent from PDP to Client PEP.
  *
  * @version 0.2
  */
