@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c46de5d7_05e8855e",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/ClosedLoopPolicyClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-18T13:51:57Z",
+      "side": 1,
+      "message": "It would be great to have this file - to use for a JUnit.",
+      "range": {
+        "startLine": 94,
+        "startChar": 35,
+        "endLine": 94,
+        "endChar": 85
+      },
+      "revId": "77d89e790517e41bc0d2ad414205dc067b068826",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5314639_e211bc2d",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/ImportMicroServiceClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-18T13:51:57Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 42,
+        "startChar": 17,
+        "endLine": 42,
+        "endChar": 117
+      },
+      "revId": "77d89e790517e41bc0d2ad414205dc067b068826",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3412a574_ef76ae6c",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/MicroServicesPolicyClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-18T13:51:57Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 93,
+        "startChar": 35,
+        "endLine": 93,
+        "endChar": 93
+      },
+      "revId": "77d89e790517e41bc0d2ad414205dc067b068826",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f31ea5e4_42aaa2e3",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/OptimizationPolicyJavaAPIClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-18T13:51:57Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 98,
+        "startChar": 35,
+        "endLine": 98,
+        "endChar": 89
+      },
+      "revId": "77d89e790517e41bc0d2ad414205dc067b068826",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
