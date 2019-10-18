@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineClient
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,39 +42,44 @@ import org.onap.policy.api.PolicyType;
 public class BrmsRawPolicyClient {
     static Boolean isEdit = true;
 
-    //Reads a File and converts into a String.
-    private static String readFile( String file ) throws IOException {
+    // Reads a File and converts into a String.
+    private static String readFile(String file) throws IOException {
 
-        String         line = null;
-        StringBuilder  stringBuilder = new StringBuilder();
-        String         ls = System.getProperty("line.separator");
+        String line = null;
+        StringBuilder stringBuilder = new StringBuilder();
+        String ls = System.getProperty("line.separator");
 
-        try (BufferedReader reader = new BufferedReader( new FileReader (file))) {
-            while( ( line = reader.readLine() ) != null ) {
-                stringBuilder.append( line );
-                stringBuilder.append( ls );
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+                stringBuilder.append(ls);
             }
             return stringBuilder.toString();
         }
     }
 
-
+    /**
+     * main.
+     *
+     * @param args String[] of arguments
+     */
     public static void main(String[] args) {
         try {
             PolicyEngine policyEngine = new PolicyEngine("config.properties");
-            PolicyParameters policyParameters = new PolicyParameters();
-            Map<String, String> attrib= new HashMap<>();
-            attrib.put("cpu","80");
+            Map<String, String> attrib = new HashMap<>();
+            attrib.put("cpu", "80");
             attrib.put("memory", "50");
             Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
             attributes.put(AttributeType.RULE, attrib);
 
+            PolicyParameters policyParameters = new PolicyParameters();
             // Set Policy Type
-            policyParameters.setPolicyConfigType(PolicyConfigType.BRMS_RAW); //required
-            policyParameters.setPolicyName("Lakshman.testBRMSRawAPITwo"); //required
-            policyParameters.setPolicyDescription("This is a sample BRMS Raw policy body");  //optional
+            policyParameters.setPolicyConfigType(PolicyConfigType.BRMS_RAW); // required
+            policyParameters.setPolicyName("Lakshman.testBRMSRawAPITwo"); // required
+            policyParameters.setPolicyDescription("This is a sample BRMS Raw policy body"); // optional
             policyParameters.setAttributes(attributes);
-            //policyParameters.setPolicyScope("Lakshman"); //Directory will be created where the Policies are saved... this displays a a subscope on the GUI
+            // policyParameters.setPolicyScope("Lakshman"); //Directory will be created where the Policies are saved...
+            // this displays a a subscope on the GUI
             policyParameters.setRequestID(UUID.randomUUID());
 
             // Set Safe Policy value for Risk Type
@@ -104,10 +109,10 @@ public class BrmsRawPolicyClient {
                 response = policyEngine.updatePolicy(policyParameters);
             }
 
-            if(response.getResponseCode()==200){
+            if (response.getResponseCode() == 200) {
                 System.out.println(response.getResponseMessage());
                 System.out.println("Policy Created Successfully!");
-            }else{
+            } else {
                 System.out.println("Error! " + response.getResponseMessage());
             }
         } catch (Exception e) {
@@ -116,5 +121,3 @@ public class BrmsRawPolicyClient {
     }
 
 }
-
-

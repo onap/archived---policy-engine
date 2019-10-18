@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineClient
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,36 +27,39 @@ import org.onap.policy.api.PolicyEngine;
 
 public class DeletePolicyClient {
 
-	public static void main(String[] args) {
-		try {
+    /**
+     * main.
+     *
+     * @param args String[] args
+     */
+    public static void main(String[] args) {
+        try {
+            DeletePolicyParameters policyParameters = new DeletePolicyParameters();
 
-			PolicyEngine policyEngine = new PolicyEngine("config.properties");
-			DeletePolicyParameters policyParameters = new DeletePolicyParameters();			
-						
-			//Parameter arguments
-			policyParameters.setPolicyName("MikeConsole.Config_testDeleteAPI6.1.xml");
-			policyParameters.setPolicyComponent("PDP");
-			policyParameters.setPdpGroup("default");
-			policyParameters.setDeleteCondition(DeletePolicyCondition.ALL);
-			policyParameters.setRequestID(null);
-			
+            // Parameter arguments
+            policyParameters.setPolicyName("MikeConsole.Config_testDeleteAPI6.1.xml");
+            policyParameters.setPolicyComponent("PDP");
+            policyParameters.setPdpGroup("default");
+            policyParameters.setDeleteCondition(DeletePolicyCondition.ALL);
+            policyParameters.setRequestID(null);
+
             // API method to Push Policy to PDP
             PolicyChangeResponse response = null;
+            PolicyEngine policyEngine = new PolicyEngine("config.properties");
             response = policyEngine.deletePolicy(policyParameters);
 
-            if(response.getResponseCode()==200){
+            if (response.getResponseCode() == 200) {
                 System.out.println(response.getResponseMessage());
                 System.out.println("Policy Deleted Successfully!");
-            }else{
+            } else {
                 System.out.println("Error! " + response.getResponseMessage());
             }
 
-		} catch (Exception e) {
-			System.err.println(e.getMessage());		
-			
-		}
-		
-	}
-	
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+
+        }
+
+    }
 
 }
