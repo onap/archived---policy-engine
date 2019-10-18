@@ -21,6 +21,7 @@
 package org.onap.policyengine;
 
 import java.util.Collection;
+
 import org.onap.policy.api.ConfigNameRequest;
 import org.onap.policy.api.PolicyEngine;
 
@@ -30,6 +31,12 @@ import org.onap.policy.api.PolicyEngine;
  * (active version)
  */
 public class ListPolicyClient {
+
+    /**
+     * main.
+     *
+     * @param args String[] args
+     */
     public static void main(String[] args) throws Exception {
         PolicyEngine pe = new PolicyEngine("config.properties");
         ConfigNameRequest listPolicyParams = new ConfigNameRequest();
