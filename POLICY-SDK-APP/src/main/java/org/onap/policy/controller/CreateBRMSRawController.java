@@ -36,7 +36,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
@@ -53,6 +52,12 @@ public class CreateBRMSRawController {
 
     protected PolicyRestAdapter policyAdapter = null;
 
+    /**
+     * prePopulateBRMSRawPolicyData.
+     *
+     * @param policyAdapter PolicyRestAdapter
+     * @param entity PolicyEntity
+     */
     public void prePopulateBRMSRawPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 
         if (! (policyAdapter.getPolicyData() instanceof PolicyType)) {
@@ -97,21 +102,8 @@ public class CreateBRMSRawController {
                         .forEach(match -> {
                             // Under the match we have attribute value and
                             // attributeDesignator. So,finally down to the actual attribute.
-                            AttributeValueType attributeValue = match.getAttributeValue();
-                            String value = (String) attributeValue.getContent().get(0);
-                            AttributeDesignatorType designator = match.getAttributeDesignator();
-                            String attributeId = designator.getAttributeId();
-                            if ("RiskType".equals(attributeId)) {
-                                policyAdapter.setRiskType(value);
-                            } else if ("RiskLevel".equals(attributeId)) {
-                                policyAdapter.setRiskLevel(value);
-                            } else if ("guard".equals(attributeId)) {
-                                policyAdapter.setGuard(value);
-                            } else if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
-                                PolicyController controller = new PolicyController();
-                                String newDate = controller.convertDate(value);
-                                policyAdapter.setTtlDate(newDate);
-                            }
+                            policyAdapter.setupUsingAttribute(match.getAttributeDesignator().getAttributeId(),
+                                    (String) match.getAttributeValue().getContent().get(0));
                         }));
     }
 

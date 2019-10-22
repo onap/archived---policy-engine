@@ -216,9 +216,7 @@ public class ActionPolicyController extends RestrictedBaseController {
         List<JAXBElement<?>> jaxbActionTypes = actionApply.getExpression();
         for (JAXBElement<?> jaxbElement : jaxbActionTypes) {
             // If There is Attribute Value under Action Type that means we came to the final child
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Prepopulating rule algoirthm: " + index);
-            }
+            LOGGER.debug("Prepopulating rule algoirthm: " + index);
             // Check to see if Attribute Value exists, if yes then it is not a compound rule
             if (jaxbElement.getValue() instanceof AttributeValueType
                     || jaxbElement.getValue() instanceof AttributeDesignatorType) {
@@ -237,9 +235,7 @@ public class ActionPolicyController extends RestrictedBaseController {
             index = prePopulateCompoundRuleAlgorithm(index, innerActionApply);
         }
         // Populate combo box
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Prepopulating Compound rule algorithm: " + index);
-        }
+        LOGGER.debug("Prepopulating Compound rule algorithm: " + index);
         Map<String, String> rule = new HashMap<>();
         for ( Entry<String, String> entrySet : PolicyController.getDropDownMap().entrySet()) {
             if (entrySet.getValue().equals(actionApply.getFunctionId())) {

@@ -55,8 +55,6 @@ import lombok.Getter;
 import lombok.Setter;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
@@ -80,6 +78,7 @@ import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.util.MSAttributeObject;
 import org.onap.policy.rest.util.MSModelUtils;
 import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -121,9 +120,7 @@ public class CreateOptimizationController extends RestrictedBaseController {
     public static final String MANYFALSE = ":MANY-false";
     public static final String MODEL = "model";
     public static final String MANY = "MANY-";
-    public static final String UTF8 = "UTF-8";
     public static final String MODELNAME = "modelName";
-    public static final String APPLICATIONJSON = "application / json";
 
     @Autowired
     private CreateOptimizationController(CommonClassDao commonClassDao) {
@@ -296,9 +293,9 @@ public class CreateOptimizationController extends RestrictedBaseController {
             jsonModel = finalJsonObject.toString();
         }
 
-        response.setCharacterEncoding(UTF8);
-        response.setContentType(APPLICATIONJSON);
-        request.setCharacterEncoding(UTF8);
+        response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+        response.setContentType(PolicyUtils.APPLICATION_JSON);
+        request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
         List<Object> list = new ArrayList<>();
         String responseString = mapper.writeValueAsString(returnModel);
         JSONObject json = null;
@@ -485,9 +482,9 @@ public class CreateOptimizationController extends RestrictedBaseController {
         final String value = root.get("policyData").toString().replaceAll("^\"|\"$", "");
         final String servicename = value.split("-v")[0];
 
-        response.setCharacterEncoding(UTF8);
-        response.setContentType(APPLICATIONJSON);
-        request.setCharacterEncoding(UTF8);
+        response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+        response.setContentType(PolicyUtils.APPLICATION_JSON);
+        request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
         List<Object> list = new ArrayList<>();
         list.add(new JSONObject("{optimizationModelVersionData: "
                 + mapper.writeValueAsString(getVersionList(servicename)) + "}"));
@@ -572,28 +569,8 @@ public class CreateOptimizationController extends RestrictedBaseController {
                     // Under the match we have attribute value and
                     // attributeDesignator. So,finally down to the actual attribute.
                     //
-                    AttributeValueType attributeValue = match.getAttributeValue();
-                    String value = (String) attributeValue.getContent().get(0);
-                    AttributeDesignatorType designator = match.getAttributeDesignator();
-                    String attributeId = designator.getAttributeId();
-                    // First match in the target is OnapName, so set that value.
-                    if ("ONAPName".equals(attributeId)) {
-                        policyAdapter.setOnapName(value);
-                    }
-                    if ("RiskType".equals(attributeId)) {
-                        policyAdapter.setRiskType(value);
-                    }
-                    if ("RiskLevel".equals(attributeId)) {
-                        policyAdapter.setRiskLevel(value);
-                    }
-                    if ("guard".equals(attributeId)) {
-                        policyAdapter.setGuard(value);
-                    }
-                    if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
-                        PolicyController controller = new PolicyController();
-                        String newDate = controller.convertDate(value);
-                        policyAdapter.setTtlDate(newDate);
-                    }
+                    policyAdapter.setupUsingAttribute(match.getAttributeDesignator().getAttributeId(),
+                            (String) match.getAttributeValue().getContent().get(0));
                 }
                 readFile(policyAdapter, entity);
             }
@@ -683,9 +660,9 @@ public class CreateOptimizationController extends RestrictedBaseController {
         }
 
         if (!errorMsg.isEmpty()) {
-            response.setCharacterEncoding(UTF8);
-            response.setContentType(APPLICATIONJSON);
-            request.setCharacterEncoding(UTF8);
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            response.setContentType(PolicyUtils.APPLICATION_JSON);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
             response.getWriter().write(new JSONObject().put("errorMsg", errorMsg).toString());
             return;
         }
@@ -753,9 +730,9 @@ public class CreateOptimizationController extends RestrictedBaseController {
 
         }
 
-        response.setCharacterEncoding(UTF8);
-        response.setContentType(APPLICATIONJSON);
-        request.setCharacterEncoding(UTF8);
+        response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+        response.setContentType(PolicyUtils.APPLICATION_JSON);
+        request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
 
         ObjectMapper mapper = new ObjectMapper();
         JSONObject json = new JSONObject();

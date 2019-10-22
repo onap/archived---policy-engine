@@ -61,6 +61,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.adapter.ReturnBlackList;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.onap.portalsdk.core.web.support.JsonMessage;
@@ -146,9 +147,9 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
             workBook.write(fos);
             fos.flush();
 
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application / json");
-            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            response.setContentType(PolicyUtils.APPLICATION_JSON);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
 
             PrintWriter out = response.getWriter();
             String successMap = file.substring(file.lastIndexOf("webapps") + 8);

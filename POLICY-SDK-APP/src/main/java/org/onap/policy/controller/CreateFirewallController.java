@@ -39,8 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
@@ -75,6 +73,7 @@ import org.onap.policy.rest.jpa.PrefixList;
 import org.onap.policy.rest.jpa.SecurityZone;
 import org.onap.policy.rest.jpa.ServiceList;
 import org.onap.policy.rest.jpa.TermList;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -278,27 +277,8 @@ public class CreateFirewallController extends RestrictedBaseController {
                     // Under the match we have attribute value and
                     // attributeDesignator. So,finally down to the actual attribute.
                     //
-                    AttributeValueType attributeValue = match.getAttributeValue();
-                    String value = (String) attributeValue.getContent().get(0);
-                    AttributeDesignatorType designator = match.getAttributeDesignator();
-                    String attributeId = designator.getAttributeId();
-                    if (("ConfigName").equals(attributeId)) {
-                        policyAdapter.setConfigName(value);
-                    }
-                    if (("RiskType").equals(attributeId)) {
-                        policyAdapter.setRiskType(value);
-                    }
-                    if (("RiskLevel").equals(attributeId)) {
-                        policyAdapter.setRiskLevel(value);
-                    }
-                    if (("guard").equals(attributeId)) {
-                        policyAdapter.setGuard(value);
-                    }
-                    if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
-                        PolicyController controller = new PolicyController();
-                        String newDate = controller.convertDate(value);
-                        policyAdapter.setTtlDate(newDate);
-                    }
+                    policyAdapter.setupUsingAttribute(match.getAttributeDesignator().getAttributeId(),
+                            (String) match.getAttributeValue().getContent().get(0));
                 }
             }
         }
@@ -457,9 +437,9 @@ public class CreateFirewallController extends RestrictedBaseController {
                     }
                 }
             }
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application / json");
-            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            response.setContentType(PolicyUtils.APPLICATION_JSON);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
 
             String responseString = mapper.writeValueAsString(displayString);
             response.getWriter().write(new JSONObject("{policyData: " + responseString + "}").toString());

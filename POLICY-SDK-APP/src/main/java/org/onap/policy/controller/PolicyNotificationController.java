@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 import javax.script.SimpleBindings;
@@ -71,6 +70,11 @@ public class PolicyNotificationController extends RestrictedBaseController {
         StringBuilder path = new StringBuilder();
         String responseValue = "";
         try {
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            //
+            //
+            //
             String userId = UserUtils.getUserSession(request).getOrgUserId();
             logger.info("userid info: " + userId);
             ObjectMapper mapper = new ObjectMapper();
@@ -118,18 +122,13 @@ public class PolicyNotificationController extends RestrictedBaseController {
                 responseValue = "You have UnSubscribed Successfully";
             }
 
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application / json");
-            request.setCharacterEncoding("UTF-8");
+            response.setContentType(PolicyUtils.APPLICATION_JSON);
 
             response.getWriter().write(new JSONObject("{watchData: "
                     + mapper.writeValueAsString(responseValue) + "}").toString());
         } catch (Exception e) {
-            response.setCharacterEncoding("UTF-8");
-            request.setCharacterEncoding("UTF-8");
             logger.error("Error druing watchPolicy function " + e);
-            PrintWriter out = response.getWriter();
-            out.write(PolicyUtils.CATCH_EXCEPTION);
+            response.getWriter().write(PolicyUtils.CATCH_EXCEPTION);
         }
         return null;
     }

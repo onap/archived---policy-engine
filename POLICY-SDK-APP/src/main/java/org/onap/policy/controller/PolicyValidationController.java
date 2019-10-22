@@ -23,7 +23,6 @@ package org.onap.policy.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -73,10 +72,9 @@ public class PolicyValidationController extends RestrictedBaseController {
                     new JsonMessage(mapper.writeValueAsString(responseString.toString()))).toString());
         } catch (Exception e) {
             LOGGER.error("Exception Occured During Policy Validation" + e);
-            response.setCharacterEncoding("UTF-8");
-            request.setCharacterEncoding("UTF-8");
-            PrintWriter out = response.getWriter();
-            out.write(PolicyUtils.CATCH_EXCEPTION);
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            response.getWriter().write(PolicyUtils.CATCH_EXCEPTION);
         }
         return null;
     }
