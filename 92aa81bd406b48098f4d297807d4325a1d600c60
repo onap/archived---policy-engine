@@ -1,0 +1,349 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e88d91ef_ba54ce38",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/DictionaryNames.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "\u003c120 characters",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 392
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b1b053f_13fdbb9d",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/package-info.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "I don\u0027t know if you really need to change the dates for such small changes......",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e5afa96_1dffe21e",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/elk/client/Pair.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "Another one.....",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "814a6561_0146229d",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/elk/client/PolicyElasticSearchController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "I guess this case statement will flag a SONAR issue (too many cases), bit probably not worth fixing.",
+      "range": {
+        "startLine": 335,
+        "startChar": 0,
+        "endLine": 335,
+        "endChar": 27
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4115a6d_c1a22d8b",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/PAPRestConfigTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "\u003e 120",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 146
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ce9af01_5ab9bff9",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/FirewallConfigPolicyTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "Line length",
+      "range": {
+        "startLine": 138,
+        "startChar": 4,
+        "endLine": 152,
+        "endChar": 16
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e3f8b7b_6054dadd",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/ActionPolicyDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "And here",
+      "range": {
+        "startLine": 133,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 84
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad4cd8ed_f357cf8d",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/BRMSDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "Here",
+      "range": {
+        "startLine": 176,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 123
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "134fbe4a_a72b7e6a",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/BRMSDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "Here",
+      "range": {
+        "startLine": 246,
+        "startChar": 0,
+        "endLine": 246,
+        "endChar": 123
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5b0a5b8_f55dbd50",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/ClosedLoopDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "Long lines in this one too,",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 50
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a82cc6fa_000f97b2",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DescriptiveDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "And this one",
+      "range": {
+        "startLine": 21,
+        "startChar": 27,
+        "endLine": 21,
+        "endChar": 28
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01457bc0_2edc9b8f",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "Here too",
+      "range": {
+        "startLine": 143,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 373
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "246e50c0_9aeb157b",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/FirewallDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "In this one too",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 50
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34602093_4771d7dd",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/PolicyScopeDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "Long lines in this class too.",
+      "range": {
+        "startLine": 21,
+        "startChar": 23,
+        "endLine": 21,
+        "endChar": 24
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbe24af8_cf4d3d42",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/jpa/PolicyEntityTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T17:55:51Z",
+      "side": 1,
+      "message": "Long lines here too.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 43
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
