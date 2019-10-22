@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,7 @@
 package org.onap.policy.pap.xacml.rest;
 
 import static org.junit.Assert.assertEquals;
+
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
@@ -45,7 +46,9 @@ public class PAPRestConfigTest {
     @Test
     public void testInit() {
         String driver = "org.mariadb.jdbc.Driver";
-        String url = "jdbc:mariadb://localhost:3306/onap_sdk?connectTimeout=30000&socketTimeout=60000&log=true&sessionVariables=max_statement_time=30";
+        String url =
+                "jdbc:mariadb://localhost:3306/onap_sdk?connectTimeout=30000&socketTimeout=60000&log="
+                + "true&sessionVariables=max_statement_time=30";
         String user = "policy_user";
         String password = "policy_user";
 
@@ -58,7 +61,7 @@ public class PAPRestConfigTest {
         assertEquals(PAPRestConfig.getDbPassword(), password);
 
         // Test hibernate
-        BasicDataSource source = (BasicDataSource)config.getDataSource();
+        BasicDataSource source = (BasicDataSource) config.getDataSource();
         assertEquals(source.getDriverClassName(), driver);
         assertEquals(source.getUrl(), url);
         assertEquals(source.getUsername(), user);

@@ -21,8 +21,10 @@
 package org.onap.policy.pap.xacml.rest.components;
 
 import static org.junit.Assert.fail;
+
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.util.XACMLProperties;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -32,8 +34,10 @@ import java.util.List;
 import java.util.Properties;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
@@ -154,10 +158,9 @@ public class PolicyDBDaoTest {
         return sessionFac;
     }
 
-
     private static void setUpAuditDb() {
         Properties properties = new Properties();
-        properties.put(XACMLRestProperties.PROP_PAP_DB_DRIVER,"org.h2.Driver");
+        properties.put(XACMLRestProperties.PROP_PAP_DB_DRIVER, "org.h2.Driver");
         properties.put(XACMLRestProperties.PROP_PAP_DB_URL, "jdbc:h2:file:./sql/xacmlTest");
         properties.put(XACMLRestProperties.PROP_PAP_DB_USER, "sa");
         properties.put(XACMLRestProperties.PROP_PAP_DB_PASSWORD, "");
@@ -338,7 +341,6 @@ public class PolicyDBDaoTest {
         session2.getTransaction().commit();
         session2.close();
 
-
         // add a pdp to a group
         group = dbd.getNewTransaction();
         try {
@@ -376,7 +378,6 @@ public class PolicyDBDaoTest {
         Assert.assertEquals(pdp.getPdpName(), "primary");
         session3.getTransaction().commit();
         session3.close();
-
 
         group = dbd.getNewTransaction();
         try {
@@ -455,7 +456,6 @@ public class PolicyDBDaoTest {
         session5.getTransaction().commit();
         session5.close();
 
-
         group = dbd.getNewTransaction();
         try {
             OnapPDPGroup groupToDelete = new StdPDPGroup(PolicyDBDao.createNewPDPGroupId("testgroup1"), Paths.get("/"));
@@ -494,7 +494,6 @@ public class PolicyDBDaoTest {
 
         session7.getTransaction().commit();
         session7.close();
-
 
         group = dbd.getNewTransaction();
         try {
@@ -587,7 +586,6 @@ public class PolicyDBDaoTest {
         }
         Assert.assertFalse(t.isTransactionOpen());
 
-
         if (logger.isDebugEnabled()) {
             Date date = new java.util.Date();
             logger.debug("\n\nPolicyDBDaoTest.threadingStabilityTest() " + "\n   a = dbd.getNewTransaction() "
@@ -636,8 +634,6 @@ public class PolicyDBDaoTest {
         }
         Assert.assertTrue(b.isTransactionOpen());
         b.close();
-
-
 
         // Now let's test the transaction wait time timeout. Shorten the wait time to 1000 ms
         System.setProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT, "1000");

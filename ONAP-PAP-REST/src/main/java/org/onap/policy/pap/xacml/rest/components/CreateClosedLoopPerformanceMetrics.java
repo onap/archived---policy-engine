@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.std.IdentifierImpl;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -29,16 +31,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.io.FilenameUtils;
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.adapter.PolicyRestAdapter;
-
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.std.IdentifierImpl;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -54,40 +46,47 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
+import org.apache.commons.io.FilenameUtils;
+import org.onap.policy.common.logging.eelf.MessageCodes;
+import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+
 public class CreateClosedLoopPerformanceMetrics extends Policy {
 
-    private static final Logger LOGGER	= FlexLogger.getLogger(CreateClosedLoopPerformanceMetrics.class);
+    private static final Logger LOGGER = FlexLogger.getLogger(CreateClosedLoopPerformanceMetrics.class);
 
     public CreateClosedLoopPerformanceMetrics() {
         super();
     }
 
-    public CreateClosedLoopPerformanceMetrics(PolicyRestAdapter policyAdapter){
+    public CreateClosedLoopPerformanceMetrics(PolicyRestAdapter policyAdapter) {
         this.policyAdapter = policyAdapter;
     }
 
-    //save configuration of the policy based on the policyname
+    // save configuration of the policy based on the policyname
     private void saveConfigurations(String policyName, final String jsonBody) {
 
-            if(policyName.endsWith(".xml")){
-                policyName   = policyName.substring(0, policyName.lastIndexOf(".xml"));
-            }
-        try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + "."+ policyName +".json")){
+        if (policyName.endsWith(".xml")) {
+            policyName = policyName.substring(0, policyName.lastIndexOf(".xml"));
+        }
+        try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + "." + policyName + ".json")) {
             out.println(jsonBody);
             policyAdapter.setJsonBody(jsonBody);
             policyAdapter.setConfigBodyData(jsonBody);
         } catch (Exception e) {
-            LOGGER.error("Exception Occured"+e);
+            LOGGER.error("Exception Occured" + e);
         }
     }
 
-    //getting the policy name and setting to configuration on adding .json
+    // getting the policy name and setting to configuration on adding .json
     private String getConfigFile(String filename) {
         filename = FilenameUtils.removeExtension(filename);
         if (filename.endsWith(".xml")) {
             filename = filename.substring(0, filename.length() - 4);
         }
-        filename = filename +".json";
+        filename = filename + ".json";
         return filename;
     }
 
@@ -95,13 +94,13 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
     public Map<String, String> savePolicies() throws PAPException {
 
         Map<String, String> successMap = new HashMap<>();
-        if(isPolicyExists()){
+        if (isPolicyExists()) {
             successMap.put("EXISTS", "This Policy already exist on the PAP");
             return successMap;
         }
 
-        if(!isPreparedToSave()){
-            //Prep and configure the policy for saving
+        if (!isPreparedToSave()) {
+            // Prep and configure the policy for saving
             prepareToSave();
         }
 
@@ -109,18 +108,18 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
         Path newPolicyPath = null;
         newPolicyPath = Paths.get(policyAdapter.getNewFileName());
 
-        successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
+        successMap = createPolicy(newPolicyPath, getCorrectPolicyDataObject());
 
         return successMap;
     }
 
-    //This is the method for preparing the policy for saving.  We have broken it out
-    //separately because the fully configured policy is used for multiple things
+    // This is the method for preparing the policy for saving. We have broken it out
+    // separately because the fully configured policy is used for multiple things
     @Override
-    public boolean prepareToSave() throws PAPException{
+    public boolean prepareToSave() throws PAPException {
 
-        if(isPreparedToSave()){
-            //we have already done this
+        if (isPreparedToSave()) {
+            // we have already done this
             return true;
         }
 
@@ -148,7 +147,6 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
                 policyName = policyName + ".xml";
             }
 
-
             PolicyType configPolicy = (PolicyType) policyAdapter.getData();
 
             configPolicy.setDescription(policyAdapter.getPolicyDescription());
@@ -167,17 +165,13 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
             // Adding the matches to AllOfType element Match for Onap
             allOf.getMatch().add(createMatch("ONAPName", policyAdapter.getOnapName()));
             // Match for riskType
-            allOf.getMatch().add(
-                    createDynamicMatch("RiskType", policyAdapter.getRiskType()));
+            allOf.getMatch().add(createDynamicMatch("RiskType", policyAdapter.getRiskType()));
             // Match for riskLevel
-            allOf.getMatch().add(
-                    createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
+            allOf.getMatch().add(createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
             // Match for riskguard
-            allOf.getMatch().add(
-                    createDynamicMatch("guard", policyAdapter.getGuard()));
+            allOf.getMatch().add(createDynamicMatch("guard", policyAdapter.getGuard()));
             // Match for ttlDate
-            allOf.getMatch().add(
-                    createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
+            allOf.getMatch().add(createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
             // Match for ServiceType
             allOf.getMatch().add(createMatch("ServiceType", policyAdapter.getServiceType()));
 
@@ -210,7 +204,8 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
             try {
                 accessURI = new URI(ACTION_ID);
             } catch (URISyntaxException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "CreateClosedLoopPerformanceMetrics", "Exception creating ACCESS URI");
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "CreateClosedLoopPerformanceMetrics",
+                        "Exception creating ACCESS URI");
             }
             accessAttributeDesignator.setCategory(CATEGORY_ACTION);
             accessAttributeDesignator.setDataType(STRING_DATATYPE);
@@ -229,7 +224,8 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
             try {
                 configURI = new URI(RESOURCE_ID);
             } catch (URISyntaxException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "CreateClosedLoopPerformanceMetrics", "Exception creating Config URI");
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "CreateClosedLoopPerformanceMetrics",
+                        "Exception creating Config URI");
             }
             configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
             configAttributeDesignator.setDataType(STRING_DATATYPE);
@@ -286,7 +282,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 
         AttributeValueType AttributeValue = new AttributeValueType();
         AttributeValue.setDataType(URI_DATATYPE);
-        String content = CONFIG_URL +"/Config/"+ getConfigFile(policyName);
+        String content = CONFIG_URL + "/Config/" + getConfigFile(policyName);
         AttributeValue.getContent().add(content);
         assignment2.setExpression(new ObjectFactory().createAttributeValue(AttributeValue));
 
@@ -344,7 +340,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 
         advice.getAttributeAssignmentExpression().add(assignment6);
 
-        //Risk Attributes
+        // Risk Attributes
         AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
         assignment7.setAttributeId("RiskType");
         assignment7.setCategory(CATEGORY_RESOURCE);

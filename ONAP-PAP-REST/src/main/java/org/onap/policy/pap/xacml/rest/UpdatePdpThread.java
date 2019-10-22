@@ -22,12 +22,14 @@ package org.onap.policy.pap.xacml.rest;
 
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPStatus;
+
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+
 import org.onap.policy.common.logging.OnapLoggingContext;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
@@ -48,7 +50,6 @@ public class UpdatePdpThread implements Runnable {
     private String requestId;
     private OnapLoggingContext loggingContext;
     private List<Properties> properties;
-
 
     public UpdatePdpThread(OnapPDP pdp, List<Properties> properties) {
         this.pdp = pdp;

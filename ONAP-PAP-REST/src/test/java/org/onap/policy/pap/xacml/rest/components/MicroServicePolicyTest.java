@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,15 +17,20 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.components;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.mockito.Matchers.any;
+
+import java.io.File;
+import java.util.Collections;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -36,8 +41,6 @@ import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import java.io.File;
-import java.util.Collections;
 
 @RunWith(PowerMockRunner.class)
 public class MicroServicePolicyTest {
@@ -104,7 +107,8 @@ public class MicroServicePolicyTest {
         // Test create methods
         String testFileName = "testFile.zip";
         String testVal = "testVal";
-        CreateNewMicroServiceModel model = new CreateNewMicroServiceModel(testFileName, testVal, testVal, testVal, testVal);
+        CreateNewMicroServiceModel model =
+                new CreateNewMicroServiceModel(testFileName, testVal, testVal, testVal, testVal);
         model.addValuesToNewModel(".xmi");
         model.saveImportService();
     }

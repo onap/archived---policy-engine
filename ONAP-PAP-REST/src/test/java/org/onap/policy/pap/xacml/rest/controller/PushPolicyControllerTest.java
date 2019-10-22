@@ -22,7 +22,9 @@ package org.onap.policy.pap.xacml.rest.controller;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+
 import com.att.research.xacml.api.pap.PAPException;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -32,12 +34,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.servlet.ReadListener;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -51,7 +55,6 @@ import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTest;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.springframework.mock.web.MockServletConfig;
-
 
 public class PushPolicyControllerTest {
 
@@ -68,7 +71,7 @@ public class PushPolicyControllerTest {
 
     @BeforeClass
     public static void beforeClassSetup() throws ServletException {
-        sessionFactory =  PolicyDBDaoTest.setupH2DbDaoImpl("pushcontrollertest");
+        sessionFactory = PolicyDBDaoTest.setupH2DbDaoImpl("pushcontrollertest");
     }
 
     @Before
@@ -82,7 +85,8 @@ public class PushPolicyControllerTest {
         servletConfig = Mockito.mock(MockServletConfig.class);
         System.setProperty("com.sun.management.jmxremote.port", "9993");
         Mockito.when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
-        Mockito.when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("src/test/resources/xacml.pap.properties");
+        Mockito.when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME"))
+                .thenReturn("src/test/resources/xacml.pap.properties");
 
         commonClassDao = Mockito.mock(CommonClassDao.class);
         controller = new PushPolicyController();
@@ -91,35 +95,39 @@ public class PushPolicyControllerTest {
     }
 
     @Test
-    public void testPushPolicy() throws ServletException, PAPException{
+    public void testPushPolicy() throws ServletException, PAPException {
         PolicyVersion versionData = new PolicyVersion();
-        versionData.setPolicyName("com"+File.separator+"Config_Test");
+        versionData.setPolicyName("com" + File.separator + "Config_Test");
         versionData.setActiveVersion(1);
         versionData.setHigherVersion(1);
         List<Object> data = new ArrayList<>();
         data.add(versionData);
-        when(commonClassDao.getDataById(PolicyVersion.class, "policyName", "com"+File.separator+"Config_Test")).thenReturn(data);
+        when(commonClassDao.getDataById(PolicyVersion.class, "policyName", "com" + File.separator + "Config_Test"))
+                .thenReturn(data);
         pap = new XACMLPapServlet();
         pap.init(servletConfig);
         callPushPolicy();
-        when(commonClassDao.getDataById(PolicyVersion.class, "policyName", "com"+File.separator+"Config_Test")).thenReturn(null);
+        when(commonClassDao.getDataById(PolicyVersion.class, "policyName", "com" + File.separator + "Config_Test"))
+                .thenReturn(null);
         callPushPolicy();
     }
 
-    public void callPushPolicy(){
-        jsonString = "{\"policyScope\":\"com\",\"filePrefix\":\"Config_\",\"policyName\":\"Test\",\"pdpGroup\":\"default\"}";
-        try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
+    public void callPushPolicy() {
+        jsonString =
+                "{\"policyScope\":\"com\",\"filePrefix\":\"Config_\",\"policyName\":\"Test\",\"pdpGroup\":\"default\"}";
+        try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
             char[] charBuffer = new char[8 * 1024];
             StringBuilder builder = new StringBuilder();
             int numCharsRead;
             while ((numCharsRead = br.read(charBuffer, 0, charBuffer.length)) != -1) {
                 builder.append(charBuffer, 0, numCharsRead);
             }
-            when(request.getInputStream()).thenReturn(getInputStream(builder.toString().getBytes(StandardCharsets.UTF_8)));
+            when(request.getInputStream())
+                    .thenReturn(getInputStream(builder.toString().getBytes(StandardCharsets.UTF_8)));
             controller.pushPolicy(request, response);
             assertTrue(response != null);
-        }catch(Exception e){
-            logger.error("Exception"+ e);
+        } catch (Exception e) {
+            logger.error("Exception" + e);
         }
     }
 
@@ -148,9 +156,9 @@ public class PushPolicyControllerTest {
         return servletInputStream;
     }
 
-     @After
-     public void destroy(){
-         if(pap!=null)
-             pap.destroy();
-     }
+    @After
+    public void destroy() {
+        if (pap != null)
+            pap.destroy();
+    }
 }

@@ -33,6 +33,13 @@ public interface AAFPolicyClient {
 
     public boolean checkPerm(String userName, String pass, String type, String instance, String action);
 
+    /**
+     * getInstance.
+     *
+     * @param properties Properties
+     * @return AAFPolicyClient
+     * @throws AAFPolicyException AAFPolicyException
+     */
     public static AAFPolicyClient getInstance(Properties properties) throws AAFPolicyException {
         try {
             Class<?> aafPolicyClient = Class

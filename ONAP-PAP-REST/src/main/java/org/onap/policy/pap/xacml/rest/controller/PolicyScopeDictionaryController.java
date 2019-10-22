@@ -23,11 +23,14 @@ package org.onap.policy.pap.xacml.rest.controller;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -49,8 +52,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class PolicyScopeDictionaryController {
 
-    private static final Logger LOGGER =
-            FlexLogger.getLogger(PolicyScopeDictionaryController.class);
+    private static final Logger LOGGER = FlexLogger.getLogger(PolicyScopeDictionaryController.class);
 
     private static CommonClassDao commonClassDao;
     private static String operation = "operation";
@@ -81,24 +83,27 @@ public class PolicyScopeDictionaryController {
         PolicyScopeDictionaryController.commonClassDao = commonClassDao;
     }
 
-    @RequestMapping(value = {"/get_GroupPolicyScopeDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_GroupPolicyScopeDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getGroupPolicyScopeEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, groupPolicyScopeDatas, "name", GroupPolicyScopeList.class);
     }
 
-    @RequestMapping(value = {"/get_GroupPolicyScopeData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_GroupPolicyScopeData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getGroupPolicyScopeEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, groupPolicyScopeDatas, GroupPolicyScopeList.class);
     }
 
-    @RequestMapping(value = {"/ps_dictionary/save_psGroupPolicyScope"},
-            method = {RequestMethod.POST})
-    public ModelAndView savePSGroupScopeDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    @RequestMapping(value = {"/ps_dictionary/save_psGroupPolicyScope"}, method = {RequestMethod.POST})
+    public ModelAndView savePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
             boolean fromAPI = utils.isRequestFromAPI(request);
@@ -109,40 +114,33 @@ public class PolicyScopeDictionaryController {
             GroupPolicyScope groupData = null;
             boolean duplicateGroupFlag = false;
             if (fromAPI) {
-                gpdata = mapper.readValue(root.get(dictionaryFields).toString(),
-                        GroupPolicyScopeList.class);
+                gpdata = mapper.readValue(root.get(dictionaryFields).toString(), GroupPolicyScopeList.class);
                 try {
-                    groupData = mapper.readValue(root.get(groupPolicyScopeListData1).toString(),
-                            GroupPolicyScope.class);
+                    groupData =
+                            mapper.readValue(root.get(groupPolicyScopeListData1).toString(), GroupPolicyScope.class);
                 } catch (Exception e) {
                     groupData = new GroupPolicyScope();
-                    groupData.setResource(root.get(dictionaryFields).get("resource").toString()
-                            .replace("\"", ""));
-                    groupData.setClosedloop(root.get(dictionaryFields).get("closedloop").toString()
-                            .replace("\"", ""));
-                    groupData.setService(
-                            root.get(dictionaryFields).get("service").toString().replace("\"", ""));
-                    groupData.setType(
-                            root.get(dictionaryFields).get("type").toString().replace("\"", ""));
+                    groupData.setResource(root.get(dictionaryFields).get("resource").toString().replace("\"", ""));
+                    groupData.setClosedloop(root.get(dictionaryFields).get("closedloop").toString().replace("\"", ""));
+                    groupData.setService(root.get(dictionaryFields).get("service").toString().replace("\"", ""));
+                    groupData.setType(root.get(dictionaryFields).get("type").toString().replace("\"", ""));
                     LOGGER.error(e);
                 }
             } else {
-                gpdata = mapper.readValue(root.get("groupPolicyScopeListData").toString(),
-                        GroupPolicyScopeList.class);
+                gpdata = mapper.readValue(root.get("groupPolicyScopeListData").toString(), GroupPolicyScopeList.class);
                 try {
-                    groupData = mapper.readValue(root.get(groupPolicyScopeListData1).toString(),
-                            GroupPolicyScope.class);
+                    groupData =
+                            mapper.readValue(root.get(groupPolicyScopeListData1).toString(), GroupPolicyScope.class);
                 } catch (Exception e) {
                     LOGGER.error(e);
                     groupData = new GroupPolicyScope();
-                    groupData.setResource(root.get(groupPolicyScopeListData1).get("resource")
-                            .toString().replace("\"", ""));
-                    groupData.setClosedloop(root.get(groupPolicyScopeListData1).get("closedloop")
-                            .toString().replace("\"", ""));
-                    groupData.setService(root.get(groupPolicyScopeListData1).get("service")
-                            .toString().replace("\"", ""));
-                    groupData.setType(root.get(groupPolicyScopeListData1).get("type").toString()
-                            .replace("\"", ""));
+                    groupData.setResource(
+                            root.get(groupPolicyScopeListData1).get("resource").toString().replace("\"", ""));
+                    groupData.setClosedloop(
+                            root.get(groupPolicyScopeListData1).get("closedloop").toString().replace("\"", ""));
+                    groupData.setService(
+                            root.get(groupPolicyScopeListData1).get("service").toString().replace("\"", ""));
+                    groupData.setType(root.get(groupPolicyScopeListData1).get("type").toString().replace("\"", ""));
                 }
             }
             if (!gpdata.getGroupName().startsWith(policyScope)) {
@@ -158,15 +156,15 @@ public class PolicyScopeDictionaryController {
             valueList.add("service=" + serviceValue);
             valueList.add("type=" + typeValue);
             valueList.add("closedLoopControlName=" + closedLoopValue);
-            String list = StringUtils.replaceEach(valueList.toString(),
-                    new String[] {"[", "]", " "}, new String[] {"", "", ""});
+            String list = StringUtils.replaceEach(valueList.toString(), new String[] {"[", "]", " "},
+                    new String[] {"", "", ""});
             gpdata.setGroupList(list);
 
-            List<Object> duplicateData = commonClassDao.checkDuplicateEntry(gpdata.getGroupName(),
-                    "name", GroupPolicyScopeList.class);
+            List<Object> duplicateData =
+                    commonClassDao.checkDuplicateEntry(gpdata.getGroupName(), "name", GroupPolicyScopeList.class);
             if (duplicateData.isEmpty()) {
-                duplicateData = commonClassDao.checkDuplicateEntry(gpdata.getGroupList(),
-                        "groupList", GroupPolicyScopeList.class);
+                duplicateData = commonClassDao.checkDuplicateEntry(gpdata.getGroupList(), "groupList",
+                        GroupPolicyScopeList.class);
                 if (duplicateData.isEmpty()) {
                     duplicateGroupFlag = true;
                 }
@@ -174,13 +172,11 @@ public class PolicyScopeDictionaryController {
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
                 GroupPolicyScopeList data = (GroupPolicyScopeList) duplicateData.get(0);
-                if (request.getParameter(operation) != null
-                        && "update".equals(request.getParameter(operation))) {
+                if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     gpdata.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
                         && !"update".equals(request.getParameter(operation)))
-                        || (request.getParameter(operation) == null
-                                && (data.getId() != gpdata.getId()))) {
+                        || (request.getParameter(operation) == null && (data.getId() != gpdata.getId()))) {
                     duplicateflag = true;
                 }
             }
@@ -191,8 +187,7 @@ public class PolicyScopeDictionaryController {
                 } else {
                     commonClassDao.update(gpdata);
                 }
-                responseString = mapper
-                        .writeValueAsString(commonClassDao.getData(GroupPolicyScopeList.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(GroupPolicyScopeList.class));
             } else if (duplicateGroupFlag) {
                 responseString = "DuplicateGroup";
             } else {
@@ -209,22 +204,25 @@ public class PolicyScopeDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/ps_dictionary/remove_GroupPolicyScope"},
-            method = {RequestMethod.POST})
-    public void removePSGroupScopeDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    @RequestMapping(value = {"/ps_dictionary/remove_GroupPolicyScope"}, method = {RequestMethod.POST})
+    public void removePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, groupPolicyScopeDatas, GroupPolicyScopeList.class);
     }
 
-    @RequestMapping(value = {"/get_PSClosedLoopDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_PSClosedLoopDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPSClosedLoopEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, psCLDatas, "name", OnapName.class);
     }
 
-    @RequestMapping(value = {"/get_PSClosedLoopData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_PSClosedLoopData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPSClosedLoopEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -232,8 +230,8 @@ public class PolicyScopeDictionaryController {
     }
 
     @RequestMapping(value = {"/ps_dictionary/save_psClosedLoop"}, method = {RequestMethod.POST})
-    public ModelAndView savePSClosedLoopDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public ModelAndView savePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
             boolean fromAPI = utils.isRequestFromAPI(request);
@@ -242,25 +240,22 @@ public class PolicyScopeDictionaryController {
             JsonNode root = mapper.readTree(request.getReader());
             PolicyScopeClosedLoop onapData;
             if (fromAPI) {
-                onapData = mapper.readValue(root.get(dictionaryFields).toString(),
-                        PolicyScopeClosedLoop.class);
+                onapData = mapper.readValue(root.get(dictionaryFields).toString(), PolicyScopeClosedLoop.class);
             } else {
                 onapData = mapper.readValue(root.get("psClosedLoopDictionaryData").toString(),
                         PolicyScopeClosedLoop.class);
             }
 
-            List<Object> duplicateData = commonClassDao.checkDuplicateEntry(onapData.getName(),
-                    "name", PolicyScopeClosedLoop.class);
+            List<Object> duplicateData =
+                    commonClassDao.checkDuplicateEntry(onapData.getName(), "name", PolicyScopeClosedLoop.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
                 PolicyScopeClosedLoop data = (PolicyScopeClosedLoop) duplicateData.get(0);
-                if (request.getParameter(operation) != null
-                        && "update".equals(request.getParameter(operation))) {
+                if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     onapData.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
                         && !"update".equals(request.getParameter(operation)))
-                        || (request.getParameter(operation) == null
-                                && (data.getId() != onapData.getId()))) {
+                        || (request.getParameter(operation) == null && (data.getId() != onapData.getId()))) {
                     duplicateflag = true;
                 }
             }
@@ -271,8 +266,7 @@ public class PolicyScopeDictionaryController {
                 } else {
                     commonClassDao.update(onapData);
                 }
-                responseString = mapper
-                        .writeValueAsString(commonClassDao.getData(PolicyScopeClosedLoop.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeClosedLoop.class));
             } else {
                 responseString = duplicateResponseString;
             }
@@ -288,20 +282,24 @@ public class PolicyScopeDictionaryController {
     }
 
     @RequestMapping(value = {"/ps_dictionary/remove_PSClosedLoop"}, method = {RequestMethod.POST})
-    public void removePSClosedLoopDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public void removePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, psCLDatas, PolicyScopeClosedLoop.class);
     }
 
-    @RequestMapping(value = {"/get_PSServiceDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_PSServiceDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPSServiceEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, psServiceDatas, "name", PolicyScopeService.class);
     }
 
-    @RequestMapping(value = {"/get_PSServiceData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_PSServiceData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPSServiceEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -309,8 +307,8 @@ public class PolicyScopeDictionaryController {
     }
 
     @RequestMapping(value = {"/ps_dictionary/save_psService"}, method = {RequestMethod.POST})
-    public ModelAndView savePSServiceDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public ModelAndView savePSServiceDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
             boolean fromAPI = utils.isRequestFromAPI(request);
@@ -319,25 +317,21 @@ public class PolicyScopeDictionaryController {
             JsonNode root = mapper.readTree(request.getReader());
             PolicyScopeService onapData;
             if (fromAPI) {
-                onapData = mapper.readValue(root.get(dictionaryFields).toString(),
-                        PolicyScopeService.class);
+                onapData = mapper.readValue(root.get(dictionaryFields).toString(), PolicyScopeService.class);
             } else {
-                onapData = mapper.readValue(root.get("psServiceDictionaryData").toString(),
-                        PolicyScopeService.class);
+                onapData = mapper.readValue(root.get("psServiceDictionaryData").toString(), PolicyScopeService.class);
             }
 
-            List<Object> duplicateData = commonClassDao.checkDuplicateEntry(onapData.getName(),
-                    "name", PolicyScopeService.class);
+            List<Object> duplicateData =
+                    commonClassDao.checkDuplicateEntry(onapData.getName(), "name", PolicyScopeService.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
                 PolicyScopeService data = (PolicyScopeService) duplicateData.get(0);
-                if (request.getParameter(operation) != null
-                        && "update".equals(request.getParameter(operation))) {
+                if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     onapData.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
                         && !"update".equals(request.getParameter(operation)))
-                        || (request.getParameter(operation) == null
-                                && (data.getId() != onapData.getId()))) {
+                        || (request.getParameter(operation) == null && (data.getId() != onapData.getId()))) {
                     duplicateflag = true;
                 }
             }
@@ -348,8 +342,7 @@ public class PolicyScopeDictionaryController {
                 } else {
                     commonClassDao.update(onapData);
                 }
-                responseString =
-                        mapper.writeValueAsString(commonClassDao.getData(PolicyScopeService.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeService.class));
             } else {
                 responseString = duplicateResponseString;
             }
@@ -365,20 +358,23 @@ public class PolicyScopeDictionaryController {
     }
 
     @RequestMapping(value = {"/ps_dictionary/remove_PSService"}, method = {RequestMethod.POST})
-    public void removePSServiceDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public void removePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, psServiceDatas, PolicyScopeService.class);
     }
 
-    @RequestMapping(value = {"/get_PSTypeDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_PSTypeDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPSTypeEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, psTypeDatas, "name", PolicyScopeType.class);
     }
 
-    @RequestMapping(value = {"/get_PSTypeData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_PSTypeData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPSTypeEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -386,8 +382,8 @@ public class PolicyScopeDictionaryController {
     }
 
     @RequestMapping(value = {"/ps_dictionary/save_psType"}, method = {RequestMethod.POST})
-    public ModelAndView savePSTypeDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public ModelAndView savePSTypeDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
             boolean fromAPI = utils.isRequestFromAPI(request);
@@ -396,25 +392,21 @@ public class PolicyScopeDictionaryController {
             JsonNode root = mapper.readTree(request.getReader());
             PolicyScopeType onapData;
             if (fromAPI) {
-                onapData = mapper.readValue(root.get(dictionaryFields).toString(),
-                        PolicyScopeType.class);
+                onapData = mapper.readValue(root.get(dictionaryFields).toString(), PolicyScopeType.class);
             } else {
-                onapData = mapper.readValue(root.get("psTypeDictionaryData").toString(),
-                        PolicyScopeType.class);
+                onapData = mapper.readValue(root.get("psTypeDictionaryData").toString(), PolicyScopeType.class);
             }
 
-            List<Object> duplicateData = commonClassDao.checkDuplicateEntry(onapData.getName(),
-                    "name", PolicyScopeType.class);
+            List<Object> duplicateData =
+                    commonClassDao.checkDuplicateEntry(onapData.getName(), "name", PolicyScopeType.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
                 PolicyScopeType data = (PolicyScopeType) duplicateData.get(0);
-                if (request.getParameter(operation) != null
-                        && "update".equals(request.getParameter(operation))) {
+                if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     onapData.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
                         && !"update".equals(request.getParameter(operation)))
-                        || (request.getParameter(operation) == null
-                                && (data.getId() != onapData.getId()))) {
+                        || (request.getParameter(operation) == null && (data.getId() != onapData.getId()))) {
                     duplicateflag = true;
                 }
             }
@@ -425,8 +417,7 @@ public class PolicyScopeDictionaryController {
                 } else {
                     commonClassDao.update(onapData);
                 }
-                responseString =
-                        mapper.writeValueAsString(commonClassDao.getData(PolicyScopeType.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeType.class));
             } else {
                 responseString = duplicateResponseString;
             }
@@ -442,20 +433,23 @@ public class PolicyScopeDictionaryController {
     }
 
     @RequestMapping(value = {"/ps_dictionary/remove_PSType"}, method = {RequestMethod.POST})
-    public void removePSTypeDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public void removePSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, psTypeDatas, PolicyScopeType.class);
     }
 
-    @RequestMapping(value = {"/get_PSResourceDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_PSResourceDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPSResourceEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, psResourceDatas, "name", PolicyScopeResource.class);
     }
 
-    @RequestMapping(value = {"/get_PSResourceData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_PSResourceData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPSResourceEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -463,8 +457,8 @@ public class PolicyScopeDictionaryController {
     }
 
     @RequestMapping(value = {"/ps_dictionary/save_psResource"}, method = {RequestMethod.POST})
-    public ModelAndView savePSResourceDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public ModelAndView savePSResourceDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
             boolean fromAPI = utils.isRequestFromAPI(request);
@@ -473,25 +467,21 @@ public class PolicyScopeDictionaryController {
             JsonNode root = mapper.readTree(request.getReader());
             PolicyScopeResource onapData;
             if (fromAPI) {
-                onapData = mapper.readValue(root.get(dictionaryFields).toString(),
-                        PolicyScopeResource.class);
+                onapData = mapper.readValue(root.get(dictionaryFields).toString(), PolicyScopeResource.class);
             } else {
-                onapData = mapper.readValue(root.get("psResourceDictionaryData").toString(),
-                        PolicyScopeResource.class);
+                onapData = mapper.readValue(root.get("psResourceDictionaryData").toString(), PolicyScopeResource.class);
             }
 
-            List<Object> duplicateData = commonClassDao.checkDuplicateEntry(onapData.getName(),
-                    "name", PolicyScopeResource.class);
+            List<Object> duplicateData =
+                    commonClassDao.checkDuplicateEntry(onapData.getName(), "name", PolicyScopeResource.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
                 PolicyScopeResource data = (PolicyScopeResource) duplicateData.get(0);
-                if (request.getParameter(operation) != null
-                        && "update".equals(request.getParameter(operation))) {
+                if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     onapData.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
                         && !"update".equals(request.getParameter(operation)))
-                        || (request.getParameter(operation) == null
-                                && (data.getId() != onapData.getId()))) {
+                        || (request.getParameter(operation) == null && (data.getId() != onapData.getId()))) {
                     duplicateflag = true;
                 }
             }
@@ -502,8 +492,7 @@ public class PolicyScopeDictionaryController {
                 } else {
                     commonClassDao.update(onapData);
                 }
-                responseString = mapper
-                        .writeValueAsString(commonClassDao.getData(PolicyScopeResource.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeResource.class));
             } else {
                 responseString = duplicateResponseString;
             }

@@ -66,14 +66,12 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
 import org.onap.policy.rest.jpa.OptimizationModels;
 import org.onap.policy.rest.jpa.PolicyEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * The class <code>CreateOptimizationControllerTest</code> contains tests for the class
- * {@link <code>CreateOptimizationController</code>}*
  *
- * All JUnits are designed to run in the local development environment where they have write
+ * <p/>All JUnits are designed to run in the local development environment where they have write
  * privileges and can execute time-sensitive tasks.
  */
 public class CreateOptimizationControllerTest {
@@ -126,7 +124,7 @@ public class CreateOptimizationControllerTest {
     }
 
     /**
-     * Run the PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter, JsonNode) method test
+     * Run the PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter, JsonNode) method test.
      */
 
     @Test
@@ -143,7 +141,7 @@ public class CreateOptimizationControllerTest {
         PolicyRestAdapter policyData = null;
         try {
             root = JsonLoader.fromString(jsonString);
-            policyData = (PolicyRestAdapter) mapper.readValue(root.get("policyData").get("policy").toString(),
+            policyData = mapper.readValue(root.get("policyData").get("policy").toString(),
                     PolicyRestAdapter.class);
         } catch (Exception e) {
             logger.error("testSetDataToPolicyRestAdapter", e);
@@ -158,7 +156,7 @@ public class CreateOptimizationControllerTest {
 
     /**
      * Run the ModelAndView getOptimizationTemplateData(HttpServletRequest, HttpServletResponse)
-     * method test
+     * method test.
      */
 
     @Test
@@ -201,7 +199,7 @@ public class CreateOptimizationControllerTest {
 
     /**
      * Run the ModelAndView getModelServiceVersionData(HttpServletRequest, HttpServletResponse)
-     * method test
+     * method test.
      */
 
     @Test
@@ -244,7 +242,7 @@ public class CreateOptimizationControllerTest {
     }
 
     /**
-     * Run the void prePopulateDCAEMSPolicyData(PolicyRestAdapter, PolicyEntity) method test
+     * Run the void prePopulateDCAEMSPolicyData(PolicyRestAdapter, PolicyEntity) method test.
      */
 
     @Test
@@ -267,7 +265,7 @@ public class CreateOptimizationControllerTest {
 
         try {
             root = JsonLoader.fromString(jsonString);
-            restAdapter = (PolicyRestAdapter) mapper.readValue(root.get("policyData").get("policy").toString(),
+            restAdapter = mapper.readValue(root.get("policyData").get("policy").toString(),
                     PolicyRestAdapter.class);
             PolicyType policyType = new PolicyType();
             TargetType target = new TargetType();
@@ -387,7 +385,7 @@ public class CreateOptimizationControllerTest {
     }
 
     /**
-     * Run the void SetMSModelData(HttpServletRequest, HttpServletResponse) method test
+     * Run the void SetMSModelData(HttpServletRequest, HttpServletResponse) method test.
      */
 
     @Test
@@ -429,9 +427,7 @@ public class CreateOptimizationControllerTest {
     }
 
     /**
-     * 
-     * @ Get File Stream
-     *
+     * @ Get File Stream.
      */
     private class MockServletInputStream extends ServletInputStream {
 

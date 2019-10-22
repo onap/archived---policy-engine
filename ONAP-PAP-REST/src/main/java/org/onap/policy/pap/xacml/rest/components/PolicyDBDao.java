@@ -24,6 +24,7 @@ package org.onap.policy.pap.xacml.rest.components;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
 import com.att.research.xacml.util.XACMLProperties;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
@@ -36,7 +37,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.PersistenceException;
+
 import org.apache.commons.io.FilenameUtils;
 import org.hibernate.Criteria;
 import org.hibernate.LockMode;
@@ -86,15 +89,12 @@ public class PolicyDBDao {
     public static final String PDPENTITY_SELECT =
             "SELECT p FROM PdpEntity p WHERE p.pdpId=:pdpId AND p.deleted=:deleted";
     public static final String GROUP_NOT_FOUND = "The group could not be found with id ";
-    public static final String FOUND_IN_DB_NOT_DEL =
-            " were found in the database that are not deleted";
+    public static final String FOUND_IN_DB_NOT_DEL = " were found in the database that are not deleted";
     public static final String MORE_THAN_ONE_PDP = "Somehow, more than one pdp with the same id ";
-    public static final String DELETED_STATUS_FOUND =
-            " and deleted status were found in the database";
+    public static final String DELETED_STATUS_FOUND = " and deleted status were found in the database";
     public static final String DUPLICATE_GROUPID = "Somehow, more than one group with the same id ";
     public static final String PDP_ID = "pdpId";
-    public static final String QUERY_FAILED_FOR_GROUP =
-            "Query failed trying to check for existing group";
+    public static final String QUERY_FAILED_FOR_GROUP = "Query failed trying to check for existing group";
     public static final String QUERY_FAILED_GET_GROUP = "Query failed trying to get group ";
     public static final String SCOPE = "scope";
     public static final String POLICYDBDAO_VAR = "PolicyDBDao";
@@ -105,7 +105,6 @@ public class PolicyDBDao {
     private static SessionFactory sessionfactory;
     private List<?> otherServers;
     private PAPPolicyEngine papEngine;
-
 
     /**
      * Gets the current instance of PolicyDBDao.
@@ -140,8 +139,8 @@ public class PolicyDBDao {
     public PolicyDBDao(String init) {
         // not needed in this release
         if (!register()) {
-            PolicyLogger.error(
-                    "This server's PolicyDBDao instance could not be registered and may not reveive updates");
+            PolicyLogger
+                    .error("This server's PolicyDBDao instance could not be registered and may not reveive updates");
         }
 
         otherServers = getRemotePolicyDBDaoList();
@@ -157,17 +156,15 @@ public class PolicyDBDao {
     // waitTime in ms to wait for lock, or -1 to wait forever (no)
     @SuppressWarnings("deprecation")
     public void startTransactionSynced(Session session, int waitTime) {
-        logger.debug("\n\nstartTransactionSynced(Hibernate Session,int waitTime) as "
-                + "\n   startTransactionSynced(" + session + "," + waitTime + ") called\n\n");
+        logger.debug("\n\nstartTransactionSynced(Hibernate Session,int waitTime) as " + "\n   startTransactionSynced("
+                + session + "," + waitTime + ") called\n\n");
         DatabaseLockEntity lock = null;
         session.beginTransaction();
         try {
             if (logger.isDebugEnabled()) {
-                logger.debug("\n\nstartTransactionSynced():" + "\n   ATTEMPT to get the DB lock"
-                        + "\n\n");
+                logger.debug("\n\nstartTransactionSynced():" + "\n   ATTEMPT to get the DB lock" + "\n\n");
             }
-            lock = (DatabaseLockEntity) session.get(DatabaseLockEntity.class, 1,
-                    LockMode.PESSIMISTIC_WRITE);
+            lock = (DatabaseLockEntity) session.get(DatabaseLockEntity.class, 1, LockMode.PESSIMISTIC_WRITE);
             if (logger.isDebugEnabled()) {
                 logger.debug("\n\nstartTransactionSynced():" + "\n   GOT the DB lock" + "\n\n");
             }
@@ -201,8 +198,7 @@ public class PolicyDBDao {
             try {
                 session.close();
             } catch (Exception e) {
-                logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement" + e);
+                logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e);
             }
         }
         return policyDBDaoEntityList;
@@ -222,11 +218,9 @@ public class PolicyDBDao {
     public PolicyDBDaoTransaction getNewAuditTransaction() {
         logger.debug("getNewAuditTransaction() as getNewAuditTransaction() called");
         // Use the standard transaction wait time in ms
-        int auditWaitMs = Integer
-                .parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT));
+        int auditWaitMs = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT));
         // Use the (extended) audit timeout time in ms
-        int auditTimeoutMs = Integer
-                .parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_TIMEOUT));
+        int auditTimeoutMs = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_TIMEOUT));
         return new PolicyDbDaoTransactionInstance(auditTimeoutMs, auditWaitMs);
     }
 
@@ -237,8 +231,7 @@ public class PolicyDBDao {
      * @param two A String or null to compare
      */
     public static boolean stringEquals(String one, String two) {
-        logger.debug("stringEquals(String one, String two) as stringEquals(" + one + ", " + two
-                + ") called");
+        logger.debug("stringEquals(String one, String two) as stringEquals(" + one + ", " + two + ") called");
         if (one == null && two == null) {
             return true;
         }
@@ -272,8 +265,7 @@ public class PolicyDBDao {
             urlUserPass[2] = commaSplit[2];
         }
         if (urlUserPass[1] == null || "".equals(urlUserPass[1])) {
-            String usernamePropertyValue =
-                    XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
+            String usernamePropertyValue = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
             if (usernamePropertyValue != null) {
                 urlUserPass[1] = usernamePropertyValue;
             }
@@ -332,8 +324,7 @@ public class PolicyDBDao {
                 }
             }
         }
-        logger.debug(
-                "\nPolicyDBDao.register. Database locking and concurrency control is initialized\n");
+        logger.debug("\nPolicyDBDao.register. Database locking and concurrency control is initialized\n");
         PolicyDBDaoEntity foundPolicyDBDaoEntity = null;
         Criteria cr = session.createCriteria(PolicyDBDaoEntity.class);
         cr.add(Restrictions.eq("policyDBDaoUrl", url[0]));
@@ -394,8 +385,8 @@ public class PolicyDBDao {
      * This method is called during all pushPolicy transactions and makes sure the file system group
      * is in sync with the database groupentity
      */
-    public StdPDPGroup synchronizeGroupPoliciesInFileSystem(StdPDPGroup pdpGroup,
-            GroupEntity groupentity) throws PAPException, PolicyDBException {
+    public StdPDPGroup synchronizeGroupPoliciesInFileSystem(StdPDPGroup pdpGroup, GroupEntity groupentity)
+            throws PAPException, PolicyDBException {
 
         HashMap<String, PDPPolicy> currentPolicyMap = new HashMap<>();
         HashSet<String> newPolicyIdSet = new HashSet<>();
@@ -415,23 +406,19 @@ public class PolicyDBDao {
                 // convert PolicyEntity object to PDPPolicy
                 String name = pdpPolicyId.replace(".xml", "");
                 name = name.substring(0, name.lastIndexOf('.'));
-                InputStream policyStream =
-                        new ByteArrayInputStream(policy.getPolicyData().getBytes());
+                InputStream policyStream = new ByteArrayInputStream(policy.getPolicyData().getBytes());
                 pdpGroup.copyPolicyToFile(pdpPolicyId, name, policyStream);
-                URI location =
-                        Paths.get(pdpGroup.getDirectory().toAbsolutePath().toString(), pdpPolicyId)
-                                .toUri();
+                URI location = Paths.get(pdpGroup.getDirectory().toAbsolutePath().toString(), pdpPolicyId).toUri();
                 StdPDPPolicy newPolicy = null;
                 try {
                     newPolicy = new StdPDPPolicy(pdpPolicyId, true,
                             removeExtensionAndVersionFromPolicyName(pdpPolicyId), location);
                     newPolicySet.add(newPolicy);
-                    logger.info("Adding new policy to PDPGroup - " + newPolicy.getId()
-                            + ", Location - " + location);
+                    logger.info("Adding new policy to PDPGroup - " + newPolicy.getId() + ", Location - " + location);
                 } catch (Exception e) {
                     logger.debug(e);
-                    PolicyLogger.error(
-                            "PolicyDBDao: Exception occurred while creating the StdPDPPolicy newPolicy object "
+                    PolicyLogger
+                            .error("PolicyDBDao: Exception occurred while creating the StdPDPPolicy newPolicy object "
                                     + e.getMessage());
                 }
             }
@@ -450,15 +437,13 @@ public class PolicyDBDao {
             }
         }
 
-        logger.info(
-                "PolicyDBDao: Adding new policy set to group to keep filesystem and DB in sync");
+        logger.info("PolicyDBDao: Adding new policy set to group to keep filesystem and DB in sync");
         pdpGroup.setPolicies(newPolicySet);
 
         return pdpGroup;
     }
 
-    public String removeExtensionAndVersionFromPolicyName(String originalPolicyName)
-            throws PolicyDBException {
+    public String removeExtensionAndVersionFromPolicyName(String originalPolicyName) throws PolicyDBException {
         return getPolicyNameAndVersionFromPolicyFileName(originalPolicyName)[0];
     }
 
@@ -468,8 +453,7 @@ public class PolicyDBDao {
      * @param originalPolicyName: a policy file name ex: Config_policy.2.xml
      * @return An array [0]: The policy name, [1]: the policy version, as a string
      */
-    public String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName)
-            throws PolicyDBException {
+    public String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName) throws PolicyDBException {
         String policyName = originalPolicyName;
         String[] nameAndVersion = new String[2];
         try {
@@ -513,8 +497,7 @@ public class PolicyDBDao {
             deleteAllGroupTables();
             auditGroups(papEngine2);
         } catch (Exception e) {
-            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, POLICYDBDAO_VAR,
-                    "auditLocalDatabase() error");
+            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, POLICYDBDAO_VAR, "auditLocalDatabase() error");
             logger.error("Exception Occured" + e);
         }
     }
@@ -534,8 +517,7 @@ public class PolicyDBDao {
             if (groupQueryList != null && !groupQueryList.isEmpty()) {
                 GroupEntity dbgroup = (GroupEntity) groupQueryList.get(0);
                 updatedGroup = synchronizeGroupPoliciesInFileSystem(group, dbgroup);
-                logger.info(
-                        "Group was updated during file system audit: " + updatedGroup.toString());
+                logger.info("Group was updated during file system audit: " + updatedGroup.toString());
             }
         } catch (PAPException | PolicyDBException e) {
             logger.error(e);
@@ -543,8 +525,7 @@ public class PolicyDBDao {
             logger.error(e);
             PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, POLICYDBDAO_VAR,
                     "Caught Exception trying to check if group exists groupQuery.getResultList()");
-            throw new PersistenceException(
-                    "Query failed trying to check if group " + group.getId() + " exists");
+            throw new PersistenceException("Query failed trying to check if group " + group.getId() + " exists");
         }
 
         session.getTransaction().commit();
@@ -571,8 +552,7 @@ public class PolicyDBDao {
             final Criteria configDataQuery = session.createCriteria(cl.getName());
             @SuppressWarnings("unchecked")
             final List<T> configDataResult = configDataQuery.list();
-            Path webappsPath = Paths
-                    .get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS), type);
+            Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS), type);
 
             for (final T configData : configDataResult) {
                 String configName = null;
@@ -588,8 +568,7 @@ public class PolicyDBDao {
                     } else {
                         configName = ((ActionBodyEntity) configData).getActionBodyName();
                         configBody = (((ActionBodyEntity) configData).getActionBody() != null)
-                                ? ((ActionBodyEntity) configData).getActionBody()
-                                        .getBytes(StandardCharsets.UTF_8)
+                                ? ((ActionBodyEntity) configData).getActionBody().getBytes(StandardCharsets.UTF_8)
                                 : "".getBytes();
                     }
                     Path filePath = Paths.get(webappsPath.toString(), configName);
@@ -662,15 +641,13 @@ public class PolicyDBDao {
 
                     for (PDPPolicy policy : policies) {
                         try {
-                            String[] stringArray =
-                                    getNameScopeAndVersionFromPdpPolicy(policy.getId());
+                            String[] stringArray = getNameScopeAndVersionFromPdpPolicy(policy.getId());
                             if (stringArray == null) {
                                 throw new IllegalArgumentException(
                                         "Invalid input - policyID must contain name, scope and version");
                             }
                             List<PolicyEntity> policyEntityList;
-                            Query getPolicyEntitiesQuery =
-                                    session.getNamedQuery("PolicyEntity.findByNameAndScope");
+                            Query getPolicyEntitiesQuery = session.getNamedQuery("PolicyEntity.findByNameAndScope");
                             getPolicyEntitiesQuery.setParameter("name", stringArray[0]);
                             getPolicyEntitiesQuery.setParameter(SCOPE, stringArray[1]);
 
@@ -694,8 +671,7 @@ public class PolicyDBDao {
             }
         } catch (Exception e) {
             session.getTransaction().rollback();
-            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, POLICYDBDAO_VAR,
-                    "Exception auditGroups outer catch");
+            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, POLICYDBDAO_VAR, "Exception auditGroups outer catch");
             session.close();
             return;
         }
@@ -717,9 +693,8 @@ public class PolicyDBDao {
     // config type selection for saving.
     public String getConfigFile(String inputFilename, String configType) {
         String filename = inputFilename;
-        logger.debug(
-                "getConfigFile(String filename, String scope, String configType) as getConfigFile("
-                        + filename + ", " + configType + ") called");
+        logger.debug("getConfigFile(String filename, String scope, String configType) as getConfigFile(" + filename
+                + ", " + configType + ") called");
         filename = FilenameUtils.removeExtension(filename);
         String id = configType;
 
@@ -812,7 +787,6 @@ public class PolicyDBDao {
         return papEngine;
     }
 
-
     public static boolean isJunit() {
         return isJunit;
     }
@@ -830,8 +804,7 @@ public class PolicyDBDao {
             return scope + "." + PolicyDBDao.this.getConfigFile(filename, policy);
         }
 
-        String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName)
-                throws PolicyDBException {
+        String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName) throws PolicyDBException {
             return PolicyDBDao.this.getPolicyNameAndVersionFromPolicyFileName(originalPolicyName);
         }
 

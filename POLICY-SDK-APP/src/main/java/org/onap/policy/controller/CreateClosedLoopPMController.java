@@ -52,6 +52,12 @@ public class CreateClosedLoopPMController {
 
     protected PolicyRestAdapter policyAdapter = null;
 
+    /**
+     * prePopulateClosedLoopPMPolicyData.
+     *
+     * @param policyAdapter PolicyRestAdapter
+     * @param entity PolicyEntity
+     */
     public void prePopulateClosedLoopPMPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         if (! (policyAdapter.getPolicyData() instanceof PolicyType)) {
             return;
@@ -116,19 +122,8 @@ public class CreateClosedLoopPMController {
                             AttributeDesignatorType designator = match.getAttributeDesignator();
                             String attributeId = designator.getAttributeId();
                             // First match in the target is OnapName, so set that value.
-                            if ("ONAPName".equals(attributeId)) {
-                                policyAdapter.setOnapName(value);
-                            } else if ("RiskType".equals(attributeId)) {
-                                policyAdapter.setRiskType(value);
-                            } else if ("RiskLevel".equals(attributeId)) {
-                                policyAdapter.setRiskLevel(value);
-                            } else if ("guard".equals(attributeId)) {
-                                policyAdapter.setGuard(value);
-                            } else if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
-                                PolicyController controller = new PolicyController();
-                                String newDate = controller.convertDate(value);
-                                policyAdapter.setTtlDate(newDate);
-                            } else if ("ServiceType".equals(attributeId)) {
+                            policyAdapter.setupUsingAttribute(attributeId, value);
+                            if ("ServiceType".equals(attributeId)) {
                                 LinkedHashMap<String, String> serviceTypePolicyName1 = new LinkedHashMap<>();
                                 serviceTypePolicyName1.put(KEY_SERVICE_TYPE_POLICY_NAME, value);
                                 policyAdapter.setServiceTypePolicyName(serviceTypePolicyName1);

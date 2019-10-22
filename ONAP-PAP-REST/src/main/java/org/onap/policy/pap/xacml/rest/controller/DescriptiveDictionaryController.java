@@ -23,11 +23,14 @@ package org.onap.policy.pap.xacml.rest.controller;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.onap.policy.pap.xacml.rest.adapters.GridData;
 import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
@@ -65,24 +68,27 @@ public class DescriptiveDictionaryController {
         return DictionaryUtils.getDictionaryUtils();
     }
 
-    @RequestMapping(value = {"/get_DescriptiveScopeByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_DescriptiveScopeByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getDescriptiveDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, descriptiveDatas, dScopeName, DescriptiveScope.class);
     }
 
-    @RequestMapping(value = {"/get_DescriptiveScope"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_DescriptiveScope"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getDescriptiveDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, descriptiveDatas, DescriptiveScope.class);
     }
 
-    @RequestMapping(value = {"/descriptive_dictionary/save_descriptive"},
-            method = {RequestMethod.POST})
-    public ModelAndView saveDescriptiveDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    @RequestMapping(value = {"/descriptive_dictionary/save_descriptive"}, method = {RequestMethod.POST})
+    public ModelAndView saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
             boolean fromAPI = utils.isRequestFromAPI(request);
@@ -93,32 +99,27 @@ public class DescriptiveDictionaryController {
             GridData data;
             String userId = null;
             if (fromAPI) {
-                descriptiveScope = mapper.readValue(root.get("dictionaryFields").toString(),
-                        DescriptiveScope.class);
+                descriptiveScope = mapper.readValue(root.get("dictionaryFields").toString(), DescriptiveScope.class);
                 data = mapper.readValue(root.get("dictionaryFields").toString(), GridData.class);
                 userId = "API";
             } else {
                 descriptiveScope =
-                        mapper.readValue(root.get("descriptiveScopeDictionaryData").toString(),
-                                DescriptiveScope.class);
-                data = mapper.readValue(root.get("descriptiveScopeDictionaryData").toString(),
-                        GridData.class);
+                        mapper.readValue(root.get("descriptiveScopeDictionaryData").toString(), DescriptiveScope.class);
+                data = mapper.readValue(root.get("descriptiveScopeDictionaryData").toString(), GridData.class);
                 userId = root.get("userid").textValue();
             }
             descriptiveScope.setSearch(utils.appendKeyValue(data.getAttributes(), "AND", ":"));
             UserInfo userInfo = utils.getUserInfo(userId);
-            List<Object> duplicateData = commonClassDao.checkDuplicateEntry(
-                    descriptiveScope.getScopeName(), dScopeName, DescriptiveScope.class);
+            List<Object> duplicateData = commonClassDao.checkDuplicateEntry(descriptiveScope.getScopeName(), dScopeName,
+                    DescriptiveScope.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
                 DescriptiveScope data1 = (DescriptiveScope) duplicateData.get(0);
-                if (request.getParameter(operation) != null
-                        && "update".equals(request.getParameter(operation))) {
+                if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     descriptiveScope.setId(data1.getId());
                 } else if ((request.getParameter(operation) != null
                         && !"update".equals(request.getParameter(operation)))
-                        || (request.getParameter(operation) == null
-                                && (data1.getId() != descriptiveScope.getId()))) {
+                        || (request.getParameter(operation) == null && (data1.getId() != descriptiveScope.getId()))) {
                     duplicateflag = true;
                 }
             }
@@ -132,8 +133,7 @@ public class DescriptiveDictionaryController {
                     descriptiveScope.setModifiedDate(new Date());
                     commonClassDao.update(descriptiveScope);
                 }
-                responseString =
-                        mapper.writeValueAsString(commonClassDao.getData(DescriptiveScope.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(DescriptiveScope.class));
             } else {
                 responseString = "Duplicate";
             }
@@ -148,10 +148,9 @@ public class DescriptiveDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/descriptive_dictionary/remove_descriptiveScope"},
-            method = {RequestMethod.POST})
-    public void removeDescriptiveDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    @RequestMapping(value = {"/descriptive_dictionary/remove_descriptiveScope"}, method = {RequestMethod.POST})
+    public void removeDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, descriptiveDatas, DescriptiveScope.class);
     }

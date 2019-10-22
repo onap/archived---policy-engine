@@ -23,6 +23,7 @@ package org.onap.policy.pap.xacml.rest;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.util.XACMLProperties;
 import com.google.common.base.Joiner;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -32,6 +33,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 import java.util.TreeSet;
+
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.dao.CommonClassDao;
@@ -59,7 +61,6 @@ public class DataToNotifyPdp {
     public DataToNotifyPdp() {
         // default constructor.
     }
-
 
     private static Properties readPipProperties() throws IOException {
         if (pipProperties == null) {

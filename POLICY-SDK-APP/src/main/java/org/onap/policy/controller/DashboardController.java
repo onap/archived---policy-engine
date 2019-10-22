@@ -188,7 +188,7 @@ public class DashboardController extends RestrictedBaseController {
             model.put("policyStatusCRUDData", mapper.writeValueAsString(policyStatusCrudData));
             response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(model))).toString());
         } catch (Exception e) {
-            response.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
             PrintWriter out = response.getWriter();
             out.write(PolicyUtils.CATCH_EXCEPTION);
         }

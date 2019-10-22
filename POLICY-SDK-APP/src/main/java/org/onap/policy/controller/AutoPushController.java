@@ -79,7 +79,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class AutoPushController extends RestrictedBaseController {
 
     private static final Logger logger = FlexLogger.getLogger(AutoPushController.class);
-    private static final String UTF8 = "UTF-8";
 
     @Autowired
     CommonClassDao commonClassDao;
@@ -194,6 +193,11 @@ public class AutoPushController extends RestrictedBaseController {
     public ModelAndView pushPolicyToPDPGroup(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         try {
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            //
+            //
+            //
             ArrayList<Object> selectedPdps = new ArrayList<>();
             ArrayList<String> selectedPoliciesInUI = new ArrayList<>();
             PolicyController controller = getPolicyControllerInstance();
@@ -333,18 +337,12 @@ public class AutoPushController extends RestrictedBaseController {
                 currentPoliciesInGroup.addAll(selectedPolicies);
                 updatedGroupObject.setPolicies(currentPoliciesInGroup);
                 this.container.updateGroup(updatedGroupObject, userId);
-
-                response.setCharacterEncoding(UTF8);
-                response.setContentType("application / json");
-                request.setCharacterEncoding(UTF8);
-
+                response.setContentType(PolicyUtils.APPLICATION_JSON);
                 refreshGroups();
                 response.getWriter().write(new JSONObject(
                         new JsonMessage(mapper.writeValueAsString(groups))).toString());
             }
         } catch (Exception e) {
-            response.setCharacterEncoding(UTF8);
-            request.setCharacterEncoding(UTF8);
             logger.error(e);
             response.getWriter().write(PolicyUtils.CATCH_EXCEPTION);
         }
@@ -358,6 +356,11 @@ public class AutoPushController extends RestrictedBaseController {
     @RequestMapping(value = {"/auto_Push/remove_GroupPolicies.htm"}, method = {RequestMethod.POST})
     public ModelAndView removePDPGroup(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            //
+            //
+            //
             PolicyController controller = getPolicyControllerInstance();
             this.container = new PDPGroupContainer(controller.getPapEngine());
             ObjectMapper mapper = new ObjectMapper();
@@ -390,15 +393,11 @@ public class AutoPushController extends RestrictedBaseController {
                 this.container.updateGroup(updatedGroupObject);
             }
 
-            response.setCharacterEncoding(UTF8);
-            response.setContentType("application / json");
-            request.setCharacterEncoding(UTF8);
+            response.setContentType(PolicyUtils.APPLICATION_JSON);
 
             refreshGroups();
             response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(groups))).toString());
         } catch (Exception e) {
-            response.setCharacterEncoding(UTF8);
-            request.setCharacterEncoding(UTF8);
             logger.error(e);
             response.getWriter().write(PolicyUtils.CATCH_EXCEPTION);
         }

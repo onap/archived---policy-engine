@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.elk;
 
 import static org.junit.Assert.assertTrue;
@@ -46,21 +47,21 @@ public class ElasticSearchPolicyUpdateTest {
     private XACMLPAPTest papTest;
 
     @Before
-    public void setUp() throws IOException, ServletException, SQLException{
+    public void setUp() throws IOException, ServletException, SQLException {
         // Set the system property temporarily
         System.setProperty("PROPERTY_FILE", "src/test/resources/policyelk.properties");
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml"));
         } catch (Exception e1) {
-            logger.error("Exception Occured"+e1);
+            logger.error("Exception Occured" + e1);
         }
         papTest = new XACMLPAPTest();
         papTest.setDBDao();
     }
 
     @Test
-    public void testElasticSearchMainFunction() throws SQLException{
+    public void testElasticSearchMainFunction() throws SQLException {
         ConfigurationDataEntity configurationEntity = new ConfigurationDataEntity();
         configurationEntity.setConfigBody("Sample Test");
         configurationEntity.setConfigType("OTHER");
@@ -68,8 +69,7 @@ public class ElasticSearchPolicyUpdateTest {
         configurationEntity.setDescription("test");
         configurationEntity.setModifiedBy("Test");
         configurationEntity.setModifiedDate(new Date());
-        
-        
+
         PolicyEntity entity = new PolicyEntity();
         entity.setPolicyName("Config_SampleTest.1.xml");
         entity.setPolicyData(policyContent.toString());
@@ -91,7 +91,7 @@ public class ElasticSearchPolicyUpdateTest {
     }
 
     @After
-    public void reset(){
+    public void reset() {
         System.clearProperty("PROPERTY_FILE");
     }
 }

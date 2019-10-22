@@ -23,14 +23,17 @@ package org.onap.policy.pap.xacml.rest.util;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
@@ -80,8 +83,7 @@ public class DictionaryUtils {
     }
 
     public boolean isRequestFromAPI(HttpServletRequest request) {
-        return request.getParameter(apiflag) != null
-                && "api".equalsIgnoreCase(request.getParameter(apiflag));
+        return request.getParameter(apiflag) != null && "api".equalsIgnoreCase(request.getParameter(apiflag));
     }
 
     public String appendKey(List<Object> objects, String key1, String appendValue) {
@@ -134,8 +136,7 @@ public class DictionaryUtils {
     }
 
     public Category getCategory() {
-        return (Category) commonClassDao.getDataById(Category.class, "shortName", "resource")
-                .get(0);
+        return (Category) commonClassDao.getDataById(Category.class, "shortName", "resource").get(0);
     }
 
     public ModelAndView getResultForApi(String inResponseString) {
@@ -148,8 +149,7 @@ public class DictionaryUtils {
         return result;
     }
 
-    public void setResponseData(HttpServletResponse response, String key, String responseString)
-            throws IOException {
+    public void setResponseData(HttpServletResponse response, String key, String responseString) throws IOException {
         response.setCharacterEncoding(utf8);
         response.setContentType(applicationJsonContentType);
 
@@ -166,13 +166,11 @@ public class DictionaryUtils {
     }
 
     @SuppressWarnings("rawtypes")
-    public void getDataByEntity(HttpServletResponse response, String key, String value,
-            Class className) {
+    public void getDataByEntity(HttpServletResponse response, String key, String value, Class className) {
         try {
             Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
-            model.put(key,
-                    mapper.writeValueAsString(commonClassDao.getDataByColumn(className, value)));
+            model.put(key, mapper.writeValueAsString(commonClassDao.getDataByColumn(className, value)));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
             JSONObject j = new JSONObject(msg);
             response.getWriter().write(j.toString());
@@ -206,8 +204,7 @@ public class DictionaryUtils {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
-            commonClassDao
-                    .delete(mapper.readValue(root.get("data").toString(), className));
+            commonClassDao.delete(mapper.readValue(root.get("data").toString(), className));
             String responseString = mapper.writeValueAsString(commonClassDao.getData(className));
             setResponseData(response, key, responseString);
         } catch (Exception e) {

@@ -54,6 +54,11 @@ public class DashboardControllerTest {
     private Path repo;
     StdEngine engine = null;
 
+    /**
+     * setUp.
+     *
+     * @throws Exception should not get one
+     */
     @Before
     public void setUp() throws Exception {
         logger.info("setUp: Entering");

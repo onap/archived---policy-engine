@@ -21,8 +21,10 @@
 package org.onap.policy.pap.xacml.rest.service;
 
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.onap.policy.pap.xacml.rest.controller.ActionPolicyDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.BRMSDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.ClosedLoopDictionaryController;
@@ -36,7 +38,6 @@ import org.onap.policy.pap.xacml.rest.controller.PolicyScopeDictionaryController
 import org.onap.policy.pap.xacml.rest.controller.SafePolicyController;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
-
 
 // TODO: Auto-generated Javadoc
 /**
@@ -387,8 +388,6 @@ public class DictionaryService {
         return result.getViewName();
     }
 
-
-
     /**
      * Save micro service location dictionary.
      *
@@ -607,7 +606,6 @@ public class DictionaryService {
         ModelAndView result = dictionary.saveSafePolicyWarningDictionary(request, response);
         return result.getViewName();
     }
-
 
     /**
      * Gets the onap dictionary.
@@ -853,7 +851,6 @@ public class DictionaryService {
         FirewallDictionaryController dictionary = new FirewallDictionaryController();
         dictionary.getTermListDictionaryEntityData(response);
     }
-
 
     /**
      * Gets the micro service location dictionary.

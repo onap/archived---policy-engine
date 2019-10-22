@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -19,16 +19,19 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.controller;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+
 import javax.servlet.http.HttpServletRequest;
-import org.junit.After;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -39,8 +42,7 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 public class DecisionPolicyDictionaryControllerTest {
-    private static Logger logger =
-            FlexLogger.getLogger(DecisionPolicyDictionaryControllerTest.class);
+    private static Logger logger = FlexLogger.getLogger(DecisionPolicyDictionaryControllerTest.class);
     private static CommonClassDao commonClassDao;
     private String jsonString = null;
     private HttpServletRequest request = null;
@@ -52,19 +54,18 @@ public class DecisionPolicyDictionaryControllerTest {
         commonClassDao = Mockito.mock(CommonClassDao.class);
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
-        jsonString =
-                "{\"attributeDictionaryDatas\": {\"error\": \"\",\"inprocess\": false,\"model\": "
-                        + "{\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],\"type\": \"dir\","
-                        + "\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\","
-                        + "\"createdBy\": \"someone\",\"modifiedBy\": \"someone\",\"content\": \"\","
-                        + "\"recursive\": false},"
-                        + "\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
-                        + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
-                        + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
-                        + "\"ecompName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
-                        + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
-                        + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
-                        + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
+        jsonString = "{\"attributeDictionaryDatas\": {\"error\": \"\",\"inprocess\": false,\"model\": "
+                + "{\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],\"type\": \"dir\","
+                + "\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\","
+                + "\"createdBy\": \"someone\",\"modifiedBy\": \"someone\",\"content\": \"\","
+                + "\"recursive\": false},"
+                + "\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
+                + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
+                + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
+                + "\"ecompName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
+                + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
+                + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
+                + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
 
         BufferedReader br = new BufferedReader(new StringReader(jsonString));
 
@@ -77,9 +78,6 @@ public class DecisionPolicyDictionaryControllerTest {
         mock(DictionaryUtils.class);
         logger.info("setUp: exit");
     }
-
-    @After
-    public void tearDown() throws Exception {}
 
     @Test
     public void testGetSettingsDictionaryByNameEntityData() {
@@ -235,10 +233,9 @@ public class DecisionPolicyDictionaryControllerTest {
 
         try {
             // mock the getReader() call
-            jsonString =
-                    "{\"rainyDayDictionaryData\":{\"bbid\":\"BB2\",\"workstep\":\"1\",\"userDataTypeValues\""
-                            + ":[{\"$$hashKey\":\"object:233\",\"treatment\":\"test1\"},{\"$$hashKey\":\"object:239\","
-                            + "\"treatment\":\"test2\"}]},\"userid\":\"mm117s\"}";
+            jsonString = "{\"rainyDayDictionaryData\":{\"bbid\":\"BB2\",\"workstep\":\"1\",\"userDataTypeValues\""
+                    + ":[{\"$$hashKey\":\"object:233\",\"treatment\":\"test1\"},{\"$$hashKey\":\"object:239\","
+                    + "\"treatment\":\"test2\"}]},\"userid\":\"mm117s\"}";
 
             BufferedReader br = new BufferedReader(new StringReader(jsonString));
             when(request.getReader()).thenReturn(br);

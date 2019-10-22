@@ -86,7 +86,7 @@ public class DbAuditCompareEntriesTest {
         persistenceUnit = "testPapPU";
         resourceName = "siteA.pap1";
 
-        //Clean the iaTest DB table for IntegrityAuditEntity entries
+        // Clean the iaTest DB table for IntegrityAuditEntity entries
         cleanDb(persistenceUnit, properties);
 
         logger.info("setUp: Exiting");
@@ -95,11 +95,11 @@ public class DbAuditCompareEntriesTest {
     @After
     public void tearDown() throws Exception {
         logger.info("tearDown: Entering");
-        //nothing to do
+        // nothing to do
         logger.info("tearDown: Exiting");
     }
 
-    public void cleanDb(String persistenceUnit, Properties properties){
+    public void cleanDb(String persistenceUnit, Properties properties) {
         logger.debug("cleanDb: enter");
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUnit, properties);
@@ -119,7 +119,6 @@ public class DbAuditCompareEntriesTest {
         logger.debug("cleanDb: exit");
     }
 
-
     /*
      * Tests that a comparison between hashsets is successful if
      * the entries match
@@ -128,19 +127,17 @@ public class DbAuditCompareEntriesTest {
     public void runAllTests() throws Exception {
         logger.info("runAllTests: Entering");
 
-
         testIntegrityAuditEntity();
         testBackupMonitorEntity();
         testStateManagementEntity();
         testForwardProgressEntity();
         testResourceRegistrationEntity();
 
-        //clean up the IntegrityAuditEntity table
+        // clean up the IntegrityAuditEntity table
         cleanDb(persistenceUnit, properties);
 
         logger.info("runAllTests: Exit");
     }
-
 
     public void testIntegrityAuditEntity() throws Exception {
         logger.info("testIntegrityAuditEntity: Entering");
@@ -149,10 +146,10 @@ public class DbAuditCompareEntriesTest {
         DbAudit dbAudit = new DbAudit(dbDAO);
 
         String className = null;
-        //There is only one entry IntegrityAuditEntity, but we will check anyway
+        // There is only one entry IntegrityAuditEntity, but we will check anyway
         Set<String> classNameSet = dbDAO.getPersistenceClassNames();
-        for(String c : classNameSet){
-            if (c.equals("org.onap.policy.common.ia.jpa.IntegrityAuditEntity")){
+        for (String c : classNameSet) {
+            if (c.equals("org.onap.policy.common.ia.jpa.IntegrityAuditEntity")) {
                 className = c;
             }
         }
@@ -231,7 +228,6 @@ public class DbAuditCompareEntriesTest {
 
         // Two entries with the same field values
 
-
         entry1.setFlag("flag1");
         entry1.setResourceNodeName("node1");
         entry1.setResourceName("resourceName");
@@ -248,17 +244,14 @@ public class DbAuditCompareEntriesTest {
 
         Set<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
 
-
         // Assert that there are no mismatches returned
 
         assertTrue(result.isEmpty());
 
-
-         /* ************************************
+        /*
+         * ************************************
          * Now test with a mis-matched entry
-         * ************************************/
-
-
+         ************************************/
 
         // Change a field on entry2
 
@@ -272,8 +265,7 @@ public class DbAuditCompareEntriesTest {
 
         result = dbAudit.compareEntries(myEntries, theirEntries);
 
-
-        //Assert that there was one mismatch
+        // Assert that there was one mismatch
 
         assertEquals(1, result.size());
         logger.info("testBackupMonitorEntity: Exit");
@@ -308,17 +300,14 @@ public class DbAuditCompareEntriesTest {
 
         Set<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
 
-
         // Assert that there are no mismatches returned
 
         assertTrue(result.isEmpty());
 
-
-         /* ************************************
+        /*
+         * ************************************
          * Now test with a mis-matched entry
-         * ************************************/
-
-
+         ************************************/
 
         // Change a field on entry2
 
@@ -332,8 +321,7 @@ public class DbAuditCompareEntriesTest {
 
         result = dbAudit.compareEntries(myEntries, theirEntries);
 
-
-        //Assert that there was one mismatch
+        // Assert that there was one mismatch
 
         assertEquals(1, result.size());
         logger.info("testStateManagementEntity: Exit");
@@ -365,15 +353,14 @@ public class DbAuditCompareEntriesTest {
 
         Set<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
 
-
         // Assert that there are no mismatches returned
 
         assertTrue(result.isEmpty());
 
-
-         /* ************************************
+        /*
+         * ************************************
          * Now test with a mis-matched entry
-         * ************************************/
+         ************************************/
 
         // Change a field on entry2
 
@@ -387,8 +374,7 @@ public class DbAuditCompareEntriesTest {
 
         result = dbAudit.compareEntries(myEntries, theirEntries);
 
-
-        //Assert that there was one mismatch
+        // Assert that there was one mismatch
 
         assertEquals(1, result.size());
         logger.info("testForwardProgressEntity: Exit");
@@ -422,15 +408,14 @@ public class DbAuditCompareEntriesTest {
 
         Set<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
 
-
         // Assert that there are no mismatches returned
 
         assertTrue(result.isEmpty());
 
-
-         /* ************************************
+        /*
+         * ************************************
          * Now test with a mis-matched entry
-         * ************************************/
+         ************************************/
 
         // Change a field on entry2
 
@@ -444,8 +429,7 @@ public class DbAuditCompareEntriesTest {
 
         result = dbAudit.compareEntries(myEntries, theirEntries);
 
-
-        //Assert that there was one mismatch
+        // Assert that there was one mismatch
 
         assertEquals(1, result.size());
         logger.info("testResourceRegistrationEntity: Exit");

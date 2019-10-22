@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,8 @@
  */
 package org.onap.policy.rest.adapter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -256,5 +258,27 @@ public class PolicyRestAdapterTest {
         assertTrue("Test".equals(adapter.getGocServerScope()));
         adapter.setSupressionType("Test");
         assertTrue("Test".equals(adapter.getSupressionType()));
+    }
+
+    @Test
+    public void testPublic() {
+        PolicyRestAdapter adapter = new PolicyRestAdapter();
+        adapter.setupUsingAttribute("ONAPName", "onapvalue");
+        adapter.setupUsingAttribute("RiskType", "riskvalue");
+        adapter.setupUsingAttribute("RiskLevel", "risklevel");
+        adapter.setupUsingAttribute("guard", "guardvalue");
+        adapter.setupUsingAttribute("ConfigName", "configvalue");
+        adapter.setupUsingAttribute("uuid", "uuidvalue");
+        adapter.setupUsingAttribute("location", "locationvalue");
+        assertEquals("riskvalue", adapter.getRiskType());
+        assertEquals("risklevel", adapter.getRiskLevel());
+        assertEquals("guardvalue", adapter.getGuard());
+        assertEquals("onapvalue", adapter.getOnapName());
+        assertEquals("onapvalue", adapter.getOnapNameField().getOnapName());
+        assertEquals("uuidvalue", adapter.getUuid());
+        assertEquals("locationvalue", adapter.getLocation());
+        assertEquals("configvalue", adapter.getConfigName());
+
+        assertFalse(adapter.setupUsingAttribute("foobar", "foo"));
     }
 }

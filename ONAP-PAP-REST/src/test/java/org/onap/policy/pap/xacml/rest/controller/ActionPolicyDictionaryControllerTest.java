@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.controller;
 
 import static org.junit.Assert.assertTrue;
@@ -57,8 +58,8 @@ public class ActionPolicyDictionaryControllerTest {
     public void setUp() throws Exception {
         logger.info("setUp: Entering");
         commonClassDao = Mockito.mock(CommonClassDao.class);
-        List<String>  data = new ArrayList<>();
-        List<Object>  objectData = new ArrayList<>();
+        List<String> data = new ArrayList<>();
+        List<Object> objectData = new ArrayList<>();
         data.add("Test");
 
         UserInfo userInfo = new UserInfo();
@@ -71,9 +72,9 @@ public class ActionPolicyDictionaryControllerTest {
         actionData.setBody("Test");
         assertTrue("Test".equals(actionData.getBody()));
         actionData.setCreatedDate(new Date());
-        assertTrue(actionData.getCreatedDate()!= null);
+        assertTrue(actionData.getCreatedDate() != null);
         actionData.setModifiedDate(new Date());
-        assertTrue(actionData.getModifiedDate()!= null);
+        assertTrue(actionData.getModifiedDate() != null);
         actionData.setHeader("Test");
         assertTrue("Test".equals(actionData.getHeader()));
         actionData.setMethod("POST");
@@ -83,9 +84,9 @@ public class ActionPolicyDictionaryControllerTest {
         actionData.setUrl("http://test.com");
         assertTrue("http://test.com".equals(actionData.getUrl()));
         actionData.setUserCreatedBy(userInfo);
-        assertTrue(actionData.getUserCreatedBy()!= null);
+        assertTrue(actionData.getUserCreatedBy() != null);
         actionData.setUserModifiedBy(userInfo);
-        assertTrue(actionData.getUserModifiedBy()!= null);
+        assertTrue(actionData.getUserModifiedBy() != null);
 
         objectData.add(actionData);
         when(commonClassDao.getDataByColumn(ActionPolicyDict.class, "attributeName")).thenReturn(data);
@@ -95,7 +96,7 @@ public class ActionPolicyDictionaryControllerTest {
         controller = new ActionPolicyDictionaryController();
         controller.setCommonClassDao(commonClassDao);
         request = Mockito.mock(HttpServletRequest.class);
-        response =  new MockHttpServletResponse();
+        response = new MockHttpServletResponse();
         new DictionaryUtils(commonClassDao);
         DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
         mock(DictionaryUtils.class);
@@ -103,60 +104,78 @@ public class ActionPolicyDictionaryControllerTest {
     }
 
     @Test
-    public void testGetActionEntitybyName(){
+    public void testGetActionEntitybyName() {
         controller.getActionEntitybyName(response);
         try {
-            assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("actionPolicyDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("actionPolicyDictionaryDatas"));
         } catch (Exception e) {
             fail();
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
     }
 
     @Test
-    public void testGetActionPolicyDictionaryEntityData(){
+    public void testGetActionPolicyDictionaryEntityData() {
         controller.getActionPolicyDictionaryEntityData(response);
         try {
-            assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("actionPolicyDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("actionPolicyDictionaryDatas"));
         } catch (Exception e) {
             fail();
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
     }
 
     @Test
-    public void testSaveActionPolicyDictionary(){
-        jsonString = "{\"actionPolicyDictionaryData\":{\"attributeName\":\"Test\",\"body\":\"{}\",\"description\":\"test\",\"headers\":[{\"$$hashKey\":\"object:548\",\"id\":\"choice1\",\"number\":\"12\",\"option\":\"test\"}],\"method\":\"GET\",\"type\":\"REST\",\"url\":\"http://test.com\"},\"userid\":\"demo\"}";
-        try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
+    public void testSaveActionPolicyDictionary() {
+        jsonString =
+                "{\"actionPolicyDictionaryData\":{\"attributeName\":\"Test\",\"body\":\"{}\",\"description\":"
+                + "\"test\",\"headers\":[{\"$$hashKey\":\"object:548\",\"id\":\"choice1\",\"number\":\"12\","
+                + "\"option\":\"test\"}],\"method\":\"GET\",\"type\":\"REST\",\"url\":\"http://test.com\"},"
+                + "\"userid\":\"demo\"}";
+        try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
             when(request.getReader()).thenReturn(br);
             controller.saveActionPolicyDictionary(request, response);
-            assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("actionPolicyDictionaryData"));
-        }catch(Exception e){
-            logger.error("Exception"+ e);
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("actionPolicyDictionaryData"));
+        } catch (Exception e) {
+            logger.error("Exception" + e);
         }
     }
 
     @Test
-    public void testUpdateActionPolicyDictionary(){
-        jsonString = "{\"actionPolicyDictionaryData\":{\"id\":1,\"attributeName\":\"Test\",\"body\":\"{}\",\"description\":\"test\",\"headers\":[{\"$$hashKey\":\"object:548\",\"id\":\"choice1\",\"number\":\"12\",\"option\":\"test\"}],\"method\":\"GET\",\"type\":\"REST\",\"url\":\"http://test.com\"},\"userid\":\"demo\"}";
-        try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
+    public void testUpdateActionPolicyDictionary() {
+        jsonString =
+                "{\"actionPolicyDictionaryData\":{\"id\":1,\"attributeName\":\"Test\",\"body\":\"{}\",\"description\":"
+                + "\"test\",\"headers\":[{\"$$hashKey\":\"object:548\",\"id\":\"choice1\",\"number\":"
+                + "\"12\",\"option\":\"test\"}],\"method\":\"GET\",\"type\":\"REST\",\"url\":\"http://test.com\"},"
+                + "\"userid\":\"demo\"}";
+        try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
             when(request.getReader()).thenReturn(br);
             controller.saveActionPolicyDictionary(request, response);
-            assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("actionPolicyDictionaryData"));
-        }catch(Exception e){
-            logger.error("Exception"+ e);
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("actionPolicyDictionaryData"));
+        } catch (Exception e) {
+            logger.error("Exception" + e);
         }
     }
 
     @Test
-    public void testRemoveActionPolicyDictionary(){
-        jsonString = "{\"data\":{\"$$hashKey\":\"uiGrid-003S\",\"attributeName\":\"Test\",\"body\":\"{}\",\"createdDate\":1518195117000,\"description\":\"test\",\"header\":\"test=12\",\"id\":1,\"method\":\"GET\",\"modifiedDate\":1518195489000,\"type\":\"REST\",\"url\":\"http://test.com\",\"userCreatedBy\":{\"userLoginId\":\"demo\",\"userName\":\"Demo\"},\"userModifiedBy\":{\"userLoginId\":\"demo\",\"userName\":\"Demo\"}}}";
-        try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
+    public void testRemoveActionPolicyDictionary() {
+        jsonString =
+                "{\"data\":{\"$$hashKey\":\"uiGrid-003S\",\"attributeName\":\"Test\",\"body\":\"{}\",\"createdDate\":"
+                + "1518195117000,\"description\":\"test\",\"header\":\"test=12\",\"id\":1,\"method\":\"GET\","
+                + "\"modifiedDate\":1518195489000,\"type\":\"REST\",\"url\":\"http://test.com\",\"userCreatedBy\":"
+                + "{\"userLoginId\":\"demo\",\"userName\":\"Demo\"},\"userModifiedBy\":{\"userLoginId\":\"demo\","
+                + "\"userName\":\"Demo\"}}}";
+        try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
             when(request.getReader()).thenReturn(br);
             controller.removeActionPolicyDictionary(request, response);
-            assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("actionPolicyDictionaryDatas"));
-        }catch(Exception e){
-            logger.error("Exception"+ e);
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("actionPolicyDictionaryDatas"));
+        } catch (Exception e) {
+            logger.error("Exception" + e);
         }
     }
 }

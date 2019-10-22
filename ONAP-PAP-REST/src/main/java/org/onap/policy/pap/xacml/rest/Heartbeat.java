@@ -23,6 +23,7 @@ package org.onap.policy.pap.xacml.rest;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPStatus;
 import com.att.research.xacml.util.XACMLProperties;
+
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -32,6 +33,7 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -41,7 +43,6 @@ import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
-
 
 /**
  * Heartbeat thread - periodically check on PDPs' status.

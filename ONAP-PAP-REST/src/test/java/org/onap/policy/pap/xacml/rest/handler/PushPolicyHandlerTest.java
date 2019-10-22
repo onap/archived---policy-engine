@@ -25,13 +25,17 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+
 import com.mockrunner.mock.web.MockHttpServletResponse;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.rest.dao.CommonClassDao;
@@ -39,7 +43,6 @@ import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
-
 
 public class PushPolicyHandlerTest {
     @Test

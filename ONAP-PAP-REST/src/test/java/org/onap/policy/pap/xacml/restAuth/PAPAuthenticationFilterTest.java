@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,10 +17,14 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.restAuth;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
+import com.mockrunner.mock.web.MockHttpServletRequest;
+import com.mockrunner.mock.web.MockHttpServletResponse;
 
 import java.io.IOException;
 
@@ -34,9 +38,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.mockrunner.mock.web.MockHttpServletRequest;
-import com.mockrunner.mock.web.MockHttpServletResponse;
-
 public class PAPAuthenticationFilterTest {
 
     private HttpServletRequest request = null;
@@ -47,7 +48,7 @@ public class PAPAuthenticationFilterTest {
     private PAPAuthenticationFilter papFilter;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         // Set the system property temporarily
         oldProperty = System.getProperty(systemKey);
         System.setProperty(systemKey, "xacml.pap.properties");
@@ -74,8 +75,7 @@ public class PAPAuthenticationFilterTest {
         try {
             filter.destroy();
             filter.init(null);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             fail("Not expecting any exceptions.");
         }
     }
@@ -89,7 +89,7 @@ public class PAPAuthenticationFilterTest {
         callDoFilter();
     }
 
-    public void callDoFilter(){
+    public void callDoFilter() {
         try {
             papFilter.doFilter(request, response, filter);
         } catch (Exception e) {
@@ -98,7 +98,7 @@ public class PAPAuthenticationFilterTest {
     }
 
     @Test
-    public void testOnPassingInvalidParamters(){
+    public void testOnPassingInvalidParamters() {
         Mockito.when(request.getRequestURI()).thenReturn("/pap/");
         Mockito.when(request.getHeader("Authorization")).thenReturn("Basic dGVzdHBhcDphbHBoYTE789==");
         try {
@@ -110,7 +110,7 @@ public class PAPAuthenticationFilterTest {
     }
 
     @After
-    public void reset(){
+    public void reset() {
         // Restore the original system property
         if (oldProperty != null) {
             System.setProperty(systemKey, oldProperty);

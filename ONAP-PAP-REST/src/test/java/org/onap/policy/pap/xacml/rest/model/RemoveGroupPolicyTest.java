@@ -21,7 +21,9 @@
 package org.onap.policy.pap.xacml.rest.model;
 
 import static org.junit.Assert.assertEquals;
+
 import com.att.research.xacml.api.pap.PDPPolicy;
+
 import org.junit.Test;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;

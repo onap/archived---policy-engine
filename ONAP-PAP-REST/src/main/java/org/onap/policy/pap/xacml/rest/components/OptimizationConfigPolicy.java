@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,12 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.std.IdentifierImpl;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Splitter;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -33,22 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
-import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.jpa.OptimizationModels;
-
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.std.IdentifierImpl;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Splitter;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -61,7 +51,17 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType; 
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.onap.policy.common.logging.eelf.MessageCodes;
+import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.jpa.OptimizationModels;
 
 public class OptimizationConfigPolicy extends Policy {
 
@@ -70,7 +70,7 @@ public class OptimizationConfigPolicy extends Policy {
     private static Map<String, String> mapAttribute = new HashMap<>();
     private static Map<String, String> mapMatch = new HashMap<>();
 
-    private static synchronized Map<String, String> getMatchMap () {
+    private static synchronized Map<String, String> getMatchMap() {
         return mapMatch;
     }
 
@@ -82,36 +82,35 @@ public class OptimizationConfigPolicy extends Policy {
         super();
     }
 
-    public OptimizationConfigPolicy(PolicyRestAdapter policyAdapter){
+    public OptimizationConfigPolicy(PolicyRestAdapter policyAdapter) {
         this.policyAdapter = policyAdapter;
     }
 
-    //save configuration of the policy based on the policyname
+    // save configuration of the policy based on the policyname
     private void saveConfigurations(String policyName, String jsonBody) {
 
-        if(policyName.endsWith(".xml")){
+        if (policyName.endsWith(".xml")) {
             policyName = policyName.replace(".xml", "");
         }
 
-        try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName +".json");){
+        try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName + ".json");) {
             out.println(jsonBody);
         } catch (Exception e) {
-            LOGGER.error("Exception Occured While writing Configuration data"+e);
+            LOGGER.error("Exception Occured While writing Configuration data" + e);
         }
     }
-
 
     @Override
     public Map<String, String> savePolicies() throws PAPException {
 
         Map<String, String> successMap = new HashMap<>();
-        if(isPolicyExists()){
+        if (isPolicyExists()) {
             successMap.put("EXISTS", "This Policy already exist on the PAP");
             return successMap;
         }
 
-        if(!isPreparedToSave()){
-            //Prep and configure the policy for saving
+        if (!isPreparedToSave()) {
+            // Prep and configure the policy for saving
             prepareToSave();
         }
 
@@ -119,18 +118,18 @@ public class OptimizationConfigPolicy extends Policy {
         Path newPolicyPath = null;
         newPolicyPath = Paths.get(policyAdapter.getNewFileName());
 
-        successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
+        successMap = createPolicy(newPolicyPath, getCorrectPolicyDataObject());
 
         return successMap;
     }
 
-    //This is the method for preparing the policy for saving.  We have broken it out
-    //separately because the fully configured policy is used for multiple things
+    // This is the method for preparing the policy for saving. We have broken it out
+    // separately because the fully configured policy is used for multiple things
     @Override
-    public boolean prepareToSave() throws PAPException{
+    public boolean prepareToSave() throws PAPException {
 
-        if(isPreparedToSave()){
-            //we have already done this
+        if (isPreparedToSave()) {
+            // we have already done this
             return true;
         }
 
@@ -158,7 +157,6 @@ public class OptimizationConfigPolicy extends Policy {
                 policyName = policyName + ".xml";
             }
 
-
             PolicyType configPolicy = (PolicyType) policyAdapter.getData();
 
             configPolicy.setDescription(policyAdapter.getPolicyDescription());
@@ -172,32 +170,33 @@ public class OptimizationConfigPolicy extends Policy {
                 name = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
             }
 
-            //setup values for pulling out matching attributes
+            // setup values for pulling out matching attributes
             ObjectMapper mapper = new ObjectMapper();
             String matching = null;
             Map<String, String> matchMap = null;
             try {
                 JsonNode rootNode = mapper.readTree(policyAdapter.getJsonBody());
-                if (policyAdapter.getTtlDate()==null){
+                if (policyAdapter.getTtlDate() == null) {
                     policyAdapter.setTtlDate("NA");
                 }
-                if (policyAdapter.getServiceType().contains("-v")){
+                if (policyAdapter.getServiceType().contains("-v")) {
                     matching = getValueFromDictionary(policyAdapter.getServiceType());
                 } else {
-                    String jsonVersion  = StringUtils.replaceEach(rootNode.get("version").toString(), new String[]{"\""}, new String[]{""});
+                    String jsonVersion = StringUtils.replaceEach(rootNode.get("version").toString(),
+                            new String[] {"\""}, new String[] {""});
                     matching = getValueFromDictionary(policyAdapter.getServiceType() + "-v" + jsonVersion);
                 }
-                if (matching != null && !matching.isEmpty()){
+                if (matching != null && !matching.isEmpty()) {
                     matchMap = Splitter.on(",").withKeyValueSeparator("=").split(matching);
                     setMatchMap(matchMap);
-                    if(policyAdapter.getJsonBody() != null){
-                        pullMatchValue(rootNode);           
+                    if (policyAdapter.getJsonBody() != null) {
+                        pullMatchValue(rootNode);
                     }
                 }
             } catch (IOException e1) {
                 throw new PAPException(e1);
             }
-            
+
             // Match for policyName
             allOfOne.getMatch().add(createMatch("PolicyName", name));
 
@@ -205,28 +204,24 @@ public class OptimizationConfigPolicy extends Policy {
 
             // Adding the matches to AllOfType element Match for Onap
             allOf.getMatch().add(createMatch("ONAPName", policyAdapter.getOnapName()));
-            if (matchMap!=null && !matchMap.isEmpty()) {
-                for (Entry<String, String> matchValue : matchMap.entrySet()){
+            if (matchMap != null && !matchMap.isEmpty()) {
+                for (Entry<String, String> matchValue : matchMap.entrySet()) {
                     String value = matchValue.getValue();
                     String key = matchValue.getKey().trim();
-                    if (value.contains("matching-true") && mapAttribute.containsKey(key)){
+                    if (value.contains("matching-true") && mapAttribute.containsKey(key)) {
                         allOf.getMatch().add(createDynamicMatch(key, mapAttribute.get(key)));
                     }
                 }
             }
 
             // Match for riskType
-            allOf.getMatch().add(
-                    createDynamicMatch("RiskType", policyAdapter.getRiskType()));
+            allOf.getMatch().add(createDynamicMatch("RiskType", policyAdapter.getRiskType()));
             // Match for riskLevel
-            allOf.getMatch().add(
-                    createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
+            allOf.getMatch().add(createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
             // Match for riskguard
-            allOf.getMatch().add(
-                    createDynamicMatch("guard", policyAdapter.getGuard()));
+            allOf.getMatch().add(createDynamicMatch("guard", policyAdapter.getGuard()));
             // Match for ttlDate
-            allOf.getMatch().add(
-                    createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
+            allOf.getMatch().add(createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
 
             AnyOfType anyOf = new AnyOfType();
             anyOf.getAllOf().add(allOfOne);
@@ -257,7 +252,8 @@ public class OptimizationConfigPolicy extends Policy {
             try {
                 accessURI = new URI(ACTION_ID);
             } catch (URISyntaxException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "OptimizationConfigPolicy", "Exception creating ACCESS URI");
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "OptimizationConfigPolicy",
+                        "Exception creating ACCESS URI");
             }
             accessAttributeDesignator.setCategory(CATEGORY_ACTION);
             accessAttributeDesignator.setDataType(STRING_DATATYPE);
@@ -276,7 +272,8 @@ public class OptimizationConfigPolicy extends Policy {
             try {
                 configURI = new URI(RESOURCE_ID);
             } catch (URISyntaxException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "OptimizationConfigPolicy", "Exception creating Config URI");
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "OptimizationConfigPolicy",
+                        "Exception creating Config URI");
             }
             configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
             configAttributeDesignator.setDataType(STRING_DATATYPE);
@@ -309,34 +306,36 @@ public class OptimizationConfigPolicy extends Policy {
     private void pullMatchValue(JsonNode rootNode) {
         Iterator<Map.Entry<String, JsonNode>> fieldsIterator = rootNode.fields();
         String newValue = null;
-           while (fieldsIterator.hasNext()) {
-               Map.Entry<String, JsonNode> field = fieldsIterator.next();
-               final String key = field.getKey();
-               final JsonNode value = field.getValue();
-               if (value.isContainerNode() && !value.isArray()) {
-                   pullMatchValue(value); // RECURSIVE CALL
-               } else {
-                   newValue = StringUtils.replaceEach(value.toString(), new String[]{"[", "]", "\""}, new String[]{"", "", ""});
-                   mapAttribute.put(key, newValue);
-               }
-           }
-       
-   }
+        while (fieldsIterator.hasNext()) {
+            Map.Entry<String, JsonNode> field = fieldsIterator.next();
+            final String key = field.getKey();
+            final JsonNode value = field.getValue();
+            if (value.isContainerNode() && !value.isArray()) {
+                pullMatchValue(value); // RECURSIVE CALL
+            } else {
+                newValue = StringUtils.replaceEach(value.toString(), new String[] {"[", "]", "\""},
+                        new String[] {"", "", ""});
+                mapAttribute.put(key, newValue);
+            }
+        }
 
-   private String getValueFromDictionary(String service){
-       String ruleTemplate=null;
-       String modelName = service.split("-v")[0];
-       String modelVersion = service.split("-v")[1];
-       
-       CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
-       List<Object> result = dbConnection.getDataById(OptimizationModels.class, "modelName:version", modelName+":"+modelVersion);
-       if(result != null && !result.isEmpty()){
-           OptimizationModels model = (OptimizationModels) result.get(0);
-           ruleTemplate = model.getAnnotation();
-       }
-       return ruleTemplate;
-   }
-   
+    }
+
+    private String getValueFromDictionary(String service) {
+        String ruleTemplate = null;
+        String modelName = service.split("-v")[0];
+        String modelVersion = service.split("-v")[1];
+
+        CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
+        List<Object> result =
+                dbConnection.getDataById(OptimizationModels.class, "modelName:version", modelName + ":" + modelVersion);
+        if (result != null && !result.isEmpty()) {
+            OptimizationModels model = (OptimizationModels) result.get(0);
+            ruleTemplate = model.getAnnotation();
+        }
+        return ruleTemplate;
+    }
+
     // Data required for Advice part is setting here.
     private AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
         AdviceExpressionsType advices = new AdviceExpressionsType();
@@ -366,18 +365,18 @@ public class OptimizationConfigPolicy extends Policy {
         AttributeValueType attributeValue = new AttributeValueType();
         attributeValue.setDataType(URI_DATATYPE);
         String configName;
-        if(policyName.endsWith(".xml")){
+        if (policyName.endsWith(".xml")) {
             configName = policyName.replace(".xml", "");
-        }else{
+        } else {
             configName = policyName;
         }
-        String content = CONFIG_URL +"/Config/" + configName + ".json";
+        String content = CONFIG_URL + "/Config/" + configName + ".json";
         attributeValue.getContent().add(content);
         assignment2.setExpression(new ObjectFactory().createAttributeValue(attributeValue));
 
         advice.getAttributeAssignmentExpression().add(assignment2);
 
-        //PolicyName Attribute Assignment
+        // PolicyName Attribute Assignment
         AttributeAssignmentExpressionType assignment3 = new AttributeAssignmentExpressionType();
         assignment3.setAttributeId("PolicyName");
         assignment3.setCategory(CATEGORY_RESOURCE);
@@ -395,7 +394,7 @@ public class OptimizationConfigPolicy extends Policy {
         assignment3.setExpression(new ObjectFactory().createAttributeValue(attributeValue3));
         advice.getAttributeAssignmentExpression().add(assignment3);
 
-        //VersionNumber Attribute Assignment
+        // VersionNumber Attribute Assignment
         AttributeAssignmentExpressionType assignment4 = new AttributeAssignmentExpressionType();
         assignment4.setAttributeId("VersionNumber");
         assignment4.setCategory(CATEGORY_RESOURCE);
@@ -408,7 +407,7 @@ public class OptimizationConfigPolicy extends Policy {
 
         advice.getAttributeAssignmentExpression().add(assignment4);
 
-        //OnapName Attribute Assignment
+        // OnapName Attribute Assignment
         AttributeAssignmentExpressionType assignment5 = new AttributeAssignmentExpressionType();
         assignment5.setAttributeId("matching:" + ONAPID);
         assignment5.setCategory(CATEGORY_RESOURCE);
@@ -421,41 +420,41 @@ public class OptimizationConfigPolicy extends Policy {
 
         advice.getAttributeAssignmentExpression().add(assignment5);
 
-        //ServiceType Attribute Assignment
+        // ServiceType Attribute Assignment
         AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
         assignment7.setAttributeId("matching:service");
         assignment7.setCategory(CATEGORY_RESOURCE);
         assignment7.setIssuer("");
- 
+
         AttributeValueType configNameAttributeValue7 = new AttributeValueType();
         configNameAttributeValue7.setDataType(STRING_DATATYPE);
         configNameAttributeValue7.getContent().add(policyAdapter.getServiceType());
         assignment7.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue7));
- 
+
         advice.getAttributeAssignmentExpression().add(assignment7);
 
         // Add matching attribute assignments if exist
         Map<String, String> matchMap = getMatchMap();
-        if (matchMap!=null && !matchMap.isEmpty()) {
-            for (Entry<String, String> matchValue : matchMap.entrySet()){
+        if (matchMap != null && !matchMap.isEmpty()) {
+            for (Entry<String, String> matchValue : matchMap.entrySet()) {
                 String value = matchValue.getValue();
                 String key = matchValue.getKey().trim();
-                if (value.contains("matching-true") && mapAttribute.containsKey(key)){
+                if (value.contains("matching-true") && mapAttribute.containsKey(key)) {
                     AttributeAssignmentExpressionType assignment9 = new AttributeAssignmentExpressionType();
                     assignment9.setAttributeId("matching:" + key);
                     assignment9.setCategory(CATEGORY_RESOURCE);
                     assignment9.setIssuer("");
-            
+
                     AttributeValueType configNameAttributeValue9 = new AttributeValueType();
                     configNameAttributeValue9.setDataType(STRING_DATATYPE);
                     configNameAttributeValue9.getContent().add(mapAttribute.get(key));
                     assignment9.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
-            
+
                     advice.getAttributeAssignmentExpression().add(assignment9);
                 }
             }
         }
-        
+
         // Priority Attribute Assignment
         AttributeAssignmentExpressionType assignment10 = new AttributeAssignmentExpressionType();
         assignment10.setAttributeId("Priority");
@@ -469,7 +468,7 @@ public class OptimizationConfigPolicy extends Policy {
 
         advice.getAttributeAssignmentExpression().add(assignment10);
 
-        //RiskType Attribute Assignment
+        // RiskType Attribute Assignment
         AttributeAssignmentExpressionType assignment11 = new AttributeAssignmentExpressionType();
         assignment11.setAttributeId("RiskType");
         assignment11.setCategory(CATEGORY_RESOURCE);
@@ -482,7 +481,7 @@ public class OptimizationConfigPolicy extends Policy {
 
         advice.getAttributeAssignmentExpression().add(assignment11);
 
-        //RiskLevel Attribute Assignment
+        // RiskLevel Attribute Assignment
         AttributeAssignmentExpressionType assignment12 = new AttributeAssignmentExpressionType();
         assignment12.setAttributeId("RiskLevel");
         assignment12.setCategory(CATEGORY_RESOURCE);
@@ -495,7 +494,7 @@ public class OptimizationConfigPolicy extends Policy {
 
         advice.getAttributeAssignmentExpression().add(assignment12);
 
-        //Guard Attribute Assignment
+        // Guard Attribute Assignment
         AttributeAssignmentExpressionType assignment13 = new AttributeAssignmentExpressionType();
         assignment13.setAttributeId("guard");
         assignment13.setCategory(CATEGORY_RESOURCE);
@@ -508,7 +507,7 @@ public class OptimizationConfigPolicy extends Policy {
 
         advice.getAttributeAssignmentExpression().add(assignment13);
 
-        //TTLDate Attribute Assignment
+        // TTLDate Attribute Assignment
         AttributeAssignmentExpressionType assignment14 = new AttributeAssignmentExpressionType();
         assignment14.setAttributeId("TTLDate");
         assignment14.setCategory(CATEGORY_RESOURCE);

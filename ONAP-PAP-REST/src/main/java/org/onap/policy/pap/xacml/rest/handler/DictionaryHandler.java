@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,16 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.handler;
+
+import com.att.research.xacml.util.XACMLProperties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-
-import com.att.research.xacml.util.XACMLProperties;
 
 public interface DictionaryHandler {
     public static final Logger logger = FlexLogger.getLogger(DictionaryHandler.class);
@@ -34,13 +35,14 @@ public interface DictionaryHandler {
     /*
      * Get Instance
      */
-    public static DictionaryHandler getInstance(){
+    public static DictionaryHandler getInstance() {
         try {
-            Class<?> dictionaryHandler = Class.forName(XACMLProperties.getProperty("dictionary.impl.className", DICTIONARY_DEFAULT_CLASS));
+            Class<?> dictionaryHandler =
+                    Class.forName(XACMLProperties.getProperty("dictionary.impl.className", DICTIONARY_DEFAULT_CLASS));
             DictionaryHandler instance = (DictionaryHandler) dictionaryHandler.newInstance();
             return instance;
         } catch (Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
         return null;
     }
@@ -49,6 +51,7 @@ public interface DictionaryHandler {
      * Get Equivalent for Dictionary Services.
      */
     public void doDictionaryAPIGet(HttpServletRequest request, HttpServletResponse response);
+
     /*
      * Put Equivalent for Dictionary Services.
      */
@@ -59,7 +62,9 @@ public interface DictionaryHandler {
      *
      * getflag=true indicates Get Request.
      * getflag=false indicates Put Request.
+     *
      * @return
      */
-    public String extendedOptions(String dictionaryType, HttpServletRequest request, HttpServletResponse response, boolean getflag);
+    public String extendedOptions(String dictionaryType, HttpServletRequest request, HttpServletResponse response,
+            boolean getflag);
 }

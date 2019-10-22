@@ -21,6 +21,7 @@
 package org.onap.policy.pap.xacml.rest.util;
 
 import java.util.List;
+
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XacmlAdminAuthorization;
@@ -40,7 +41,6 @@ public class JPAUtils {
     public JPAUtils(CommonClassDao commonClassDao) {
         JPAUtils.commonClassDao = commonClassDao;
     }
-
 
     /**
      * Get an instance of a JPAUtils. It creates one if it does not exist. Only one instance is allowed

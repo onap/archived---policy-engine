@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.std.IdentifierImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,15 +35,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.io.FilenameUtils;
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.pap.xacml.rest.controller.BRMSDictionaryController;
-import org.onap.policy.rest.adapter.PolicyRestAdapter;
-
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.std.IdentifierImpl;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -57,6 +50,11 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
+import org.apache.commons.io.FilenameUtils;
+import org.onap.policy.common.logging.eelf.MessageCodes;
+import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.pap.xacml.rest.controller.BRMSDictionaryController;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
 
 public class CreateBrmsRawPolicy extends Policy {
 
@@ -76,8 +74,7 @@ public class CreateBrmsRawPolicy extends Policy {
     protected void saveConfigurations(String policyName, String jsonBody) {
 
         if (policyName.endsWith(".xml")) {
-            policyName = policyName.substring(0,
-                    policyName.lastIndexOf(".xml"));
+            policyName = policyName.substring(0, policyName.lastIndexOf(".xml"));
         }
         try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName + ".txt")) {
             out.println(jsonBody);
@@ -195,7 +192,6 @@ public class CreateBrmsRawPolicy extends Policy {
             }
             allOfOne.getMatch().add(createMatch("PolicyName", name));
 
-
             AllOfType allOf = new AllOfType();
 
             // Match for ONAPName
@@ -243,8 +239,7 @@ public class CreateBrmsRawPolicy extends Policy {
             }
             accessAttributeDesignator.setCategory(CATEGORY_ACTION);
             accessAttributeDesignator.setDataType(STRING_DATATYPE);
-            accessAttributeDesignator.setAttributeId(new IdentifierImpl(
-                    accessURI).stringValue());
+            accessAttributeDesignator.setAttributeId(new IdentifierImpl(accessURI).stringValue());
             accessMatch.setAttributeDesignator(accessAttributeDesignator);
             accessMatch.setMatchId(FUNCTION_STRING_EQUAL_IGNORE);
 
@@ -267,8 +262,7 @@ public class CreateBrmsRawPolicy extends Policy {
 
             configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
             configAttributeDesignator.setDataType(STRING_DATATYPE);
-            configAttributeDesignator.setAttributeId(new IdentifierImpl(
-                    configURI).stringValue());
+            configAttributeDesignator.setAttributeId(new IdentifierImpl(configURI).stringValue());
             configMatch.setAttributeDesignator(configAttributeDesignator);
             configMatch.setMatchId(FUNCTION_STRING_EQUAL_IGNORE);
 
@@ -284,22 +278,18 @@ public class CreateBrmsRawPolicy extends Policy {
             rule.setTarget(targetInRule);
             rule.setAdviceExpressions(getAdviceExpressions(version, policyName));
 
-            configPolicy
-                    .getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()
-                    .add(rule);
+            configPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
             policyAdapter.setPolicyData(configPolicy);
 
         } else {
-            PolicyLogger.error("Unsupported data object."
-                    + policyAdapter.getData().getClass().getCanonicalName());
+            PolicyLogger.error("Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
         }
         setPreparedToSave(true);
         return true;
     }
 
     // Data required for Advice part is setting here.
-    private AdviceExpressionsType getAdviceExpressions(int version,
-                                                       String fileName) {
+    private AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
 
         // Policy Config ID Assignment
         AdviceExpressionsType advices = new AdviceExpressionsType();
@@ -314,8 +304,7 @@ public class CreateBrmsRawPolicy extends Policy {
         AttributeValueType configNameAttributeValue = new AttributeValueType();
         configNameAttributeValue.setDataType(STRING_DATATYPE);
         configNameAttributeValue.getContent().add("Configuration");
-        assignment1.setExpression(new ObjectFactory()
-                .createAttributeValue(configNameAttributeValue));
+        assignment1.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue));
         advice.getAttributeAssignmentExpression().add(assignment1);
 
         // For Config file Url if configurations are provided.
@@ -330,8 +319,7 @@ public class CreateBrmsRawPolicy extends Policy {
         String content = CONFIG_URL + "/Config/" + getConfigFile(policyName);
 
         AttributeValue.getContent().add(content);
-        assignment2.setExpression(new ObjectFactory()
-                .createAttributeValue(AttributeValue));
+        assignment2.setExpression(new ObjectFactory().createAttributeValue(AttributeValue));
         advice.getAttributeAssignmentExpression().add(assignment2);
 
         // Policy Name Assignment
@@ -350,8 +338,7 @@ public class CreateBrmsRawPolicy extends Policy {
         }
         System.out.println(name);
         attributeValue3.getContent().add(name);
-        assignment3.setExpression(new ObjectFactory()
-                .createAttributeValue(attributeValue3));
+        assignment3.setExpression(new ObjectFactory().createAttributeValue(attributeValue3));
         advice.getAttributeAssignmentExpression().add(assignment3);
 
         // Version Number Assignment
@@ -362,8 +349,7 @@ public class CreateBrmsRawPolicy extends Policy {
         AttributeValueType configNameAttributeValue4 = new AttributeValueType();
         configNameAttributeValue4.setDataType(STRING_DATATYPE);
         configNameAttributeValue4.getContent().add(Integer.toString(version));
-        assignment4.setExpression(new ObjectFactory()
-                .createAttributeValue(configNameAttributeValue4));
+        assignment4.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue4));
         advice.getAttributeAssignmentExpression().add(assignment4);
 
         // Onap Name Assignment
@@ -374,12 +360,10 @@ public class CreateBrmsRawPolicy extends Policy {
         AttributeValueType configNameAttributeValue5 = new AttributeValueType();
         configNameAttributeValue5.setDataType(STRING_DATATYPE);
         configNameAttributeValue5.getContent().add(policyAdapter.getOnapName());
-        assignment5.setExpression(new ObjectFactory()
-                .createAttributeValue(configNameAttributeValue5));
+        assignment5.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue5));
         advice.getAttributeAssignmentExpression().add(assignment5);
 
-
-        //Config Name Assignment
+        // Config Name Assignment
         AttributeAssignmentExpressionType assignment6 = new AttributeAssignmentExpressionType();
         assignment6.setAttributeId("matching:" + CONFIGID);
         assignment6.setCategory(CATEGORY_RESOURCE);
@@ -390,16 +374,15 @@ public class CreateBrmsRawPolicy extends Policy {
         assignment6.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue6));
         advice.getAttributeAssignmentExpression().add(assignment6);
 
-        // Adding Controller Information. 
+        // Adding Controller Information.
         if (policyAdapter.getBrmsController() != null) {
             BRMSDictionaryController brmsDicitonaryController = new BRMSDictionaryController();
-            advice.getAttributeAssignmentExpression().add(
-                    createResponseAttributes("controller:" + policyAdapter.getBrmsController(),
-                            brmsDicitonaryController.getControllerDataByID(policyAdapter.getBrmsController())
-                                    .getController()));
+            advice.getAttributeAssignmentExpression().add(createResponseAttributes(
+                    "controller:" + policyAdapter.getBrmsController(),
+                    brmsDicitonaryController.getControllerDataByID(policyAdapter.getBrmsController()).getController()));
         }
 
-        // Adding Dependencies. 
+        // Adding Dependencies.
         if (policyAdapter.getBrmsDependency() != null) {
             BRMSDictionaryController brmsDicitonaryController = new BRMSDictionaryController();
             ArrayList<String> dependencies = new ArrayList<>();
@@ -408,11 +391,11 @@ public class CreateBrmsRawPolicy extends Policy {
                 dependencies.add(brmsDicitonaryController.getDependencyDataByID(dependencyName).getDependency());
                 key.append(dependencyName).append(",");
             }
-            advice.getAttributeAssignmentExpression().add(
-                    createResponseAttributes("dependencies:" + key.toString(), dependencies.toString()));
+            advice.getAttributeAssignmentExpression()
+                    .add(createResponseAttributes("dependencies:" + key.toString(), dependencies.toString()));
         }
 
-        // Dynamic Field Config Attributes. 
+        // Dynamic Field Config Attributes.
         Map<String, String> dynamicFieldConfigAttributes = policyAdapter.getDynamicFieldConfigAttributes();
         for (Map.Entry<String, String> entry : dynamicFieldConfigAttributes.entrySet()) {
             String keyField = entry.getKey();
@@ -420,7 +403,7 @@ public class CreateBrmsRawPolicy extends Policy {
                     .add(createResponseAttributes("key:" + keyField, entry.getValue()));
         }
 
-        //Risk Attributes
+        // Risk Attributes
         AttributeAssignmentExpressionType assignment8 = new AttributeAssignmentExpressionType();
         assignment8.setAttributeId("RiskType");
         assignment8.setCategory(CATEGORY_RESOURCE);

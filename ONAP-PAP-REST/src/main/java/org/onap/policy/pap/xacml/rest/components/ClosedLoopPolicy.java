@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,9 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.std.IdentifierImpl;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,16 +34,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.io.FilenameUtils;
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.adapter.PolicyRestAdapter;
-
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.std.IdentifierImpl;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -56,6 +49,13 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
+import org.apache.commons.io.FilenameUtils;
+import org.onap.policy.common.logging.eelf.MessageCodes;
+import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+
 public class ClosedLoopPolicy extends Policy {
 
     private static final Logger LOGGER = FlexLogger.getLogger(ClosedLoopPolicy.class);
@@ -68,7 +68,7 @@ public class ClosedLoopPolicy extends Policy {
         this.policyAdapter = policyAdapter;
     }
 
-    //save configuration of the policy based on the policyname
+    // save configuration of the policy based on the policyname
     private void saveConfigurations(String policyName, String jsonBody) {
 
         if (policyName.endsWith(".xml")) {
@@ -76,7 +76,7 @@ public class ClosedLoopPolicy extends Policy {
         }
         try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName + ".json")) {
             String body = jsonBody;
-            //Remove the trapMaxAge in Verification Signature
+            // Remove the trapMaxAge in Verification Signature
             body = body.replace(",\"trapMaxAge\":null", "");
             this.policyAdapter.setJsonBody(body);
             out.println(body);
@@ -85,7 +85,7 @@ public class ClosedLoopPolicy extends Policy {
         }
     }
 
-    //Utility to read json data from the existing file to a string
+    // Utility to read json data from the existing file to a string
     static String readFile(String path, Charset encoding) throws IOException {
 
         byte[] encoded = Files.readAllBytes(Paths.get(path));
@@ -93,7 +93,7 @@ public class ClosedLoopPolicy extends Policy {
 
     }
 
-    //create the configuration file based on the policy name on adding the extension as .json
+    // create the configuration file based on the policy name on adding the extension as .json
     private String getConfigFile(String filename) {
         filename = FilenameUtils.removeExtension(filename);
         if (filename.endsWith(".xml")) {
@@ -124,13 +124,13 @@ public class ClosedLoopPolicy extends Policy {
         return successMap;
     }
 
-    //This is the method for preparing the policy for saving.  We have broken it out
-    //separately because the fully configured policy is used for multiple things
+    // This is the method for preparing the policy for saving. We have broken it out
+    // separately because the fully configured policy is used for multiple things
     @Override
     public boolean prepareToSave() throws PAPException {
 
         if (isPreparedToSave()) {
-            //we have already done this
+            // we have already done this
             return true;
         }
 
@@ -176,17 +176,13 @@ public class ClosedLoopPolicy extends Policy {
             // Match for Onap
             allOf.getMatch().add(createMatch("ONAPName", policyAdapter.getOnapName()));
             // Match for riskType
-            allOf.getMatch().add(
-                    createDynamicMatch("RiskType", policyAdapter.getRiskType()));
+            allOf.getMatch().add(createDynamicMatch("RiskType", policyAdapter.getRiskType()));
             // Match for riskLevel
-            allOf.getMatch().add(
-                    createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
+            allOf.getMatch().add(createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
             // Match for riskguard
-            allOf.getMatch().add(
-                    createDynamicMatch("guard", policyAdapter.getGuard()));
+            allOf.getMatch().add(createDynamicMatch("guard", policyAdapter.getGuard()));
             // Match for ttlDate
-            allOf.getMatch().add(
-                    createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
+            allOf.getMatch().add(createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
 
             AnyOfType anyOf = new AnyOfType();
             anyOf.getAllOf().add(allOfOne);
@@ -340,7 +336,7 @@ public class ClosedLoopPolicy extends Policy {
 
         advice.getAttributeAssignmentExpression().add(assignment5);
 
-        //Risk Attributes
+        // Risk Attributes
         AttributeAssignmentExpressionType assignment6 = new AttributeAssignmentExpressionType();
         assignment6.setAttributeId("RiskType");
         assignment6.setCategory(CATEGORY_RESOURCE);
@@ -389,7 +385,6 @@ public class ClosedLoopPolicy extends Policy {
 
         advice.getAttributeAssignmentExpression().add(assignment9);
 
-
         advices.getAdviceExpression().add(advice);
         return advices;
     }
@@ -398,6 +393,5 @@ public class ClosedLoopPolicy extends Policy {
     public Object getCorrectPolicyDataObject() {
         return policyAdapter.getPolicyData();
     }
-
 
 }

@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,9 +21,11 @@
 package org.onap.policy.pap.xacml.rest.elk;
 
 import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
 import org.junit.Test;
 import org.onap.policy.pap.xacml.rest.elk.client.PolicyElasticData;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
@@ -103,7 +105,7 @@ public class PolicyElasticDataTest {
         data.setSupressionType(testVal);
         assertEquals(data.getSupressionType(), testVal);
         data.setServiceType(testVal);
-        assertEquals(data.getServiceType(),testVal);
+        assertEquals(data.getServiceType(), testVal);
         data.setUuid(testVal);
         assertEquals(data.getUuid(), testVal);
         data.setLocation(testVal);
@@ -111,7 +113,7 @@ public class PolicyElasticDataTest {
         data.setPriority(testVal);
         assertEquals(data.getPriority(), testVal);
         data.setMsLocation(testVal);
-        assertEquals(data.getMsLocation(),testVal);
+        assertEquals(data.getMsLocation(), testVal);
         data.setRuleName(testVal);
         assertEquals(data.getRuleName(), testVal);
         data.setBrmsParamBody(testMap);

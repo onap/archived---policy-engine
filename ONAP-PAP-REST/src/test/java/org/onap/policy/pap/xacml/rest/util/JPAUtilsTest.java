@@ -22,8 +22,9 @@
 
 package org.onap.policy.pap.xacml.rest.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTest;
@@ -41,7 +42,7 @@ public class JPAUtilsTest {
 
         // Test lockdown
         JPAUtils utils = JPAUtils.getJPAUtilsInstance();
-        assertEquals(utils.dbLockdownIgnoreErrors(), false);
+        assertFalse(utils.dbLockdownIgnoreErrors());
         utils.dbLockdown();
         fail("Expecting an exception");
     }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -19,6 +19,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.controller;
 
 import static org.junit.Assert.assertTrue;
@@ -26,9 +27,11 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.io.BufferedReader;
 import java.io.StringReader;
 import javax.servlet.http.HttpServletRequest;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -39,7 +42,6 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.OptimizationModels;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.springframework.mock.web.MockHttpServletResponse;
-
 
 public class OptimizationDictionaryControllerTest {
 
@@ -57,8 +59,7 @@ public class OptimizationDictionaryControllerTest {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserLoginId("testUserId");
         userInfo.setUserName("John");
-        when(commonClassDao.getEntityItem(UserInfo.class, "userLoginId", "testing"))
-                .thenReturn(userInfo);
+        when(commonClassDao.getEntityItem(UserInfo.class, "userLoginId", "testing")).thenReturn(userInfo);
 
         OptimizationModels optimziationModels = new OptimizationModels();
 
@@ -70,19 +71,17 @@ public class OptimizationDictionaryControllerTest {
 
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
-        jsonString =
-                "{\"optimizationModelsDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,\"model\":"
-                        + " {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],\"type\": \"dir\","
-                        + "\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", \"version\": \"\","
-                        + "\"createdBy\": \"someone\",\"modifiedBy\": \"someone\",\"content\": \"\","
-                        + "\"recursive\": false},"
-                        + "\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
-                        + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
-                        + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
-                        + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
-                        + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
-                        + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
-                        + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
+        jsonString = "{\"optimizationModelsDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,\"model\":"
+                + " {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],\"type\": \"dir\","
+                + "\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", \"version\": \"\","
+                + "\"createdBy\": \"someone\",\"modifiedBy\": \"someone\",\"content\": \"\"," + "\"recursive\": false},"
+                + "\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
+                + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
+                + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
+                + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
+                + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
+                + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
+                + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
 
         br = new BufferedReader(new StringReader(jsonString));
         // --- mock the getReader() call

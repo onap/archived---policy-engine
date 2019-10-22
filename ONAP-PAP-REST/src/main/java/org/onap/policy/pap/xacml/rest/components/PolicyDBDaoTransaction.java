@@ -21,8 +21,11 @@
 package org.onap.policy.pap.xacml.rest.components;
 
 import com.att.research.xacml.api.pap.PAPException;
+
 import java.util.List;
+
 import javax.persistence.PersistenceException;
+
 import org.onap.policy.rest.dao.PolicyDBException;
 import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
@@ -69,7 +72,6 @@ public interface PolicyDBDaoTransaction {
      * session.
      */
     public void close();
-
 
     /**
      * Create a new PDP group in the database
@@ -161,7 +163,6 @@ public interface PolicyDBDaoTransaction {
      */
     public StdPDPGroup addPolicyToGroup(String group, String policyID, String requestType, String username)
             throws PolicyDBException;
-
 
     /**
      * Delete an existing PDP groupPolicyDBException

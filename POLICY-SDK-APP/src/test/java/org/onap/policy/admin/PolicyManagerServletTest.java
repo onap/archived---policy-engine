@@ -71,6 +71,11 @@ public class PolicyManagerServletTest extends Mockito {
     private HttpServletRequest request;
     private MockHttpServletResponse response;
 
+    /**
+     * setUp.
+     *
+     * @throws Exception should not get one
+     */
     @Before
     public void setUp() throws Exception {
         logger.info("setUp: Entering");

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,11 @@ package org.onap.policy.pap.xacml.rest.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+
 import com.mockrunner.mock.web.MockHttpServletResponse;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
@@ -42,6 +45,6 @@ public class MetricServiceTest {
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         MetricService.doGetPolicyMetrics(response);
-        assertEquals(response.getStatusCode(), HttpServletResponse.SC_BAD_REQUEST);
+        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatusCode());
     }
 }

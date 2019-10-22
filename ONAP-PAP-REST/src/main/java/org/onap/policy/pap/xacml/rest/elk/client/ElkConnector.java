@@ -20,9 +20,10 @@
 
 package org.onap.policy.pap.xacml.rest.elk.client;
 
-
 import io.searchbox.client.JestResult;
+
 import java.util.Map;
+
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 
 public interface ElkConnector {
@@ -44,8 +45,7 @@ public interface ElkConnector {
 
     public boolean delete(PolicyRestAdapter policyData) throws IllegalStateException;
 
-    public JestResult search(PolicyIndexType type, String text)
-            throws IllegalStateException, IllegalArgumentException;
+    public JestResult search(PolicyIndexType type, String text) throws IllegalStateException, IllegalArgumentException;
 
     public JestResult search(PolicyIndexType type, String text, Map<String, String> searchKeyValue)
             throws IllegalStateException, IllegalArgumentException;
@@ -54,8 +54,7 @@ public interface ElkConnector {
 
     public ElkConnector singleton = new ElkConnectorImpl();
 
-    public static PolicyIndexType toPolicyIndexType(String policyName)
-            throws IllegalArgumentException {
+    public static PolicyIndexType toPolicyIndexType(String policyName) throws IllegalArgumentException {
         if (policyName == null)
             throw new IllegalArgumentException("Unsupported NULL policy name conversion");
 
@@ -76,8 +75,7 @@ public interface ElkConnector {
         } else if (policyName.startsWith("Config")) {
             return PolicyIndexType.config;
         } else {
-            throw new IllegalArgumentException(
-                    "Unsupported policy name conversion to index: " + policyName);
+            throw new IllegalArgumentException("Unsupported policy name conversion to index: " + policyName);
         }
     }
 

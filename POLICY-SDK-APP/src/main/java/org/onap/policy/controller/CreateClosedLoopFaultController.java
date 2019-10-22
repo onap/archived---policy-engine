@@ -39,8 +39,6 @@ import lombok.Getter;
 import lombok.Setter;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
@@ -52,9 +50,9 @@ import org.onap.policy.rest.adapter.ClosedLoopFaultTriggerUISignatures;
 import org.onap.policy.rest.adapter.ClosedLoopSignatures;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
-import org.onap.policy.rest.jpa.OnapName;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.VarbindDictionary;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,7 +72,6 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
     private static final String CONNECT_TRAP_2 = "connectTrap2";
     private static final String TRAP_COUNT_2 = "trapCount2";
     private static final String TRIGGER_1 = "trigger1";
-    private static final String ENC_UTF_8 = "UTF-8";
     private static final String TRIGGER_2 = "trigger2";
 
     protected PolicyRestAdapter policyAdapter = null;
@@ -346,7 +343,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
             } catch (NumberFormatException e) {
                 try {
                     trap1Attrib = getVarbindOid(trap1Attrib);
-                    attributesStr = attributesStr + "(" + URLEncoder.encode(trap1Attrib, ENC_UTF_8) + ")";
+                    attributesStr = attributesStr + "(" + URLEncoder.encode(trap1Attrib,
+                            PolicyUtils.CHARACTER_ENCODING) + ")";
                 } catch (UnsupportedEncodingException e1) {
                     policyLogger.error("Caused Exception while Encoding Varbind Dictionary Values", e1);
                 }
@@ -354,7 +352,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
         } else {
             try {
                 trap1Attrib = getVarbindOid(trap1Attrib);
-                attributesStr = attributesStr + "(" + URLEncoder.encode(trap1Attrib, ENC_UTF_8) + ")";
+                attributesStr = attributesStr + "(" + URLEncoder.encode(trap1Attrib,
+                        PolicyUtils.CHARACTER_ENCODING) + ")";
             } catch (UnsupportedEncodingException e) {
                 policyLogger.error("Caused Exception while Encoding Varbind Dictionary Values", e);
             }
@@ -515,27 +514,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
                         .forEach(match -> {
                             // Under the match we have attribute value and
                             // attributeDesignator. So,finally down to the actual attribute.
-                            AttributeValueType attributeValue = match.getAttributeValue();
-                            String value = (String) attributeValue.getContent().get(0);
-                            AttributeDesignatorType designator = match.getAttributeDesignator();
-                            String attributeId = designator.getAttributeId();
-                            // First match in the target is OnapName, so set that value.
-                            if ("ONAPName".equals(attributeId)) {
-                                policyAdapter.setOnapName(value);
-                                OnapName onapName = new OnapName();
-                                onapName.setOnapName(value);
-                                policyAdapter.setOnapNameField(onapName);
-                            } else if ("RiskType".equals(attributeId)) {
-                                policyAdapter.setRiskType(value);
-                            } else if ("RiskLevel".equals(attributeId)) {
-                                policyAdapter.setRiskLevel(value);
-                            } else if ("guard".equals(attributeId)) {
-                                policyAdapter.setGuard(value);
-                            } else if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
-                                PolicyController controller = new PolicyController();
-                                String newDate = controller.convertDate(value);
-                                policyAdapter.setTtlDate(newDate);
-                            }
+                            policyAdapter.setupUsingAttribute(match.getAttributeDesignator().getAttributeId(),
+                                    (String) match.getAttributeValue().getContent().get(0));
                         }));
     }
 

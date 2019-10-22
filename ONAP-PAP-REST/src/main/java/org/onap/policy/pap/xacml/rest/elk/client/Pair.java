@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,31 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.elk.client;
 
-public class Pair<L,R> {
+public class Pair<L, R> {
     private L left;
     private R right;
-    public Pair(L l, R r){
+
+    public Pair(L l, R r) {
         this.left = l;
         this.right = r;
     }
-    public L left(){ return left; }
-    public R right(){ return right; }
-    public void left(L l){ this.left = l; }
-    public void right(R r){ this.right = r; }
+
+    public L left() {
+        return left;
+    }
+
+    public R right() {
+        return right;
+    }
+
+    public void left(L l) {
+        this.left = l;
+    }
+
+    public void right(R r) {
+        this.right = r;
+    }
 }

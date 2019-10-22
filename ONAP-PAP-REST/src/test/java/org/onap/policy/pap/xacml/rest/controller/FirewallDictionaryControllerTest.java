@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.controller;
 
 import static org.junit.Assert.assertTrue;
@@ -117,7 +118,8 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testGetProtocolListDictionaryEntityDataByName() {
-        test_WithGetDataByColumn(ProtocolList.class, "protocolListDictionaryDatas", "protocolName",
+        test_WithGetDataByColumn(ProtocolList.class,
+                "protocolListDictionaryDatas", "protocolName",
                 () -> controller.getProtocolListDictionaryEntityDataByName(response));
     }
 
@@ -195,7 +197,8 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testGetZoneDictionaryEntityData() {
-        test_WithGetData(Zone.class, "zoneDictionaryDatas", () -> controller.getZoneDictionaryEntityData(response));
+        test_WithGetData(Zone.class, "zoneDictionaryDatas", () ->
+            controller.getZoneDictionaryEntityData(response));
     }
 
     @Test
@@ -212,7 +215,8 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testGetFWDictListDictionaryEntityDataByName() {
-        test_WithGetDataByColumn(FirewallDictionaryList.class, "fwDictListDictionaryDatas", "parentItemName",
+        test_WithGetDataByColumn(FirewallDictionaryList.class,
+                "fwDictListDictionaryDatas", "parentItemName",
                 () -> controller.getFWDictListDictionaryEntityDataByName(response));
     }
 
@@ -247,14 +251,18 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testSavePrefixListDictionary() {
-        jsonString = "{\"userid\":\"demo\",\"prefixListDictionaryData\":{\"description\":\"test\",\"prefixListName\":\"Test\"}}";
+        jsonString =
+                "{\"userid\":\"demo\",\"prefixListDictionaryData\":"
+                + "{\"description\":\"test\",\"prefixListName\":\"Test\"}}";
         testSave(PrefixList.class, "prefixListDictionaryDatas", "prefixListName",
                 () -> controller.savePrefixListDictionary(request, response));
     }
 
     @Test
     public void testUpdatePrefixListDictionary() {
-        jsonString = "{\"userid\":\"demo\",\"prefixListDictionaryData\":{\"id\":1,\"description\":\"test\",\"prefixListName\":\"Test\"}}";
+        jsonString =
+                "{\"userid\":\"demo\",\"prefixListDictionaryData\":{\"id\":1,\"description\":"
+                        + "\"test\",\"prefixListName\":\"Test\"}}";
         testUpdate(PrefixList.class, "prefixListDictionaryDatas", "prefixListName",
                 () -> controller.savePrefixListDictionary(request, response));
     }
@@ -268,20 +276,25 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testValidatePrefixListDictionary() {
-        jsonString = "{\"userid\":\"demo\",\"prefixListDictionaryData\":{\"id\":1,\"description\":\"test\",\"prefixListName\":\"Test\",\"prefixListValue\":\"10.10.10\"}}";
+        jsonString =
+                "{\"userid\":\"demo\",\"prefixListDictionaryData\":{\"id\":1,\"description\":"
+                        + "\"test\",\"prefixListName\":\"Test\",\"prefixListValue\":\"10.10.10\"}}";
         testValidate(PrefixList.class, "result", () -> controller.validatePrefixListDictionary(request, response));
     }
 
     @Test
     public void testSavePortListDictionary() {
-        jsonString = "{\"userid\":\"demo\",\"portListDictionaryData\":{\"description\":\"test\",\"portName\":\"Test\"}}";
+        jsonString =
+                "{\"userid\":\"demo\",\"portListDictionaryData\":{\"description\":\"test\",\"portName\":\"Test\"}}";
         testSave(PortList.class, "portListDictionaryDatas", "portName",
                 () -> controller.savePortListDictionary(request, response));
     }
 
     @Test
     public void testUpdatePortListDictionary() {
-        jsonString = "{\"userid\":\"demo\",\"portListDictionaryData\":{\"id\":1,\"description\":\"test\",\"portName\":\"Test\"}}";
+        jsonString =
+                "{\"userid\":\"demo\",\"portListDictionaryData\":{\"id\":1,\"description\":"
+                        + "\"test\",\"portName\":\"Test\"}}";
         testUpdate(PortList.class, "portListDictionaryDatas", "portName",
                 () -> controller.savePortListDictionary(request, response));
     }
@@ -295,14 +308,18 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testSaveProtocolListDictionary() {
-        jsonString = "{\"userid\":\"demo\",\"protocolListDictionaryData\":{\"description\":\"test\",\"protocolName\":\"Test\"}}";
+        jsonString =
+                "{\"userid\":\"demo\",\"protocolListDictionaryData\":{\"description\":\"test\",\"protocolName\":"
+                        + "\"Test\"}}";
         testSave(ProtocolList.class, "protocolListDictionaryDatas", "protocolName",
                 () -> controller.saveProtocolListDictionary(request, response));
     }
 
     @Test
     public void testUpdateProtocolListDictionary() {
-        jsonString = "{\"userid\":\"demo\",\"protocolListDictionaryData\":{\"id\":1,\"description\":\"test\",\"protocolName\":\"Test\"}}";
+        jsonString =
+                "{\"userid\":\"demo\",\"protocolListDictionaryData\":{\"id\":1,\"description\":"
+                        + "\"test\",\"protocolName\":\"Test\"}}";
         testUpdate(ProtocolList.class, "protocolListDictionaryDatas", "protocolName",
                 () -> controller.saveProtocolListDictionary(request, response));
     }
@@ -316,14 +333,20 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testSaveAddressGroupDictionary() {
-        jsonString = "{\"addressGroupDictionaryData\":{\"attributes\":[{\"$$hashKey\":\"object:409\",\"id\":\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"groupName\":\"Test\"},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"addressGroupDictionaryData\":{\"attributes\":[{\"$$hashKey\":\"object:409\",\"id\":"
+                        + "\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"groupName\":"
+                        + "\"Test\"},\"userid\":\"demo\"}";
         testSave(AddressGroup.class, "addressGroupDictionaryDatas", "name", "Group_Test",
                 () -> controller.saveAddressGroupDictionary(request, response));
     }
 
     @Test
     public void testUpdateAddressGroupDictionary() {
-        jsonString = "{\"addressGroupDictionaryData\":{\"id\":1, \"attributes\":[{\"$$hashKey\":\"object:409\",\"id\":\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"groupName\":\"Test\"},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"addressGroupDictionaryData\":{\"id\":1, \"attributes\":[{\"$$hashKey\":\"object:409\",\"id\":"
+                + "\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"groupName\":\"Test\"},\"userid\":"
+                + "\"demo\"}";
         testUpdate(AddressGroup.class, "addressGroupDictionaryDatas", "name", "Group_Test",
                 () -> controller.saveAddressGroupDictionary(request, response));
     }
@@ -337,14 +360,18 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testSaveActionListDictionary() {
-        jsonString = "{\"userid\":\"demo\",\"actionListDictionaryData\":{\"description\":\"test\",\"actionName\":\"Test\"}}";
+        jsonString =
+                "{\"userid\":\"demo\",\"actionListDictionaryData\":{\"description\":\"test\",\"actionName\":"
+                + "\"Test\"}}";
         testSave(ActionList.class, "actionListDictionaryDatas", "actionName",
                 () -> controller.saveActionListDictionary(request, response));
     }
 
     @Test
     public void testUpdateActionListDictionary() {
-        jsonString = "{\"userid\":\"demo\",\"actionListDictionaryData\":{\"id\":1,\"description\":\"test\",\"actionName\":\"Test\"}}";
+        jsonString =
+                "{\"userid\":\"demo\",\"actionListDictionaryData\":{\"id\":1,\"description\":\"test\",\"actionName\":"
+                + "\"Test\"}}";
         testUpdate(ActionList.class, "actionListDictionaryDatas", "actionName",
                 () -> controller.saveActionListDictionary(request, response));
     }
@@ -358,14 +385,18 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testSaveServiceGroupDictionary() {
-        jsonString = "{\"serviceGroupDictionaryData\":{\"attributes\":[{\"$$hashKey\":\"object:657\",\"id\":\"choice1\",\"option\":\"Test\"}],\"groupName\":\"Test\"},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"serviceGroupDictionaryData\":{\"attributes\":[{\"$$hashKey\":\"object:657\",\"id\":"
+                + "\"choice1\",\"option\":\"Test\"}],\"groupName\":\"Test\"},\"userid\":\"demo\"}";
         testSave(GroupServiceList.class, "serviceGroupDictionaryDatas", "name", "Group_Test",
                 () -> controller.saveServiceGroupDictionary(request, response));
     }
 
     @Test
     public void testUpdateServiceGroupDictionary() {
-        jsonString = "{\"serviceGroupDictionaryData\":{\"id\":1, \"attributes\":[{\"$$hashKey\":\"object:657\",\"id\":\"choice1\",\"option\":\"Test\"}],\"groupName\":\"Test\"},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"serviceGroupDictionaryData\":{\"id\":1, \"attributes\":[{\"$$hashKey\":\"object:657\",\"id\":"
+                + "\"choice1\",\"option\":\"Test\"}],\"groupName\":\"Test\"},\"userid\":\"demo\"}";
         testUpdate(GroupServiceList.class, "serviceGroupDictionaryDatas", "name", "Group_Test",
                 () -> controller.saveServiceGroupDictionary(request, response));
     }
@@ -379,14 +410,18 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testSaveSecurityZoneDictionary() {
-        jsonString = "{\"userid\":\"demo\",\"securityZoneDictionaryData\":{\"description\":\"test\",\"zoneName\":\"Test\"}}";
+        jsonString =
+                "{\"userid\":\"demo\",\"securityZoneDictionaryData\":{\"description\":\"test\",\"zoneName\":"
+                + "\"Test\"}}";
         testSave(SecurityZone.class, "securityZoneDictionaryDatas", "zoneName",
                 () -> controller.saveSecurityZoneDictionary(request, response));
     }
 
     @Test
     public void testUpdateSecurityZoneDictionary() {
-        jsonString = "{\"userid\":\"demo\",\"securityZoneDictionaryData\":{\"id\":1,\"description\":\"test\",\"zoneName\":\"Test\"}}";
+        jsonString =
+                "{\"userid\":\"demo\",\"securityZoneDictionaryData\":{\"id\":1,\"description\":\"test\",\"zoneName\":"
+                + "\"Test\"}}";
         testUpdate(SecurityZone.class, "securityZoneDictionaryDatas", "zoneName",
                 () -> controller.saveSecurityZoneDictionary(request, response));
     }
@@ -400,21 +435,33 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testSaveServiceListDictionary() {
-        jsonString = "{\"serviceListDictionaryData\":{\"appProtocols\":[{\"$$hashKey\":\"object:560\",\"id\":\"choice1\",\"option\":\"Test\"}],\"serviceDescription\":\"test\",\"serviceName\":\"Test\",\"servicePorts\":\"1010\",\"transportProtocols\":[{\"$$hashKey\":\"object:555\",\"id\":\"choice1\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"serviceListDictionaryData\":{\"appProtocols\":[{\"$$hashKey\":\"object:560\",\"id\":"
+                + "\"choice1\",\"option\":\"Test\"}],\"serviceDescription\":\"test\",\"serviceName\":"
+                + "\"Test\",\"servicePorts\":\"1010\",\"transportProtocols\":[{\"$$hashKey\":\"object:555\",\"id\":"
+                + "\"choice1\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
         testSave(ServiceList.class, "serviceListDictionaryDatas", "serviceName",
                 () -> controller.saveServiceListDictionary(request, response));
     }
 
     @Test
     public void testUpdateServiceListDictionary() {
-        jsonString = "{\"serviceListDictionaryData\":{\"appProtocols\":[{\"$$hashKey\":\"object:560\",\"id\":\"choice1\",\"option\":\"Test\"}],\"serviceDescription\":\"test\",\"id\":1,\"serviceName\":\"Test\",\"servicePorts\":\"1010\",\"transportProtocols\":[{\"$$hashKey\":\"object:555\",\"id\":\"choice1\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"serviceListDictionaryData\":{\"appProtocols\":[{\"$$hashKey\":\"object:560\",\"id\":"
+                + "\"choice1\",\"option\":\"Test\"}],\"serviceDescription\":\"test\",\"id\":1,\"serviceName\":"
+                + "\"Test\",\"servicePorts\":\"1010\",\"transportProtocols\":[{\"$$hashKey\":\"object:555\",\"id\":"
+                + "\"choice1\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
         testUpdate(ServiceList.class, "serviceListDictionaryDatas", "serviceName",
                 () -> controller.saveServiceListDictionary(request, response));
     }
 
     @Test
     public void testRemoveServiceListDictionary() {
-        jsonString = "{\"data\":{\"appProtocols\":[{\"$$hashKey\":\"object:560\",\"id\":\"choice1\",\"option\":\"Test\"}],\"serviceDescription\":\"test\",\"id\":1,\"serviceName\":\"Test\",\"servicePorts\":\"1010\",\"transportProtocols\":[{\"$$hashKey\":\"object:555\",\"id\":\"choice1\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"data\":{\"appProtocols\":[{\"$$hashKey\":\"object:560\",\"id\":\"choice1\",\"option\":"
+                + "\"Test\"}],\"serviceDescription\":\"test\",\"id\":1,\"serviceName\":\"Test\",\"servicePorts\":"
+                + "\"1010\",\"transportProtocols\":[{\"$$hashKey\":\"object:555\",\"id\":\"choice1\",\"option\":"
+                + "\"Test\"}]},\"userid\":\"demo\"}";
         testRemove(ServiceList.class, "serviceListDictionaryDatas",
                 () -> controller.removeServiceListDictionary(request, response));
     }
@@ -422,12 +469,14 @@ public class FirewallDictionaryControllerTest {
     @Test
     public void testSaveZoneDictionary() {
         jsonString = "{\"userid\":\"demo\",\"zoneDictionaryData\":{\"zoneValue\":\"test\",\"zoneName\":\"Test\"}}";
-        testSave(Zone.class, "zoneDictionaryDatas", "zoneName", () -> controller.saveZoneDictionary(request, response));
+        testSave(Zone.class, "zoneDictionaryDatas", "zoneName", ()
+                -> controller.saveZoneDictionary(request, response));
     }
 
     @Test
     public void testUpdateZoneDictionary() {
-        jsonString = "{\"userid\":\"demo\",\"zoneDictionaryData\":{\"id\":1,\"zoneValue\":\"test\",\"zoneName\":\"Test\"}}";
+        jsonString =
+                "{\"userid\":\"demo\",\"zoneDictionaryData\":{\"id\":1,\"zoneValue\":\"test\",\"zoneName\":\"Test\"}}";
         testUpdate(Zone.class, "zoneDictionaryDatas", "zoneName",
                 () -> controller.saveZoneDictionary(request, response));
     }
@@ -440,14 +489,34 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testSaveTermListDictionary() {
-        jsonString = "{\"termListDictionaryData\":{\"actionListDatas\":[{\"$$hashKey\":\"object:1220\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"destinationListDatas\":[{\"$$hashKey\":\"object:1220\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"destinationServiceDatas\":[{\"$$hashKey\":\"object:1230\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"fromZoneDatas\":[{\"$$hashKey\":\"object:1245\",\"id\":\"choice1\",\"option\":\"Test\"}],\"sourceListDatas\":[{\"$$hashKey\":\"object:1215\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"sourceServiceDatas\":[{\"$$hashKey\":\"object:1225\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"termDescription\":\"test\",\"termName\":\"Test\",\"toZoneDatas\":[{\"$$hashKey\":\"object:1240\",\"id\":\"choice1\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"termListDictionaryData\":{\"actionListDatas\":[{\"$$hashKey\":\"object:1220\",\"id\":"
+                + "\"choice1\",\"option\":\"Group_Test\"}],\"destinationListDatas\":[{\"$$hashKey\":"
+                + "\"object:1220\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"destinationServiceDatas\":"
+                + "[{\"$$hashKey\":\"object:1230\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"fromZoneDatas\":"
+                + "[{\"$$hashKey\":\"object:1245\",\"id\":\"choice1\",\"option\":\"Test\"}],\"sourceListDatas\":"
+                + "[{\"$$hashKey\":\"object:1215\",\"id\":\"choice1\",\"option\":"
+                + "\"Group_Test\"}],\"sourceServiceDatas\":[{\"$$hashKey\":\"object:1225\",\"id\":"
+                + "\"choice1\",\"option\":\"Group_Test\"}],\"termDescription\":\"test\",\"termName\":"
+                + "\"Test\",\"toZoneDatas\":[{\"$$hashKey\":\"object:1240\",\"id\":\"choice1\",\"option\":"
+                + "\"Test\"}]},\"userid\":\"demo\"}";
         testSave(TermList.class, "termListDictionaryDatas", "termName",
                 () -> controller.saveTermListDictionary(request, response));
     }
 
     @Test
     public void testUpdateTermListDictionary() {
-        jsonString = "{\"termListDictionaryData\":{\"id\":1,\"actionListDatas\":[{\"$$hashKey\":\"object:1220\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"destinationListDatas\":[{\"$$hashKey\":\"object:1220\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"destinationServiceDatas\":[{\"$$hashKey\":\"object:1230\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"fromZoneDatas\":[{\"$$hashKey\":\"object:1245\",\"id\":\"choice1\",\"option\":\"Test\"}],\"sourceListDatas\":[{\"$$hashKey\":\"object:1215\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"sourceServiceDatas\":[{\"$$hashKey\":\"object:1225\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"termDescription\":\"test\",\"termName\":\"Test\",\"toZoneDatas\":[{\"$$hashKey\":\"object:1240\",\"id\":\"choice1\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"termListDictionaryData\":{\"id\":1,\"actionListDatas\":[{\"$$hashKey\":\"object:1220\",\"id\":"
+                + "\"choice1\",\"option\":\"Group_Test\"}],\"destinationListDatas\":[{\"$$hashKey\":"
+                + "\"object:1220\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"destinationServiceDatas\":"
+                + "[{\"$$hashKey\":\"object:1230\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"fromZoneDatas\":"
+                + "[{\"$$hashKey\":\"object:1245\",\"id\":\"choice1\",\"option\":\"Test\"}],\"sourceListDatas\":"
+                + "[{\"$$hashKey\":\"object:1215\",\"id\":\"choice1\",\"option\":"
+                + "\"Group_Test\"}],\"sourceServiceDatas\":[{\"$$hashKey\":\"object:1225\",\"id\":"
+                + "\"choice1\",\"option\":\"Group_Test\"}],\"termDescription\":\"test\",\"termName\":"
+                + "\"Test\",\"toZoneDatas\":[{\"$$hashKey\":\"object:1240\",\"id\":\"choice1\",\"option\":"
+                + "\"Test\"}]},\"userid\":\"demo\"}";
         testUpdate(TermList.class, "termListDictionaryDatas", "termName",
                 () -> controller.saveTermListDictionary(request, response));
     }
@@ -461,14 +530,22 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testSaveFWDictionaryList() {
-        jsonString = "{\"fwDictListDictionaryData\":{\"alAttributes\":[{\"$$hashKey\":\"object:1379\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"attributes\":[{\"$$hashKey\":\"object:1374\",\"id\":\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"parentItemName\":\"Test\"},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"fwDictListDictionaryData\":{\"alAttributes\":[{\"$$hashKey\":\"object:1379\",\"id\":"
+                + "\"choice1\",\"option\":\"Group_Test\"}],\"attributes\":[{\"$$hashKey\":\"object:1374\",\"id\":"
+                + "\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"parentItemName\":\"Test\"},\"userid\":"
+                + "\"demo\"}";
         testSave(FirewallDictionaryList.class, "fwDictListDictionaryDatas", "parentItemName",
                 () -> controller.saveFWDictionaryList(request, response));
     }
 
     @Test
     public void testUpdateFWDictionaryList() {
-        jsonString = "{\"fwDictListDictionaryData\":{\"id\":1,\"alAttributes\":[{\"$$hashKey\":\"object:1379\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"attributes\":[{\"$$hashKey\":\"object:1374\",\"id\":\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"parentItemName\":\"Test\"},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"fwDictListDictionaryData\":{\"id\":1,\"alAttributes\":[{\"$$hashKey\":\"object:1379\",\"id\":"
+                + "\"choice1\",\"option\":\"Group_Test\"}],\"attributes\":[{\"$$hashKey\":\"object:1374\",\"id\":"
+                + "\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"parentItemName\":\"Test\"},\"userid\":"
+                + "\"demo\"}";
         testUpdate(FirewallDictionaryList.class, "fwDictListDictionaryDatas", "parentItemName",
                 () -> controller.saveFWDictionaryList(request, response));
     }
@@ -482,14 +559,20 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testSaveFirewallTagPickerDictionary() {
-        jsonString = "{\"fwTagPickerDictionaryData\":{\"description\":\"test\",\"networkRole\":\"test\",\"tagPickerName\":\"Test\",\"tags\":[{\"$$hashKey\":\"object:1855\",\"id\":\"choice1\",\"number\":\"test\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"fwTagPickerDictionaryData\":{\"description\":\"test\",\"networkRole\":\"test\",\"tagPickerName\":"
+                + "\"Test\",\"tags\":[{\"$$hashKey\":\"object:1855\",\"id\":\"choice1\",\"number\":\"test\",\"option\":"
+                + "\"Test\"}]},\"userid\":\"demo\"}";
         testSave(FWTagPicker.class, "fwTagPickerDictionaryDatas", "tagPickerName",
                 () -> controller.saveFirewallTagPickerDictionary(request, response));
     }
 
     @Test
     public void testUpdateFirewallTagPickerDictionary() {
-        jsonString = "{\"fwTagPickerDictionaryData\":{\"id\":1,\"description\":\"test\",\"networkRole\":\"test\",\"tagPickerName\":\"Test\",\"tags\":[{\"$$hashKey\":\"object:1855\",\"id\":\"choice1\",\"number\":\"test\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"fwTagPickerDictionaryData\":{\"id\":1,\"description\":\"test\",\"networkRole\":"
+                + "\"test\",\"tagPickerName\":\"Test\",\"tags\":[{\"$$hashKey\":\"object:1855\",\"id\":"
+                + "\"choice1\",\"number\":\"test\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
         testUpdate(FWTagPicker.class, "fwTagPickerDictionaryDatas", "tagPickerName",
                 () -> controller.saveFirewallTagPickerDictionary(request, response));
     }
@@ -503,14 +586,18 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testSaveFirewallTagDictionary() {
-        jsonString = "{\"fwTagDictionaryData\":{\"description\":\"test\",\"fwTagName\":\"Test\",\"tags\":[{\"$$hashKey\":\"object:1690\",\"id\":\"choice1\",\"tags\":\"test\"}]},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"fwTagDictionaryData\":{\"description\":\"test\",\"fwTagName\":\"Test\",\"tags\":[{\"$$hashKey\":"
+                + "\"object:1690\",\"id\":\"choice1\",\"tags\":\"test\"}]},\"userid\":\"demo\"}";
         testSave(FWTag.class, "fwTagDictionaryDatas", "fwTagName",
                 () -> controller.saveFirewallTagDictionary(request, response));
     }
 
     @Test
     public void testUpdateFirewallTagDictionary() {
-        jsonString = "{\"fwTagDictionaryData\":{\"id\":1,\"description\":\"test\",\"fwTagName\":\"Test\",\"tags\":[{\"$$hashKey\":\"object:1690\",\"id\":\"choice1\",\"tags\":\"test\"}]},\"userid\":\"demo\"}";
+        jsonString =
+                "{\"fwTagDictionaryData\":{\"id\":1,\"description\":\"test\",\"fwTagName\":\"Test\",\"tags\":"
+                + "[{\"$$hashKey\":\"object:1690\",\"id\":\"choice1\",\"tags\":\"test\"}]},\"userid\":\"demo\"}";
         testUpdate(FWTag.class, "fwTagDictionaryDatas", "fwTagName",
                 () -> controller.saveFirewallTagDictionary(request, response));
     }

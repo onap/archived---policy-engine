@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -23,6 +23,7 @@
 package org.onap.policy.pap.xacml.rest.handler;
 
 import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
 
 public class DictionaryHandlerTest {

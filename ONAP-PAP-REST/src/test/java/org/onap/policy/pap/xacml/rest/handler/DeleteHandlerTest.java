@@ -26,10 +26,13 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
+
 import java.util.Collections;
 import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -93,31 +96,30 @@ public class DeleteHandlerTest {
         PolicyElasticSearchController controller = Mockito.mock(PolicyElasticSearchController.class);
         PowerMockito.whenNew(PolicyElasticSearchController.class).withNoArguments().thenReturn(controller);
 
-		// Test deletion from PAP
-		MockHttpServletResponse response = new MockHttpServletResponse();
-		try {
-			handler.doApiDeleteFromPap(request, response);
-		} catch (Exception ex) {
-			fail("Not expecting an exception: " + ex);
-		}
+        // Test deletion from PAP
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        try {
+            handler.doApiDeleteFromPap(request, response);
+        } catch (Exception ex) {
+            fail("Not expecting an exception: " + ex);
+        }
 
         // Test deletion from PDP
         OnapLoggingContext loggingContext = Mockito.mock(OnapLoggingContext.class);
         try {
             handler.doApiDeleteFromPdp(request, response, loggingContext);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             fail("Not expecting an exception: " + ex);
         }
 
-		// Test delete entity
-		PolicyEntity policyEntity = new PolicyEntity();
-		policyEntity.setPolicyName("testVal");
-		String result = DeleteHandler.deletePolicyEntityData(policyEntity);
-		assertEquals(result, "success");
+        // Test delete entity
+        PolicyEntity policyEntity = new PolicyEntity();
+        policyEntity.setPolicyName("testVal");
+        String result = DeleteHandler.deletePolicyEntityData(policyEntity);
+        assertEquals(result, "success");
 
-		// Test check entity
-		List<?> peResult = Collections.emptyList();
-		assertEquals(DeleteHandler.checkPolicyGroupEntity(peResult), false);
-	}
+        // Test check entity
+        List<?> peResult = Collections.emptyList();
+        assertEquals(DeleteHandler.checkPolicyGroupEntity(peResult), false);
+    }
 }

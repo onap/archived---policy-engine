@@ -21,16 +21,20 @@
 package org.onap.policy.pap.xacml.rest.controller;
 
 import au.com.bytecode.opencsv.CSVReader;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.compress.utils.IOUtils;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -68,7 +72,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-
 @Controller
 public class DictionaryImportController {
     private static final Logger LOGGER = FlexLogger.getLogger(DictionaryImportController.class);
@@ -92,8 +95,7 @@ public class DictionaryImportController {
     }
 
     @RequestMapping(value = {"/dictionary/import_dictionary"}, method = {RequestMethod.POST})
-    public void importDictionaryData(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public void importDictionaryData(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         String userId = request.getParameter("userId");
@@ -273,8 +275,7 @@ public class DictionaryImportController {
                     String[] rows = dictSheet.get(i);
                     for (int j = 0; j < rows.length; j++) {
                         if ("modelName".equalsIgnoreCase(dictSheet.get(0)[j])
-                                || "Optimization Service Model"
-                                        .equalsIgnoreCase(dictSheet.get(0)[j])) {
+                                || "Optimization Service Model".equalsIgnoreCase(dictSheet.get(0)[j])) {
                             attribute.setModelName(rows[j]);
                         }
                         if ("version".equalsIgnoreCase(dictSheet.get(0)[j])

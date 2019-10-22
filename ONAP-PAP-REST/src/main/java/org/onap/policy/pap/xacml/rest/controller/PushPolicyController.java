@@ -24,6 +24,7 @@ import com.att.research.xacml.api.pap.PAPException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -32,9 +33,11 @@ import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
+
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -93,8 +96,8 @@ public class PushPolicyController {
                 LOGGER.info("No request ID provided, sending generated ID: " + requestID);
             }
             LOGGER.info("Push policy Request to get the selectedPolicy : " + root.asText());
-            String policyVersionName = policyScope.replace(".", File.separator) + File.separator
-                    + filePrefix + policyName;
+            String policyVersionName =
+                    policyScope.replace(".", File.separator) + File.separator + filePrefix + policyName;
             List<?> policyVersionObject =
                     commonClassDao.getDataById(PolicyVersion.class, policyNames, policyVersionName);
             if (policyVersionObject != null) {
@@ -120,10 +123,10 @@ public class PushPolicyController {
     }
 
     private void addPolicyToGroup(String policyScope, String policyID, String policyName, String pdpGroup,
-                                  HttpServletResponse response) {
+            HttpServletResponse response) {
         StdPDPGroup selectedPDPGroup = null;
         StdPDPPolicy selectedPolicy = null;
-        //Get the selected PDP Group to push the policy
+        // Get the selected PDP Group to push the policy
         try {
             selectedPDPGroup = (StdPDPGroup) XACMLPapServlet.getPAPEngine().getGroup(pdpGroup);
         } catch (PAPException e1) {
@@ -147,16 +150,15 @@ public class PushPolicyController {
         params.put("scope", policyScope);
         params.put(policyNames, policyName.substring(policyScope.length() + 1));
         List<?> createPolicyQueryList = commonClassDao.getDataByQuery(createPolicyQuery, params);
-        LOGGER.info("addPolicyToGroup:Total execution time to retrieve " + policyNames
-                + " from PolicyEntity");
+        LOGGER.info("addPolicyToGroup:Total execution time to retrieve " + policyNames + " from PolicyEntity");
 
         PolicyEntity policyEntity = null;
         if (!createPolicyQueryList.isEmpty()) {
             policyEntity = (PolicyEntity) createPolicyQueryList.get(0);
         } else {
             PolicyLogger
-                    .error("Somehow, more than one policy with the same scope, name, and deleted status were found in" +
-                            " the database");
+                    .error("Somehow, more than one policy with the same scope, name, and deleted status were found in"
+                            + " the database");
             String message = "Unknown Policy '" + policyName + "'";
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
             response.addHeader(errorMsg, "unknownPolicy");

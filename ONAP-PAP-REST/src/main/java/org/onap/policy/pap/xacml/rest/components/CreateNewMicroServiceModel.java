@@ -22,6 +22,7 @@
 package org.onap.policy.pap.xacml.rest.components;
 
 import com.google.gson.Gson;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
@@ -54,7 +56,6 @@ public class CreateNewMicroServiceModel {
     private static final Logger logger = FlexLogger.getLogger(CreateNewMicroServiceModel.class);
     private MicroServiceModels newModel = null;
     private HashMap<String, MSAttributeObject> classMap = new HashMap<>();
-
 
     private MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
 
@@ -144,7 +145,6 @@ public class CreateNewMicroServiceModel {
     private void processYmlModel(String fileName, String modelName) {
 
         try {
-
 
             utils.parseTosca(fileName);
 
@@ -268,7 +268,6 @@ public class CreateNewMicroServiceModel {
             return successMap;
         }
         mainClass = classMap.get(this.newModel.getModelName());
-
 
         if (".yml".equalsIgnoreCase(type)) {
 

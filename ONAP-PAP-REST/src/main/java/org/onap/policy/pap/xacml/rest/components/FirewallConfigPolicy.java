@@ -26,6 +26,7 @@ import com.att.research.xacml.std.IdentifierImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonpatch.diff.JsonDiff;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -41,11 +42,27 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.script.SimpleBindings;
+
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
 import org.apache.commons.io.FilenameUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
@@ -66,19 +83,6 @@ import org.onap.policy.rest.jpa.TermList;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 @Component
 public class FirewallConfigPolicy extends Policy {
@@ -114,11 +118,11 @@ public class FirewallConfigPolicy extends Policy {
                 LOGGER.debug("Configuration is succesfully saved");
             }
         } catch (IOException e) {
-            LOGGER.error("Save of configuration to file" +fileName+ "failed",e);
+            LOGGER.error("Save of configuration to file" + fileName + "failed", e);
         }
     }
 
-   //Utility to read json data from the existing file to a string
+    // Utility to read json data from the existing file to a string
     static String readFile(String path, Charset encoding) throws IOException {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return new String(encoded, encoding);
@@ -127,11 +131,11 @@ public class FirewallConfigPolicy extends Policy {
     @Override
     public Map<String, String> savePolicies() throws PAPException {
         Map<String, String> successMap = new HashMap<>();
-        if(isPolicyExists()){
+        if (isPolicyExists()) {
             successMap.put("EXISTS", "This Policy already exist on the PAP");
             return successMap;
         }
-        if(!isPreparedToSave()){
+        if (!isPreparedToSave()) {
             prepareToSave();
         }
 
@@ -139,9 +143,10 @@ public class FirewallConfigPolicy extends Policy {
         Path newPolicyPath = null;
         newPolicyPath = Paths.get(policyAdapter.getNewFileName());
         Boolean dbIsUpdated = false;
-        if (policyAdapter.getApiflag() != null && "admin".equalsIgnoreCase(policyAdapter.getApiflag())){
+        if (policyAdapter.getApiflag() != null && "admin".equalsIgnoreCase(policyAdapter.getApiflag())) {
             if (policyAdapter.isEditPolicy()) {
-                dbIsUpdated = updateFirewallDictionaryData(policyAdapter.getJsonBody(), policyAdapter.getPrevJsonBody());
+                dbIsUpdated =
+                        updateFirewallDictionaryData(policyAdapter.getJsonBody(), policyAdapter.getPrevJsonBody());
             } else {
                 try {
                     dbIsUpdated = insertFirewallDicionaryData(policyAdapter.getJsonBody());
@@ -153,14 +158,14 @@ public class FirewallConfigPolicy extends Policy {
             dbIsUpdated = true;
         }
 
-        if(dbIsUpdated) {
-            successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
+        if (dbIsUpdated) {
+            successMap = createPolicy(newPolicyPath, getCorrectPolicyDataObject());
         } else {
             PolicyLogger.error("Failed to Update the Database Dictionary Tables.");
 
-            //remove the new json file
+            // remove the new json file
             String jsonBody = policyAdapter.getPrevJsonBody();
-            if (jsonBody!=null){
+            if (jsonBody != null) {
                 saveConfigurations(policyName, jsonBody);
             } else {
                 saveConfigurations(policyName, "");
@@ -171,13 +176,13 @@ public class FirewallConfigPolicy extends Policy {
         return successMap;
     }
 
-    //This is the method for preparing the policy for saving.  We have broken it out
-    //separately because the fully configured policy is used for multiple things
+    // This is the method for preparing the policy for saving. We have broken it out
+    // separately because the fully configured policy is used for multiple things
     @Override
-    public boolean prepareToSave() throws PAPException{
+    public boolean prepareToSave() throws PAPException {
 
-        if(isPreparedToSave()){
-            //we have already done this
+        if (isPreparedToSave()) {
+            // we have already done this
             return true;
         }
 
@@ -196,13 +201,13 @@ public class FirewallConfigPolicy extends Policy {
         }
         policyName = policyAdapter.getNewFileName();
 
-        //String oldPolicyName = policyName.replace(".xml", "");
+        // String oldPolicyName = policyName.replace(".xml", "");
         String scope = policyName.substring(0, policyName.indexOf('.'));
-        String dbPolicyName = policyName.substring(policyName.indexOf('.')+1).replace(".xml", "");
+        String dbPolicyName = policyName.substring(policyName.indexOf('.') + 1).replace(".xml", "");
 
-        int oldversion = Integer.parseInt(dbPolicyName.substring(dbPolicyName.lastIndexOf('.')+1));
-        dbPolicyName = dbPolicyName.substring(0, dbPolicyName.lastIndexOf('.')+1);
-        if(oldversion > 1){
+        int oldversion = Integer.parseInt(dbPolicyName.substring(dbPolicyName.lastIndexOf('.') + 1));
+        dbPolicyName = dbPolicyName.substring(0, dbPolicyName.lastIndexOf('.') + 1);
+        if (oldversion > 1) {
             oldversion = oldversion - 1;
             dbPolicyName = dbPolicyName + oldversion + ".xml";
         }
@@ -277,7 +282,8 @@ public class FirewallConfigPolicy extends Policy {
             try {
                 accessURI = new URI(ACTION_ID);
             } catch (URISyntaxException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "FirewallConfigPolicy", "Exception creating ACCESS URI");
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "FirewallConfigPolicy",
+                        "Exception creating ACCESS URI");
             }
             accessAttributeDesignator.setCategory(CATEGORY_ACTION);
             accessAttributeDesignator.setDataType(STRING_DATATYPE);
@@ -298,7 +304,8 @@ public class FirewallConfigPolicy extends Policy {
             try {
                 configURI = new URI(RESOURCE_ID);
             } catch (URISyntaxException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "FirewallConfigPolicy", "Exception creating Config URI");
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "FirewallConfigPolicy",
+                        "Exception creating Config URI");
             }
 
             configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
@@ -332,7 +339,7 @@ public class FirewallConfigPolicy extends Policy {
     // Data required for Advice part is setting here.
     private AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
 
-        //Firewall Config ID Assignment
+        // Firewall Config ID Assignment
         AdviceExpressionsType advices = new AdviceExpressionsType();
         AdviceExpressionType advice = new AdviceExpressionType();
         advice.setAdviceId("firewallConfigID");
@@ -349,7 +356,7 @@ public class FirewallConfigPolicy extends Policy {
         advice.getAttributeAssignmentExpression().add(assignment1);
 
         // For Config file Url if configurations are provided.
-        //URL ID Assignment
+        // URL ID Assignment
         AttributeAssignmentExpressionType assignment2 = new AttributeAssignmentExpressionType();
         assignment2.setAttributeId("URLID");
         assignment2.setCategory(CATEGORY_RESOURCE);
@@ -365,7 +372,7 @@ public class FirewallConfigPolicy extends Policy {
         assignment2.setExpression(new ObjectFactory().createAttributeValue(AttributeValue));
         advice.getAttributeAssignmentExpression().add(assignment2);
 
-        //Policy Name Assignment
+        // Policy Name Assignment
         AttributeAssignmentExpressionType assignment3 = new AttributeAssignmentExpressionType();
         assignment3.setAttributeId("PolicyName");
         assignment3.setCategory(CATEGORY_RESOURCE);
@@ -382,7 +389,7 @@ public class FirewallConfigPolicy extends Policy {
         assignment3.setExpression(new ObjectFactory().createAttributeValue(attributeValue3));
         advice.getAttributeAssignmentExpression().add(assignment3);
 
-        //Version Number Assignment
+        // Version Number Assignment
         AttributeAssignmentExpressionType assignment4 = new AttributeAssignmentExpressionType();
         assignment4.setAttributeId("VersionNumber");
         assignment4.setCategory(CATEGORY_RESOURCE);
@@ -393,7 +400,7 @@ public class FirewallConfigPolicy extends Policy {
         assignment4.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue4));
         advice.getAttributeAssignmentExpression().add(assignment4);
 
-        //Onap Name Assignment
+        // Onap Name Assignment
         AttributeAssignmentExpressionType assignment5 = new AttributeAssignmentExpressionType();
         assignment5.setAttributeId("matching:" + ONAPID);
         assignment5.setCategory(CATEGORY_RESOURCE);
@@ -403,7 +410,7 @@ public class FirewallConfigPolicy extends Policy {
         assignment5.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue5));
         advice.getAttributeAssignmentExpression().add(assignment5);
 
-        //Config Name Assignment
+        // Config Name Assignment
         AttributeAssignmentExpressionType assignment6 = new AttributeAssignmentExpressionType();
         assignment6.setAttributeId("matching:" + CONFIGID);
         assignment6.setCategory(CATEGORY_RESOURCE);
@@ -414,7 +421,7 @@ public class FirewallConfigPolicy extends Policy {
         assignment6.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue6));
         advice.getAttributeAssignmentExpression().add(assignment6);
 
-        //Risk Attributes
+        // Risk Attributes
         AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
         assignment7.setAttributeId("RiskType");
         assignment7.setCategory(CATEGORY_RESOURCE);
@@ -466,19 +473,18 @@ public class FirewallConfigPolicy extends Policy {
         return advices;
     }
 
-
-    private Boolean insertFirewallDicionaryData (String jsonBody) throws SQLException {
+    private Boolean insertFirewallDicionaryData(String jsonBody) throws SQLException {
         CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
         JsonObject json = null;
         if (jsonBody != null) {
 
-            //Read jsonBody to JsonObject
+            // Read jsonBody to JsonObject
             json = stringToJson(jsonBody);
 
             JsonArray firewallRules = null;
             JsonArray serviceGroup = null;
             JsonArray addressGroup = null;
-            //insert data into tables
+            // insert data into tables
             try {
                 firewallRules = json.getJsonArray("firewallRuleList");
                 serviceGroup = json.getJsonArray("serviceGroups");
@@ -487,28 +493,28 @@ public class FirewallConfigPolicy extends Policy {
                  * Inserting firewallRuleList data into the Terms, SecurityZone, and Action tables
                  */
                 if (firewallRules != null) {
-                    for(int i = 0;i<firewallRules.size();i++) {
+                    for (int i = 0; i < firewallRules.size(); i++) {
                         /*
                          * Populate ArrayLists with values from the JSON
                          */
-                        //create the JSON object from the JSON Array for each iteration through the for loop
+                        // create the JSON object from the JSON Array for each iteration through the for loop
                         JsonObject ruleListobj = firewallRules.getJsonObject(i);
 
-                        //get values from JSON fields of firewallRulesList Array
+                        // get values from JSON fields of firewallRulesList Array
                         String ruleName = ruleListobj.get("ruleName").toString();
                         String action = ruleListobj.get("action").toString();
                         String description = ruleListobj.get("description").toString();
                         List<Object> result = dbConnection.getDataById(TermList.class, "termName", ruleName);
-                        if(result != null && !result.isEmpty()){
+                        if (result != null && !result.isEmpty()) {
                             TermList termEntry = (TermList) result.get(0);
                             dbConnection.delete(termEntry);
                         }
 
-                        //getting fromZone Array field from the firewallRulesList
+                        // getting fromZone Array field from the firewallRulesList
                         JsonArray fromZoneArray = ruleListobj.getJsonArray("fromZones");
                         String fromZoneString = null;
 
-                        for (int fromZoneIndex = 0;fromZoneIndex<fromZoneArray.size(); fromZoneIndex++) {
+                        for (int fromZoneIndex = 0; fromZoneIndex < fromZoneArray.size(); fromZoneIndex++) {
                             String value = fromZoneArray.get(fromZoneIndex).toString();
                             value = value.replace("\"", "");
                             if (fromZoneString != null) {
@@ -517,12 +523,12 @@ public class FirewallConfigPolicy extends Policy {
                                 fromZoneString = value;
                             }
                         }
-                        String fromZoneInsert = "'"+fromZoneString+"'";
+                        String fromZoneInsert = "'" + fromZoneString + "'";
 
-                        //getting toZone Array field from the firewallRulesList
+                        // getting toZone Array field from the firewallRulesList
                         JsonArray toZoneArray = ruleListobj.getJsonArray("toZones");
                         String toZoneString = null;
-                        for (int toZoneIndex = 0; toZoneIndex<toZoneArray.size(); toZoneIndex++) {
+                        for (int toZoneIndex = 0; toZoneIndex < toZoneArray.size(); toZoneIndex++) {
                             String value = toZoneArray.get(toZoneIndex).toString();
                             value = value.replace("\"", "");
                             if (toZoneString != null) {
@@ -531,19 +537,19 @@ public class FirewallConfigPolicy extends Policy {
                                 toZoneString = value;
                             }
                         }
-                        String toZoneInsert = "'"+toZoneString+"'";
+                        String toZoneInsert = "'" + toZoneString + "'";
 
-                        //getting sourceList Array fields from the firewallRulesList
+                        // getting sourceList Array fields from the firewallRulesList
                         JsonArray srcListArray = ruleListobj.getJsonArray("sourceList");
                         String srcListString = null;
-                        for (int srcListIndex = 0; srcListIndex< srcListArray.size(); srcListIndex++) {
+                        for (int srcListIndex = 0; srcListIndex < srcListArray.size(); srcListIndex++) {
                             JsonObject srcListObj = srcListArray.getJsonObject(srcListIndex);
                             String type = srcListObj.get("type").toString().replace("\"", "");
 
                             String value = null;
-                            if(type.equals("REFERENCE")||type.equals("GROUP")){
+                            if (type.equals("REFERENCE") || type.equals("GROUP")) {
                                 value = srcListObj.get("name").toString();
-                            } else if (type.equalsIgnoreCase("ANY")){
+                            } else if (type.equalsIgnoreCase("ANY")) {
                                 value = null;
                             } else {
                                 value = srcListObj.get("value").toString();
@@ -552,19 +558,19 @@ public class FirewallConfigPolicy extends Policy {
                             srcListString = getLeftOrRight(srcListString, value);
 
                         }
-                        String srcListInsert = "'"+srcListString+"'";
+                        String srcListInsert = "'" + srcListString + "'";
 
-                        //getting destinationList Array fields from the firewallRulesList
+                        // getting destinationList Array fields from the firewallRulesList
                         JsonArray destListArray = ruleListobj.getJsonArray("destinationList");
                         String destListString = null;
-                        for (int destListIndex = 0; destListIndex <destListArray.size(); destListIndex++) {
+                        for (int destListIndex = 0; destListIndex < destListArray.size(); destListIndex++) {
                             JsonObject destListObj = destListArray.getJsonObject(destListIndex);
                             String type = destListObj.get("type").toString().replace("\"", "");
 
                             String value = null;
-                            if(type.equals("REFERENCE")||type.equals("GROUP")){
+                            if (type.equals("REFERENCE") || type.equals("GROUP")) {
                                 value = destListObj.get("name").toString();
-                            } else if (type.equalsIgnoreCase("ANY")){
+                            } else if (type.equalsIgnoreCase("ANY")) {
                                 value = null;
                             } else {
                                 value = destListObj.get("value").toString();
@@ -572,19 +578,20 @@ public class FirewallConfigPolicy extends Policy {
 
                             destListString = getLeftOrRight(destListString, value);
                         }
-                        String destListInsert = "'"+destListString+"'";
+                        String destListInsert = "'" + destListString + "'";
 
-                        //getting destServices Array fields from the firewallRulesList
+                        // getting destServices Array fields from the firewallRulesList
                         JsonArray destServicesArray = ruleListobj.getJsonArray("destServices");
                         String destPortListString = null;
-                        for (int destPortListIndex = 0; destPortListIndex < destServicesArray.size(); destPortListIndex++) {
+                        for (int destPortListIndex = 0; destPortListIndex < destServicesArray
+                                .size(); destPortListIndex++) {
                             JsonObject destServicesObj = destServicesArray.getJsonObject(destPortListIndex);
                             String type = destServicesObj.get("type").toString().replace("\"", "");
 
                             String value = null;
-                            if(type.equals("REFERENCE")||type.equals("GROUP")){
+                            if (type.equals("REFERENCE") || type.equals("GROUP")) {
                                 value = destServicesObj.get("name").toString();
-                            } else if (type.equalsIgnoreCase("ANY")){
+                            } else if (type.equalsIgnoreCase("ANY")) {
                                 value = null;
                             } else {
                                 value = destServicesObj.get("value").toString();
@@ -592,7 +599,7 @@ public class FirewallConfigPolicy extends Policy {
 
                             destPortListString = getLeftOrRight(destPortListString, value);
                         }
-                        String destPortListInsert = "'"+destPortListString+"'";
+                        String destPortListInsert = "'" + destPortListString + "'";
 
                         /*
                          * Create Queries to INSERT data into database tables and execute
@@ -624,35 +631,35 @@ public class FirewallConfigPolicy extends Policy {
                  * Inserting serviceGroups data into the ServiceGroup, ServiceList, ProtocolList, and PortList tables
                  */
                 if (serviceGroup != null) {
-                    for(int i = 0; i < serviceGroup.size() ; i++) {
+                    for (int i = 0; i < serviceGroup.size(); i++) {
                         /*
                          * Populate ArrayLists with values from the JSON
                          */
-                        //create the JSON object from the JSON Array for each iteration through the for loop
+                        // create the JSON object from the JSON Array for each iteration through the for loop
                         JsonObject svcGroupListobj = serviceGroup.getJsonObject(i);
 
                         String serviceListName = svcGroupListobj.get("name").toString();
                         String description = null;
-                        if (svcGroupListobj.containsKey("description")){
+                        if (svcGroupListobj.containsKey("description")) {
                             description = svcGroupListobj.get("description").toString();
                         }
 
-                        //getting members Array from the serviceGroup
+                        // getting members Array from the serviceGroup
                         JsonArray membersArray = svcGroupListobj.getJsonArray("members");
 
-                        //String type = svcGroupListobj.get("type").toString();
+                        // String type = svcGroupListobj.get("type").toString();
                         Boolean isServiceGroup = false;
-                        if (membersArray!=null){
+                        if (membersArray != null) {
                             String membersType = membersArray.getJsonObject(0).get("type").toString();
                             if (membersType.contains("REFERENCE")) {
                                 isServiceGroup = true;
                             }
                         }
 
-                        //Insert values into GROUPSERVICELIST table if name begins with Group
+                        // Insert values into GROUPSERVICELIST table if name begins with Group
                         if (isServiceGroup) {
                             saveGroupServiceListTableToDb(dbConnection, serviceListName, membersArray);
-                        } else { //Insert JSON data serviceList table, protollist table, and portlist table
+                        } else { // Insert JSON data serviceList table, protollist table, and portlist table
                             String type = svcGroupListobj.get("type").toString();
                             String transportProtocol = svcGroupListobj.get("transportProtocol").toString();
                             String ports = svcGroupListobj.get("ports").toString();
@@ -660,7 +667,8 @@ public class FirewallConfigPolicy extends Policy {
                             /*
                              * Create Queries to INSERT data into database table and execute
                              */
-                            saveServiceListToDb(dbConnection, serviceListName, description, type, transportProtocol, ports);
+                            saveServiceListToDb(dbConnection, serviceListName, description, type, transportProtocol,
+                                    ports);
 
                             saveProtocolListToDb(dbConnection, transportProtocol);
 
@@ -673,19 +681,19 @@ public class FirewallConfigPolicy extends Policy {
                  * Inserting addressGroup data into the ADDRESSGROUP table
                  */
                 if (addressGroup != null) {
-                    for(int i = 0; i < addressGroup.size(); i++) {
+                    for (int i = 0; i < addressGroup.size(); i++) {
                         /*
                          * Populate ArrayLists with values from the JSON
                          */
-                        //create the JSON object from the JSON Array for each iteration through the for loop
+                        // create the JSON object from the JSON Array for each iteration through the for loop
                         JsonObject addressGroupObj = addressGroup.getJsonObject(i);
 
-                        //create JSON array for members
+                        // create JSON array for members
                         JsonArray membersArray = addressGroupObj.getJsonArray("members");
                         String addressGroupName = addressGroupObj.get("name").toString();
 
                         String description = null;
-                        if (addressGroupObj.containsKey("description")){
+                        if (addressGroupObj.containsKey("description")) {
                             description = addressGroupObj.get("description").toString();
                         }
 
@@ -697,7 +705,7 @@ public class FirewallConfigPolicy extends Policy {
 
                             prefixIP = getName(prefixIP, membersObj, type);
                         }
-                        String prefixList = "'"+prefixIP+"'";
+                        String prefixList = "'" + prefixIP + "'";
 
                         Boolean isAddressGroup = type.contains("REFERENCE");
 
@@ -709,8 +717,9 @@ public class FirewallConfigPolicy extends Policy {
                     }
                 }
                 removeDuplicateValuesFromLookup(dbConnection);
-            }catch (Exception e) {
-                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "FirewallConfigPolicy", "Exception getting Json values");
+            } catch (Exception e) {
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "FirewallConfigPolicy",
+                        "Exception getting Json values");
                 return false;
             }
             return true;
@@ -729,33 +738,34 @@ public class FirewallConfigPolicy extends Policy {
                 + "WHERE protocollist.id > p1.id AND protocollist.protocolname = p1.protocolname;";
         dbConnection.updateQuery(protoDelete);
 
-        //PortList Table
+        // PortList Table
         String portListDelete = "DELETE FROM portlist USING portlist, portlist p1 "
                 + "WHERE portlist.id > p1.id AND portlist.portname = p1.portname; ";
         dbConnection.updateQuery(portListDelete);
 
-        //PrefixList Table
+        // PrefixList Table
         String prefixListDelete = "DELETE FROM prefixlist USING prefixlist, prefixlist p1 "
                 + "WHERE prefixlist.id > p1.id AND prefixlist.pl_name = p1.pl_name AND "
                 + "prefixlist.pl_value = p1.pl_value AND prefixlist.description = p1.description; ";
         dbConnection.updateQuery(prefixListDelete);
 
-        //GroupServiceList
+        // GroupServiceList
         String groupServiceDelete = "DELETE FROM groupservicelist USING groupservicelist, groupservicelist g1 "
                 + "WHERE groupservicelist.id > g1.id AND groupservicelist.name = g1.name AND "
                 + "groupservicelist.serviceList = g1.serviceList; ";
         dbConnection.updateQuery(groupServiceDelete);
     }
 
-    private void saveGroupServiceListTableToDb(CommonClassDaoImpl dbConnection, String serviceListName, JsonArray membersArray) {
+    private void saveGroupServiceListTableToDb(CommonClassDaoImpl dbConnection, String serviceListName,
+            JsonArray membersArray) {
         String name = null;
-        for (int membersIndex = 0; membersIndex< membersArray.size(); membersIndex++) {
+        for (int membersIndex = 0; membersIndex < membersArray.size(); membersIndex++) {
             JsonObject membersObj = membersArray.getJsonObject(membersIndex);
             String type = membersObj.get("type").toString().replace("\"", "");
 
             name = getName(name, membersObj, type);
         }
-        String nameInsert = "'"+name+"'";
+        String nameInsert = "'" + name + "'";
         GroupServiceList groupServiceEntry = new GroupServiceList();
         groupServiceEntry.setGroupName(serviceListName);
         groupServiceEntry.setServiceList(nameInsert);
@@ -764,9 +774,9 @@ public class FirewallConfigPolicy extends Policy {
 
     private String getName(String name, JsonObject membersObj, String type) {
         String value;
-        if(type.equals("REFERENCE")||type.equals("GROUP")||type.equals("SERVICE")){
+        if (type.equals("REFERENCE") || type.equals("GROUP") || type.equals("SERVICE")) {
             value = membersObj.get("name").toString();
-        } else if (type.equalsIgnoreCase("ANY")){
+        } else if (type.equalsIgnoreCase("ANY")) {
             value = null;
         } else {
             value = membersObj.get("value").toString();
@@ -789,7 +799,6 @@ public class FirewallConfigPolicy extends Policy {
         return name;
     }
 
-
     private Boolean updateFirewallDictionaryData(String jsonBody, String prevJsonBody) {
         CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
         JsonObject oldJson = null;
@@ -800,7 +809,7 @@ public class FirewallConfigPolicy extends Policy {
             oldJson = stringToJson(prevJsonBody);
             newJson = stringToJson(jsonBody);
 
-            //if no changes to the json then return true
+            // if no changes to the json then return true
             if (oldJson != null && oldJson.equals(newJson)) {
                 return true;
             }
@@ -813,12 +822,12 @@ public class FirewallConfigPolicy extends Policy {
             serviceGroup = newJson.getJsonArray("serviceGroups");
             addressGroup = newJson.getJsonArray("addressGroups");
 
-            //insert data into tables
+            // insert data into tables
             try {
                 JsonNode jsonDiff = createPatch(jsonBody, prevJsonBody);
 
-                for (int i = 0; i<jsonDiff.size(); i++) {
-                    //String path = jsonDiff.get(i).asText();
+                for (int i = 0; i < jsonDiff.size(); i++) {
+                    // String path = jsonDiff.get(i).asText();
                     String jsonpatch = jsonDiff.get(i).toString();
 
                     JsonObject patchObj = stringToJson(jsonpatch);
@@ -829,29 +838,29 @@ public class FirewallConfigPolicy extends Policy {
                         /*
                          * Inserting firewallRuleList data into the Terms, SecurityZone, and Action tables
                          */
-                        for(int ri = 0; ri < firewallRules.size(); ri++) {
+                        for (int ri = 0; ri < firewallRules.size(); ri++) {
                             /*
                              * Populate ArrayLists with values from the JSON
                              */
-                            //create the JSON object from the JSON Array for each iteration through the for loop
+                            // create the JSON object from the JSON Array for each iteration through the for loop
                             JsonObject ruleListobj = firewallRules.getJsonObject(ri);
 
-                            //get values from JSON fields of firewallRulesList Array
+                            // get values from JSON fields of firewallRulesList Array
                             String ruleName = ruleListobj.get("ruleName").toString().replace('"', '\'');
                             String action = ruleListobj.get("action").toString().replace('"', '\'');
                             String description = ruleListobj.get("description").toString().replace('"', '\'');
 
                             List<Object> result = dbConnection.getDataById(TermList.class, "termName", ruleName);
-                            if(result != null && !result.isEmpty()){
+                            if (result != null && !result.isEmpty()) {
                                 TermList termEntry = (TermList) result.get(0);
                                 dbConnection.delete(termEntry);
                             }
 
-                            //getting fromZone Array field from the firewallRulesList
+                            // getting fromZone Array field from the firewallRulesList
                             JsonArray fromZoneArray = ruleListobj.getJsonArray("fromZones");
                             String fromZoneString = null;
 
-                            for (int fromZoneIndex = 0; fromZoneIndex<fromZoneArray.size() ; fromZoneIndex++) {
+                            for (int fromZoneIndex = 0; fromZoneIndex < fromZoneArray.size(); fromZoneIndex++) {
                                 String value = fromZoneArray.get(fromZoneIndex).toString();
                                 value = value.replace("\"", "");
 
@@ -863,12 +872,11 @@ public class FirewallConfigPolicy extends Policy {
                                 }
 
                             }
-                            String fromZoneInsert = "'"+fromZoneString+"'";
+                            String fromZoneInsert = "'" + fromZoneString + "'";
 
-                            //getting toZone Array field from the firewallRulesList
+                            // getting toZone Array field from the firewallRulesList
                             JsonArray toZoneArray = ruleListobj.getJsonArray("toZones");
                             String toZoneString = null;
-
 
                             for (int toZoneIndex = 0; toZoneIndex < toZoneArray.size(); toZoneIndex++) {
                                 String value = toZoneArray.get(toZoneIndex).toString();
@@ -882,18 +890,18 @@ public class FirewallConfigPolicy extends Policy {
                                 }
 
                             }
-                            String toZoneInsert = "'"+toZoneString+"'";
-                            //getting sourceList Array fields from the firewallRulesList
+                            String toZoneInsert = "'" + toZoneString + "'";
+                            // getting sourceList Array fields from the firewallRulesList
                             JsonArray srcListArray = ruleListobj.getJsonArray("sourceList");
                             String srcListString = null;
-                            for (int srcListIndex = 0; srcListIndex<srcListArray.size(); srcListIndex++) {
+                            for (int srcListIndex = 0; srcListIndex < srcListArray.size(); srcListIndex++) {
                                 JsonObject srcListObj = srcListArray.getJsonObject(srcListIndex);
                                 String type = srcListObj.get("type").toString().replace("\"", "");
 
                                 String value = null;
-                                if(type.equals("REFERENCE")||type.equals("GROUP")){
+                                if (type.equals("REFERENCE") || type.equals("GROUP")) {
                                     value = srcListObj.get("name").toString();
-                                } else if (type.equalsIgnoreCase("ANY")){
+                                } else if (type.equalsIgnoreCase("ANY")) {
                                     value = null;
                                 } else {
                                     value = srcListObj.get("value").toString();
@@ -902,19 +910,19 @@ public class FirewallConfigPolicy extends Policy {
                                 srcListString = getLeftOrRight(srcListString, value);
 
                             }
-                            String srcListInsert = "'"+srcListString+"'";
+                            String srcListInsert = "'" + srcListString + "'";
 
-                            //getting destinationList Array fields from the firewallRulesList
+                            // getting destinationList Array fields from the firewallRulesList
                             JsonArray destListArray = ruleListobj.getJsonArray("destinationList");
                             String destListString = null;
-                            for (int destListIndex = 0; destListIndex<destListArray.size(); destListIndex ++) {
+                            for (int destListIndex = 0; destListIndex < destListArray.size(); destListIndex++) {
                                 JsonObject destListObj = destListArray.getJsonObject(destListIndex);
                                 String type = destListObj.get("type").toString().replace("\"", "");
 
                                 String value = null;
-                                if(type.equals("REFERENCE")||type.equals("GROUP")){
+                                if (type.equals("REFERENCE") || type.equals("GROUP")) {
                                     value = destListObj.get("name").toString();
-                                } else if (type.equalsIgnoreCase("ANY")){
+                                } else if (type.equalsIgnoreCase("ANY")) {
                                     value = null;
                                 } else {
                                     value = destListObj.get("value").toString();
@@ -922,19 +930,20 @@ public class FirewallConfigPolicy extends Policy {
 
                                 destListString = getLeftOrRight(destListString, value);
                             }
-                            String destListInsert = "'"+destListString+"'";
+                            String destListInsert = "'" + destListString + "'";
 
-                            //getting destServices Array fields from the firewallRulesList
+                            // getting destServices Array fields from the firewallRulesList
                             JsonArray destServicesArray = ruleListobj.getJsonArray("destServices");
                             String destPortListString = null;
-                            for (int destPortListIndex = 0; destPortListIndex < destServicesArray.size(); destPortListIndex++) {
+                            for (int destPortListIndex = 0; destPortListIndex < destServicesArray
+                                    .size(); destPortListIndex++) {
                                 JsonObject destServicesObj = destServicesArray.getJsonObject(destPortListIndex);
                                 String type = destServicesObj.get("type").toString().replace("\"", "");
 
                                 String value = null;
-                                if(type.equals("REFERENCE")||type.equals("GROUP")){
+                                if (type.equals("REFERENCE") || type.equals("GROUP")) {
                                     value = destServicesObj.get("name").toString();
-                                } else if (type.equalsIgnoreCase("ANY")){
+                                } else if (type.equalsIgnoreCase("ANY")) {
                                     value = null;
                                 } else {
                                     value = destServicesObj.get("value").toString();
@@ -942,7 +951,7 @@ public class FirewallConfigPolicy extends Policy {
 
                                 destPortListString = getLeftOrRight(destPortListString, value);
                             }
-                            String destPortListInsert = "'"+destPortListString+"'";
+                            String destPortListInsert = "'" + destPortListString + "'";
 
                             /*
                              * Create Queries to INSERT data into database tables and execute
@@ -966,8 +975,9 @@ public class FirewallConfigPolicy extends Policy {
                             termEntry.setUserCreatedBy(userInfo);
                             dbConnection.save(termEntry);
 
-                            List<Object> actionResult = dbConnection.getDataById(ActionList.class, "actionName", action);
-                            if(actionResult == null || actionResult.isEmpty()){
+                            List<Object> actionResult =
+                                    dbConnection.getDataById(ActionList.class, "actionName", action);
+                            if (actionResult == null || actionResult.isEmpty()) {
                                 saveActionListToDb(dbConnection, action);
                             }
                         }
@@ -975,61 +985,66 @@ public class FirewallConfigPolicy extends Policy {
 
                     if (path.contains("serviceGroups")) {
                         /*
-                         * Inserting serviceGroups data into the ServiceGroup, ServiceList, ProtocolList, and PortList tables
+                         * Inserting serviceGroups data into the ServiceGroup, ServiceList, ProtocolList, and PortList
+                         * tables
                          */
-                        for(int si = 0; si < serviceGroup.size(); si++) {
+                        for (int si = 0; si < serviceGroup.size(); si++) {
                             /*
                              * Populate ArrayLists with values from the JSON
                              */
-                            //create the JSON object from the JSON Array for each iteration through the for loop
+                            // create the JSON object from the JSON Array for each iteration through the for loop
                             JsonObject svcGroupListobj = serviceGroup.getJsonObject(si);
 
                             String groupName = svcGroupListobj.get("name").toString().replace('"', '\'');
 
                             String description = null;
-                            if (svcGroupListobj.containsKey("description")){
+                            if (svcGroupListobj.containsKey("description")) {
                                 description = svcGroupListobj.get("description").toString().replace('"', '\'');
                             }
 
                             JsonArray membersArray = svcGroupListobj.getJsonArray("members");
 
                             Boolean isServiceGroup = false;
-                            if (membersArray!=null){
+                            if (membersArray != null) {
                                 String membersType = membersArray.getJsonObject(0).get("type").toString();
                                 if (membersType.contains("REFERENCE")) {
                                     isServiceGroup = true;
                                 }
                             }
 
-                            //Insert values into GROUPSERVICELIST table if name begins with Group
+                            // Insert values into GROUPSERVICELIST table if name begins with Group
                             if (isServiceGroup) {
-                                List<Object> result = dbConnection.getDataById(GroupServiceList.class, "name", groupName);
-                                if(result != null && !result.isEmpty()){
+                                List<Object> result =
+                                        dbConnection.getDataById(GroupServiceList.class, "name", groupName);
+                                if (result != null && !result.isEmpty()) {
                                     GroupServiceList groupEntry = (GroupServiceList) result.get(0);
                                     dbConnection.delete(groupEntry);
                                 }
 
                                 saveGroupServiceListTableToDb(dbConnection, groupName, membersArray);
-                            } else { //Insert JSON data serviceGroup table, protocollist table, and portlist table
+                            } else { // Insert JSON data serviceGroup table, protocollist table, and portlist table
                                 String type = svcGroupListobj.get("type").toString().replace('"', '\'');
-                                String transportProtocol = svcGroupListobj.get("transportProtocol").toString().replace('"', '\'');
+                                String transportProtocol =
+                                        svcGroupListobj.get("transportProtocol").toString().replace('"', '\'');
                                 String ports = svcGroupListobj.get("ports").toString().replace('"', '\'');
 
                                 List<Object> result = dbConnection.getDataById(ServiceList.class, "name", groupName);
-                                if(result != null && !result.isEmpty()){
+                                if (result != null && !result.isEmpty()) {
                                     ServiceList serviceEntry = (ServiceList) result.get(0);
                                     dbConnection.delete(serviceEntry);
                                 }
 
-                                saveServiceListToDb(dbConnection, groupName, description, type, transportProtocol, ports);
+                                saveServiceListToDb(dbConnection, groupName, description, type, transportProtocol,
+                                        ports);
 
-                                List<Object> protocolResult = dbConnection.getDataById(ProtocolList.class, "protocolName", transportProtocol);
-                                if(protocolResult == null || protocolResult.isEmpty()){
+                                List<Object> protocolResult =
+                                        dbConnection.getDataById(ProtocolList.class, "protocolName", transportProtocol);
+                                if (protocolResult == null || protocolResult.isEmpty()) {
                                     saveProtocolListToDb(dbConnection, transportProtocol);
                                 }
 
                                 List<Object> portResult = dbConnection.getDataById(PortList.class, "portName", ports);
-                                if(portResult == null || portResult.isEmpty()){
+                                if (portResult == null || portResult.isEmpty()) {
                                     savePortListToDb(dbConnection, ports);
                                 }
                             }
@@ -1040,45 +1055,47 @@ public class FirewallConfigPolicy extends Policy {
                         /*
                          * Inserting addressGroup data into the ADDRESSGROUP table
                          */
-                        for(int ai=0; ai < addressGroup.size() ; ai++) {
+                        for (int ai = 0; ai < addressGroup.size(); ai++) {
 
                             /*
                              * Populate ArrayLists with values from the JSON
                              */
-                            //create the JSON object from the JSON Array for each iteration through the for loop
+                            // create the JSON object from the JSON Array for each iteration through the for loop
                             JsonObject addressGroupObj = addressGroup.getJsonObject(ai);
 
-                            //create JSON array for members
+                            // create JSON array for members
                             JsonArray membersArray = addressGroupObj.getJsonArray("members");
                             String addressGroupName = addressGroupObj.get("name").toString().replace('"', '\'');
 
                             String description = null;
-                            if (addressGroupObj.containsKey("description")){
+                            if (addressGroupObj.containsKey("description")) {
                                 description = addressGroupObj.get("description").toString().replace('"', '\'');
                             }
 
                             String prefixIP = null;
                             String type = null;
-                            for (int membersIndex=0; membersIndex < membersArray.size(); membersIndex++) {
+                            for (int membersIndex = 0; membersIndex < membersArray.size(); membersIndex++) {
                                 JsonObject membersObj = membersArray.getJsonObject(membersIndex);
                                 type = membersObj.get("type").toString().replace("\"", "");
 
                                 prefixIP = getName(prefixIP, membersObj, type);
                             }
 
-                            String prefixList = "'"+prefixIP+"'";
+                            String prefixList = "'" + prefixIP + "'";
                             Boolean isAddressGroup = type.contains("REFERENCE");
 
                             if (isAddressGroup) {
-                                List<Object> result = dbConnection.getDataById(AddressGroup.class, "name", addressGroupName);
-                                if(result != null && !result.isEmpty()){
+                                List<Object> result =
+                                        dbConnection.getDataById(AddressGroup.class, "name", addressGroupName);
+                                if (result != null && !result.isEmpty()) {
                                     AddressGroup addressGroupEntry = (AddressGroup) result.get(0);
                                     dbConnection.delete(addressGroupEntry);
                                 }
                                 saveAddressGroupToDb(dbConnection, addressGroupName, description, prefixList);
                             } else {
-                                List<Object> result = dbConnection.getDataById(PrefixList.class, "prefixListName", addressGroupName);
-                                if(result != null && !result.isEmpty()){
+                                List<Object> result =
+                                        dbConnection.getDataById(PrefixList.class, "prefixListName", addressGroupName);
+                                if (result != null && !result.isEmpty()) {
                                     PrefixList prefixListEntry = (PrefixList) result.get(0);
                                     dbConnection.delete(prefixListEntry);
                                 }
@@ -1088,8 +1105,9 @@ public class FirewallConfigPolicy extends Policy {
                     }
                 }
                 removeDuplicateValuesFromLookup(dbConnection);
-            }catch (Exception e) {
-                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "FirewallConfigPolicy", "Exception executing Firewall queries");
+            } catch (Exception e) {
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "FirewallConfigPolicy",
+                        "Exception executing Firewall queries");
                 return false;
             }
             return true;
@@ -1120,7 +1138,8 @@ public class FirewallConfigPolicy extends Policy {
         dbConnection.save(protocolEntry);
     }
 
-    private void saveServiceListToDb(CommonClassDaoImpl dbConnection, String groupName, String description, String type, String transportProtocol, String ports) {
+    private void saveServiceListToDb(CommonClassDaoImpl dbConnection, String groupName, String description, String type,
+            String transportProtocol, String ports) {
         ServiceList serviceListEntry = new ServiceList();
         serviceListEntry.setServiceName(groupName);
         serviceListEntry.setServiceDescription(description);
@@ -1131,7 +1150,8 @@ public class FirewallConfigPolicy extends Policy {
         dbConnection.save(serviceListEntry);
     }
 
-    private void savePrefixListToDb(CommonClassDaoImpl dbConnection, String addressGroupName, String description, String prefixList) {
+    private void savePrefixListToDb(CommonClassDaoImpl dbConnection, String addressGroupName, String description,
+            String prefixList) {
         PrefixList newPrefixList = new PrefixList();
         newPrefixList.setPrefixListName(addressGroupName);
         newPrefixList.setDescription(description);
@@ -1139,7 +1159,8 @@ public class FirewallConfigPolicy extends Policy {
         dbConnection.save(newPrefixList);
     }
 
-    private void saveAddressGroupToDb(CommonClassDaoImpl dbConnection, String addressGroupName, String description, String prefixList) {
+    private void saveAddressGroupToDb(CommonClassDaoImpl dbConnection, String addressGroupName, String description,
+            String prefixList) {
         AddressGroup newAddressGroup = new AddressGroup();
         newAddressGroup.setGroupName(addressGroupName);
         newAddressGroup.setDescription(description);
@@ -1148,7 +1169,7 @@ public class FirewallConfigPolicy extends Policy {
     }
 
     private JsonObject stringToJson(String jsonString) {
-        //Read jsonBody to JsonObject
+        // Read jsonBody to JsonObject
         StringReader in = new StringReader(jsonString);
         JsonReader jsonReader = Json.createReader(in);
         JsonObject json = jsonReader.readObject();
@@ -1164,7 +1185,7 @@ public class FirewallConfigPolicy extends Policy {
             oldJason = JsonLoader.fromString(oldJson);
             updatedJason = JsonLoader.fromString(json);
         } catch (IOException e) {
-            LOGGER.error("Exception Occured"+e);
+            LOGGER.error("Exception Occured" + e);
         }
         return JsonDiff.asJson(oldJason, updatedJason);
     }

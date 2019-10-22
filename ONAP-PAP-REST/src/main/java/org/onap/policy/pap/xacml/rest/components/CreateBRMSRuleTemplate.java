@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.components;
 
 import java.util.HashMap;
@@ -34,25 +35,27 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CreateBRMSRuleTemplate {
-    private static final Logger LOGGER  = FlexLogger.getLogger(CreateBRMSRuleTemplate.class);
+    private static final Logger LOGGER = FlexLogger.getLogger(CreateBRMSRuleTemplate.class);
     private static CommonClassDao commonClassDao;
 
     @Autowired
-    public CreateBRMSRuleTemplate(CommonClassDao commonClassDao){
+    public CreateBRMSRuleTemplate(CommonClassDao commonClassDao) {
         CreateBRMSRuleTemplate.commonClassDao = commonClassDao;
     }
 
-    public CreateBRMSRuleTemplate() {}
+    public CreateBRMSRuleTemplate() {
+    }
 
     public Map<String, String> addRule(String rule, String ruleName, String description, String userID) {
-        Map<String,String> responseMap = new HashMap<>();
-        if(rule!=null && !PolicyUtils.brmsRawValidate(rule).contains("[ERR")){
-            List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ruleName, "ruleName", BRMSParamTemplate.class);
-            if(duplicateData!=null && !duplicateData.isEmpty()){
+        Map<String, String> responseMap = new HashMap<>();
+        if (rule != null && !PolicyUtils.brmsRawValidate(rule).contains("[ERR")) {
+            List<Object> duplicateData =
+                    commonClassDao.checkDuplicateEntry(ruleName, "ruleName", BRMSParamTemplate.class);
+            if (duplicateData != null && !duplicateData.isEmpty()) {
                 LOGGER.error("Import new service failed.  Service already exists");
                 responseMap.put("DBError", "EXISTS");
                 return responseMap;
-            }else{
+            } else {
                 BRMSParamTemplate brmsParamTemplate = new BRMSParamTemplate();
                 brmsParamTemplate.setDescription(description);
                 brmsParamTemplate.setRuleName(ruleName);
@@ -63,7 +66,7 @@ public class CreateBRMSRuleTemplate {
                 LOGGER.info("Template created with " + ruleName + " by " + userID);
             }
             responseMap.put("success", "success");
-        }else{
+        } else {
             LOGGER.debug("Error during validating the rule for creating record for BRMS Param Template");
             responseMap.put("error", "VALIDATION");
         }
@@ -73,8 +76,8 @@ public class CreateBRMSRuleTemplate {
     public static boolean validateRuleParams(String rule) {
         CreateBrmsParamPolicy policy = new CreateBrmsParamPolicy();
         Map<String, String> paramValues = policy.findType(rule);
-        for(String key : paramValues.keySet()) {
-            if(!PolicyUtils.SUCCESS.equals(PolicyUtils.policySpecialCharValidator(key))){
+        for (String key : paramValues.keySet()) {
+            if (!PolicyUtils.SUCCESS.equals(PolicyUtils.policySpecialCharValidator(key))) {
                 return false;
             }
         }

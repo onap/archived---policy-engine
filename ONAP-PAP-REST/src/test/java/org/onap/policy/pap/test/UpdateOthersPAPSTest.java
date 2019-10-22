@@ -2,14 +2,14 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.test;
 
 import static org.junit.Assert.assertTrue;
@@ -60,9 +61,9 @@ public class UpdateOthersPAPSTest {
     public void setUp() throws Exception {
         logger.info("setUp: Entering");
         commonClassDao = mock(CommonClassDao.class);
-        
-        request = mock(HttpServletRequest.class);       
-        response =  new MockHttpServletResponse();
+
+        request = mock(HttpServletRequest.class);
+        response = new MockHttpServletResponse();
         List<Object> data = new ArrayList<>();
         PolicyDBDaoEntity entity = new PolicyDBDaoEntity();
         entity.setPolicyDBDaoUrl("http://localhost:8070/pap");
@@ -76,12 +77,12 @@ public class UpdateOthersPAPSTest {
 
         data.add(entity);
         data.add(entity1);
-        System.setProperty("xacml.rest.pap.url","http://localhost:8070/pap");
+        System.setProperty("xacml.rest.pap.url", "http://localhost:8070/pap");
         when(commonClassDao.getData(PolicyDBDaoEntity.class)).thenReturn(data);
     }
 
     @Test
-    public void testNotifyOthersPAPsToUpdateConfigurations(){
+    public void testNotifyOthersPAPsToUpdateConfigurations() {
         UpdateOthersPAPS updateOtherPaps = new UpdateOthersPAPS();
         UpdateOthersPAPS.setCommonClassDao(commonClassDao);
         when(request.getParameter("action")).thenReturn("rename");
@@ -98,7 +99,7 @@ public class UpdateOthersPAPSTest {
 
     @PrepareForTest({Policy.class})
     @Test
-    public void testUpdateConfiguration() throws Exception{
+    public void testUpdateConfiguration() throws Exception {
         UpdateOthersPAPS updateOtherPaps = new UpdateOthersPAPS();
         UpdateObjectData data = new UpdateObjectData();
         PowerMockito.mockStatic(Policy.class);
@@ -109,7 +110,8 @@ public class UpdateOthersPAPSTest {
         when(Policy.getActionHome()).thenReturn("test");
         File mockedFile = Mockito.mock(File.class);
         Mockito.when(mockedFile.exists()).thenReturn(true);
-        PowerMockito.whenNew(File.class).withParameterTypes(String.class).withArguments(Matchers.anyString()).thenReturn(mockedFile);
+        PowerMockito.whenNew(File.class).withParameterTypes(String.class).withArguments(Matchers.anyString())
+                .thenReturn(mockedFile);
         updateOtherPaps.updateConfiguration(data, response);
         assertTrue(response.getStatus() == 200);
     }

@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,8 +33,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -110,14 +113,18 @@ public class MicroServiceDictionaryController {
 
     private MicroServiceModels newModel;
 
-    @RequestMapping(value = {"/get_DCAEUUIDDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_DCAEUUIDDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getDCAEUUIDDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, dcaeUUIDDatas, "name", DCAEuuid.class);
     }
 
-    @RequestMapping(value = {"/get_DCAEUUIDData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_DCAEUUIDData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getDCAEUUIDDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -180,21 +187,27 @@ public class MicroServiceDictionaryController {
         utils.removeData(request, response, dcaeUUIDDatas, DCAEuuid.class);
     }
 
-    @RequestMapping(value = {"/get_MicroServiceConfigNameDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceConfigNameDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceConfigNameByNameDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, microServiceConfigNameDatas, "name", MicroServiceConfigName.class);
     }
 
-    @RequestMapping(value = {"/get_MicroServiceConfigNameData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceConfigNameData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceConfigNameDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, microServiceConfigNameDatas, MicroServiceConfigName.class);
     }
 
-    @RequestMapping(value = {"/get_MicroServiceDictData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceDictData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceDictNameDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -328,14 +341,18 @@ public class MicroServiceDictionaryController {
         utils.removeData(request, response, microServiceConfigNameDatas, MicroServiceConfigName.class);
     }
 
-    @RequestMapping(value = {"/get_MicroServiceLocationDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceLocationDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceLocationByNameDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, microServiceLocationDatas, "name", MicroServiceLocation.class);
     }
 
-    @RequestMapping(value = {"/get_MicroServiceLocationData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceLocationData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceLocationDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -403,14 +420,18 @@ public class MicroServiceDictionaryController {
         utils.removeData(request, response, microServiceLocationDatas, MicroServiceLocation.class);
     }
 
-    @RequestMapping(value = {"/get_MicroServiceAttributeDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceAttributeDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceAttributeByNameDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, microServiceAttributeDatas, "name", MicroServiceAttribute.class);
     }
 
-    @RequestMapping(value = {"/get_MicroServiceAttributeData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceAttributeData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceAttributeDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -481,15 +502,18 @@ public class MicroServiceDictionaryController {
         utils.removeData(request, response, microServiceAttributeDatas, MicroServiceAttribute.class);
     }
 
-
-    @RequestMapping(value = {"/get_MicroServiceModelsDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceModelsDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceModelsDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, microServiceModelsDictionaryDatas, modelName, MicroServiceModels.class);
     }
 
-    @RequestMapping(value = {"/get_MicroServiceModelsDataByVersion"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceModelsDataByVersion"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceModelsDictionaryByVersionEntityData(HttpServletRequest request,
             HttpServletResponse response) {
@@ -515,14 +539,18 @@ public class MicroServiceDictionaryController {
         }
     }
 
-    @RequestMapping(value = {"/get_MicroServiceModelsData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceModelsData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceModelsDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, microServiceModelsDictionaryDatas, MicroServiceModels.class);
     }
 
-    @RequestMapping(value = {"/get_MicroServiceModelsDataServiceVersion"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceModelsDataServiceVersion"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceModelsDictionaryEntityDataServiceVersion(HttpServletResponse response) {
         try {
@@ -550,7 +578,9 @@ public class MicroServiceDictionaryController {
         }
     }
 
-    @RequestMapping(value = {"/get_MicroServiceModelsDataByClass"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceModelsDataByClass"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceModelsDictionaryClassEntityData(HttpServletResponse response) {
         try {
@@ -798,20 +828,23 @@ public class MicroServiceDictionaryController {
         return returnList;
     }
 
-    @RequestMapping(value = {"/get_MicroServiceHeaderDefaultsDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceHeaderDefaultsDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceHeaderDefaultsEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, microServiceHeaderDefaultDatas, "modelName", MicroserviceHeaderdeFaults.class);
     }
 
-    @RequestMapping(value = {"/get_MicroServiceHeaderDefaultsData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_MicroServiceHeaderDefaultsData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceHeaderDefaultsEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, microServiceHeaderDefaultDatas, MicroserviceHeaderdeFaults.class);
     }
-
 
     @RequestMapping(value = {"/ms_dictionary/save_headerDefaults"}, method = {RequestMethod.POST})
     public ModelAndView saveMicroServiceHeaderDefaultValues(HttpServletRequest request, HttpServletResponse response)

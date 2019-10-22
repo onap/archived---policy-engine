@@ -21,6 +21,7 @@
 package org.onap.policy.pap.xacml.rest.components;
 
 import com.att.research.xacml.util.XACMLProperties;
+
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -31,6 +32,7 @@ import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XACMLRestProperties;

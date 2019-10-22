@@ -64,6 +64,7 @@ import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.BRMSParamTemplate;
 import org.onap.policy.rest.jpa.PolicyEntity;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -244,10 +245,14 @@ public class CreateBRMSParamController extends RestrictedBaseController {
         dynamicLayoutMap.put(caption, type);
     }
 
-    /*
+    /**
+     * prePopulateBRMSParamPolicyData.
      * When the User Click Edit or View Policy the following method will get invoked for setting the data to
      * PolicyRestAdapter.
-     * Which is used to bind the data in GUI
+     * Which is used to bind the data in GUI.
+     *
+     * @param policyAdapter PolicyRestAdapter
+     * @param entity PolicyEntity
      */
     public void prePopulateBRMSParamPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         dynamicLayoutMap = new HashMap<>();
@@ -351,20 +356,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
             String value = (String) attributeValue.getContent().get(0);
             AttributeDesignatorType designator = match.getAttributeDesignator();
             String attributeId = designator.getAttributeId();
-            if ("RiskType".equals(attributeId)) {
-                policyAdapter.setRiskType(value);
-            }
-            if ("RiskLevel".equals(attributeId)) {
-                policyAdapter.setRiskLevel(value);
-            }
-            if ("guard".equals(attributeId)) {
-                policyAdapter.setGuard(value);
-            }
-            if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
-                PolicyController controller = new PolicyController();
-                String newDate = controller.convertDate(value);
-                policyAdapter.setTtlDate(newDate);
-            }
+            policyAdapter.setupUsingAttribute(attributeId, value);
         }
     }
 
@@ -535,9 +527,9 @@ public class CreateBRMSParamController extends RestrictedBaseController {
                 // Replacing the value with the inputs provided by the user in the editor.
                 body = matcher.replaceAll(copyMap.get(input));
             }
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application / json");
-            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            response.setContentType(PolicyUtils.APPLICATION_JSON);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
 
             response.getWriter().write(new JSONObject("{policyData: " + mapper.writeValueAsString(body)
                 + "}").toString());

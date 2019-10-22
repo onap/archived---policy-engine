@@ -20,6 +20,14 @@
 
 package org.onap.policy.pap.xacml.rest;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.api.pap.PDPPolicy;
+import com.att.research.xacml.api.pap.PDPStatus;
+import com.att.research.xacml.util.FactoryException;
+import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Splitter;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,6 +43,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -44,6 +53,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.common.ia.IntegrityAudit;
 import org.onap.policy.common.im.AdministrativeStateException;
@@ -80,20 +90,17 @@ import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPItemSetChangeNotifier.StdItemSetChangeListener;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.api.pap.PDPPolicy;
-import com.att.research.xacml.api.pap.PDPStatus;
-import com.att.research.xacml.util.FactoryException;
-import com.att.research.xacml.util.XACMLProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Splitter;
 
 /**
  * Servlet implementation class XacmlPapServlet.
  */
-@WebServlet(description = "Implements the XACML PAP RESTful API.", urlPatterns = {"/"},
+@WebServlet(
+        description = "Implements the XACML PAP RESTful API.",
+        urlPatterns = {"/"},
         loadOnStartup = 1,
-        initParams = {@WebInitParam(name = "XACML_PROPERTIES_NAME", value = "xacml.pap.properties",
+        initParams = {@WebInitParam(
+                name = "XACML_PROPERTIES_NAME",
+                value = "xacml.pap.properties",
                 description = "The location of the properties file holding configuration information.")})
 public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeListener, Runnable {
     private static final long serialVersionUID = 1L;
@@ -116,8 +123,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
      * The CopyOnWriteArrayList *should* protect from concurrency errors. This list is seldom
      * changed but often read, so the costs of this approach make sense.
      */
-    private static final CopyOnWriteArrayList<String> adminConsoleURLStringList =
-            new CopyOnWriteArrayList<>();
+    private static final CopyOnWriteArrayList<String> adminConsoleURLStringList = new CopyOnWriteArrayList<>();
 
     private static String configHome;
     private static String actionHome;
@@ -181,8 +187,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 String hostname = InetAddress.getLocalHost().getCanonicalHostName();
                 baseLoggingContext.setServer(hostname);
             } catch (UnknownHostException e) {
-                LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR
-                        + "Unable to get hostname for logging", e);
+                LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get hostname for logging", e);
             }
 
             // Initialize
@@ -207,56 +212,49 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             }
             // Integer will throw an exception of anything is missing or
             // unrecognized
-            int papTransWait = Integer
-                    .parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT));
-            int papTransTimeout = Integer.parseInt(
-                    XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_TIMEOUT));
-            int papAuditTimeout = Integer.parseInt(
-                    XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_TIMEOUT));
+            int papTransWait = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT));
+            int papTransTimeout =
+                    Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_TIMEOUT));
+            int papAuditTimeout =
+                    Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_TIMEOUT));
             // Boolean will default to false if anything is missing or
             // unrecognized
-            boolean papAuditFlag = Boolean.parseBoolean(
-                    XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_RUN_AUDIT_FLAG));
-            boolean papFileSystemAudit = Boolean.parseBoolean(
-                    XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_FLAG));
-            String papDependencyGroups =
-                    XACMLProperties.getProperty(XACMLRestProperties.PAP_DEPENDENCY_GROUPS);
+            boolean papAuditFlag =
+                    Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_RUN_AUDIT_FLAG));
+            boolean papFileSystemAudit =
+                    Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_FLAG));
+            String papDependencyGroups = XACMLProperties.getProperty(XACMLRestProperties.PAP_DEPENDENCY_GROUPS);
             if (papDependencyGroups == null) {
                 throw new PAPException("papDependencyGroups is null");
             }
             setPAPDependencyGroups(papDependencyGroups);
             // Integer will throw an exception of anything is missing or
             // unrecognized
-            int fpMonitorInterval = Integer.parseInt(
-                    XACMLProperties.getProperty(IntegrityMonitorProperties.FP_MONITOR_INTERVAL));
-            int failedCounterThreshold = Integer.parseInt(XACMLProperties
-                    .getProperty(IntegrityMonitorProperties.FAILED_COUNTER_THRESHOLD));
-            int testTransInterval = Integer.parseInt(
-                    XACMLProperties.getProperty(IntegrityMonitorProperties.TEST_TRANS_INTERVAL));
-            int writeFpcInterval = Integer.parseInt(
-                    XACMLProperties.getProperty(IntegrityMonitorProperties.WRITE_FPC_INTERVAL));
-            LOGGER.debug("\n\n\n**************************************"
-                    + "\n*************************************" + "\n" + "\n   papDbDriver = "
-                    + papDbDriver + "\n   papDbUrl = " + papDbUrl + "\n   papDbUser = " + papDbUser
-                    + "\n   papTransWait = " + papTransWait + "\n   papTransTimeout = "
-                    + papTransTimeout + "\n   papAuditTimeout = " + papAuditTimeout
-                    + "\n   papAuditFlag = " + papAuditFlag + "\n   papFileSystemAudit = "
-                    + papFileSystemAudit + "\n	papResourceName = " + papResourceName
-                    + "\n	fpMonitorInterval = " + fpMonitorInterval
-                    + "\n	failedCounterThreshold = " + failedCounterThreshold
-                    + "\n	testTransInterval = " + testTransInterval + "\n	writeFpcInterval = "
-                    + writeFpcInterval + "\n	papSiteName = " + papSiteName + "\n	papNodeType = "
-                    + papNodeType + "\n	papDependencyGroupsList = " + papDependencyGroups
-                    + "\n   papIntegrityAuditPeriodSeconds = " + papIntegrityAuditPeriodSeconds
-                    + "\n\n*************************************"
+            int fpMonitorInterval =
+                    Integer.parseInt(XACMLProperties.getProperty(IntegrityMonitorProperties.FP_MONITOR_INTERVAL));
+            int failedCounterThreshold =
+                    Integer.parseInt(XACMLProperties.getProperty(IntegrityMonitorProperties.FAILED_COUNTER_THRESHOLD));
+            int testTransInterval =
+                    Integer.parseInt(XACMLProperties.getProperty(IntegrityMonitorProperties.TEST_TRANS_INTERVAL));
+            int writeFpcInterval =
+                    Integer.parseInt(XACMLProperties.getProperty(IntegrityMonitorProperties.WRITE_FPC_INTERVAL));
+            LOGGER.debug("\n\n\n**************************************" + "\n*************************************"
+                    + "\n" + "\n   papDbDriver = " + papDbDriver + "\n   papDbUrl = " + papDbUrl + "\n   papDbUser = "
+                    + papDbUser + "\n   papTransWait = " + papTransWait + "\n   papTransTimeout = " + papTransTimeout
+                    + "\n   papAuditTimeout = " + papAuditTimeout + "\n   papAuditFlag = " + papAuditFlag
+                    + "\n   papFileSystemAudit = " + papFileSystemAudit + "\n	papResourceName = " + papResourceName
+                    + "\n	fpMonitorInterval = " + fpMonitorInterval + "\n	failedCounterThreshold = "
+                    + failedCounterThreshold + "\n	testTransInterval = " + testTransInterval + "\n	writeFpcInterval = "
+                    + writeFpcInterval + "\n	papSiteName = " + papSiteName + "\n	papNodeType = " + papNodeType
+                    + "\n	papDependencyGroupsList = " + papDependencyGroups + "\n   papIntegrityAuditPeriodSeconds = "
+                    + papIntegrityAuditPeriodSeconds + "\n\n*************************************"
                     + "\n**************************************");
             // Pull custom persistence settings
             Properties properties;
             try {
                 properties = XACMLProperties.getProperties();
-                LOGGER.debug("\n\n\n**************************************"
-                        + "\n**************************************" + "\n\n" + "properties = "
-                        + properties + "\n\n**************************************");
+                LOGGER.debug("\n\n\n**************************************" + "\n**************************************"
+                        + "\n\n" + "properties = " + properties + "\n\n**************************************");
             } catch (IOException e) {
                 PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPapServlet",
                         " Error loading properties with: " + "XACMLProperties.getProperties()");
@@ -278,16 +276,15 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             // Create the policyDBDao
             setPolicyDbDao();
             // Load our PAP engine, first create a factory
-            ONAPPapEngineFactory factory = ONAPPapEngineFactory.newInstance(
-                    XACMLProperties.getProperty(XACMLProperties.PROP_PAP_PAPENGINEFACTORY));
+            ONAPPapEngineFactory factory = ONAPPapEngineFactory
+                    .newInstance(XACMLProperties.getProperty(XACMLProperties.PROP_PAP_PAPENGINEFACTORY));
             // The factory knows how to go about creating a PAP Engine
             setPAPEngine(factory.newEngine());
             if (((org.onap.policy.xacml.std.pap.StdEngine) papEngine).wasDefaultGroupJustAdded) {
                 createDefaultGroupOnInit();
             }
             policyDbDao.setPapEngine(XACMLPapServlet.papEngine);
-            if (Boolean.parseBoolean(
-                    XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_RUN_AUDIT_FLAG))) {
+            if (Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_RUN_AUDIT_FLAG))) {
                 /*
                  * Auditing the local File System groups to be in sync with the Database
                  */
@@ -304,8 +301,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 if (updatedGroup != null) {
                     papEngine.updateGroup(updatedGroup);
                 }
-                LOGGER.info(
-                        "PapServlet:  updated group is " + papEngine.getDefaultGroup().toString());
+                LOGGER.info("PapServlet:  updated group is " + papEngine.getDefaultGroup().toString());
 
                 // sync up the config data from DB to file system
                 LOGGER.info("PapServlet:  Sync config data from DB to file system");
@@ -318,23 +314,20 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             // Configurable - have the PAP servlet initiate sending the latest
             // PDP policy/pip configuration
             // to all its known PDP nodes.
-            if (Boolean.parseBoolean(XACMLProperties
-                    .getProperty(XACMLRestProperties.PROP_PAP_INITIATE_PDP_CONFIG))) {
+            if (Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_INITIATE_PDP_CONFIG))) {
                 startInitiateThreadService(new Thread(this));
             }
             // After startup, the PAP does Heartbeat's to each of the PDPs
             // periodically
             startHeartBeatService(new Heartbeat(XACMLPapServlet.papEngine));
         } catch (FactoryException | PAPException e) {
-            PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet",
-                    " Failed to create engine");
-            throw new ServletException(
-                    XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PAP not initialized; error: " + e);
+            PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", " Failed to create engine");
+            throw new ServletException(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PAP not initialized; error: " + e);
         } catch (Exception e) {
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet",
                     " Failed to create engine - unexpected error");
-            throw new ServletException(XACMLErrorConstants.ERROR_SYSTEM_ERROR
-                    + "PAP not initialized; unexpected error: " + e);
+            throw new ServletException(
+                    XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PAP not initialized; unexpected error: " + e);
         }
 
     }
@@ -344,8 +337,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         try {
             addNewGroup = policyDbDao.getNewTransaction();
             OnapPDPGroup group = papEngine.getDefaultGroup();
-            addNewGroup.createGroup(group.getId(), group.getName(), group.getDescription(),
-                    "automaticallyAdded");
+            addNewGroup.createGroup(group.getId(), group.getName(), group.getDescription(), "automaticallyAdded");
             addNewGroup.commitTransaction();
             addNewGroup = policyDbDao.getNewTransaction();
             addNewGroup.changeDefaultGroup(group, "automaticallyAdded");
@@ -364,8 +356,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         initiateThread.start();
     }
 
-    private static void mapperWriteValue(ObjectMapper mapper, HttpServletResponse response,
-            Object value) {
+    private static void mapperWriteValue(ObjectMapper mapper, HttpServletResponse response, Object value) {
         try {
             mapper.writeValue(response.getOutputStream(), value);
         } catch (Exception e) {
@@ -412,11 +403,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 papDependencyGroupsFlatArray[i] = papDependencyGroupsFlatArray[i].trim();
             }
             try {
-                if (XACMLProperties.getProperty(
-                        XACMLRestProperties.PAP_INTEGRITY_AUDIT_PERIOD_SECONDS) != null) {
-                    papIntegrityAuditPeriodSeconds = Integer.parseInt(XACMLProperties
-                            .getProperty(XACMLRestProperties.PAP_INTEGRITY_AUDIT_PERIOD_SECONDS)
-                            .trim());
+                if (XACMLProperties.getProperty(XACMLRestProperties.PAP_INTEGRITY_AUDIT_PERIOD_SECONDS) != null) {
+                    papIntegrityAuditPeriodSeconds = Integer.parseInt(
+                            XACMLProperties.getProperty(XACMLRestProperties.PAP_INTEGRITY_AUDIT_PERIOD_SECONDS).trim());
                 }
             } catch (Exception e) {
                 String msg = "integrity_audit_period_seconds ";
@@ -426,8 +415,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 throw e;
             }
         } catch (Exception e) {
-            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "XACMLPapServlet",
-                    " ERROR: Bad property entry");
+            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "XACMLPapServlet", " ERROR: Bad property entry");
             throw new PAPException(e);
         }
     }
@@ -444,8 +432,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         setPapDbDriver(papDbDriver);
         papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
         if (papDbUrl == null) {
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "XACMLPapServlet",
-                    " ERROR: Bad papDbUrl property entry");
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "XACMLPapServlet", " ERROR: Bad papDbUrl property entry");
             throw new PAPException("papDbUrl is null");
         }
         setPapDbUrl(papDbUrl);
@@ -479,11 +466,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         // PDPId File location
         XACMLPapServlet.pdpFile = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_IDFILE);
         if (XACMLPapServlet.pdpFile == null) {
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE
-                    + " The PDP Id Authentication File Property is not valid: "
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " The PDP Id Authentication File Property is not valid: "
                     + XACMLRestProperties.PROP_PDP_IDFILE);
-            throw new PAPException("The PDP Id Authentication File Property :"
-                    + XACMLRestProperties.PROP_PDP_IDFILE + " is not Valid. ");
+            throw new PAPException("The PDP Id Authentication File Property :" + XACMLRestProperties.PROP_PDP_IDFILE
+                    + " is not Valid. ");
         }
     }
 
@@ -517,8 +503,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 XACMLPapServlet.heartbeatThread.join();
             } catch (InterruptedException e) {
                 XACMLPapServlet.heartbeatThread.interrupt();
-                PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet",
-                        " Error stopping heartbeat");
+                PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", " Error stopping heartbeat");
             }
         }
         if (initiateThread != null) {
@@ -527,8 +512,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 initiateThread.join();
             } catch (InterruptedException e) {
                 initiateThread.interrupt();
-                PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet",
-                        " Error stopping thread");
+                PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", " Error stopping thread");
             }
         }
     }
@@ -546,8 +530,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        OnapLoggingContext loggingContext =
-                OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
+        OnapLoggingContext loggingContext = OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         setLoggingContext(loggingContext, "doPost", "PAP.post");
         PolicyDBDaoTransaction pdpTransaction = null;
         try {
@@ -557,9 +540,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             PolicyLogger.metrics("XACMLPapServlet doPost im startTransaction");
         } catch (AdministrativeStateException ae) {
             String message = "POST interface called for PAP " + papResourceName
-                    + " but it has an Administrative state of "
-                    + im.getStateManager().getAdminState() + "\n Exception Message: "
-                    + PolicyUtils.CATCH_EXCEPTION;
+                    + " but it has an Administrative state of " + im.getStateManager().getAdminState()
+                    + "\n Exception Message: " + PolicyUtils.CATCH_EXCEPTION;
             LOGGER.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message, ae);
             loggingContext.metricEnded();
             PolicyLogger.metrics("XACMLPapServlet doPost im startTransaction");
@@ -568,13 +550,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
             return;
         } catch (IntegrityMonitorException ime) {
-            String message = "POST interface called for PAP " + papResourceName
-                    + " but it has an Administrative state of "
-                    + im.getStateManager().getAdminState()
-                    + " and a Standby Status of "
-                    + im.getStateManager().getStandbyStatus()
-                    + "\n Exception Message: "
-                    + ime.getMessage();
+            String message =
+                    "POST interface called for PAP " + papResourceName + " but it has an Administrative state of "
+                            + im.getStateManager().getAdminState() + " and a Standby Status of "
+                            + im.getStateManager().getStandbyStatus() + "\n Exception Message: " + ime.getMessage();
             LOGGER.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message, ime);
             loggingContext.metricEnded();
             PolicyLogger.metrics("XACMLPapServlet doPost im startTransaction");
@@ -611,8 +590,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                     }
                 }
                 loggingContext.metricStarted();
-                getAcServiceInstance().doAcPost(request, response, groupId, loggingContext,
-                        papEngine);
+                getAcServiceInstance().doAcPost(request, response, groupId, loggingContext, papEngine);
                 loggingContext.metricEnded();
                 PolicyLogger.metrics("XACMLPapServlet doPost doACPost");
                 loggingContext.transactionEnded();
@@ -635,23 +613,18 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 if (CheckPDP.validateID(id)) {
                     pdpTransaction = policyDbDao.getNewTransaction();
                     try {
-                        pdpTransaction.addPdpToGroup(id,
-                                XACMLPapServlet.papEngine.getDefaultGroup().getId(), id,
-                                "Registered on first startup", Integer.parseInt(jmxport),
-                                "PDP autoregister");
-                        XACMLPapServlet.papEngine.newPDP(id,
-                                XACMLPapServlet.papEngine.getDefaultGroup(), id,
+                        pdpTransaction.addPdpToGroup(id, XACMLPapServlet.papEngine.getDefaultGroup().getId(), id,
+                                "Registered on first startup", Integer.parseInt(jmxport), "PDP autoregister");
+                        XACMLPapServlet.papEngine.newPDP(id, XACMLPapServlet.papEngine.getDefaultGroup(), id,
                                 "Registered on first startup", Integer.parseInt(jmxport));
-                    } catch (NullPointerException | PAPException | IllegalArgumentException
-                            | IllegalStateException | PersistenceException | PolicyDBException e) {
+                    } catch (NullPointerException | PAPException | IllegalArgumentException | IllegalStateException
+                            | PersistenceException | PolicyDBException e) {
                         pdpTransaction.rollbackTransaction();
                         String message = "Failed to create new PDP for id: " + id;
-                        PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet",
-                                " " + message);
+                        PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " " + message);
                         loggingContext.transactionEnded();
                         PolicyLogger.audit("Transaction Failed - See Error.log");
-                        setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                                e.getMessage());
+                        setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
                         im.endTransaction();
                         return;
                     }
@@ -669,8 +642,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                         PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW + " " + message);
                         loggingContext.transactionEnded();
                         PolicyLogger.audit("Transaction Failed - See Error.log");
-                        setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                                message);
+                        setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
                         im.endTransaction();
                         return;
                     }
@@ -709,8 +681,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 LOGGER.error(e);
             }
             if (group == null) {
-                PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW
-                        + " PDP not associated with any group, even the default");
+                PolicyLogger.error(
+                        MessageCodes.ERROR_PROCESS_FLOW + " PDP not associated with any group, even the default");
                 loggingContext.transactionEnded();
                 PolicyLogger.audit("Transaction Failed - See Error.log");
                 setResponseError(response, HttpServletResponse.SC_UNAUTHORIZED,
@@ -783,8 +755,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             LOGGER.debug(XACMLErrorConstants.ERROR_PROCESS_FLOW + "POST exception: " + e, e);
             loggingContext.transactionEnded();
             PolicyLogger.audit("Transaction Failed - See Error.log");
-            setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                    e.getMessage());
+            setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
             im.endTransaction();
             return;
         }
@@ -810,8 +781,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        OnapLoggingContext loggingContext =
-                OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
+        OnapLoggingContext loggingContext = OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         setLoggingContext(loggingContext, "doGet", "PAP.get");
         loggingContext.metricStarted();
         XACMLRest.dumpRequest(request);
@@ -835,13 +805,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             loggingContext.metricEnded();
             PolicyLogger.metrics("XACMLPapServlet doGet im startTransaction");
         } catch (IntegrityMonitorException ime) {
-            String message = "GET interface called for PAP " + papResourceName
-                    + " but it has an Administrative state of "
-                    + im.getStateManager().getAdminState()
-                    + " and a Standby Status of "
-                    + im.getStateManager().getStandbyStatus()
-                    + "\n Exception Message: "
-                    + ime.getMessage();
+            String message =
+                    "GET interface called for PAP " + papResourceName + " but it has an Administrative state of "
+                            + im.getStateManager().getAdminState() + " and a Standby Status of "
+                            + im.getStateManager().getStandbyStatus() + "\n Exception Message: " + ime.getMessage();
             LOGGER.info(message, ime);
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
             loggingContext.transactionEnded();
@@ -883,8 +850,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             // this is from the Admin Console, so handle separately
             try {
                 loggingContext.metricStarted();
-                getAcServiceInstance().doAcGet(request, response, groupId, loggingContext,
-                        papEngine);
+                getAcServiceInstance().doAcGet(request, response, groupId, loggingContext, papEngine);
                 loggingContext.metricEnded();
                 PolicyLogger.metrics("XACMLPapServlet doGet doACGet");
             } catch (IOException e) {
@@ -908,8 +874,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         // Is it known?
         if (pdp == null) {
             // Check if request came from localhost
-            if ("localhost".equals(request.getRemoteHost())
-                    || request.getRemoteHost().equals(request.getLocalAddr())) {
+            if ("localhost".equals(request.getRemoteHost()) || request.getRemoteHost().equals(request.getLocalAddr())) {
                 // Return status information - basically all the groups
                 loggingContext.setServiceName("PAP.getGroups");
                 Set<OnapPDPGroup> groups = null;
@@ -917,12 +882,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                     groups = papEngine.getOnapPDPGroups();
                 } catch (PAPException e) {
                     LOGGER.debug(e);
-                    PolicyLogger.error(MessageCodes.ERROR_UNKNOWN, e, "XACMLPapServlet",
-                            " GET exception");
+                    PolicyLogger.error(MessageCodes.ERROR_UNKNOWN, e, "XACMLPapServlet", " GET exception");
                     loggingContext.transactionEnded();
                     PolicyLogger.audit("Transaction Failed - See Error.log");
-                    setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                            e.getMessage());
+                    setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
                     im.endTransaction();
                     return;
                 }
@@ -935,8 +898,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 im.endTransaction();
                 return;
             }
-            String message = "Unknown PDP: " + id + " from " + request.getRemoteHost() + " us: "
-                    + request.getLocalAddr();
+            String message =
+                    "Unknown PDP: " + id + " from " + request.getRemoteHost() + " us: " + request.getLocalAddr();
             PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS + " " + message);
             loggingContext.transactionEnded();
             PolicyLogger.audit("Transaction Failed - See Error.log");
@@ -983,14 +946,13 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             return;
         }
         try {
-            LOGGER.warn("PolicyDebugging: Policy Validity: " + policy.isValid() + "\n "
-                    + "Policy Name : " + policy.getName() + "\n Policy URI: "
-                    + policy.getLocation().toString());
+            LOGGER.warn("PolicyDebugging: Policy Validity: " + policy.isValid() + "\n " + "Policy Name : "
+                    + policy.getName() + "\n Policy URI: " + policy.getLocation().toString());
         } catch (PAPException | IOException e) {
             LOGGER.error(e);
         }
-        try (InputStream is = new FileInputStream(
-                ((StdPDPGroup) group).getDirectory().toString() + File.separator + policyId);
+        try (InputStream is =
+                new FileInputStream(((StdPDPGroup) group).getDirectory().toString() + File.separator + policyId);
                 OutputStream os = response.getOutputStream()) {
             // Send the policy back
             IOUtils.copy(is, os);
@@ -1017,8 +979,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        OnapLoggingContext loggingContext =
-                OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
+        OnapLoggingContext loggingContext = OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         setLoggingContext(loggingContext, "doPut", "PAP.put");
         try {
             loggingContext.metricStarted();
@@ -1026,13 +987,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             loggingContext.metricEnded();
             PolicyLogger.metrics("XACMLPapServlet doPut im startTransaction");
         } catch (IntegrityMonitorException e) {
-            String message = "PUT interface called for PAP " + papResourceName
-                    + " but it has an Administrative state of "
-                    + im.getStateManager().getAdminState()
-                    + " and a Standby Status of "
-                    + im.getStateManager().getStandbyStatus()
-                    + "\n Exception Message: "
-                    + e.getMessage();
+            String message =
+                    "PUT interface called for PAP " + papResourceName + " but it has an Administrative state of "
+                            + im.getStateManager().getAdminState() + " and a Standby Status of "
+                            + im.getStateManager().getStandbyStatus() + "\n Exception Message: " + e.getMessage();
             LOGGER.info(message, e);
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
             loggingContext.transactionEnded();
@@ -1067,11 +1025,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             }
             loggingContext.metricStarted();
             LOGGER.info("XACMLPapServlet: Calling PolicyDBDao to handlIncomingHttpNotification");
-            HandleIncomingNotifications handleIncomingNotifications =
-                    new HandleIncomingNotifications();
+            HandleIncomingNotifications handleIncomingNotifications = new HandleIncomingNotifications();
             handleIncomingNotifications.handleIncomingHttpNotification(policyDBDaoRequestUrl,
-                    policyDBDaoRequestEntityId, policyDBDaoRequestEntityType,
-                    policyDBDaoRequestExtraData, this);
+                    policyDBDaoRequestEntityId, policyDBDaoRequestEntityType, policyDBDaoRequestExtraData, this);
             loggingContext.metricEnded();
             PolicyLogger.metrics("XACMLPapServlet doPut handle incoming http notification");
             response.setStatus(200);
@@ -1159,8 +1115,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             // this is from the Admin Console, so handle separately
             try {
                 loggingContext.metricEnded();
-                getAcServiceInstance().doAcPut(request, response, groupId, loggingContext,
-                        papEngine);
+                getAcServiceInstance().doAcPut(request, response, groupId, loggingContext, papEngine);
                 loggingContext.metricEnded();
                 PolicyLogger.metrics("XACMLPapServlet goPut doACPut");
             } catch (IOException e) {
@@ -1217,12 +1172,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         }
         // We do not expect anything from anywhere else.
         // This method is here in case we ever need to support other operations.
-        LOGGER.error(
-                XACMLErrorConstants.ERROR_DATA_ISSUE + "Request does not have groupId or apiflag");
+        LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Request does not have groupId or apiflag");
         loggingContext.transactionEnded();
         PolicyLogger.audit("Transaction Failed - See Error.log");
-        setResponseError(response, HttpServletResponse.SC_BAD_REQUEST,
-                "Request does not have groupId or apiflag");
+        setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, "Request does not have groupId or apiflag");
         loggingContext.transactionEnded();
         PolicyLogger.audit("Transaction Failed - See error.log");
         im.endTransaction();
@@ -1234,8 +1187,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        OnapLoggingContext loggingContext =
-                OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
+        OnapLoggingContext loggingContext = OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         setLoggingContext(loggingContext, "doDelete", "PAP.delete");
         try {
             loggingContext.metricStarted();
@@ -1243,13 +1195,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             loggingContext.metricEnded();
             PolicyLogger.metrics("XACMLPapServlet doDelete im startTransaction");
         } catch (IntegrityMonitorException ime) {
-            String message = "DELETE interface called for PAP " + papResourceName
-                    + " but it has an Administrative state of "
-                    + im.getStateManager().getAdminState()
-                    + " and a Standby Status of "
-                    + im.getStateManager().getStandbyStatus()
-                    + "\n Exception Message: "
-                    + ime.getMessage();
+            String message =
+                    "DELETE interface called for PAP " + papResourceName + " but it has an Administrative state of "
+                            + im.getStateManager().getAdminState() + " and a Standby Status of "
+                            + im.getStateManager().getStandbyStatus() + "\n Exception Message: " + ime.getMessage();
             LOGGER.info(message, ime);
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
             loggingContext.transactionEnded();
@@ -1292,8 +1241,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             // this is from the Admin Console, so handle separately
             try {
                 loggingContext.metricStarted();
-                getAcServiceInstance().doAcDelete(request, response, groupId, loggingContext,
-                        papEngine);
+                getAcServiceInstance().doAcDelete(request, response, groupId, loggingContext, papEngine);
                 loggingContext.metricEnded();
                 PolicyLogger.metrics("XACMLPapServlet doDelete doACDelete");
             } catch (IOException e) {
@@ -1308,20 +1256,16 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Request does not have groupId");
         loggingContext.transactionEnded();
         PolicyLogger.audit("Transaction Failed - See Error.log");
-        setResponseError(response, HttpServletResponse.SC_BAD_REQUEST,
-                "Request does not have groupId");
+        setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, "Request does not have groupId");
         im.endTransaction();
     }
 
-    private boolean isPDPCurrent(Properties policies, Properties pipconfig,
-            Properties pdpProperties) {
+    private boolean isPDPCurrent(Properties policies, Properties pipconfig, Properties pdpProperties) {
         String localRootPolicies = policies.getProperty(XACMLProperties.PROP_ROOTPOLICIES);
-        String localReferencedPolicies =
-                policies.getProperty(XACMLProperties.PROP_REFERENCEDPOLICIES);
+        String localReferencedPolicies = policies.getProperty(XACMLProperties.PROP_REFERENCEDPOLICIES);
         if (localRootPolicies == null || localReferencedPolicies == null) {
-            LOGGER.warn(XACMLErrorConstants.ERROR_DATA_ISSUE
-                    + "Missing property on PAP server: RootPolicies=" + localRootPolicies
-                    + "  ReferencedPolicies=" + localReferencedPolicies);
+            LOGGER.warn(XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing property on PAP server: RootPolicies="
+                    + localRootPolicies + "  ReferencedPolicies=" + localReferencedPolicies);
             return false;
         }
         // Compare the policies and pipconfig properties to the pdpProperties
@@ -1331,8 +1275,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             Properties pdpPolicies = XACMLProperties.getPolicyProperties(pdpProperties, false);
             Properties pdpPipConfig = XACMLProperties.getPipProperties(pdpProperties);
             if (localRootPolicies.equals(pdpPolicies.getProperty(XACMLProperties.PROP_ROOTPOLICIES))
-                    && localReferencedPolicies.equals(
-                            pdpPolicies.getProperty(XACMLProperties.PROP_REFERENCEDPOLICIES))
+                    && localReferencedPolicies.equals(pdpPolicies.getProperty(XACMLProperties.PROP_REFERENCEDPOLICIES))
                     && pdpPipConfig.equals(pipconfig)) {
                 // The PDP is current
                 return true;
@@ -1344,8 +1287,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             // property.
             // Either of these cases means that the PDP is not up-to-date, so
             // just drop-through to return false.
-            PolicyLogger.error(MessageCodes.ERROR_SCHEMA_INVALID, e, "XACMLPapServlet",
-                    " PDP Error");
+            PolicyLogger.error(MessageCodes.ERROR_SCHEMA_INVALID, e, "XACMLPapServlet", " PDP Error");
         }
         return false;
     }
@@ -1396,8 +1338,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
      * @throws ServletException
      * @throws IOException
      */
-    public void updateGroupsFromAPI(HttpServletRequest request, HttpServletResponse response,
-            String groupId, OnapLoggingContext loggingContext) throws IOException {
+    public void updateGroupsFromAPI(HttpServletRequest request, HttpServletResponse response, String groupId,
+            OnapLoggingContext loggingContext) throws IOException {
         PolicyDBDaoTransaction acPutTransaction = policyDbDao.getNewTransaction();
         PolicyLogger.audit("PolicyDBDaoTransaction started for updateGroupsFromAPI");
         try {
@@ -1470,8 +1412,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             loggingContext.transactionEnded();
             LOGGER.info("Success");
 
-            if (policy != null && ((policy.getId().contains("Config_MS_"))
-                    || (policy.getId().contains("BRMS_Param")))) {
+            if (policy != null
+                    && ((policy.getId().contains("Config_MS_")) || (policy.getId().contains("BRMS_Param")))) {
                 PushPolicyHandler pushPolicyHandler = PushPolicyHandler.getInstance();
                 if (pushPolicyHandler.preSafetyCheck(policy, configHome)) {
                     LOGGER.debug("Precheck Successful.");
@@ -1482,14 +1424,12 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             return;
         } catch (PAPException e) {
             acPutTransaction.rollbackTransaction();
-            PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet",
-                    " API PUT exception");
+            PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " API PUT exception");
             loggingContext.transactionEnded();
             PolicyLogger.audit("Transaction Failed - See Error.log");
             String message = XACMLErrorConstants.ERROR_PROCESS_FLOW
                     + "Exception in request to update group from API - See Error.log on on the PAP.";
-            setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                    e.getMessage());
+            setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.addHeader("error", ADD_GROUP_ERROR);
             response.addHeader("message", message);
@@ -1531,10 +1471,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         try {
             groups = papEngine.getOnapPDPGroups();
         } catch (PAPException e) {
-            PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet",
-                    " getPDPGroups failed");
-            throw new IllegalAccessError(
-                    XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get Groups: " + e);
+            PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", " getPDPGroups failed");
+            throw new IllegalAccessError(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get Groups: " + e);
         }
         for (OnapPDPGroup group : groups) {
             groupChanged(group);
@@ -1547,10 +1485,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         try {
             groups = papEngine.getOnapPDPGroups();
         } catch (PAPException e) {
-            PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet",
-                    " getPDPGroups failed");
-            throw new IllegalAccessError(
-                    XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get Groups: " + e);
+            PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", " getPDPGroups failed");
+            throw new IllegalAccessError(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get Groups: " + e);
         }
         for (OnapPDPGroup group : groups) {
             groupChanged(group, loggingContext);
@@ -1604,8 +1540,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         }
     }
 
-    private void pdpChanged(OnapPDP pdp, OnapLoggingContext loggingContext,
-            List<Properties> pdpDataByGroup) {
+    private void pdpChanged(OnapPDP pdp, OnapLoggingContext loggingContext, List<Properties> pdpDataByGroup) {
         Thread t = new Thread(new UpdatePdpThread(pdp, loggingContext, pdpDataByGroup));
         if (CheckPDP.validateID(pdp.getId())) {
             t.start();
@@ -1622,8 +1557,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         return dataToNotify.setPolicyConfigProperties(pdp, papEngine);
     }
 
-    private void testService(OnapLoggingContext loggingContext, HttpServletResponse response)
-            throws IOException {
+    private void testService(OnapLoggingContext loggingContext, HttpServletResponse response) throws IOException {
         LOGGER.info("Test request received");
         try {
             im.evaluateSanity();
@@ -1634,8 +1568,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             PolicyLogger.audit("Transaction Failed - See Error.log");
             response.setStatus(HttpServletResponse.SC_OK);
             return;
-        } catch (ForwardProgressException | AdministrativeStateException
-                | StandbyStatusException e) {
+        } catch (ForwardProgressException | AdministrativeStateException | StandbyStatusException e) {
             String submsg;
             if (e instanceof ForwardProgressException) {
                 submsg = " is not making forward progress.";
@@ -1645,8 +1578,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 submsg = " Standby Status is NOT PROVIDING SERVICE.";
             }
 
-            String message = "GET:/pap/test called and PAP " + papResourceName + submsg
-                    + " Exception Message: " + e.getMessage();
+            String message = "GET:/pap/test called and PAP " + papResourceName + submsg + " Exception Message: "
+                    + e.getMessage();
             LOGGER.info(message, e);
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
             loggingContext.transactionEnded();
@@ -1660,8 +1593,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             if (eMsg == null) {
                 eMsg = "No Exception Message";
             }
-            String message = "GET:/pap/test called and PAP " + papResourceName
-                    + " has had a subsystem failure." + " Exception Message: " + eMsg;
+            String message = "GET:/pap/test called and PAP " + papResourceName + " has had a subsystem failure."
+                    + " Exception Message: " + eMsg;
             LOGGER.info(message, e);
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
             loggingContext.transactionEnded();
@@ -1686,18 +1619,16 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         }
     }
 
-    private void setLoggingContext(OnapLoggingContext loggingContext, String methodType,
-            String serviceName) {
+    private void setLoggingContext(OnapLoggingContext loggingContext, String methodType, String serviceName) {
         loggingContext.transactionStarted();
         loggingContext.setServiceName(serviceName);
         if (loggingContext.getRequestId() == null || "".equals(loggingContext.getRequestId())) {
             UUID requestID = UUID.randomUUID();
             loggingContext.setRequestId(requestID.toString());
-            PolicyLogger.info("requestID not provided in call to XACMLPapServlet ('" + methodType
-                    + "') so we generated one");
-        } else {
             PolicyLogger.info(
-                    "requestID was provided in call to XACMLPapServlet ('" + methodType + "')");
+                    "requestID not provided in call to XACMLPapServlet ('" + methodType + "') so we generated one");
+        } else {
+            PolicyLogger.info("requestID was provided in call to XACMLPapServlet ('" + methodType + "')");
         }
     }
 
@@ -1712,14 +1643,12 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 
     private static void loadWebapps() throws PAPException {
         if (actionHome == null || configHome == null) {
-            Path webappsPath =
-                    Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS));
+            Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS));
             // Sanity Check
             if (webappsPath == null) {
-                PolicyLogger.error("Invalid Webapps Path Location property : "
-                        + XACMLRestProperties.PROP_PAP_WEBAPPS);
-                throw new PAPException("Invalid Webapps Path Location property : "
-                        + XACMLRestProperties.PROP_PAP_WEBAPPS);
+                PolicyLogger.error("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
+                throw new PAPException(
+                        "Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
             }
             Path webappsPathConfig = Paths.get(webappsPath.toString() + File.separator + "Config");
             Path webappsPathAction = Paths.get(webappsPath.toString() + File.separator + "Action");
@@ -1728,16 +1657,14 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                     Files.createDirectories(webappsPathConfig);
                 } catch (IOException e) {
                     PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet",
-                            "Failed to create config directory: "
-                                    + webappsPathConfig.toAbsolutePath().toString());
+                            "Failed to create config directory: " + webappsPathConfig.toAbsolutePath().toString());
                 }
             }
             if (Files.notExists(webappsPathAction)) {
                 try {
                     Files.createDirectories(webappsPathAction);
                 } catch (IOException e) {
-                    LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                            + "Failed to create action directory: "
+                    LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create action directory: "
                             + webappsPathAction.toAbsolutePath().toString(), e);
                 }
             }

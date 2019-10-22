@@ -20,7 +20,6 @@
  * ============LICENSE_END=========================================================
  */
 
-
 package org.onap.policy.pap.xacml.rest.controller;
 
 import static org.junit.Assert.assertTrue;
@@ -28,12 +27,15 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -141,7 +143,6 @@ public class MicroServiceDictionaryControllerTest {
         logger.info("testSaveMicroServiceHeaderDefaultValues: exit");
     }
 
-
     @Test
     public void testGetMicroServiceHeaderDefaultsEntityDataByName() {
         logger.info("testGetMicroServiceHeaderDefaultsEntityDataByName: Entering");
@@ -214,7 +215,6 @@ public class MicroServiceDictionaryControllerTest {
 
         logger.info("testRemoveMicroServiceHeaderDefaults: exit");
     }
-
 
     @Test
     public void testGetDCAEUUIDDictionaryByNameEntityData() {

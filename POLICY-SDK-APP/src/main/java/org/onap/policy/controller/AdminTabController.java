@@ -52,7 +52,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class AdminTabController extends RestrictedBaseController {
 
     private static final Logger LOGGER = FlexLogger.getLogger(AdminTabController.class);
-    private static final String CHARACTER_ENCODING = "UTF-8";
 
     private static CommonClassDao commonClassDao;
 
@@ -107,8 +106,8 @@ public class AdminTabController extends RestrictedBaseController {
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView saveAdminTabLockdownValue(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        response.setCharacterEncoding(CHARACTER_ENCODING);
-        request.setCharacterEncoding(CHARACTER_ENCODING);
+        response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+        request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -124,7 +123,7 @@ public class AdminTabController extends RestrictedBaseController {
             globalRole.setRole("super-admin");
             commonClassDao.update(globalRole);
 
-            response.setContentType("application / json");
+            response.setContentType(PolicyUtils.APPLICATION_JSON);
 
             String responseString = mapper.writeValueAsString(commonClassDao.getData(GlobalRoleSettings.class));
 

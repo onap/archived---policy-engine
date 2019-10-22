@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * Modified Copyright (C) 2019 Bell Canada.
  * ================================================================================
@@ -22,6 +22,9 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.std.IdentifierImpl;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -32,17 +35,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.io.FilenameUtils;
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.utils.PolicyUtils;
-
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.std.IdentifierImpl;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -57,6 +49,14 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
+import org.apache.commons.io.FilenameUtils;
+import org.onap.policy.common.logging.eelf.MessageCodes;
+import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.utils.PolicyUtils;
 
 public class ConfigPolicy extends Policy {
 
@@ -93,7 +93,6 @@ public class ConfigPolicy extends Policy {
         }
     }
 
-
     // Here we are adding the extension for the configurations file based on the
     // config type selection for saving.
     private String getConfigFile(String filename) {
@@ -103,8 +102,7 @@ public class ConfigPolicy extends Policy {
         if (id == null) {
             return filename;
         }
-        switch (id.toUpperCase())
-        {
+        switch (id.toUpperCase()) {
             case JSON_CONFIG:
                 return filename + ".json";
             case XML_CONFIG:
@@ -126,7 +124,6 @@ public class ConfigPolicy extends Policy {
         }
         return filename;
     }
-
 
     // Validations for Config form
     /*
@@ -181,7 +178,7 @@ public class ConfigPolicy extends Policy {
         }
 
         if (!isPreparedToSave()) {
-            //Prep and configure the policy for saving
+            // Prep and configure the policy for saving
             prepareToSave();
         }
 
@@ -192,8 +189,8 @@ public class ConfigPolicy extends Policy {
         return successMap;
     }
 
-    //This is the method for preparing the policy for saving.  We have broken it out
-    //separately because the fully configured policy is used for multiple things
+    // This is the method for preparing the policy for saving. We have broken it out
+    // separately because the fully configured policy is used for multiple things
     @Override
     public boolean prepareToSave() throws PAPException {
 
@@ -441,7 +438,7 @@ public class ConfigPolicy extends Policy {
             }
         }
 
-        //Risk Attributes
+        // Risk Attributes
         AttributeAssignmentExpressionType assignment8 = new AttributeAssignmentExpressionType();
         assignment8.setAttributeId("RiskType");
         assignment8.setCategory(CATEGORY_RESOURCE);

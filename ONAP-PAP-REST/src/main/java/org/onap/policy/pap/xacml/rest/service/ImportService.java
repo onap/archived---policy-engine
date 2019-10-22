@@ -30,8 +30,10 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -84,8 +86,7 @@ public class ImportService {
                 response.addHeader(service, serviceName);
             }
             CreateBRMSRuleTemplate brmsRuleTemplate = new CreateBRMSRuleTemplate();
-            successMap =
-                    brmsRuleTemplate.addRule(builder.toString(), serviceName, description, "API");
+            successMap = brmsRuleTemplate.addRule(builder.toString(), serviceName, description, "API");
         } else if (("MICROSERVICE").equals(importServiceCreation)) {
             CreateNewMicroServiceModel newMS = null;
             String randomID = UUID.randomUUID().toString();
@@ -114,8 +115,7 @@ public class ImportService {
                     }
                     PolicyLogger.info("Request from API to import new Service");
                     try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                            new FileOutputStream(extractDir + File.separator + randomID + type),
-                            "utf-8"))) {
+                            new FileOutputStream(extractDir + File.separator + randomID + type), "utf-8"))) {
                         writer.write(xmi);
                     } catch (IOException e) {
                         logger.error(e);
@@ -141,14 +141,12 @@ public class ImportService {
                                 inputStream.close();
                             }
                         } catch (IOException e) {
-                            PolicyLogger.error(
-                                    "Exception Occured while closing the input/output stream" + e);
+                            PolicyLogger.error("Exception Occured while closing the input/output stream" + e);
                         }
                     }
                 }
 
-                newMS = new CreateNewMicroServiceModel(fileName, serviceName, "API", version,
-                        randomID);
+                newMS = new CreateNewMicroServiceModel(fileName, serviceName, "API", version, randomID);
 
                 successMap = newMS.addValuesToNewModel(type);
 
@@ -180,8 +178,7 @@ public class ImportService {
                 }
                 PolicyLogger.info("Request from API to import new Optimization Service Model");
                 try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream(extractDir + File.separator + randomID + type),
-                        "utf-8"))) {
+                        new FileOutputStream(extractDir + File.separator + randomID + type), "utf-8"))) {
                     writer.write(yml);
                 } catch (IOException e) {
                     logger.error(e);
@@ -189,8 +186,7 @@ public class ImportService {
                     return;
                 }
 
-                newOOF = new CreateNewOptimizationModel(fileName, serviceName, "API Import Service",
-                        version, randomID);
+                newOOF = new CreateNewOptimizationModel(fileName, serviceName, "API Import Service", version, randomID);
                 successMap = newOOF.addValuesToNewModel();
                 if (successMap.containsKey(successMessage)) {
                     successMap.clear();
