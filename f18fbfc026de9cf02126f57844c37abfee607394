@@ -46,6 +46,30 @@
       "revId": "f18fbfc026de9cf02126f57844c37abfee607394",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e40e1cae_4ad7a762",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/util/XACMLPolicyScanner.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T18:08:34Z",
+      "side": 1,
+      "message": "Perfect!",
+      "parentUuid": "a416566f_5f8afbc7",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 1
+      },
+      "revId": "f18fbfc026de9cf02126f57844c37abfee607394",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
