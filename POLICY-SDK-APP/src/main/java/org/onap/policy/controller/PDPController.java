@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,6 +43,7 @@ import org.onap.policy.admin.RESTfulPAPEngine;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.model.PDPGroupContainer;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
@@ -195,6 +195,11 @@ public class PDPController extends RestrictedBaseController {
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public void savePDPGroup(HttpServletRequest request, HttpServletResponse response) {
         try {
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            //
+            //
+            //
             ObjectMapper mapper = new ObjectMapper();
             PolicyController controller = getPolicyControllerInstance();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -223,20 +228,14 @@ public class PDPController extends RestrictedBaseController {
                         + message + e);
             }
 
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application / json");
-            request.setCharacterEncoding("UTF-8");
+            response.setContentType(PolicyUtils.APPLICATION_JSON);
 
             refreshGroups(request);
             response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(groups))).toString());
         } catch (Exception e) {
             policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error Occured while Saving the PDP Group" + e);
-            response.setCharacterEncoding("UTF-8");
-            PrintWriter out = null;
             try {
-                request.setCharacterEncoding("UTF-8");
-                out = response.getWriter();
-                out.write(e.getMessage());
+                response.getWriter().write(e.getMessage());
             } catch (Exception e1) {
                 policyLogger
                         .error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error Occured while Saving the PDP Group" + e1);
@@ -255,6 +254,11 @@ public class PDPController extends RestrictedBaseController {
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public void removePDPGroup(HttpServletRequest request, HttpServletResponse response) {
         try {
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            //
+            //
+            //
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
@@ -275,19 +279,13 @@ public class PDPController extends RestrictedBaseController {
                 this.container.removeGroup(pdpGroupData, null);
             }
 
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application / json");
-            request.setCharacterEncoding("UTF-8");
+            response.setContentType(PolicyUtils.APPLICATION_JSON);
             refreshGroups(request);
             response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(groups))).toString());
         } catch (Exception e) {
             policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error Occured while Removing the PDP Group" + e);
-            PrintWriter out;
             try {
-                response.setCharacterEncoding("UTF-8");
-                request.setCharacterEncoding("UTF-8");
-                out = response.getWriter();
-                out.write(e.getMessage());
+                response.getWriter().write(e.getMessage());
             } catch (Exception e1) {
                 policyLogger.error("Exception Occured" + e1);
             }
@@ -305,6 +303,11 @@ public class PDPController extends RestrictedBaseController {
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public void savePDPToGroup(HttpServletRequest request, HttpServletResponse response) {
         try {
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            //
+            //
+            //
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
@@ -336,20 +339,14 @@ public class PDPController extends RestrictedBaseController {
                         + "Error Occured while Creating Pdp in PDP Group" + message + e);
             }
 
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application / json");
-            request.setCharacterEncoding("UTF-8");
+            response.setContentType(PolicyUtils.APPLICATION_JSON);
             refreshGroups(request);
             response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(groups))).toString());
         } catch (Exception e) {
             policyLogger
                     .error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error Occured while Creating Pdp in PDP Group" + e);
-            PrintWriter out;
             try {
-                response.setCharacterEncoding("UTF-8");
-                request.setCharacterEncoding("UTF-8");
-                out = response.getWriter();
-                out.write(e.getMessage());
+                response.getWriter().write(e.getMessage());
             } catch (Exception e1) {
                 policyLogger.error("Exception Occured" + e1);
             }
@@ -367,6 +364,11 @@ public class PDPController extends RestrictedBaseController {
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
     public void removePDPFromGroup(HttpServletRequest request, HttpServletResponse response) {
         try {
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            //
+            //
+            //
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
@@ -384,9 +386,7 @@ public class PDPController extends RestrictedBaseController {
             StdPDP deletePdp = mapper.readValue(root.get("data").toString(), StdPDP.class);
             StdPDPGroup activeGroupData = mapper.readValue(root.get("activePDP").toString(), StdPDPGroup.class);
             this.container.removePDP(deletePdp, activeGroupData);
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application / json");
-            request.setCharacterEncoding("UTF-8");
+            response.setContentType(PolicyUtils.APPLICATION_JSON);
 
             refreshGroups(request);
             response.getWriter().write(new JSONObject(new JsonMessage(mapper.writeValueAsString(groups))).toString());
@@ -394,8 +394,6 @@ public class PDPController extends RestrictedBaseController {
             policyLogger.error(
                     XACMLErrorConstants.ERROR_DATA_ISSUE + "Error Occured while Removing Pdp from PDP Group" + e);
             try {
-                response.setCharacterEncoding("UTF-8");
-                request.setCharacterEncoding("UTF-8");
                 response.getWriter().write(e.getMessage());
             } catch (Exception e1) {
                 policyLogger.error("Exception Occured" + e1);

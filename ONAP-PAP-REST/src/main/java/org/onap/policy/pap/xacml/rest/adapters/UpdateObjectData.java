@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.adapters;
 
 public class UpdateObjectData {

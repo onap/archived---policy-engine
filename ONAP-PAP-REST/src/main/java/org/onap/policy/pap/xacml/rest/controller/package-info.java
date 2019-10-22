@@ -18,5 +18,4 @@
  * ============LICENSE_END=========================================================
  */
 
-
 package org.onap.policy.pap.xacml.rest.controller;

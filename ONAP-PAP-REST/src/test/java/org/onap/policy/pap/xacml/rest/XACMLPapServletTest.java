@@ -22,6 +22,7 @@ package org.onap.policy.pap.xacml.rest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 
@@ -40,10 +41,10 @@ public class XACMLPapServletTest {
         assertNotNull(XACMLPapServlet.getActionHome());
         assertEquals(XACMLPapServlet.getPersistenceUnit(), "XACML-PAP-REST");
 
-        //assertNull(XACMLPapServlet.getEmf());
-        //assertNull(XACMLPapServlet.getPDPFile());
-        //assertNull(XACMLPapServlet.getPAPEngine());
-        //assertNull(servlet.getIa());
+        // assertNull(XACMLPapServlet.getEmf());
+        // assertNull(XACMLPapServlet.getPDPFile());
+        // assertNull(XACMLPapServlet.getPAPEngine());
+        // assertNull(servlet.getIa());
 
         XACMLPapServlet.setPapDbDriver(testVal);
         assertEquals(XACMLPapServlet.getPapDbDriver(), testVal);
@@ -60,9 +61,8 @@ public class XACMLPapServletTest {
 
         // Restore the original system property
         if (oldProperty != null) {
-            System.setProperty(systemKey,  oldProperty);
-        }
-        else {
+            System.setProperty(systemKey, oldProperty);
+        } else {
             System.clearProperty(systemKey);
         }
     }

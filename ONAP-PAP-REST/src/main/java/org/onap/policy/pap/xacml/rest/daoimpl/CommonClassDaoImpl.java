@@ -22,7 +22,9 @@ package org.onap.policy.pap.xacml.rest.daoimpl;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.script.SimpleBindings;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -51,9 +53,7 @@ public class CommonClassDaoImpl implements CommonClassDao {
 
     private static final Log LOGGER = LogFactory.getLog(CommonClassDaoImpl.class);
 
-
     private static SessionFactory sessionFactory;
-
 
     @Autowired
     private CommonClassDaoImpl(SessionFactory sessionFactory) {
@@ -78,13 +78,11 @@ public class CommonClassDaoImpl implements CommonClassDao {
             try {
                 session.close();
             } catch (Exception e) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement" + e);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e);
             }
         }
         return data;
     }
-
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
@@ -109,8 +107,7 @@ public class CommonClassDaoImpl implements CommonClassDao {
             try {
                 session.close();
             } catch (Exception e1) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement" + e1);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e1);
             }
         }
         return data;
@@ -131,8 +128,7 @@ public class CommonClassDaoImpl implements CommonClassDao {
             try {
                 session.close();
             } catch (Exception e) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement" + e);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e);
             }
         }
         return data;
@@ -146,14 +142,12 @@ public class CommonClassDaoImpl implements CommonClassDao {
             session.persist(entity);
             tx.commit();
         } catch (Exception e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                    + "Error While Saving  data to Table" + e);
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Saving  data to Table" + e);
         } finally {
             try {
                 session.close();
             } catch (Exception e1) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement" + e1);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e1);
             }
         }
 
@@ -167,19 +161,16 @@ public class CommonClassDaoImpl implements CommonClassDao {
             session.delete(entity);
             tx.commit();
         } catch (Exception e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                    + "Error While Deleting data from Table" + e);
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Deleting data from Table" + e);
         } finally {
             try {
                 session.close();
             } catch (Exception e1) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement" + e1);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e1);
             }
         }
 
     }
-
 
     @Override
     public void update(Object entity) {
@@ -189,19 +180,16 @@ public class CommonClassDaoImpl implements CommonClassDao {
             session.update(entity);
             tx.commit();
         } catch (Exception e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                    + "Error While Updating data to Table" + e);
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Updating data to Table" + e);
         } finally {
             try {
                 session.close();
             } catch (Exception e1) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement" + e1);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e1);
             }
         }
 
     }
-
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
@@ -231,19 +219,17 @@ public class CommonClassDaoImpl implements CommonClassDao {
             data = cr.list();
             tx.commit();
         } catch (Exception e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                    + "Error While Querying for Duplicate Entries for Table" + e + className);
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying for Duplicate Entries for Table"
+                    + e + className);
         } finally {
             try {
                 session.close();
             } catch (Exception e1) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement" + e1);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e1);
             }
         }
         return data;
     }
-
 
     @SuppressWarnings("unchecked")
     @Override
@@ -263,20 +249,17 @@ public class CommonClassDaoImpl implements CommonClassDao {
             data = hbquery.list();
             tx.commit();
         } catch (Exception e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                    + "Error While Querying Database Table" + e);
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Database Table" + e);
             throw e;
         } finally {
             try {
                 session.close();
             } catch (HibernateException e1) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement", e1);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement", e1);
             }
         }
         return data;
     }
-
 
     @Override
     public void updateQuery(String query) {
@@ -287,18 +270,15 @@ public class CommonClassDaoImpl implements CommonClassDao {
             hbquery.executeUpdate();
             tx.commit();
         } catch (Exception e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                    + "Error While Updating Database Table" + e);
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Updating Database Table" + e);
         } finally {
             try {
                 session.close();
             } catch (Exception e1) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement" + e1);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e1);
             }
         }
     }
-
 
     @SuppressWarnings("rawtypes")
     @Override
@@ -320,19 +300,16 @@ public class CommonClassDaoImpl implements CommonClassDao {
             data = cr.list().get(0);
             tx.commit();
         } catch (Exception e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                    + "Error While Querying Database Table" + e);
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Database Table" + e);
         } finally {
             try {
                 session.close();
             } catch (Exception e1) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement" + e1);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e1);
             }
         }
         return data;
     }
-
 
     @SuppressWarnings("unchecked")
     @Override
@@ -355,19 +332,16 @@ public class CommonClassDaoImpl implements CommonClassDao {
             rolesData = cr.add(disjunction).list();
             tx.commit();
         } catch (Exception e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                    + "Error While Querying PolicyRoles Table" + e);
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying PolicyRoles Table" + e);
         } finally {
             try {
                 session.close();
             } catch (Exception e1) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement" + e1);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e1);
             }
         }
         return rolesData;
     }
-
 
     @SuppressWarnings("unchecked")
     @Override
@@ -384,13 +358,11 @@ public class CommonClassDaoImpl implements CommonClassDao {
             session.update(closedloop);
             tx.commit();
         } catch (Exception e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                    + "Error While Updating ClosedLoops Table" + e);
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Updating ClosedLoops Table" + e);
         } finally {
             session.close();
         }
     }
-
 
     @SuppressWarnings("unchecked")
     @Override
@@ -407,13 +379,11 @@ public class CommonClassDaoImpl implements CommonClassDao {
             session.update(closedloop);
             tx.commit();
         } catch (Exception e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                    + "Error While Updating ClosedLoops Table" + e);
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Updating ClosedLoops Table" + e);
         } finally {
             session.close();
         }
     }
-
 
     @SuppressWarnings("unchecked")
     @Override
@@ -438,8 +408,8 @@ public class CommonClassDaoImpl implements CommonClassDao {
 
             tx.commit();
         } catch (Exception e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                    + "Error while deleting ClosedLoops from the table" + e);
+            LOGGER.error(
+                    XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while deleting ClosedLoops from the table" + e);
         } finally {
             session.close();
         }
@@ -447,8 +417,7 @@ public class CommonClassDaoImpl implements CommonClassDao {
 
     @SuppressWarnings({"unchecked"})
     @Override
-    public List<Object> checkExistingGroupListforUpdate(String groupListValue,
-            String groupNameValue) {
+    public List<Object> checkExistingGroupListforUpdate(String groupListValue, String groupNameValue) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
         List<Object> data = null;
@@ -461,23 +430,20 @@ public class CommonClassDaoImpl implements CommonClassDao {
             tx.commit();
         } catch (Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                    + "Error While Querying for Duplicate Entries for GroupPolicyScopeList Table"
-                    + e);
+                    + "Error While Querying for Duplicate Entries for GroupPolicyScopeList Table" + e);
         } finally {
             try {
                 session.close();
             } catch (Exception e1) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                        + "Error While Closing Connection/Statement" + e1);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e1);
             }
         }
         return data;
     }
 
-
     @Override
-    public List<Object> getMultipleDataOnAddingConjunction(
-            @SuppressWarnings("rawtypes") Class className, String columnName, List<String> data) {
+    public List<Object> getMultipleDataOnAddingConjunction(@SuppressWarnings("rawtypes") Class className,
+            String columnName, List<String> data) {
         return null;
     }
 

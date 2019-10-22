@@ -21,13 +21,15 @@
 package org.onap.policy.pap.xacml.rest;
 
 import static org.junit.Assert.fail;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
 public class WebConfigTest {
-    @Test(expected=NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void testNegativeStartup() throws ServletException {
         WebConfig init = new WebConfig();
         ServletContext container = Mockito.mock(ServletContext.class);

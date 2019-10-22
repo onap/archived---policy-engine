@@ -42,6 +42,7 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyEditorScopes;
 import org.onap.policy.rest.jpa.PolicyRoles;
 import org.onap.policy.rest.jpa.UserInfo;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.onap.portalsdk.core.web.support.JsonMessage;
 import org.onap.portalsdk.core.web.support.UserUtils;
@@ -147,9 +148,9 @@ public class PolicyRolesController extends RestrictedBaseController {
             } else {
                 commonClassDao.update(roles);
             }
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application / json");
-            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+            response.setContentType(PolicyUtils.CHARACTER_ENCODING);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
             response.getWriter().write(new JSONObject("{rolesDatas: "
                 + mapper.writeValueAsString(commonClassDao.getUserRoles()) + "}").toString());
         } catch (Exception e) {

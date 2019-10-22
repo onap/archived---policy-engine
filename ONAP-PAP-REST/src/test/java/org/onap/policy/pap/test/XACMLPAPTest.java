@@ -24,7 +24,9 @@ package org.onap.policy.pap.test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
+
 import com.mockrunner.mock.web.MockServletInputStream;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,11 +38,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
@@ -78,7 +82,6 @@ import org.onap.policy.xacml.std.pap.StdPAPPolicyParams;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
-
 
 public class XACMLPAPTest {
     private static final Log logger = LogFactory.getLog(XACMLPAPTest.class);
@@ -332,7 +335,6 @@ public class XACMLPAPTest {
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
 
-
     @Test
     public void testDecisonBLGuardPolicy() throws IOException, ServletException, SQLException {
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
@@ -444,7 +446,6 @@ public class XACMLPAPTest {
         pap.service(httpServletRequest, httpServletResponse);
         Mockito.verify(httpServletResponse).addHeader("operation", "create");
     }
-
 
     private void setPolicyCreation() {
         CommonClassDao commonClassDao = Mockito.mock(CommonClassDao.class);
@@ -693,7 +694,6 @@ public class XACMLPAPTest {
         pap.service(httpServletRequest, httpServletResponse);
         // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-
 
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = Mockito.mock(MockHttpServletResponse.class);

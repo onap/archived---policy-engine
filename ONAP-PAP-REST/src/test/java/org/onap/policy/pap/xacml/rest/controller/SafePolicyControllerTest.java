@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.controller;
 
 import static org.junit.Assert.assertTrue;
@@ -53,7 +54,7 @@ public class SafePolicyControllerTest {
     private SafePolicyController controller = null;
     private MockHttpServletResponse response = null;
     private UserInfo userInfo;
-    private List<String>  data;
+    private List<String> data;
 
     @Before
     public void setUp() throws Exception {
@@ -76,127 +77,139 @@ public class SafePolicyControllerTest {
         DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
         mock(DictionaryUtils.class);
         request = Mockito.mock(HttpServletRequest.class);
-        response =  new MockHttpServletResponse();
+        response = new MockHttpServletResponse();
         logger.info("setUp: exit");
     }
 
     @Test
-    public void testGetRiskTypeDictionaryByNameEntityData(){
+    public void testGetRiskTypeDictionaryByNameEntityData() {
         when(commonClassDao.getDataByColumn(RiskType.class, "name")).thenReturn(data);
         controller.getRiskTypeDictionaryByNameEntityData(response);
         try {
-            assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("riskTypeDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("riskTypeDictionaryDatas"));
         } catch (Exception e) {
             fail();
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
     }
 
     @Test
-    public void testGetRiskTypeDictionaryEntityData(){
+    public void testGetRiskTypeDictionaryEntityData() {
         when(commonClassDao.getData(RiskType.class)).thenReturn(new ArrayList<>());
         controller.getRiskTypeDictionaryEntityData(response);
         try {
-            assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("riskTypeDictionaryDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("riskTypeDictionaryDatas"));
         } catch (Exception e) {
             fail();
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
     }
 
     @Test
-    public void testGetSafePolicyWarningEntityDataByName(){
+    public void testGetSafePolicyWarningEntityDataByName() {
         when(commonClassDao.getDataByColumn(SafePolicyWarning.class, "name")).thenReturn(data);
         controller.getSafePolicyWarningEntityDataByName(response);
         try {
-            assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("safePolicyWarningDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("safePolicyWarningDatas"));
         } catch (Exception e) {
             fail();
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
     }
 
     @Test
-    public void testGetSafePolicyWarningeEntityData(){
+    public void testGetSafePolicyWarningeEntityData() {
         when(commonClassDao.getData(SafePolicyWarning.class)).thenReturn(new ArrayList<>());
         controller.getSafePolicyWarningeEntityData(response);
         try {
-            assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("safePolicyWarningDatas"));
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("safePolicyWarningDatas"));
         } catch (Exception e) {
             fail();
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
     }
 
     @Test
-    public void testSaveRiskTypeDictionary(){
-        jsonString = "{\"userid\":\"demo\",\"riskTypeDictionaryData\":{\"id\":1,\"description\":\"test\",\"name\":\"Test\"}}";
-        try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
+    public void testSaveRiskTypeDictionary() {
+        jsonString =
+                "{\"userid\":\"demo\",\"riskTypeDictionaryData\":{\"id\":1,\"description\":\"test\",\"name\":\"Test\"}}";
+        try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
             when(request.getReader()).thenReturn(br);
             controller.saveRiskTypeDictionary(request, response);
-            assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("riskTypeDictionaryDatas"));
-        }catch(Exception e){
-            logger.error("Exception"+ e);
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("riskTypeDictionaryDatas"));
+        } catch (Exception e) {
+            logger.error("Exception" + e);
         }
     }
 
     @Test
-    public void testUpdateRiskTypeDictionary(){
+    public void testUpdateRiskTypeDictionary() {
         jsonString = "{\"userid\":\"demo\",\"riskTypeDictionaryData\":{\"description\":\"test\",\"name\":\"Test\"}}";
-        try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
+        try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
             when(request.getReader()).thenReturn(br);
             controller.saveRiskTypeDictionary(request, response);
-            assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("riskTypeDictionaryDatas"));
-        }catch(Exception e){
-            logger.error("Exception"+ e);
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("riskTypeDictionaryDatas"));
+        } catch (Exception e) {
+            logger.error("Exception" + e);
         }
     }
 
     @Test
-    public void testRemoveRiskTypeDictionary(){
+    public void testRemoveRiskTypeDictionary() {
         jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"name\":\"Test\"}}";
-        try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
+        try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
             when(request.getReader()).thenReturn(br);
             controller.removeRiskTypeDictionary(request, response);
-            assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("riskTypeDictionaryDatas"));
-        }catch(Exception e){
-            logger.error("Exception"+ e);
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("riskTypeDictionaryDatas"));
+        } catch (Exception e) {
+            logger.error("Exception" + e);
         }
     }
 
     @Test
-    public void testSaveSafePolicyWarningDictionary(){
-        jsonString = "{\"userid\":\"demo\",\"safePolicyWarningData\":{\"id\":1,\"description\":\"test\",\"name\":\"Test\"}}";
-        try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
+    public void testSaveSafePolicyWarningDictionary() {
+        jsonString =
+                "{\"userid\":\"demo\",\"safePolicyWarningData\":{\"id\":1,\"description\":\"test\",\"name\":\"Test\"}}";
+        try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
             when(request.getReader()).thenReturn(br);
             controller.saveSafePolicyWarningDictionary(request, response);
-            assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("safePolicyWarningDatas"));
-        }catch(Exception e){
-            logger.error("Exception"+ e);
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("safePolicyWarningDatas"));
+        } catch (Exception e) {
+            logger.error("Exception" + e);
         }
     }
 
     @Test
-    public void testUpdateSafePolicyWarningDictionary(){
+    public void testUpdateSafePolicyWarningDictionary() {
         jsonString = "{\"userid\":\"demo\",\"safePolicyWarningData\":{\"description\":\"test\",\"name\":\"Test\"}}";
-        try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
+        try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
             when(request.getReader()).thenReturn(br);
             controller.saveSafePolicyWarningDictionary(request, response);
-            assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("safePolicyWarningDatas"));
-        }catch(Exception e){
-            logger.error("Exception"+ e);
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("safePolicyWarningDatas"));
+        } catch (Exception e) {
+            logger.error("Exception" + e);
         }
     }
 
     @Test
-    public void testRemoveSafePolicyWarningDictionary(){
+    public void testRemoveSafePolicyWarningDictionary() {
         jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"name\":\"Test\"}}";
-        try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
+        try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
             when(request.getReader()).thenReturn(br);
             controller.removeSafePolicyWarningDictionary(request, response);
-            assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("safePolicyWarningDatas"));
-        }catch(Exception e){
-            logger.error("Exception"+ e);
+            assertTrue(response.getContentAsString() != null
+                    && response.getContentAsString().contains("safePolicyWarningDatas"));
+        } catch (Exception e) {
+            logger.error("Exception" + e);
         }
     }
 }

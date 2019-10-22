@@ -21,9 +21,11 @@
 package org.onap.policy.pap.xacml.rest.elk;
 
 import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
 import org.junit.Test;
 import org.onap.policy.pap.xacml.rest.elk.client.PolicyElasticData;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
@@ -103,7 +105,7 @@ public class PolicyElasticDataTest {
         data.setSupressionType(testVal);
         assertEquals(data.getSupressionType(), testVal);
         data.setServiceType(testVal);
-        assertEquals(data.getServiceType(),testVal);
+        assertEquals(data.getServiceType(), testVal);
         data.setUuid(testVal);
         assertEquals(data.getUuid(), testVal);
         data.setLocation(testVal);
@@ -111,7 +113,7 @@ public class PolicyElasticDataTest {
         data.setPriority(testVal);
         assertEquals(data.getPriority(), testVal);
         data.setMsLocation(testVal);
-        assertEquals(data.getMsLocation(),testVal);
+        assertEquals(data.getMsLocation(), testVal);
         data.setRuleName(testVal);
         assertEquals(data.getRuleName(), testVal);
         data.setBrmsParamBody(testMap);

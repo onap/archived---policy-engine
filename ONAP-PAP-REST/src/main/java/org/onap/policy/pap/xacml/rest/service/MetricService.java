@@ -21,10 +21,13 @@
 package org.onap.policy.pap.xacml.rest.service;
 
 import com.att.research.xacml.api.pap.PDPPolicy;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.JSONObject;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;

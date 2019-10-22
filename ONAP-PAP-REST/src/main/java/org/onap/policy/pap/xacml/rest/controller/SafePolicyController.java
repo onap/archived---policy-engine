@@ -23,11 +23,14 @@ package org.onap.policy.pap.xacml.rest.controller;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.RiskType;
@@ -66,14 +69,18 @@ public class SafePolicyController {
         return DictionaryUtils.getDictionaryUtils();
     }
 
-    @RequestMapping(value = {"/get_RiskTypeDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_RiskTypeDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getRiskTypeDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, riskTypeDatas, "name", RiskType.class);
     }
 
-    @RequestMapping(value = {"/get_RiskTypeData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_RiskTypeData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getRiskTypeDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -81,8 +88,8 @@ public class SafePolicyController {
     }
 
     @RequestMapping(value = {"/sp_dictionary/save_riskType"}, method = {RequestMethod.POST})
-    public ModelAndView saveRiskTypeDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public ModelAndView saveRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
             boolean fromAPI = utils.isRequestFromAPI(request);
@@ -92,27 +99,23 @@ public class SafePolicyController {
             RiskType riskTypeData;
             String userId = null;
             if (fromAPI) {
-                riskTypeData =
-                        mapper.readValue(root.get("dictionaryFields").toString(), RiskType.class);
+                riskTypeData = mapper.readValue(root.get("dictionaryFields").toString(), RiskType.class);
                 userId = "API";
             } else {
-                riskTypeData = mapper.readValue(root.get("riskTypeDictionaryData").toString(),
-                        RiskType.class);
+                riskTypeData = mapper.readValue(root.get("riskTypeDictionaryData").toString(), RiskType.class);
                 userId = root.get("userid").textValue();
             }
             UserInfo userInfo = utils.getUserInfo(userId);
-            List<Object> duplicateData = commonClassDao
-                    .checkDuplicateEntry(riskTypeData.getRiskName(), "name", RiskType.class);
+            List<Object> duplicateData =
+                    commonClassDao.checkDuplicateEntry(riskTypeData.getRiskName(), "name", RiskType.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
                 RiskType data = (RiskType) duplicateData.get(0);
-                if (request.getParameter(operation) != null
-                        && "update".equals(request.getParameter(operation))) {
+                if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     riskTypeData.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
                         && !"update".equals(request.getParameter(operation)))
-                        || (request.getParameter(operation) == null
-                                && (data.getId() != riskTypeData.getId()))) {
+                        || (request.getParameter(operation) == null && (data.getId() != riskTypeData.getId()))) {
                     duplicateflag = true;
                 }
             }
@@ -142,30 +145,32 @@ public class SafePolicyController {
     }
 
     @RequestMapping(value = {"/sp_dictionary/remove_riskType"}, method = {RequestMethod.POST})
-    public void removeRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public void removeRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, riskTypeDatas, RiskType.class);
     }
 
-    @RequestMapping(value = {"/get_SafePolicyWarningDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_SafePolicyWarningDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getSafePolicyWarningEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, safePolicyWarningDatas, "name", SafePolicyWarning.class);
     }
 
-    @RequestMapping(value = {"/get_SafePolicyWarningData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_SafePolicyWarningData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getSafePolicyWarningeEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, safePolicyWarningDatas, SafePolicyWarning.class);
     }
 
-    @RequestMapping(value = {"/sp_dictionary/save_safePolicyWarning"},
-            method = {RequestMethod.POST})
-    public ModelAndView saveSafePolicyWarningDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    @RequestMapping(value = {"/sp_dictionary/save_safePolicyWarning"}, method = {RequestMethod.POST})
+    public ModelAndView saveSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
             boolean fromAPI = utils.isRequestFromAPI(request);
@@ -174,25 +179,22 @@ public class SafePolicyController {
             JsonNode root = mapper.readTree(request.getReader());
             SafePolicyWarning safePolicyWarning;
             if (fromAPI) {
-                safePolicyWarning = mapper.readValue(root.get("dictionaryFields").toString(),
-                        SafePolicyWarning.class);
+                safePolicyWarning = mapper.readValue(root.get("dictionaryFields").toString(), SafePolicyWarning.class);
             } else {
-                safePolicyWarning = mapper.readValue(root.get("safePolicyWarningData").toString(),
-                        SafePolicyWarning.class);
+                safePolicyWarning =
+                        mapper.readValue(root.get("safePolicyWarningData").toString(), SafePolicyWarning.class);
             }
 
-            List<Object> duplicateData = commonClassDao.checkDuplicateEntry(
-                    safePolicyWarning.getName(), "name", SafePolicyWarning.class);
+            List<Object> duplicateData =
+                    commonClassDao.checkDuplicateEntry(safePolicyWarning.getName(), "name", SafePolicyWarning.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
                 SafePolicyWarning data = (SafePolicyWarning) duplicateData.get(0);
-                if (request.getParameter(operation) != null
-                        && "update".equals(request.getParameter(operation))) {
+                if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     safePolicyWarning.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
                         && !"update".equals(request.getParameter(operation)))
-                        || (request.getParameter(operation) == null
-                                && (data.getId() != safePolicyWarning.getId()))) {
+                        || (request.getParameter(operation) == null && (data.getId() != safePolicyWarning.getId()))) {
                     duplicateflag = true;
                 }
             }
@@ -203,8 +205,7 @@ public class SafePolicyController {
                 } else {
                     commonClassDao.update(safePolicyWarning);
                 }
-                responseString =
-                        mapper.writeValueAsString(commonClassDao.getData(SafePolicyWarning.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(SafePolicyWarning.class));
             } else {
                 responseString = duplicateResponseString;
             }
@@ -219,10 +220,9 @@ public class SafePolicyController {
         return null;
     }
 
-    @RequestMapping(value = {"/sp_dictionary/remove_SafePolicyWarning"},
-            method = {RequestMethod.POST})
-    public void removeSafePolicyWarningDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    @RequestMapping(value = {"/sp_dictionary/remove_SafePolicyWarning"}, method = {RequestMethod.POST})
+    public void removeSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, safePolicyWarningDatas, SafePolicyWarning.class);
     }

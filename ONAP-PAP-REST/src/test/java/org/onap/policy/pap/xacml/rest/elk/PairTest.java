@@ -21,6 +21,7 @@
 package org.onap.policy.pap.xacml.rest.elk;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.onap.policy.pap.xacml.rest.elk.client.Pair;
 

@@ -53,11 +53,14 @@ import org.xml.sax.XMLReader;
 
 public class PolicyUtils {
     private static final Logger LOGGER = FlexLogger.getLogger(PolicyUtils.class);
+    private static final String PACKAGE_ERROR = "mismatched input '{' expecting one of the following tokens: '[package";
+
     public static final String CATCH_EXCEPTION = "PE500: An exception was caught.";
     public static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    private static final String PACKAGE_ERROR = "mismatched input '{' expecting one of the following tokens: '[package";
     public static final String SUCCESS = "success";
+    public static final String CHARACTER_ENCODING = "UTF-8";
+    public static final String APPLICATION_JSON = "application/json";
 
     private PolicyUtils() {
         // Private Constructor

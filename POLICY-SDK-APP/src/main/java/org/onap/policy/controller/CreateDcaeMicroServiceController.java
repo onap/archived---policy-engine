@@ -72,8 +72,6 @@ import lombok.Getter;
 import lombok.Setter;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
@@ -99,6 +97,7 @@ import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.util.MSAttributeObject;
 import org.onap.policy.rest.util.MSModelUtils;
 import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.onap.portalsdk.core.web.support.JsonMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -960,9 +959,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             }
         }
 
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application / json");
-        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+        response.setContentType(PolicyUtils.APPLICATION_JSON);
+        request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
         List<Object> list = new ArrayList<>();
         String responseString = mapper.writeValueAsString(returnModel);
 
@@ -1183,6 +1182,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         return keys;
     }
 
+    /**
+     * getModelServiceVersionData.
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return ModelAndView
+     * @throws IOException IOException
+     */
     @RequestMapping(
             value = {"/policyController/getModelServiceVersioneData.htm"},
             method = {org.springframework.web.bind.annotation.RequestMethod.POST})
@@ -1191,9 +1198,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application / json");
-        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
+        response.setContentType(PolicyUtils.APPLICATION_JSON);
+        request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
         List<Object> list = new ArrayList<>();
         String value = mapper.readTree(request.getReader()).get("policyData").toString().replaceAll("^\"|\"$", "");
         String servicename = value.split("-v")[0];
@@ -1311,29 +1318,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
                     // Under the match we have attribute value and
                     // attributeDesignator. So,finally down to the actual attribute.
                     //
-                    AttributeValueType attributeValue = match.getAttributeValue();
-                    String value = (String) attributeValue.getContent().get(0);
-                    AttributeDesignatorType designator = match.getAttributeDesignator();
-                    String attributeId = designator.getAttributeId();
                     // First match in the target is OnapName, so set that value.
-                    if ("ONAPName".equals(attributeId)) {
-                        policyAdapter.setOnapName(value);
-                    } else if ("ConfigName".equals(attributeId)) {
-                        policyAdapter.setConfigName(value);
-                    } else if ("uuid".equals(attributeId)) {
-                        policyAdapter.setUuid(value);
-                    } else if ("location".equals(attributeId)) {
-                        policyAdapter.setLocation(value);
-                    } else if ("RiskType".equals(attributeId)) {
-                        policyAdapter.setRiskType(value);
-                    } else if ("RiskLevel".equals(attributeId)) {
-                        policyAdapter.setRiskLevel(value);
-                    } else if ("guard".equals(attributeId)) {
-                        policyAdapter.setGuard(value);
-                    } else if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
-                        String newDate = new PolicyController().convertDate(value);
-                        policyAdapter.setTtlDate(newDate);
-                    }
+                    policyAdapter.setupUsingAttribute(match.getAttributeDesignator().getAttributeId(),
+                            (String) match.getAttributeValue().getContent().get(0));
                 }
                 readFile(policyAdapter, entity);
             }
@@ -1397,6 +1384,12 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
     }
 
+    /**
+     * readRecursivlyJSONContent.
+     *
+     * @param map Map of String to something
+     * @param data Map of String to Object
+     */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void readRecursivlyJSONContent(Map<String, ?> map, Map<String, Object> data) {
         for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {

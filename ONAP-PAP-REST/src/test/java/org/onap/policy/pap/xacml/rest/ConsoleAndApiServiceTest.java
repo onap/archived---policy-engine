@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -34,10 +35,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
 import org.apache.commons.io.IOUtils;
 import org.hibernate.SessionFactory;
 import org.junit.Before;
@@ -118,7 +122,6 @@ public class ConsoleAndApiServiceTest {
         pap = new XACMLPapServlet();
         pap.init(servletConfig);
     }
-
 
     /**
      * Sets the up.
@@ -228,7 +231,6 @@ public class ConsoleAndApiServiceTest {
         consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP5, logContext, stdEngine);
         assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
 
-
         Mockito.when(httpServletRequest.getParameter(GROUP_DESCRIPTION)).thenReturn(null);
         Mockito.when(httpServletRequest.getParameter(PDP_ID)).thenReturn("http://localhost:4344/pdp/");
         Mockito.when(httpServletRequest.getMethod()).thenReturn(PUT);
@@ -239,7 +241,6 @@ public class ConsoleAndApiServiceTest {
                 new ByteArrayInputStream(ow.writeValueAsString(newPdp).getBytes(StandardCharsets.UTF_8))));
         consoleAndApi.doAcPut(httpServletRequest, httpServletResponse, TESTGRP5, logContext, stdEngine);
         assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
-
 
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = new MockHttpServletResponse();
@@ -252,7 +253,6 @@ public class ConsoleAndApiServiceTest {
         consoleAndApi.doAcPost(httpServletRequest, httpServletResponse, TESTGRP4, logContext, stdEngine);
         assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
 
-
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = new MockHttpServletResponse();
         Mockito.when(httpServletRequest.getHeader(ENVIRONMENT_HEADER)).thenReturn(DEVL);
@@ -263,7 +263,6 @@ public class ConsoleAndApiServiceTest {
         Mockito.when(httpServletRequest.getParameter(GROUP_NAME)).thenReturn(TESTGRP4);
         consoleAndApi.doAcDelete(httpServletRequest, httpServletResponse, TESTGRP4, logContext, stdEngine);
         assertTrue(HttpServletResponse.SC_NO_CONTENT == httpServletResponse.getStatus());
-
 
     }
 

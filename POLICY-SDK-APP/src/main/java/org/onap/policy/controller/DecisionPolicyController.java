@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -170,9 +169,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
                     AttributeDesignatorType designator = match.getAttributeDesignator();
                     String attributeId = designator.getAttributeId();
                     // First match in the target is OnapName, so set that value.
-                    if ("ONAPName".equals(attributeId)) {
-                        policyAdapter.setOnapName(value);
-                    }
+                    policyAdapter.setupUsingAttribute(attributeId, value);
                     // Component attributes are saved under Target here we are fetching them back.
                     // One row is default so we are not adding dynamic component at index 0.
                     if (index >= 1) {

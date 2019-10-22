@@ -74,10 +74,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * The class <code>CreateDcaeMicroServiceControllerTest</code> contains tests for the class
- * {@link <code>CreateDcaeMicroServiceController</code>}*
  *
- * All JUnits are designed to run in the local development environment where they have write privileges and can execute
- * time-sensitive tasks.
+ * <p/>All JUnits are designed to run in the local development environment where they have write privileges
+ * and can execute time-sensitive tasks.
  *
  */
 
@@ -89,11 +88,15 @@ public class CreateDcaeMicroServiceControllerTest {
     private String configBodyString = null;
     private HttpServletRequest request = null;
 
+    /**
+     * setUp.
+     *
+     * @throws Exception should not throw one
+     */
     @Before
     public void setUp() throws Exception {
         logger.info("setUp: Entering");
         commonClassDao = mock(CommonClassDao.class);
-        List<Object> microServiceModelsData = new ArrayList<Object>();
         MicroServiceModels testData = new MicroServiceModels();
         testData.setVersion("OpenOnap-Junit");
         testData.setModelName("modelName");
@@ -140,6 +143,7 @@ public class CreateDcaeMicroServiceControllerTest {
         testData.setDataOrderInfo("triggerSignature.signaturesAlarm.alarmSignatures.alarmSignature[VnfType, Contains, "
                 + "FilterValue]@SymptomTriggerSignature.signaturesSymptom.symptomSignatures."
                 + "symptomSignature[symptomVnfType, symptomContains, symptomFilterValue]");
+        List<Object> microServiceModelsData = new ArrayList<Object>();
         microServiceModelsData.add(testData);
 
         // mock the getDataById() call
@@ -353,11 +357,8 @@ public class CreateDcaeMicroServiceControllerTest {
         try {
             root = JsonLoader.fromString(jsonString);
             restAdapter = mapper.readValue(root.get("policyData").get("policy").toString(), PolicyRestAdapter.class);
-            TargetType target = new TargetType();
 
             // create guard attribute
-            AnyOfType anyOfType = new AnyOfType();
-            AllOfType alltype = new AllOfType();
             MatchType matchType = new MatchType();
             // set value
             AttributeValueType attributeValue1 = new AttributeValueType();
@@ -367,6 +368,7 @@ public class CreateDcaeMicroServiceControllerTest {
             AttributeDesignatorType designator = new AttributeDesignatorType();
             designator.setAttributeId("guard");
             matchType.setAttributeDesignator(designator);
+            AllOfType alltype = new AllOfType();
             alltype.getMatch().add(matchType);
 
             // add a dummy MatchType object since while (matchList.size()>1 ...)
@@ -381,8 +383,10 @@ public class CreateDcaeMicroServiceControllerTest {
             matchDummy.setAttributeDesignator(designatorDummy);
 
             alltype.getMatch().add(matchDummy);
+            AnyOfType anyOfType = new AnyOfType();
             anyOfType.getAllOf().add(alltype);
 
+            TargetType target = new TargetType();
             target.getAnyOf().add(anyOfType);
 
             // create RiskType attribute

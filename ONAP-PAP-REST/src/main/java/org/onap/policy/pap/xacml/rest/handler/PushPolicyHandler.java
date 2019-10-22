@@ -21,12 +21,15 @@
 package org.onap.policy.pap.xacml.rest.handler;
 
 import com.att.research.xacml.util.XACMLProperties;
+
 import java.io.File;
 import java.net.URI;
 import java.util.List;
+
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -104,21 +107,22 @@ public class PushPolicyHandler {
         }
     }
 
-    public boolean preSafetyCheck(StdPDPPolicy policy, String configHome){
+    public boolean preSafetyCheck(StdPDPPolicy policy, String configHome) {
         return true;
     }
 
-    public boolean preSafetyCheck(OnapPDPGroup policy, String configHome){
+    public boolean preSafetyCheck(OnapPDPGroup policy, String configHome) {
         return true;
     }
 
     public static PushPolicyHandler getInstance() {
         try {
-            Class<?> pushPolicyHandler = Class.forName(XACMLProperties.getProperty("pushPolicy.impl.className", PushPolicyHandler.class.getName()));
+            Class<?> pushPolicyHandler = Class.forName(
+                    XACMLProperties.getProperty("pushPolicy.impl.className", PushPolicyHandler.class.getName()));
             PushPolicyHandler instance = (PushPolicyHandler) pushPolicyHandler.newInstance();
             return instance;
         } catch (Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
         return null;
     }

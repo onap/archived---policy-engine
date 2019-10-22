@@ -21,11 +21,14 @@
 package org.onap.policy.pap.xacml.rest.service;
 
 import static org.junit.Assert.assertEquals;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.junit.Test;
+
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.junit.Test;
 
 public class ImportServiceTest {
     @Test

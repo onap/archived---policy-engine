@@ -23,12 +23,15 @@ package org.onap.policy.pap.xacml.rest.components;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+
 import com.att.research.xacml.util.XACMLProperties;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -61,7 +64,7 @@ public class DecisionPolicyTest {
     @Before
     public void setUp() throws Exception {
         logger.info("setUp: Entering");
-        System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME,"src/test/resources/xacml.pap.properties");
+        System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/xacml.pap.properties");
 
         policyAdapter.setPolicyName("Test.Decision_junitTest.1.xml");
         policyAdapter.setPolicyDescription("testing");
@@ -71,10 +74,10 @@ public class DecisionPolicyTest {
         policyAdapter.setDomainDir("Test");
         policyAdapter.setNewFileName("/src/test/resources/Test/client.properties");
         policyAdapter.setHighestVersion(1);
-        policyAdapter.setPolicyID("urn:xacml:policy:id:"+UUID.randomUUID());
+        policyAdapter.setPolicyID("urn:xacml:policy:id:" + UUID.randomUUID());
         policyAdapter.setOnapName("MSO");
 
-        //rainy day attributes
+        // rainy day attributes
         attributeMap.put("ServiceType", "S");
         attributeMap.put("VNFType", "V");
         attributeMap.put("BB_ID", "testBB");
@@ -119,7 +122,7 @@ public class DecisionPolicyTest {
             e.printStackTrace();
         }
 
-        assertEquals(successMap.get("success"),"success");
+        assertEquals(successMap.get("success"), "success");
     }
 
     /**
@@ -135,7 +138,7 @@ public class DecisionPolicyTest {
         try {
             response = component.prepareToSave();
         } catch (Exception e) {
-            logger.error("Exception Occured"+e);
+            logger.error("Exception Occured" + e);
         }
         assertTrue(response);
     }

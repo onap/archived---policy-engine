@@ -23,6 +23,7 @@ package org.onap.policy.pap.xacml.rest.components;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
 import com.att.research.xacml.util.XACMLProperties;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,14 +37,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Query;
@@ -71,7 +75,6 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-
 @Component
 public class PolicyDbDaoTransactionInstance implements PolicyDBDaoTransaction {
 
@@ -87,7 +90,6 @@ public class PolicyDbDaoTransactionInstance implements PolicyDBDaoTransaction {
     private static final String POLICY_NOTIFICATION = "policy";
     private static final String PDP_NOTIFICATION = "pdp";
     private static final String GROUP_NOTIFICATION = "group";
-
 
     private static final String DECISIONMS_MODEL = "MicroService_Model";
     private static boolean isJunit = false;
@@ -114,7 +116,6 @@ public class PolicyDbDaoTransactionInstance implements PolicyDBDaoTransaction {
     }
 
     private static SessionFactory sessionfactory;
-
 
     /**
      * Instantiates a new policy DB dao transaction instance.
@@ -629,7 +630,6 @@ public class PolicyDbDaoTransactionInstance implements PolicyDBDaoTransaction {
         }
     }
 
-
     public PolicyEntity getPolicy(int policyId) {
         return getPolicy(policyId, null, null);
     }
@@ -834,7 +834,6 @@ public class PolicyDbDaoTransactionInstance implements PolicyDBDaoTransaction {
         }
         return configDataString;
     }
-
 
     @Override
     public void close() {

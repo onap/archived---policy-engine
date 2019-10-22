@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.components;
 
 import java.util.List;
@@ -31,8 +32,8 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 public class SafePolicyBuilder {
 
-    private SafePolicyBuilder(){
-        //Private Constructor.
+    private SafePolicyBuilder() {
+        // Private Constructor.
     }
 
     public static ControlLoopGuard loadYamlGuard(String specification) {
@@ -45,40 +46,42 @@ public class SafePolicyBuilder {
         return (ControlLoopGuard) obj;
     }
 
-    public static String generateXacmlGuard(String xacmlFileContent,Map<String, String> generateMap, List<String> blacklist, List<String> targets) {
-        //Setup default values and Targets.
-        StringBuilder targetRegex= new StringBuilder(".*|");
-        if(targets!=null && !targets.isEmpty()){
+    public static String generateXacmlGuard(String xacmlFileContent, Map<String, String> generateMap,
+            List<String> blacklist, List<String> targets) {
+        // Setup default values and Targets.
+        StringBuilder targetRegex = new StringBuilder(".*|");
+        if (targets != null && !targets.isEmpty()) {
             targetRegex = new StringBuilder();
-            for(String t : targets){
+            for (String t : targets) {
                 targetRegex.append(t + "|");
             }
         }
-        if(generateMap.get("clname")==null|| generateMap.get("clname").isEmpty()){
-            generateMap.put("clname",".*");
+        if (generateMap.get("clname") == null || generateMap.get("clname").isEmpty()) {
+            generateMap.put("clname", ".*");
         }
-        generateMap.put("targets", targetRegex.toString().substring(0, targetRegex.length()-1));
+        generateMap.put("targets", targetRegex.toString().substring(0, targetRegex.length() - 1));
         // Replace values.
-        for(Map.Entry<String,String> map: generateMap.entrySet()){
-            Pattern p = Pattern.compile("\\$\\{" +map.getKey() +"\\}");
+        for (Map.Entry<String, String> map : generateMap.entrySet()) {
+            Pattern p = Pattern.compile("\\$\\{" + map.getKey() + "\\}");
             Matcher m = p.matcher(xacmlFileContent);
             String finalInput = map.getValue();
-            if(finalInput.contains("$")){
+            if (finalInput.contains("$")) {
                 finalInput = finalInput.replace("$", "\\$");
             }
-            xacmlFileContent=m.replaceAll(finalInput);
+            xacmlFileContent = m.replaceAll(finalInput);
         }
-        if(blacklist!=null && !blacklist.isEmpty()){
+        if (blacklist != null && !blacklist.isEmpty()) {
             StringBuilder rule = new StringBuilder();
-            for(String blackListName : blacklist){
-                if(blackListName.contains("$")){
+            for (String blackListName : blacklist) {
+                if (blackListName.contains("$")) {
                     blackListName = blackListName.replace("$", "\\$");
                 }
-                rule.append("<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">"+blackListName+"</AttributeValue>");
+                rule.append("<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" + blackListName
+                        + "</AttributeValue>");
             }
             Pattern p = Pattern.compile("\\$\\{blackListElement\\}");
             Matcher m = p.matcher(xacmlFileContent);
-            xacmlFileContent=m.replaceAll(rule.toString());
+            xacmlFileContent = m.replaceAll(rule.toString());
         }
         PolicyLogger.info("Generated XACML from the YAML Spec: \n" + xacmlFileContent);
         return xacmlFileContent;

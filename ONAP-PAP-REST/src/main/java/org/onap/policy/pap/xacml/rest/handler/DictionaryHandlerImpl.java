@@ -22,6 +22,7 @@ package org.onap.policy.pap.xacml.rest.handler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.pap.xacml.rest.service.DictionaryService;
@@ -313,7 +314,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
             response.addHeader("error", message);
             return;
         }
-        if(("Success").equalsIgnoreCase(result)) {
+        if (("Success").equalsIgnoreCase(result)) {
             response.setStatus(HttpServletResponse.SC_OK);
             response.addHeader("successMapKey", "success");
             if (operation.equalsIgnoreCase("update")) {

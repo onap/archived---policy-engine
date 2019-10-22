@@ -23,13 +23,16 @@ package org.onap.policy.pap.xacml.rest.handler;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
 import com.att.research.xacml.util.XACMLProperties;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.logging.OnapLoggingContext;
 import org.onap.policy.common.logging.eelf.MessageCodes;

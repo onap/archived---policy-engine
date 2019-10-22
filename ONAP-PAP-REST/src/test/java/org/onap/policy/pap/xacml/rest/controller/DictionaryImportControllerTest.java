@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.controller;
 
 import static org.junit.Assert.assertTrue;
@@ -42,7 +43,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-public class DictionaryImportControllerTest extends Mockito{
+public class DictionaryImportControllerTest extends Mockito {
 
     private static Logger logger = FlexLogger.getLogger(DictionaryImportController.class);
 
@@ -59,20 +60,20 @@ public class DictionaryImportControllerTest extends Mockito{
         controller = new DictionaryImportController();
         new DictionaryImportController(commonClassDao);
         request = Mockito.mock(HttpServletRequest.class);
-        response =  new MockHttpServletResponse();
+        response = new MockHttpServletResponse();
     }
 
     @Test
-    public void testIsValidDictionaryName(){
+    public void testIsValidDictionaryName() {
         DictionaryImportController cotroller = new DictionaryImportController();
-        //test invalid name
+        // test invalid name
         assertTrue(!cotroller.isValidDictionaryName("wrong-name"));
-        //test valid name
+        // test valid name
         assertTrue(cotroller.isValidDictionaryName("ActionList"));
     }
 
     @Test
-    public void testImportDictionaryData() throws ServletException, IOException{
+    public void testImportDictionaryData() throws ServletException, IOException {
         List<String> fileNames = new ArrayList<>();
         fileNames.add("Attribute.csv");
         fileNames.add("ActionPolicyDictionary.csv");
@@ -99,9 +100,9 @@ public class DictionaryImportControllerTest extends Mockito{
         fileNames.add("Settings.csv");
         fileNames.add("Zone.csv");
         fileNames.add("ActionList.csv");
-        for(int i =0; i < fileNames.size(); i++){
-            File file = new File("src/test/resources/dictionaryImport/"+fileNames.get(i));
-            try(FileInputStream targetStream = new FileInputStream(file)){
+        for (int i = 0; i < fileNames.size(); i++) {
+            File file = new File("src/test/resources/dictionaryImport/" + fileNames.get(i));
+            try (FileInputStream targetStream = new FileInputStream(file)) {
                 PushPolicyControllerTest pushController = new PushPolicyControllerTest();
                 when(request.getInputStream()).thenReturn(pushController.getInputStream(getBytes(targetStream)));
                 when(request.getParameter("userId")).thenReturn("demo");

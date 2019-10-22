@@ -22,10 +22,13 @@ package org.onap.policy.pap.xacml.rest.components;
 
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.util.XACMLProperties;
+
 import java.io.File;
 import java.io.IOException;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

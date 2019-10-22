@@ -20,6 +20,8 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -47,16 +49,13 @@ import org.onap.policy.rest.util.MSAttributeObject;
 import org.onap.policy.rest.util.MSModelUtils;
 import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
 
-import com.google.gson.Gson;
-
 public class CreateNewOptimizationModel {
     private static final Logger logger = FlexLogger.getLogger(CreateNewOptimizationModel.class);
     private OptimizationModels newModel = null;
-    private HashMap<String,MSAttributeObject > classMap = new HashMap<>();
+    private HashMap<String, MSAttributeObject> classMap = new HashMap<>();
 
     private static final String EXTRACTDIR = "ExtractDir";
     private static final String SUCCESS = "success";
-
 
     MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
 
@@ -64,7 +63,8 @@ public class CreateNewOptimizationModel {
         super();
     }
 
-    public CreateNewOptimizationModel(String importFile, String  modelName, String description, String version, String randomID) {
+    public CreateNewOptimizationModel(String importFile, String modelName, String description, String version,
+            String randomID) {
 
         this.newModel = new OptimizationModels();
         this.newModel.setVersion(version);
@@ -76,14 +76,14 @@ public class CreateNewOptimizationModel {
         String cleanUpFile = null;
 
         Map<String, MSAttributeObject> tempMap = new HashMap<>();
-        //Need to delete the file
-        if (importFile.contains(".zip")){
+        // Need to delete the file
+        if (importFile.contains(".zip")) {
             extractFolder(randomID + ".zip");
             File directory = new File(EXTRACTDIR + File.separator + randomID);
             List<File> fileList = listModelFiles(directory.toString());
-            //get all the files from a director
-            for (File file : fileList){
-                if (file.isFile()){
+            // get all the files from a director
+            for (File file : fileList) {
+                if (file.isFile()) {
                     processYmlModel(file.toString(), modelName);
                 }
             }
@@ -96,32 +96,32 @@ public class CreateNewOptimizationModel {
             } catch (IOException e) {
                 logger.error("Failed to unzip model file " + randomID, e);
             }
-        }else {
-            if(importFile.contains(".yml")){
+        } else {
+            if (importFile.contains(".yml")) {
 
-                processYmlModel(EXTRACTDIR + File.separator + randomID+".yml", modelName);
-                cleanUpFile = EXTRACTDIR + File.separator + randomID+".yml";
+                processYmlModel(EXTRACTDIR + File.separator + randomID + ".yml", modelName);
+                cleanUpFile = EXTRACTDIR + File.separator + randomID + ".yml";
 
-            }else{
-                tempMap = utils.processEpackage(EXTRACTDIR + File.separator + randomID+".xmi", MODEL_TYPE.XMI);
+            } else {
+                tempMap = utils.processEpackage(EXTRACTDIR + File.separator + randomID + ".xmi", MODEL_TYPE.XMI);
                 classMap.putAll(tempMap);
-                cleanUpFile = EXTRACTDIR + File.separator + randomID+".xmi";
+                cleanUpFile = EXTRACTDIR + File.separator + randomID + ".xmi";
             }
             File deleteFile = new File(cleanUpFile);
             deleteFile.delete();
         }
     }
 
-    private void processYmlModel(String fileName, String  modelName){
+    private void processYmlModel(String fileName, String modelName) {
 
         try {
 
             utils.parseTosca(fileName);
 
-            MSAttributeObject msAttributes= new MSAttributeObject();
+            MSAttributeObject msAttributes = new MSAttributeObject();
             msAttributes.setClassName(modelName);
 
-            LinkedHashMap<String, String> returnAttributeList =new LinkedHashMap<>();
+            LinkedHashMap<String, String> returnAttributeList = new LinkedHashMap<>();
             returnAttributeList.put(modelName, utils.getAttributeString());
             msAttributes.setAttribute(returnAttributeList);
 
@@ -129,24 +129,24 @@ public class CreateNewOptimizationModel {
 
             msAttributes.setMatchingSet(utils.getMatchableValues());
 
-            LinkedHashMap<String, String> returnReferenceList =new LinkedHashMap<>();
+            LinkedHashMap<String, String> returnReferenceList = new LinkedHashMap<>();
 
             returnReferenceList.put(modelName, utils.getReferenceAttributes());
             msAttributes.setRefAttribute(returnReferenceList);
 
-            if(!"".equals(utils.getListConstraints())){
-                LinkedHashMap<String, String> enumList =new LinkedHashMap<>();
-                String[] listArray=utils.getListConstraints().split("#");
-                for(String str:listArray){
-                    String[] strArr= str.split("=");
-                    if(strArr.length>1){
+            if (!"".equals(utils.getListConstraints())) {
+                LinkedHashMap<String, String> enumList = new LinkedHashMap<>();
+                String[] listArray = utils.getListConstraints().split("#");
+                for (String str : listArray) {
+                    String[] strArr = str.split("=");
+                    if (strArr.length > 1) {
                         enumList.put(strArr[0], strArr[1]);
                     }
                 }
                 msAttributes.setEnumType(enumList);
             }
 
-            classMap=new LinkedHashMap<>();
+            classMap = new LinkedHashMap<>();
             classMap.put(modelName, msAttributes);
 
         } catch (Exception e) {
@@ -174,13 +174,13 @@ public class CreateNewOptimizationModel {
         int buffer = 2048;
         File file = new File(zipFile);
 
-        try(ZipFile zip = new ZipFile(EXTRACTDIR + File.separator +file);){
-            String newPath =  zipFile.substring(0, zipFile.length() - 4);
+        try (ZipFile zip = new ZipFile(EXTRACTDIR + File.separator + file);) {
+            String newPath = zipFile.substring(0, zipFile.length() - 4);
             new File(newPath).mkdir();
             Enumeration zipFileEntries = zip.entries();
 
             // Process each entry
-            while (zipFileEntries.hasMoreElements()){
+            while (zipFileEntries.hasMoreElements()) {
                 // grab a zip file entry
                 ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
                 String currentEntry = entry.getName();
@@ -189,13 +189,13 @@ public class CreateNewOptimizationModel {
 
                 destinationParent.mkdirs();
 
-                if (!entry.isDirectory()){
+                if (!entry.isDirectory()) {
                     int currentByte;
 
                     byte[] data = new byte[buffer];
-                    try(FileOutputStream fos = new FileOutputStream(destFile);
+                    try (FileOutputStream fos = new FileOutputStream(destFile);
                             BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry));
-                                BufferedOutputStream dest = new BufferedOutputStream(fos, buffer)) {
+                            BufferedOutputStream dest = new BufferedOutputStream(fos, buffer)) {
 
                         while ((currentByte = is.read(data, 0, buffer)) != -1) {
                             dest.write(data, 0, currentByte);
@@ -204,7 +204,7 @@ public class CreateNewOptimizationModel {
                     }
                 }
 
-                if (currentEntry.endsWith(".zip")){
+                if (currentEntry.endsWith(".zip")) {
                     extractFolder(destFile.getAbsolutePath());
                 }
             }
@@ -218,38 +218,40 @@ public class CreateNewOptimizationModel {
         Map<String, String> successMap = new HashMap<>();
         MSAttributeObject mainClass;
 
-        if (!classMap.containsKey(this.newModel.getModelName())){
-            logger.error("Model Provided does not contain the service name provided in request. Unable to import new model");
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "AddValuesToNewModel", "Unable to pull out required values, file missing service name provided in request");
+        if (!classMap.containsKey(this.newModel.getModelName())) {
+            logger.error(
+                    "Model Provided does not contain the service name provided in request. Unable to import new model");
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "AddValuesToNewModel",
+                    "Unable to pull out required values, file missing service name provided in request");
             successMap.put("error", "MISSING");
             return successMap;
         }
         mainClass = classMap.get(this.newModel.getModelName());
         newModel.setDependency("[]");
-        if(mainClass.getSubClass() != null){
-           String value = new Gson().toJson(mainClass.getSubClass());
-           newModel.setSubattributes(value);
+        if (mainClass.getSubClass() != null) {
+            String value = new Gson().toJson(mainClass.getSubClass());
+            newModel.setSubattributes(value);
         }
 
-        if(mainClass.getAttribute() != null){
-            String attributes= mainClass.getAttribute().toString().replace("{", "").replace("}", "");
-            int equalsIndexForAttributes= attributes.indexOf('=');
-            String atttributesAfterFirstEquals= attributes.substring(equalsIndexForAttributes+1);
+        if (mainClass.getAttribute() != null) {
+            String attributes = mainClass.getAttribute().toString().replace("{", "").replace("}", "");
+            int equalsIndexForAttributes = attributes.indexOf('=');
+            String atttributesAfterFirstEquals = attributes.substring(equalsIndexForAttributes + 1);
             this.newModel.setAttributes(atttributesAfterFirstEquals);
         }
 
-        if(mainClass.getRefAttribute() != null){
-            String refAttributes= mainClass.getRefAttribute().toString().replace("{", "").replace("}", "");
-            int equalsIndex= refAttributes.indexOf('=');
-            String refAttributesAfterFirstEquals= refAttributes.substring(equalsIndex+1);
+        if (mainClass.getRefAttribute() != null) {
+            String refAttributes = mainClass.getRefAttribute().toString().replace("{", "").replace("}", "");
+            int equalsIndex = refAttributes.indexOf('=');
+            String refAttributesAfterFirstEquals = refAttributes.substring(equalsIndex + 1);
             this.newModel.setRefattributes(refAttributesAfterFirstEquals);
         }
 
-        if(mainClass.getEnumType() != null){
+        if (mainClass.getEnumType() != null) {
             this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
         }
 
-        if(mainClass.getMatchingSet() != null){
+        if (mainClass.getMatchingSet() != null) {
             this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
         }
 
@@ -258,14 +260,15 @@ public class CreateNewOptimizationModel {
 
     }
 
-    public Map<String, String> saveImportService(){
+    public Map<String, String> saveImportService() {
         String modelName = this.newModel.getModelName();
         String importedBy = "API";
         String version = this.newModel.getVersion();
         Map<String, String> successMap = new HashMap<>();
         CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
-        List<Object> result = dbConnection.getDataById(OptimizationModels.class, "modelName:version", modelName+":"+version);
-        if(result.isEmpty()){
+        List<Object> result =
+                dbConnection.getDataById(OptimizationModels.class, "modelName:version", modelName + ":" + version);
+        if (result.isEmpty()) {
             OptimizationModels model = new OptimizationModels();
             model.setModelName(modelName);
             model.setVersion(version);
@@ -283,7 +286,7 @@ public class CreateNewOptimizationModel {
             model.setUserCreatedBy(userInfo);
             dbConnection.save(model);
             successMap.put(SUCCESS, SUCCESS);
-        }else{
+        } else {
             successMap.put("DBError", "EXISTS");
             logger.error("Import new service failed.  Service already exists");
         }

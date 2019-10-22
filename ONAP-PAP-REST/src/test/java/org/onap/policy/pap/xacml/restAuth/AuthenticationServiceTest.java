@@ -17,11 +17,14 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.restAuth;
 
 import static org.junit.Assert.assertEquals;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
+
 import org.junit.Test;
 import org.onap.policy.pap.xacml.restAuth.AuthenticationService;
 
@@ -44,8 +47,7 @@ public class AuthenticationServiceTest {
         // Restore the original system property
         if (oldProperty != null) {
             System.setProperty(systemKey, oldProperty);
-        }
-        else {
+        } else {
             System.clearProperty(systemKey);
         }
     }

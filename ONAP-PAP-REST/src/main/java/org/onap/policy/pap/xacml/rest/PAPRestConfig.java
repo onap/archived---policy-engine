@@ -24,8 +24,10 @@ package org.onap.policy.pap.xacml.rest;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
+
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -45,9 +47,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
-@ComponentScan(basePackages = { "org.onap.*", "com.*" })
+@ComponentScan(basePackages = {"org.onap.*", "com.*"})
 public class PAPRestConfig extends WebMvcConfigurerAdapter {
-    private static final Logger LOGGER	= FlexLogger.getLogger(PAPRestConfig.class);
+    private static final Logger LOGGER = FlexLogger.getLogger(PAPRestConfig.class);
 
     private static String dbDriver = null;
     private static String dbUrl = null;
@@ -55,9 +57,9 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
     private static String dbPassword = null;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         Properties prop = new Properties();
-        try(InputStream input = new FileInputStream("xacml.pap.properties")) {
+        try (InputStream input = new FileInputStream("xacml.pap.properties")) {
             // load a properties file
             prop.load(input);
             setDbDriver(prop.getProperty("javax.persistence.jdbc.driver"));
@@ -65,8 +67,8 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
             setDbUserName(prop.getProperty("javax.persistence.jdbc.user"));
             PeCryptoUtils.initAesKey(prop.getProperty(XACMLRestProperties.PROP_AES_KEY));
             setDbPassword(PeCryptoUtils.decrypt(prop.getProperty("javax.persistence.jdbc.password")));
-        }catch(Exception e){
-            LOGGER.error("Exception Occured while loading properties file"+e);
+        } catch (Exception e) {
+            LOGGER.error("Exception Occured while loading properties file" + e);
         }
     }
 

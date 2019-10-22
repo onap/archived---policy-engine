@@ -64,6 +64,7 @@ import org.onap.policy.rest.jpa.PolicyEditorScopes;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
@@ -174,8 +175,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
             workBook2.write(fos);
             fos.flush();
 
-            response.setContentType("application / json");
-            request.setCharacterEncoding("UTF-8");
+            response.setContentType(PolicyUtils.APPLICATION_JSON);
+            request.setCharacterEncoding(PolicyUtils.CHARACTER_ENCODING);
 
             PrintWriter out = response.getWriter();
             String successMap = file.substring(file.lastIndexOf("webapps") + 8);

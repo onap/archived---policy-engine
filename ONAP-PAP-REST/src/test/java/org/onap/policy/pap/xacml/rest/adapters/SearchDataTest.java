@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.adapters;
 
 import static org.junit.Assert.*;
@@ -25,9 +26,8 @@ import org.junit.Test;
 
 public class SearchDataTest {
 
-
     @Test
-    public void testSearchData(){
+    public void testSearchData() {
         String data = "Test";
         SearchData searchData = new SearchData();
         searchData.setQuery(data);

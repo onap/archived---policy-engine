@@ -21,6 +21,12 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.std.IdentifierImpl;
+import com.att.research.xacml.util.XACMLProperties;
+import com.att.research.xacmlatt.pdp.policy.PolicyDef;
+import com.att.research.xacmlatt.pdp.policy.dom.DOMPolicyDef;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -30,6 +36,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+
 import org.apache.commons.io.FilenameUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
@@ -38,16 +51,6 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.std.IdentifierImpl;
-import com.att.research.xacml.util.XACMLProperties;
-import com.att.research.xacmlatt.pdp.policy.PolicyDef;
-import com.att.research.xacmlatt.pdp.policy.dom.DOMPolicyDef;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 public abstract class Policy {
 

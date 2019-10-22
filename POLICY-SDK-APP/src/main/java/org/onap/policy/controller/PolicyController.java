@@ -64,6 +64,7 @@ import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.utils.PeCryptoUtils;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
@@ -112,8 +113,6 @@ public class PolicyController extends RestrictedBaseController {
 
     // Constant variables used across Policy-sdk
     private static final String policyData = "policyData";
-    private static final String characterEncoding = "UTF-8";
-    private static final String contentType = "application/json";
     private static final String file = "file";
     private static final String SUPERADMIN = "super-admin";
     private static final String POLICYGUEST = "Policy Guest";
@@ -945,11 +944,11 @@ public class PolicyController extends RestrictedBaseController {
     }
 
     public static String getCharacterencoding() {
-        return characterEncoding;
+        return PolicyUtils.CHARACTER_ENCODING;
     }
 
     public static String getContenttype() {
-        return contentType;
+        return PolicyUtils.APPLICATION_JSON;
     }
 
     public static String getFile() {
@@ -974,17 +973,4 @@ public class PolicyController extends RestrictedBaseController {
         return fileSizeLimit;
     }
 
-    /**
-     * Function to convert date.
-     *
-     * @param dateTimeToLive input date value.
-     * @return
-     */
-    public String convertDate(String dateTimeToLive) {
-        String formatDate = null;
-        if (dateTimeToLive.contains("-")) {
-            formatDate = dateTimeToLive.replace("-", "/");
-        }
-        return formatDate;
-    }
 }

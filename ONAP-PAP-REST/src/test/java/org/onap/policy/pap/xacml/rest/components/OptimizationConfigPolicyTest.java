@@ -17,14 +17,19 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.components;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.mockito.Matchers.any;
+
+import java.io.File;
+import java.util.Collections;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -35,8 +40,6 @@ import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import java.io.File;
-import java.util.Collections;
 
 @RunWith(PowerMockRunner.class)
 public class OptimizationConfigPolicyTest {
@@ -97,7 +100,8 @@ public class OptimizationConfigPolicyTest {
         // Test create methods
         String testFileName = "testFile.zip";
         String testVal = "testVal";
-        CreateNewOptimizationModel model = new CreateNewOptimizationModel(testFileName, testVal, testVal, testVal, testVal);
+        CreateNewOptimizationModel model =
+                new CreateNewOptimizationModel(testFileName, testVal, testVal, testVal, testVal);
         model.addValuesToNewModel();
         model.saveImportService();
     }

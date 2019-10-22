@@ -23,6 +23,7 @@ package org.onap.policy.pap.xacml.rest.components;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
 import com.att.research.xacml.util.XACMLProperties;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
@@ -34,7 +35,9 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+
 import javax.persistence.PersistenceException;
+
 import org.apache.commons.io.FilenameUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -69,7 +72,6 @@ public class HandleIncomingNotifications {
     public static final String PROPERTIES_CONFIG = "PROPERTIES";
     public static final String OTHER_CONFIG = "OTHER";
     public static final String AUDIT_USER = "audit";
-
 
     private static SessionFactory sessionfactory;
 

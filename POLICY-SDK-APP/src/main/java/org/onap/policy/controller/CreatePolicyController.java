@@ -27,8 +27,6 @@ import java.util.Map;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
@@ -99,31 +97,10 @@ public class CreatePolicyController extends RestrictedBaseController {
                         // Under the match we have attribute value and
                         // attributeDesignator. So,finally down to the actual attribute.
                         //
-                        AttributeValueType attributeValue = match.getAttributeValue();
-                        String value = (String) attributeValue.getContent().get(0);
-                        AttributeDesignatorType designator = match.getAttributeDesignator();
-                        String attributeId = designator.getAttributeId();
+                        String value = (String) match.getAttributeValue().getContent().get(0);
+                        String attributeId = match.getAttributeDesignator().getAttributeId();
                         // First match in the target is OnapName, so set that value.
-                        if ("ONAPName".equals(attributeId)) {
-                            policyAdapter.setOnapName(value);
-                        }
-                        if ("RiskType".equals(attributeId)) {
-                            policyAdapter.setRiskType(value);
-                        }
-                        if ("RiskLevel".equals(attributeId)) {
-                            policyAdapter.setRiskLevel(value);
-                        }
-                        if ("guard".equals(attributeId)) {
-                            policyAdapter.setGuard(value);
-                        }
-                        if ("TTLDate".equals(attributeId) && !value.contains("NA")) {
-                            PolicyController controller = new PolicyController();
-                            String newDate = controller.convertDate(value);
-                            policyAdapter.setTtlDate(newDate);
-                        }
-                        if ("ConfigName".equals(attributeId)) {
-                            policyAdapter.setConfigName(value);
-                        }
+                        policyAdapter.setupUsingAttribute(attributeId, value);
                         // After Onap and Config it is optional to have attributes, so
                         // check weather dynamic values or there or not.
                         if (index >= 7) {

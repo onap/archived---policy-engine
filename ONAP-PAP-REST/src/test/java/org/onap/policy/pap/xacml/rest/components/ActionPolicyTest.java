@@ -19,15 +19,20 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.pap.xacml.rest.components;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
+
+import com.att.research.xacml.util.XACMLProperties;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,8 +40,6 @@ import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import com.att.research.xacml.util.XACMLProperties;
-
 
 public class ActionPolicyTest {
 
@@ -55,8 +58,7 @@ public class ActionPolicyTest {
     @Before
     public void setUp() throws Exception {
         logger.info("setUp: Entering");
-        System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME,
-                "src/test/resources/xacml.pap.properties");
+        System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/xacml.pap.properties");
 
         dynamicRuleAlgorithmLabels.add("test");
         dynamicRuleAlgorithmField1.add("testField1");
@@ -65,8 +67,7 @@ public class ActionPolicyTest {
 
         policyAdapter.setPolicyName("Test.Action_junitTest");
         policyAdapter.setPolicyDescription("test");
-        policyAdapter.setRuleCombiningAlgId(
-                "urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides");
+        policyAdapter.setRuleCombiningAlgId("urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides");
         policyAdapter.setPolicyType("Action");
         policyAdapter.setEditPolicy(false);
         policyAdapter.setDomainDir("Test");
@@ -98,7 +99,8 @@ public class ActionPolicyTest {
      * @throws java.lang.Exception
      */
     @After
-    public void tearDown() throws Exception {}
+    public void tearDown() throws Exception {
+    }
 
     /**
      * Test method for

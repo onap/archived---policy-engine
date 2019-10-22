@@ -21,9 +21,11 @@
 package org.onap.policy.pap.xacml.rest.model;
 
 import com.att.research.xacml.api.pap.PDPPolicy;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.onap.policy.rest.util.PDPPolicyContainer;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;

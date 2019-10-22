@@ -23,6 +23,7 @@ package org.onap.policy.pap.xacml.rest.components;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.IdentifierImpl;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +40,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableDefinitionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
@@ -63,25 +83,6 @@ import org.onap.policy.xacml.std.pip.engines.aaf.AAFEngine;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableDefinitionType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
-
 
 @Component
 public class DecisionPolicy extends Policy {
@@ -102,7 +103,6 @@ public class DecisionPolicy extends Policy {
     private static final String ONAPNAME = "ONAPName";
     private static final String POLICY_NAME = "PolicyName";
     private static final String DESCRIPTION = "description";
-
 
     List<String> dynamicLabelRuleAlgorithms = new LinkedList<>();
     List<String> dynamicFieldComboRuleAlgorithms = new LinkedList<>();
@@ -154,16 +154,15 @@ public class DecisionPolicy extends Policy {
     private void readRawPolicyData() {
         Object policy;
         if ("API".equalsIgnoreCase(policyAdapter.getApiflag())) {
-            policy = XACMLPolicyScanner.readPolicy(new ByteArrayInputStream(StringEscapeUtils
-                    .unescapeXml(policyAdapter.getRawXacmlPolicy()).getBytes(StandardCharsets.UTF_8)));
+            policy = XACMLPolicyScanner.readPolicy(new ByteArrayInputStream(
+                    StringEscapeUtils.unescapeXml(policyAdapter.getRawXacmlPolicy()).getBytes(StandardCharsets.UTF_8)));
         } else {
             policy = XACMLPolicyScanner.readPolicy(
                     new ByteArrayInputStream(policyAdapter.getRawXacmlPolicy().getBytes(StandardCharsets.UTF_8)));
         }
         String policyRawDesc;
         if (policy instanceof PolicySetType) {
-            policyRawDesc =
-                    ((PolicySetType) policy).getDescription() + "@#RuleProvider@#Decision_Raw@#RuleProvider@#";
+            policyRawDesc = ((PolicySetType) policy).getDescription() + "@#RuleProvider@#Decision_Raw@#RuleProvider@#";
             ((PolicySetType) policy).setDescription(policyRawDesc);
         } else {
             policyRawDesc = ((PolicyType) policy).getDescription() + "@#RuleProvider@#Decision_Raw@#RuleProvider@#";
@@ -204,13 +203,13 @@ public class DecisionPolicy extends Policy {
         }
         policyName = policyAdapter.getNewFileName();
 
-        if(policyAdapter.getRuleProvider().equals(GUARD_YAML) ||
-                policyAdapter.getRuleProvider().equals(GUARD_BL_YAML) ||
-                policyAdapter.getRuleProvider().equals(GUARD_MIN_MAX)){
+        if (policyAdapter.getRuleProvider().equals(GUARD_YAML) || policyAdapter.getRuleProvider().equals(GUARD_BL_YAML)
+                || policyAdapter.getRuleProvider().equals(GUARD_MIN_MAX)) {
 
             Map<String, String> yamlParams = new HashMap<>();
-            String blackListEntryType = policyAdapter.getBlackListEntryType() != null
-                    ? policyAdapter.getBlackListEntryType() : "Use Manual Entry";
+            String blackListEntryType =
+                    policyAdapter.getBlackListEntryType() != null ? policyAdapter.getBlackListEntryType()
+                            : "Use Manual Entry";
             String description = policyAdapter.getPolicyDescription() != null ? policyAdapter.getPolicyDescription()
                     : "YAML Guard Policy";
             yamlParams.put(DESCRIPTION, description + "@blEntry@" + blackListEntryType + "@blEntry@");
@@ -428,8 +427,7 @@ public class DecisionPolicy extends Policy {
                 yamlSpecs.put("guardActiveStart", constraints.getActive_time_range().get("start"));
                 yamlSpecs.put("guardActiveEnd", constraints.getActive_time_range().get("end"));
                 String xacmlPolicyContent = SafePolicyBuilder.generateXacmlGuard(xacmlTemplateContent, yamlSpecs,
-                        constraints.getBlacklist(),
-                        guard.getMatch_parameters().getTargets());
+                        constraints.getBlacklist(), guard.getMatch_parameters().getTargets());
 
                 // Convert the Policy into Stream input to Policy Adapter.
                 Object policy = XACMLPolicyScanner
@@ -713,7 +711,8 @@ public class DecisionPolicy extends Policy {
                     if (!attributeId.startsWith("S_")) {
                         ApplyType innerDecisionApply = generateApplyTypeDataType(functionKey);
                         AttributeDesignatorType attributeDesignator = generateAttributeDesignatorDataType(functionKey);
-                        AttributeValueType decisionConditionAttributeValue = generateAttributeValueTypeDataType(functionKey);
+                        AttributeValueType decisionConditionAttributeValue =
+                                generateAttributeValueTypeDataType(functionKey);
 
                         if (attributeId != null) {
                             attributeDesignator.setCategory(CATEGORY_RESOURCE);
@@ -793,7 +792,6 @@ public class DecisionPolicy extends Policy {
         dataTypeList.add(dataType);
     }
 
-
     private String getDataType(String key) {
 
         DecisionSettings decisionSettings = findDecisionSettingsBySettingId(key);
@@ -826,8 +824,7 @@ public class DecisionPolicy extends Policy {
 
     private AttributeDesignatorType generateAttributeDesignatorDataType(String functionKey) {
         AttributeDesignatorType attributeDesignator = new AttributeDesignatorType();
-        switch(functionKey.toLowerCase())
-        {
+        switch (functionKey.toLowerCase()) {
             case "integer":
                 attributeDesignator.setDataType(INTEGER_DATATYPE);
                 break;
@@ -839,8 +836,7 @@ public class DecisionPolicy extends Policy {
 
     private ApplyType generateApplyTypeDataType(String functionKey) {
         ApplyType applyType = new ApplyType();
-        switch(functionKey.toLowerCase())
-        {
+        switch (functionKey.toLowerCase()) {
             case "integer":
                 applyType.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
                 break;
@@ -852,8 +848,7 @@ public class DecisionPolicy extends Policy {
 
     private AttributeValueType generateAttributeValueTypeDataType(String functionKey) {
         AttributeValueType applyType = new AttributeValueType();
-        switch(functionKey.toLowerCase())
-        {
+        switch (functionKey.toLowerCase()) {
             case "integer":
                 applyType.setDataType(INTEGER_DATATYPE);
                 break;
@@ -864,8 +859,10 @@ public class DecisionPolicy extends Policy {
     }
 
     private void applyTwoTextFieldRuleAttribute(ApplyType decisionApply, String value1, String functionKey) {
-        decisionApply.getExpression().add(new ObjectFactory().createApply(generateApplyTypeDataType(value1, functionKey)));
-        decisionApply.getExpression().add(new ObjectFactory().createApply(generateApplyTypeDataType(value1, functionKey)));
+        decisionApply.getExpression()
+                .add(new ObjectFactory().createApply(generateApplyTypeDataType(value1, functionKey)));
+        decisionApply.getExpression()
+                .add(new ObjectFactory().createApply(generateApplyTypeDataType(value1, functionKey)));
     }
 
     private ApplyType generateApplyTypeDataType(String value1, String functionKey) {
@@ -874,10 +871,8 @@ public class DecisionPolicy extends Policy {
 
         attributeDesignator.setCategory(CATEGORY_RESOURCE);
         // Here set actual field values
-        attributeDesignator
-                .setAttributeId(value1.contains("resource:") ? value1.substring(9) : value1.substring(8));
-        innerApply.getExpression()
-                .add(new ObjectFactory().createAttributeDesignator(attributeDesignator));
+        attributeDesignator.setAttributeId(value1.contains("resource:") ? value1.substring(9) : value1.substring(8));
+        innerApply.getExpression().add(new ObjectFactory().createAttributeDesignator(attributeDesignator));
         return innerApply;
     }
 

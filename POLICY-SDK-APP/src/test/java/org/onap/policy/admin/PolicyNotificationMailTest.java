@@ -45,6 +45,11 @@ public class PolicyNotificationMailTest {
     private CommonClassDao commonClassDao;
     private List<Object> data = null;
 
+    /**
+     * setUp.
+     *
+     * @throws Exception should not throw one
+     */
     @Before
     public void setUp() throws Exception {
         PolicyController.setjUnit(true);

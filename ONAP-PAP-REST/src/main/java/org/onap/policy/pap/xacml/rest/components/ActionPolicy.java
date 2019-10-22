@@ -21,6 +21,7 @@
 package org.onap.policy.pap.xacml.rest.components;
 
 import com.att.research.xacml.api.pap.PAPException;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -32,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
@@ -47,6 +49,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -81,7 +84,6 @@ public class ActionPolicy extends Policy {
     List<String> dynamicFieldFunctionRuleAlgorithms = new LinkedList<>();
     List<String> dynamicFieldOneRuleAlgorithms = new LinkedList<>();
     List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<>();
-
 
     private CommonClassDao commonClassDao;
 
@@ -359,7 +361,6 @@ public class ActionPolicy extends Policy {
         obligations.getObligationExpression().add(obligation);
         return obligations;
     }
-
 
     // if compound setting the inner apply here
     protected ApplyType getInnerActionApply(String value1Label) {

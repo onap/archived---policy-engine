@@ -23,12 +23,15 @@ package org.onap.policy.pap.xacml.rest.controller;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.DecisionSettings;
@@ -66,16 +69,18 @@ public class DecisionPolicyDictionaryController {
         return DictionaryUtils.getDictionaryUtils();
     }
 
-    @RequestMapping(value = {"/get_SettingsDictionaryDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_SettingsDictionaryDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void getSettingsDictionaryByNameEntityData(HttpServletRequest request,
-            HttpServletResponse response) {
+    public void getSettingsDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, settingDatas, xacmlId, DecisionSettings.class);
     }
 
-
-    @RequestMapping(value = {"/get_SettingsDictionaryData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_SettingsDictionaryData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getSettingsDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -83,8 +88,8 @@ public class DecisionPolicyDictionaryController {
     }
 
     @RequestMapping(value = {"/decision_dictionary/save_Settings"}, method = {RequestMethod.POST})
-    public ModelAndView saveSettingsDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public ModelAndView saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
             boolean fromAPI = utils.isRequestFromAPI(request);
@@ -95,27 +100,24 @@ public class DecisionPolicyDictionaryController {
             String userId = null;
 
             if (fromAPI) {
-                decisionSettings = mapper.readValue(root.get(dictionaryFields).toString(),
-                        DecisionSettings.class);
+                decisionSettings = mapper.readValue(root.get(dictionaryFields).toString(), DecisionSettings.class);
                 userId = "API";
             } else {
-                decisionSettings = mapper.readValue(root.get("settingsDictionaryData").toString(),
-                        DecisionSettings.class);
+                decisionSettings =
+                        mapper.readValue(root.get("settingsDictionaryData").toString(), DecisionSettings.class);
                 userId = root.get("userid").textValue();
             }
             UserInfo userInfo = utils.getUserInfo(userId);
-            List<Object> duplicateData = commonClassDao.checkDuplicateEntry(
-                    decisionSettings.getXacmlId(), xacmlId, DecisionSettings.class);
+            List<Object> duplicateData =
+                    commonClassDao.checkDuplicateEntry(decisionSettings.getXacmlId(), xacmlId, DecisionSettings.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
                 DecisionSettings data = (DecisionSettings) duplicateData.get(0);
-                if (request.getParameter(operation) != null
-                        && "update".equals(request.getParameter(operation))) {
+                if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     decisionSettings.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
                         && !"update".equals(request.getParameter(operation)))
-                        || (request.getParameter(operation) == null
-                                && (data.getId() != decisionSettings.getId()))) {
+                        || (request.getParameter(operation) == null && (data.getId() != decisionSettings.getId()))) {
                     duplicateflag = true;
                 }
             }
@@ -133,8 +135,7 @@ public class DecisionPolicyDictionaryController {
                     decisionSettings.setModifiedDate(new Date());
                     commonClassDao.update(decisionSettings);
                 }
-                responseString =
-                        mapper.writeValueAsString(commonClassDao.getData(DecisionSettings.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(DecisionSettings.class));
             } else {
                 responseString = duplicateResponseString;
             }
@@ -150,21 +151,23 @@ public class DecisionPolicyDictionaryController {
     }
 
     @RequestMapping(value = {"/settings_dictionary/remove_settings"}, method = {RequestMethod.POST})
-    public void removeSettingsDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public void removeSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, settingDatas, DecisionSettings.class);
     }
 
-    @RequestMapping(value = {"/get_RainyDayDictionaryDataByName"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_RainyDayDictionaryDataByName"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void getRainyDayDictionaryByNameEntityData(HttpServletRequest request,
-            HttpServletResponse response) {
+    public void getRainyDayDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, rainDayDatas, bbID, RainyDayTreatments.class);
     }
 
-    @RequestMapping(value = {"/get_RainyDayDictionaryData"}, method = {RequestMethod.GET},
+    @RequestMapping(
+            value = {"/get_RainyDayDictionaryData"},
+            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getRainyDayDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -172,8 +175,8 @@ public class DecisionPolicyDictionaryController {
     }
 
     @RequestMapping(value = {"/decision_dictionary/save_RainyDay"}, method = {RequestMethod.POST})
-    public ModelAndView saveRainyDayDictionary(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    public ModelAndView saveRainyDayDictionary(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
             boolean fromAPI = utils.isRequestFromAPI(request);
@@ -183,32 +186,26 @@ public class DecisionPolicyDictionaryController {
             RainyDayTreatments decisionRainyDay;
             TreatmentValues treatmentsData = null;
             if (fromAPI) {
-                decisionRainyDay = mapper.readValue(root.get(dictionaryFields).toString(),
-                        RainyDayTreatments.class);
-                treatmentsData = mapper.readValue(root.get(dictionaryFields).toString(),
-                        TreatmentValues.class);
+                decisionRainyDay = mapper.readValue(root.get(dictionaryFields).toString(), RainyDayTreatments.class);
+                treatmentsData = mapper.readValue(root.get(dictionaryFields).toString(), TreatmentValues.class);
             } else {
-                decisionRainyDay = mapper.readValue(root.get("rainyDayDictionaryData").toString(),
-                        RainyDayTreatments.class);
-                treatmentsData = mapper.readValue(root.get("rainyDayDictionaryData").toString(),
-                        TreatmentValues.class);
+                decisionRainyDay =
+                        mapper.readValue(root.get("rainyDayDictionaryData").toString(), RainyDayTreatments.class);
+                treatmentsData = mapper.readValue(root.get("rainyDayDictionaryData").toString(), TreatmentValues.class);
             }
-            decisionRainyDay.setTreatments(
-                    utils.appendKey(treatmentsData.getUserDataTypeValues(), "treatment", ","));
+            decisionRainyDay.setTreatments(utils.appendKey(treatmentsData.getUserDataTypeValues(), "treatment", ","));
 
             List<Object> duplicateData = commonClassDao.checkDuplicateEntry(
-                    decisionRainyDay.getBbid() + ":" + decisionRainyDay.getWorkstep(),
-                    "bbid:workstep", RainyDayTreatments.class);
+                    decisionRainyDay.getBbid() + ":" + decisionRainyDay.getWorkstep(), "bbid:workstep",
+                    RainyDayTreatments.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
                 RainyDayTreatments data = (RainyDayTreatments) duplicateData.get(0);
-                if (request.getParameter(operation) != null
-                        && "update".equals(request.getParameter(operation))) {
+                if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     decisionRainyDay.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
                         && !"update".equals(request.getParameter(operation)))
-                        || (request.getParameter(operation) == null
-                                && (data.getId() != decisionRainyDay.getId()))) {
+                        || (request.getParameter(operation) == null && (data.getId() != decisionRainyDay.getId()))) {
                     duplicateflag = true;
                 }
             }
@@ -219,8 +216,7 @@ public class DecisionPolicyDictionaryController {
                 } else {
                     commonClassDao.update(decisionRainyDay);
                 }
-                responseString =
-                        mapper.writeValueAsString(commonClassDao.getData(RainyDayTreatments.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(RainyDayTreatments.class));
             } else {
                 responseString = duplicateResponseString;
             }
@@ -236,8 +232,7 @@ public class DecisionPolicyDictionaryController {
     }
 
     @RequestMapping(value = {"/decision_dictionary/remove_rainyDay"}, method = {RequestMethod.POST})
-    public void removeRainyDayDictionary(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public void removeRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, rainDayDatas, RainyDayTreatments.class);
     }

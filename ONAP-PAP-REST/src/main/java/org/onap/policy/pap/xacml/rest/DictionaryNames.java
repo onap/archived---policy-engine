@@ -18,7 +18,6 @@
  * ============LICENSE_END=========================================================
  */
 
-
 package org.onap.policy.pap.xacml.rest;
 
 /**
@@ -28,30 +27,5 @@ package org.onap.policy.pap.xacml.rest;
  */
 public enum DictionaryNames {
 
-    Attribute,
-    ActionPolicyDictionary,
-    OnapName,
-    MSPolicyDictionary,
-    OptimizationPolicyDictionary,
-    VNFType,
-    VSCLAction,
-    ClosedLoopService,
-    ClosedLoopSite,
-    PEPOptions,
-    VarbindDictionary,
-    BRMSParamDictionary,
-    BRMSControllerDictionary,
-    BRMSDependencyDictionary,
-    Settings,
-    PrefixList,
-    SecurityZone,
-    Zone,
-    ServiceList,
-    ServiceGroup,
-    AddressGroup,
-    ProtocolList,
-    ActionList,
-    TermList,
-    SearchCriteria
+    Attribute, ActionPolicyDictionary, OnapName, MSPolicyDictionary, OptimizationPolicyDictionary, VNFType, VSCLAction, ClosedLoopService, ClosedLoopSite, PEPOptions, VarbindDictionary, BRMSParamDictionary, BRMSControllerDictionary, BRMSDependencyDictionary, Settings, PrefixList, SecurityZone, Zone, ServiceList, ServiceGroup, AddressGroup, ProtocolList, ActionList, TermList, SearchCriteria
 }
-

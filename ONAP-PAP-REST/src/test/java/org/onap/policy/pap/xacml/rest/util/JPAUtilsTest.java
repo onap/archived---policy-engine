@@ -24,6 +24,7 @@ package org.onap.policy.pap.xacml.rest.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTest;

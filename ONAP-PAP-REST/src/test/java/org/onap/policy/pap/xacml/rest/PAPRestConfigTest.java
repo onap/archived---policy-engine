@@ -21,6 +21,7 @@
 package org.onap.policy.pap.xacml.rest;
 
 import static org.junit.Assert.assertEquals;
+
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
@@ -45,7 +46,8 @@ public class PAPRestConfigTest {
     @Test
     public void testInit() {
         String driver = "org.mariadb.jdbc.Driver";
-        String url = "jdbc:mariadb://localhost:3306/onap_sdk?connectTimeout=30000&socketTimeout=60000&log=true&sessionVariables=max_statement_time=30";
+        String url =
+                "jdbc:mariadb://localhost:3306/onap_sdk?connectTimeout=30000&socketTimeout=60000&log=true&sessionVariables=max_statement_time=30";
         String user = "policy_user";
         String password = "policy_user";
 
@@ -58,7 +60,7 @@ public class PAPRestConfigTest {
         assertEquals(PAPRestConfig.getDbPassword(), password);
 
         // Test hibernate
-        BasicDataSource source = (BasicDataSource)config.getDataSource();
+        BasicDataSource source = (BasicDataSource) config.getDataSource();
         assertEquals(source.getDriverClassName(), driver);
         assertEquals(source.getUrl(), url);
         assertEquals(source.getUsername(), user);

@@ -21,9 +21,11 @@
 package org.onap.policy.pap.xacml.restAuth;
 
 import com.att.research.xacml.util.XACMLProperties;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.StringTokenizer;
+
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.rest.XACMLRestProperties;

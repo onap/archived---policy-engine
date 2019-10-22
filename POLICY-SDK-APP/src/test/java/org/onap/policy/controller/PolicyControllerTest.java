@@ -47,12 +47,16 @@ public class PolicyControllerTest {
     private static Logger logger = FlexLogger.getLogger(PolicyControllerTest.class);
     private static CommonClassDao commonClassDao;
 
+    /**
+     * setUp.
+     *
+     * @throws Exception Should not throw one
+     */
     @Before
     public void setUp() throws Exception {
         logger.info("setUp: Entering");
         commonClassDao = mock(CommonClassDao.class);
         PolicyController.setCommonClassDao(commonClassDao);
-        List<Object> data = new ArrayList<>();
         String policyData = "";
         try {
             ClassLoader classLoader = getClass().getClassLoader();
@@ -64,6 +68,7 @@ public class PolicyControllerTest {
         entity.setPolicyName("Config_SampleTest.1.xml");
         entity.setPolicyData(policyData);
         entity.setScope("com");
+        List<Object> data = new ArrayList<>();
         data.add(entity);
 
         when(commonClassDao.getDataByQuery(

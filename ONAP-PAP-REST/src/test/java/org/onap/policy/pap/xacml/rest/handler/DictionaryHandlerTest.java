@@ -23,6 +23,7 @@
 package org.onap.policy.pap.xacml.rest.handler;
 
 import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
 
 public class DictionaryHandlerTest {

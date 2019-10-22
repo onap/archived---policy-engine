@@ -41,13 +41,12 @@ import org.apache.commons.logging.LogFactory;
 @WebFilter("/*")
 public class PAPAuthenticationFilter implements Filter {
 
-    private static final Log logger	= LogFactory.getLog(PAPAuthenticationFilter.class);
+    private static final Log logger = LogFactory.getLog(PAPAuthenticationFilter.class);
     public static final String AUTHENTICATION_HEADER = "Authorization";
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response,
-            FilterChain filter) throws IOException, ServletException {
-
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filter)
+            throws IOException, ServletException {
 
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
@@ -57,7 +56,7 @@ public class PAPAuthenticationFilter implements Filter {
 
             logger.info("Request URI: " + url);
 
-            //getting authentication credentials
+            // getting authentication credentials
             authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
 
             // Check Authentication credentials
@@ -65,17 +64,17 @@ public class PAPAuthenticationFilter implements Filter {
             boolean authenticationStatus = authenticationService.authenticate(authCredentials);
 
             if (authenticationStatus) {
-                //indicates the request comes from Traditional Admin Console or PolicyEngineAPI
-                if ("/pap/".equals(url)){
+                // indicates the request comes from Traditional Admin Console or PolicyEngineAPI
+                if ("/pap/".equals(url)) {
                     logger.info("Request comes from Traditional Admin Console or PolicyEngineAPI");
-                    //forward request to the XACMLPAPServlet if authenticated
+                    // forward request to the XACMLPAPServlet if authenticated
                     request.getRequestDispatcher("/pap/pap/").forward(request, response);
-                }else if (url.startsWith("/pap/onap/") && response instanceof HttpServletResponse){
-                    //indicates the request comes from the ONAP Portal onap-sdk-app
-                    HttpServletResponse alteredResponse = ((HttpServletResponse)response);
+                } else if (url.startsWith("/pap/onap/") && response instanceof HttpServletResponse) {
+                    // indicates the request comes from the ONAP Portal onap-sdk-app
+                    HttpServletResponse alteredResponse = ((HttpServletResponse) response);
                     addCorsHeader(alteredResponse);
                     logger.info("Request comes from Onap Portal");
-                    //Spring dispatcher servlet is at the end of the filter chain at /pap/onap/ path
+                    // Spring dispatcher servlet is at the end of the filter chain at /pap/onap/ path
                     filter.doFilter(request, response);
                 }
             } else {
@@ -88,22 +87,23 @@ public class PAPAuthenticationFilter implements Filter {
         }
     }
 
-    //method to add CorsHeaders for onap portal rest call
+    // method to add CorsHeaders for onap portal rest call
     private void addCorsHeader(HttpServletResponse response) {
         logger.info("Adding Cors Response Headers!!!");
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
-        response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
-        response.addHeader("Access-Control-Max-Age", "1728000");	
+        response.addHeader("Access-Control-Allow-Headers",
+                "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
+        response.addHeader("Access-Control-Max-Age", "1728000");
     }
 
     @Override
     public void destroy() {
-        //Empty
+        // Empty
     }
 
     @Override
     public void init(FilterConfig arg0) throws ServletException {
-        //Empty
+        // Empty
     }
 }

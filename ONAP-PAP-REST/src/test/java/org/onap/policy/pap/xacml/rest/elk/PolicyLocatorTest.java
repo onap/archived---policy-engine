@@ -21,6 +21,7 @@
 package org.onap.policy.pap.xacml.rest.elk;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.onap.policy.pap.xacml.rest.elk.client.PolicyLocator;
 
@@ -35,8 +36,7 @@ public class PolicyLocatorTest {
         String version = "1.0";
         String testString = "[owner|scope|type|name|id|v1.0|]";
 
-        PolicyLocator locator = new PolicyLocator(policyType, policyName, owner,
-            scope, policyId, version);
+        PolicyLocator locator = new PolicyLocator(policyType, policyName, owner, scope, policyId, version);
         String locatorString = locator.toString();
         assertEquals(locatorString, testString);
     }

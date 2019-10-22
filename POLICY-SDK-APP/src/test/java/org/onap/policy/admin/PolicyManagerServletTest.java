@@ -70,6 +70,11 @@ public class PolicyManagerServletTest extends Mockito {
     private ConfigurationDataEntity configurationEntity;
     private HttpServletRequest request;
     private MockHttpServletResponse response;
+    /**
+     * setUp.
+     *
+     * @throws Exception should not get one
+     */
 
     @Before
     public void setUp() throws Exception {

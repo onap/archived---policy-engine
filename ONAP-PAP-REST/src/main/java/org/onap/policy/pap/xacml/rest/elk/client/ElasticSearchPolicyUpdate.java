@@ -21,6 +21,7 @@
 package org.onap.policy.pap.xacml.rest.elk.client;
 
 import com.google.gson.Gson;
+
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.client.http.JestHttpClient;
@@ -28,6 +29,7 @@ import io.searchbox.core.Bulk;
 import io.searchbox.core.Bulk.Builder;
 import io.searchbox.core.BulkResult;
 import io.searchbox.core.Index;
+
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -43,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
@@ -50,12 +53,11 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
-
-
 
 /**
  * This code will deals with parsing the XACML content on reading from
@@ -126,54 +128,53 @@ public class ElasticSearchPolicyUpdate {
             String policyEntityQuery = "Select * from PolicyEntity";
             result = stmt.executeQuery(policyEntityQuery);
 
-            while(result.next()){
+            while (result.next()) {
                 StringBuilder policyDataString = new StringBuilder("{");
                 String scope = result.getString("scope");
                 String policyName = result.getString("policyName");
-                if(policyName != null){
-                    policyDataString.append("\"policyName\":\""+scope+"."+policyName+"\",");
+                if (policyName != null) {
+                    policyDataString.append("\"policyName\":\"" + scope + "." + policyName + "\",");
                 }
                 String description = result.getString("description");
-                if(description != null){
-                    policyDataString.append("\"policyDescription\":\""+description+"\",");
+                if (description != null) {
+                    policyDataString.append("\"policyDescription\":\"" + description + "\",");
                 }
                 Object policyData = result.getString("policydata");
 
-                if(scope != null){
-                    policyDataString.append("\"scope\":\""+scope+"\",");
+                if (scope != null) {
+                    policyDataString.append("\"scope\":\"" + scope + "\",");
                 }
                 String actionbodyid = result.getString("actionbodyid");
                 String configurationdataid = result.getString("configurationdataid");
 
-
                 String policyWithScopeName = scope + "." + policyName;
                 String _type = null;
 
-                if(policyWithScopeName.contains(".Config_")){
+                if (policyWithScopeName.contains(".Config_")) {
                     policyDataString.append("\"policyType\":\"Config\",");
-                    if(policyWithScopeName.contains(".Config_Fault_")){
+                    if (policyWithScopeName.contains(".Config_Fault_")) {
                         _type = "closedloop";
                         policyDataString.append("\"configPolicyType\":\"ClosedLoop_Fault\",");
-                    }else if(policyWithScopeName.contains(".Config_PM_")){
+                    } else if (policyWithScopeName.contains(".Config_PM_")) {
                         _type = "closedloop";
                         policyDataString.append("\"configPolicyType\":\"ClosedLoop_PM\",");
-                    }else{
+                    } else {
                         _type = "config";
                         policyDataString.append("\"configPolicyType\":\"Base\",");
                     }
-                }else if(policyWithScopeName.contains(".Action_")){
+                } else if (policyWithScopeName.contains(".Action_")) {
                     _type = "action";
                     policyDataString.append("\"policyType\":\"Action\",");
-                }else if(policyWithScopeName.contains(".Decision_")){
+                } else if (policyWithScopeName.contains(".Decision_")) {
                     _type = "decision";
                     policyDataString.append("\"policyType\":\"Decision\",");
                 }
 
-                if(!"decision".equals(_type)){
-                    if(configurationdataid != null){
+                if (!"decision".equals(_type)) {
+                    if (configurationdataid != null) {
                         updateConfigData(conn, configurationdataid, policyDataString);
                     }
-                    if(actionbodyid != null){
+                    if (actionbodyid != null) {
                         updateActionData(conn, actionbodyid, policyDataString);
                     }
                 }
@@ -181,72 +182,72 @@ public class ElasticSearchPolicyUpdate {
                 String _id = policyWithScopeName;
 
                 String dataString = constructPolicyData(policyData, policyDataString);
-                dataString = dataString.substring(0, dataString.length()-1);
+                dataString = dataString.substring(0, dataString.length() - 1);
                 dataString = dataString.trim().replace(System.getProperty("line.separator"), "") + "}";
                 dataString = dataString.replace("null", "\"\"");
                 dataString = dataString.replaceAll("\n", "");
 
-                try{
+                try {
                     Gson gson = new Gson();
                     gson.fromJson(dataString, Object.class);
-                }catch(Exception e){
+                } catch (Exception e) {
                     LOGGER.error(e);
                     continue;
                 }
 
-                if("config".equals(_type)){
+                if ("config".equals(_type)) {
                     listIndex.add(new Index.Builder(dataString).index("policy").type("config").id(_id).build());
-                }else if("closedloop".equals(_type)){
+                } else if ("closedloop".equals(_type)) {
                     listIndex.add(new Index.Builder(dataString).index("policy").type("closedloop").id(_id).build());
-                }else if("action".equals(_type)){
+                } else if ("action".equals(_type)) {
                     listIndex.add(new Index.Builder(dataString).index("policy").type("action").id(_id).build());
-                }else if("decision".equals(_type)){
+                } else if ("decision".equals(_type)) {
                     listIndex.add(new Index.Builder(dataString).index("policy").type("decision").id(_id).build());
                 }
             }
 
             result.close();
             bulk = new Bulk.Builder();
-            for(int i =0; i < listIndex.size(); i++){
+            for (int i = 0; i < listIndex.size(); i++) {
                 bulk.addAction(listIndex.get(i));
             }
             BulkResult searchResult = client.execute(bulk.build());
-            if(searchResult.isSucceeded()){
+            if (searchResult.isSucceeded()) {
                 LOGGER.debug("Success");
-            }else{
+            } else {
                 LOGGER.error("Failure");
             }
         } catch (Exception e) {
-            LOGGER.error("Exception Occured while performing database Operation for Elastic Search Policy Upgrade"+e);
-        }finally{
-                if(result != null){
-                    try {
-                        result.close();
-                    } catch (Exception e) {
-                        LOGGER.error("Exception Occured while closing the resultset"+e);
-                    }
+            LOGGER.error("Exception Occured while performing database Operation for Elastic Search Policy Upgrade" + e);
+        } finally {
+            if (result != null) {
+                try {
+                    result.close();
+                } catch (Exception e) {
+                    LOGGER.error("Exception Occured while closing the resultset" + e);
                 }
-                if(stmt != null){
-                    try {
-                        stmt.close();
-                    } catch (Exception e) {
-                        LOGGER.error("Exception Occured while closing the statement"+e);
-                    }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (Exception e) {
+                    LOGGER.error("Exception Occured while closing the statement" + e);
                 }
-            if(conn != null){
+            }
+            if (conn != null) {
                 try {
                     conn.close();
                 } catch (Exception e) {
-                    LOGGER.error("Exception Occured while closing the connection"+e);
+                    LOGGER.error("Exception Occured while closing the connection" + e);
                 }
             }
         }
     }
 
-    public static String constructPolicyData(Object policyContent, StringBuilder policyDataString){
+    public static String constructPolicyData(Object policyContent, StringBuilder policyDataString) {
         InputStream stream = new ByteArrayInputStream(policyContent.toString().getBytes(StandardCharsets.UTF_8));
         Object policyData = XACMLPolicyScanner.readPolicy(stream);
-        if(policyData instanceof PolicyType){
+        if (policyData instanceof PolicyType) {
             PolicyType policy = (PolicyType) policyData;
             TargetType target = policy.getTarget();
             if (target != null) {
@@ -278,19 +279,19 @@ public class ElasticSearchPolicyUpdate {
                                         String attributeId = designator.getAttributeId();
                                         // First match in the target is OnapName, so set that value.
                                         if ("ONAPName".equals(attributeId)) {
-                                            policyDataString.append("\"onapName\":\""+value+"\",");
+                                            policyDataString.append("\"onapName\":\"" + value + "\",");
                                         }
-                                        if ("RiskType".equals(attributeId)){
-                                            policyDataString.append("\"riskType\":\""+value+"\",");
+                                        if ("RiskType".equals(attributeId)) {
+                                            policyDataString.append("\"riskType\":\"" + value + "\",");
                                         }
-                                        if ("RiskLevel".equals(attributeId)){
-                                            policyDataString.append("\"riskLevel\":\""+value+"\",");
+                                        if ("RiskLevel".equals(attributeId)) {
+                                            policyDataString.append("\"riskLevel\":\"" + value + "\",");
                                         }
-                                        if ("guard".equals(attributeId)){
-                                            policyDataString.append("\"guard\":\""+value+"\",");
+                                        if ("guard".equals(attributeId)) {
+                                            policyDataString.append("\"guard\":\"" + value + "\",");
                                         }
-                                        if ("ConfigName".equals(attributeId)){
-                                            policyDataString.append("\"configName\":\""+value+"\",");
+                                        if ("ConfigName".equals(attributeId)) {
+                                            policyDataString.append("\"configName\":\"" + value + "\",");
                                         }
                                     }
                                 }
@@ -303,79 +304,82 @@ public class ElasticSearchPolicyUpdate {
         return policyDataString.toString();
     }
 
-    private static void updateConfigData(Connection conn, String configurationdataid, StringBuilder policyDataString) throws Exception {
+    private static void updateConfigData(Connection conn, String configurationdataid, StringBuilder policyDataString)
+            throws Exception {
 
-            PreparedStatement pstmt = null;
-            ResultSet configResult = null;
-            try {
-                String configEntityQuery = "Select * from ConfigurationDataEntity where configurationDataId = ?";
-                pstmt = null;
-                pstmt = conn.prepareStatement(configEntityQuery);
-                pstmt.setString(1, configurationdataid);
-                configResult = pstmt.executeQuery();
-                while(configResult.next()){
-                    String configBody = configResult.getString("configbody");
-                    String configType = configResult.getString("configtype");
-                    if(configBody!=null){
-                        configBody = configBody.replace("null", "\"\"");
-                        configBody= configBody.replace("\"", "\\\"");
-                        policyDataString.append("\"jsonBodyData\":\""+configBody+"\",\"configType\":\""+configType+"\",");
-                    }
+        PreparedStatement pstmt = null;
+        ResultSet configResult = null;
+        try {
+            String configEntityQuery = "Select * from ConfigurationDataEntity where configurationDataId = ?";
+            pstmt = null;
+            pstmt = conn.prepareStatement(configEntityQuery);
+            pstmt.setString(1, configurationdataid);
+            configResult = pstmt.executeQuery();
+            while (configResult.next()) {
+                String configBody = configResult.getString("configbody");
+                String configType = configResult.getString("configtype");
+                if (configBody != null) {
+                    configBody = configBody.replace("null", "\"\"");
+                    configBody = configBody.replace("\"", "\\\"");
+                    policyDataString
+                            .append("\"jsonBodyData\":\"" + configBody + "\",\"configType\":\"" + configType + "\",");
                 }
-            } catch(Exception e) {
-                LOGGER.error("Exception Occured while updating configData"+e);
-                throw(e);
-            } finally {
-                if(configResult != null){
-                    try {
-                        configResult.close();
-                    } catch (Exception e) {
-                        LOGGER.error("Exception Occured while closing the ResultSet"+e);
-                    }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Exception Occured while updating configData" + e);
+            throw (e);
+        } finally {
+            if (configResult != null) {
+                try {
+                    configResult.close();
+                } catch (Exception e) {
+                    LOGGER.error("Exception Occured while closing the ResultSet" + e);
                 }
-                if(pstmt != null){
-                    try {
-                        pstmt.close();
-                    } catch (Exception e) {
-                        LOGGER.error("Exception Occured while closing the PreparedStatement"+e);
-                    }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (Exception e) {
+                    LOGGER.error("Exception Occured while closing the PreparedStatement" + e);
                 }
-           }
+            }
+        }
     }
 
-    private static void updateActionData(Connection conn, String actionbodyid, StringBuilder policyDataString) throws Exception {
+    private static void updateActionData(Connection conn, String actionbodyid, StringBuilder policyDataString)
+            throws Exception {
 
-            PreparedStatement pstmt = null;
-            ResultSet actionResult = null;
-            try {
-                String actionEntityQuery = "Select * from ActionBodyEntity where actionBodyId = ?";
-                pstmt = conn.prepareStatement(actionEntityQuery);
-                pstmt.setString(1, actionbodyid);
-                actionResult = pstmt.executeQuery();
-                while(actionResult.next()){
-                    String actionBody = actionResult.getString("actionbody");
-                    actionBody = actionBody.replace("null", "\"\"");
-                    actionBody = actionBody.replace("\"", "\\\"");
-                    policyDataString.append("\"jsonBodyData\":\""+actionBody+"\",");
+        PreparedStatement pstmt = null;
+        ResultSet actionResult = null;
+        try {
+            String actionEntityQuery = "Select * from ActionBodyEntity where actionBodyId = ?";
+            pstmt = conn.prepareStatement(actionEntityQuery);
+            pstmt.setString(1, actionbodyid);
+            actionResult = pstmt.executeQuery();
+            while (actionResult.next()) {
+                String actionBody = actionResult.getString("actionbody");
+                actionBody = actionBody.replace("null", "\"\"");
+                actionBody = actionBody.replace("\"", "\\\"");
+                policyDataString.append("\"jsonBodyData\":\"" + actionBody + "\",");
+            }
+        } catch (Exception e) {
+            LOGGER.error("Exception Occured while updating actionData" + e);
+            throw (e);
+        } finally {
+            if (actionResult != null) {
+                try {
+                    actionResult.close();
+                } catch (Exception e) {
+                    LOGGER.error("Exception Occured while closing the ResultSet" + e);
                 }
-            } catch(Exception e) {
-                LOGGER.error("Exception Occured while updating actionData"+e);
-                throw(e);
-            } finally {
-                if(actionResult != null){
-                    try {
-                        actionResult.close();
-                    } catch (Exception e) {
-                        LOGGER.error("Exception Occured while closing the ResultSet"+e);
-                    }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (Exception e) {
+                    LOGGER.error("Exception Occured while closing the PreparedStatement" + e);
                 }
-                if(pstmt != null){
-                    try {
-                        pstmt.close();
-                    } catch (Exception e) {
-                        LOGGER.error("Exception Occured while closing the PreparedStatement"+e);
-                    }
-                }
-           }
+            }
+        }
     }
 }

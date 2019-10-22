@@ -1154,4 +1154,55 @@ public class PolicyRestAdapter {
     public void setUiJsonBody(String uiJsonBody) {
         this.uiJsonBody = uiJsonBody;
     }
+
+    public boolean setupUsingAttribute(String attributeId, String value) {
+        switch (attributeId) {
+            case "ONAPName":
+                this.setOnapName(value);
+                OnapName tempOnapName = new OnapName();
+                tempOnapName.setOnapName(value);
+                this.setOnapNameField(tempOnapName);
+                return true;
+            case "RiskType":
+                this.setRiskType(value);
+                return true;
+            case "RiskLevel":
+                this.setRiskLevel(value);
+                return true;
+            case "guard":
+                this.setGuard(value);
+                return true;
+            case "ConfigName":
+                this.setConfigName(value);
+                return true;
+            case "uuid":
+                this.setUuid(value);
+                return true;
+            case "location":
+                this.setLocation(value);
+                return true;
+            case "TTLDate":
+                if (!value.contains("NA")) {
+                    this.setTtlDate(PolicyRestAdapter.convertDate(value));
+                    return true;
+                }
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Function to convert date.
+     *
+     * @param dateTimeToLive input date value.
+     * @return
+     */
+    private static String convertDate(String dateTimeToLive) {
+        String formatDate = null;
+        if (dateTimeToLive.contains("-")) {
+            formatDate = dateTimeToLive.replace("-", "/");
+        }
+        return formatDate;
+    }
 }
