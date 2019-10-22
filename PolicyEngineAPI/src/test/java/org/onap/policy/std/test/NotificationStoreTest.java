@@ -25,7 +25,6 @@ package org.onap.policy.std.test;
 import org.junit.*;
 import org.onap.policy.std.NotificationStore;
 import org.onap.policy.std.StdPDPNotification;
-import static org.junit.Assert.*;
 
 /**
  * The class <code>NotificationStoreTest</code> contains tests for the class

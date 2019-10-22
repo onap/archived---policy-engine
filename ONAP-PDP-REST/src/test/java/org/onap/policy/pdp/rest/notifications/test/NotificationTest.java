@@ -23,8 +23,6 @@ package org.onap.policy.pdp.rest.notifications.test;
 
 import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import org.onap.policy.api.NotificationType;

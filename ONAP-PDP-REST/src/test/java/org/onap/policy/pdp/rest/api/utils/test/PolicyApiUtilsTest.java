@@ -28,7 +28,6 @@ import static org.junit.Assert.assertTrue;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.onap.policy.pdp.rest.api.utils.PolicyApiUtils;
 

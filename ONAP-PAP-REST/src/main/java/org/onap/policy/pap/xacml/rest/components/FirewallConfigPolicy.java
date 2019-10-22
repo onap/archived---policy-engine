@@ -693,10 +693,8 @@ public class FirewallConfigPolicy extends Policy {
                         String type = null;
                         for (int membersIndex = 0; membersIndex < membersArray.size(); membersIndex++) {
                             JsonObject membersObj = membersArray.getJsonObject(membersIndex);
-                            //String value = membersObj.get("value").toString();
                             type = membersObj.get("type").toString().replace("\"", "");
 
-                            String value = null;
                             prefixIP = getName(prefixIP, membersObj, type);
                         }
                         String prefixList = "'"+prefixIP+"'";
@@ -1065,7 +1063,6 @@ public class FirewallConfigPolicy extends Policy {
                                 JsonObject membersObj = membersArray.getJsonObject(membersIndex);
                                 type = membersObj.get("type").toString().replace("\"", "");
 
-                                String value = null;
                                 prefixIP = getName(prefixIP, membersObj, type);
                             }
 

@@ -74,9 +74,7 @@ public class MicroServiceDictionaryController {
     private static String dictionaryDBQuery = "dictionaryDBQuery";
     private LinkedHashMap<String, MSAttributeObject> classMap;
     private List<String> modelList = new ArrayList<>();
-    private static String apiflag = "apiflag";
     private static String dictionaryFields = "dictionaryFields";
-    private static String update = "update";
     private static String duplicateResponseString = "Duplicate";
     private static String microServiceModelsDictionaryDatas = "microServiceModelsDictionaryDatas";
     private static String modelName = "modelName";

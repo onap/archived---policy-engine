@@ -40,8 +40,8 @@ public class RegisterTest {
         triggers.add(trigger);
 
         register.setScheduleTriggers(triggers);
-        assertEquals(register.getScheduleTriggers(), triggers);
-        assertEquals(register.getTriggers().length, 1);
+        assertEquals(triggers, register.getScheduleTriggers());
+        assertEquals(1, register.getTriggers().length);
     }
 
     @Test(expected = NullPointerException.class)
@@ -54,7 +54,6 @@ public class RegisterTest {
     @Test(expected = NullPointerException.class)
     public void testRegisterNegativeCase2() {
         // Setup test data
-        String value = "testVal";
         Register register = new Register();
         List<Trigger> triggers = new ArrayList<Trigger>();
         register.setScheduleTriggers(triggers);

@@ -93,10 +93,6 @@ public class XACMLPAPTest {
     private static SessionFactory sessionFactory;
     private static CommonClassDao commonClassDao;
 
-    private static final String DEFAULT_DB_DRIVER = "org.h2.Driver";
-    private static final String DEFAULT_DB_USER = "sa";
-    private static final String DEFAULT_DB_PWD = "";
-
     @BeforeClass
     public static void beforeClassSetup() throws ServletException {
         sessionFactory = PolicyDBDaoTest.setupH2DbDaoImpl("xacmlpaptest");

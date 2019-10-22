@@ -22,7 +22,6 @@
 
 package org.onap.policy.std.test;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import java.util.LinkedList;
 import java.util.List;
