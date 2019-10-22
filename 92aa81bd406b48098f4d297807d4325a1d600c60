@@ -94,6 +94,23 @@
     },
     {
       "key": {
+        "uuid": "5d99178e_6f13db0e",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DictionaryHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T19:25:35Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f4115a6d_c1a22d8b",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/PAPRestConfigTest.java",
         "patchSetId": 2
@@ -111,6 +128,23 @@
         "endLine": 50,
         "endChar": 146
       },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67bd7f8d_cb7f769a",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/ActionPolicyTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T19:25:35Z",
+      "side": 1,
+      "message": "could just delete this and remove the import of @After",
       "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -232,6 +266,23 @@
     },
     {
       "key": {
+        "uuid": "1badb75b_539eb1f3",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DecisionPolicyDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T19:25:35Z",
+      "side": 1,
+      "message": "can delete this",
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a82cc6fa_000f97b2",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DescriptiveDictionaryControllerTest.java",
         "patchSetId": 2
@@ -243,6 +294,30 @@
       "writtenOn": "2019-10-22T17:55:51Z",
       "side": 1,
       "message": "And this one",
+      "range": {
+        "startLine": 21,
+        "startChar": 27,
+        "endLine": 21,
+        "endChar": 28
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d89709b8_f10b7003",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DescriptiveDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T19:25:35Z",
+      "side": 1,
+      "message": "anyone know why the \".\" is highlighted in the gerrit GUI?",
+      "parentUuid": "a82cc6fa_000f97b2",
       "range": {
         "startLine": 21,
         "startChar": 27,
@@ -341,6 +416,64 @@
         "endLine": 21,
         "endChar": 43
       },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "739de181_b458da3d",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/jpa/PolicyEntityTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T19:25:35Z",
+      "side": 1,
+      "message": "I thought I was the only one crazy enough to look through all of these :-)",
+      "parentUuid": "fbe24af8_cf4d3d42",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 43
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96cf1b5f_43b850d9",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T19:25:35Z",
+      "side": 1,
+      "message": "since this is using concatenation (which is all you can do with flexlogger :-( ), it\u0027s reasonable to leave in the isDebugEnabled() tests.  On the other hand, removing them results in less code needing coverage.",
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd5ec41b_abf62c87",
+        "filename": "PolicyEngineUtils/src/test/resources/META-INF/persistencePUtest.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T19:25:35Z",
+      "side": 1,
+      "message": "trailing spaces",
       "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
