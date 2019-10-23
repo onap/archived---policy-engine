@@ -860,6 +860,23 @@
     },
     {
       "key": {
+        "uuid": "3b49bb83_0103caf5",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/util/JPAUtilsTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-23T17:58:43Z",
+      "side": 1,
+      "message": "good catch!",
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96cf1b5f_43b850d9",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
         "patchSetId": 2
@@ -906,6 +923,30 @@
       "writtenOn": "2019-10-23T17:34:45Z",
       "side": 1,
       "message": "whoops - Jim I\u0027m disappointed you didn\u0027t catch this. :)",
+      "range": {
+        "startLine": 152,
+        "startChar": 36,
+        "endLine": 152,
+        "endChar": 67
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a889c2e_1e4a31e8",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyRolesController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-23T17:58:43Z",
+      "side": 1,
+      "message": "my bad :-D",
+      "parentUuid": "5b47934d_69f4b2a5",
       "range": {
         "startLine": 152,
         "startChar": 36,
