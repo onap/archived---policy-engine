@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c2f70e1d_af84bf13",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/DictionaryNames.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "I think the formatter did this wrong - will fix it.",
+      "parentUuid": "e88d91ef_ba54ce38",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 392
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3b1b053f_13fdbb9d",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/package-info.java",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2019-10-22T17:55:51Z",
       "side": 1,
       "message": "I don\u0027t know if you really need to change the dates for such small changes......",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e14a311e_e7b89694",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/package-info.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b1b053f_13fdbb9d",
       "range": {
         "startLine": 5,
         "startChar": 17,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "faa21276_9dcac130",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/elk/client/Pair.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e5afa96_1dffe21e",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "814a6561_0146229d",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/elk/client/PolicyElasticSearchController.java",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2019-10-22T17:55:51Z",
       "side": 1,
       "message": "I guess this case statement will flag a SONAR issue (too many cases), bit probably not worth fixing.",
+      "range": {
+        "startLine": 335,
+        "startChar": 0,
+        "endLine": 335,
+        "endChar": 27
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7376a2a3_87b48e2a",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/elk/client/PolicyElasticSearchController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Will take a look at it when I address sonar in this sub-module.",
+      "parentUuid": "814a6561_0146229d",
       "range": {
         "startLine": 335,
         "startChar": 0,
@@ -111,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "62b38390_3a31fa44",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DictionaryHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5d99178e_6f13db0e",
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f4115a6d_c1a22d8b",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/PAPRestConfigTest.java",
         "patchSetId": 2
@@ -122,6 +236,30 @@
       "writtenOn": "2019-10-22T17:55:51Z",
       "side": 1,
       "message": "\u003e 120",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 146
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9d987f14_596307ef",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/PAPRestConfigTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4115a6d_c1a22d8b",
       "range": {
         "startLine": 50,
         "startChar": 0,
@@ -151,6 +289,24 @@
     },
     {
       "key": {
+        "uuid": "15764ae2_c229bb54",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/ActionPolicyTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67bd7f8d_cb7f769a",
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ce9af01_5ab9bff9",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/FirewallConfigPolicyTest.java",
         "patchSetId": 2
@@ -162,6 +318,30 @@
       "writtenOn": "2019-10-22T17:55:51Z",
       "side": 1,
       "message": "Line length",
+      "range": {
+        "startLine": 138,
+        "startChar": 4,
+        "endLine": 152,
+        "endChar": 16
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "770dc878_39c70224",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/FirewallConfigPolicyTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ce9af01_5ab9bff9",
       "range": {
         "startLine": 138,
         "startChar": 4,
@@ -197,6 +377,30 @@
     },
     {
       "key": {
+        "uuid": "e5f8fdce_df70a5a7",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/ActionPolicyDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e3f8b7b_6054dadd",
+      "range": {
+        "startLine": 133,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 84
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad4cd8ed_f357cf8d",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/BRMSDictionaryControllerTest.java",
         "patchSetId": 2
@@ -208,6 +412,30 @@
       "writtenOn": "2019-10-22T17:55:51Z",
       "side": 1,
       "message": "Here",
+      "range": {
+        "startLine": 176,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 123
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a72c76f0_1c25cd19",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/BRMSDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "This one is easy to fix.",
+      "parentUuid": "ad4cd8ed_f357cf8d",
       "range": {
         "startLine": 176,
         "startChar": 0,
@@ -243,6 +471,30 @@
     },
     {
       "key": {
+        "uuid": "3ab33ce2_ce7cb516",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/BRMSDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "134fbe4a_a72b7e6a",
+      "range": {
+        "startLine": 246,
+        "startChar": 0,
+        "endLine": 246,
+        "endChar": 123
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5b0a5b8_f55dbd50",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/ClosedLoopDictionaryControllerTest.java",
         "patchSetId": 2
@@ -266,6 +518,30 @@
     },
     {
       "key": {
+        "uuid": "62f48911_a57e02f0",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/ClosedLoopDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Yuck - too many. Deferring to coverage fun.",
+      "parentUuid": "d5b0a5b8_f55dbd50",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 50
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1badb75b_539eb1f3",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DecisionPolicyDictionaryControllerTest.java",
         "patchSetId": 2
@@ -277,6 +553,24 @@
       "writtenOn": "2019-10-22T19:25:35Z",
       "side": 1,
       "message": "can delete this",
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d22af552_b734fc68",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DecisionPolicyDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1badb75b_539eb1f3",
       "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -330,6 +624,30 @@
     },
     {
       "key": {
+        "uuid": "dae83a08_51240d9e",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DescriptiveDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "No idea. Weird.\n\nDone.",
+      "parentUuid": "d89709b8_f10b7003",
+      "range": {
+        "startLine": 21,
+        "startChar": 27,
+        "endLine": 21,
+        "endChar": 28
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01457bc0_2edc9b8f",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DictionaryControllerTest.java",
         "patchSetId": 2
@@ -341,6 +659,30 @@
       "writtenOn": "2019-10-22T17:55:51Z",
       "side": 1,
       "message": "Here too",
+      "range": {
+        "startLine": 143,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 373
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a994157_c945de42",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01457bc0_2edc9b8f",
       "range": {
         "startLine": 143,
         "startChar": 0,
@@ -376,6 +718,30 @@
     },
     {
       "key": {
+        "uuid": "d16c3076_c69b4336",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/FirewallDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "246e50c0_9aeb157b",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 50
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "34602093_4771d7dd",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/PolicyScopeDictionaryControllerTest.java",
         "patchSetId": 2
@@ -387,6 +753,30 @@
       "writtenOn": "2019-10-22T17:55:51Z",
       "side": 1,
       "message": "Long lines in this class too.",
+      "range": {
+        "startLine": 21,
+        "startChar": 23,
+        "endLine": 21,
+        "endChar": 24
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45c5d654_83508a8e",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/PolicyScopeDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34602093_4771d7dd",
       "range": {
         "startLine": 21,
         "startChar": 23,
@@ -446,6 +836,30 @@
     },
     {
       "key": {
+        "uuid": "7d8f12f9_3482d81c",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/jpa/PolicyEntityTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "739de181_b458da3d",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 43
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96cf1b5f_43b850d9",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
         "patchSetId": 2
@@ -463,6 +877,47 @@
     },
     {
       "key": {
+        "uuid": "d02e24b4_6dd46e11",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96cf1b5f_43b850d9",
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b47934d_69f4b2a5",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyRolesController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "whoops - Jim I\u0027m disappointed you didn\u0027t catch this. :)",
+      "range": {
+        "startLine": 152,
+        "startChar": 36,
+        "endLine": 152,
+        "endChar": 67
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bd5ec41b_abf62c87",
         "filename": "PolicyEngineUtils/src/test/resources/META-INF/persistencePUtest.xml",
         "patchSetId": 2
@@ -474,6 +929,24 @@
       "writtenOn": "2019-10-22T19:25:35Z",
       "side": 1,
       "message": "trailing spaces",
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2910cc90_87a655b2",
+        "filename": "PolicyEngineUtils/src/test/resources/META-INF/persistencePUtest.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-23T17:34:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd5ec41b_abf62c87",
       "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
