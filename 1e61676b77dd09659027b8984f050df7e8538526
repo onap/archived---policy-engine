@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa5b639d_7708216e",
+        "filename": "PolicyEngineUtils/src/test/resources/META-INF/persistencePUtest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-23T17:58:43Z",
+      "side": 1,
+      "message": "still have trailing spaces :-)",
+      "revId": "1e61676b77dd09659027b8984f050df7e8538526",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
