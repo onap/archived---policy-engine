@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb38e2ae_38ce995a",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/CSS/bootstrap/dist/js/bootstrap-modalmanager.min.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-23T18:45:05Z",
+      "side": 1,
+      "message": "replace tabs with spaces",
+      "revId": "a440ffe49db162241e7c4ff9fff4cf04b7472c18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
