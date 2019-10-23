@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c250f53_967c2f6a",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/MicroServicePolicyTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-23T15:58:00Z",
+      "side": 0,
+      "message": "I guess we have a trade-off here: less code is ACTUALLY tested, but the coverage looks better since we\u0027ve eliminated powermock.\n\nIt would be easy enough to add some protected methods to wrap the two \"new\" calls that we wish to mock.  Then those methods could be overridden here to return the mock objects.  This would give us the code coverage AND actually test the code.",
+      "revId": "3c4b4fcb076e90f2d2a2582d27f316e60dba6ac3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
