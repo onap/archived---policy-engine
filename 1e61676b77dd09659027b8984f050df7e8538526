@@ -34,6 +34,24 @@
       "revId": "1e61676b77dd09659027b8984f050df7e8538526",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c9624936_ff9ca726",
+        "filename": "PolicyEngineUtils/src/test/resources/META-INF/persistencePUtest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-24T13:15:50Z",
+      "side": 1,
+      "message": "The Eclipse feature to set a close action on Java files to always clear white space is handy. Its a pity it doesn\u0027t work on all file types.",
+      "parentUuid": "63ec5a51_dbe44e0f",
+      "revId": "1e61676b77dd09659027b8984f050df7e8538526",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
