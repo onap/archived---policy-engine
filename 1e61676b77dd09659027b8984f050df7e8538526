@@ -16,6 +16,24 @@
       "revId": "1e61676b77dd09659027b8984f050df7e8538526",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63ec5a51_dbe44e0f",
+        "filename": "PolicyEngineUtils/src/test/resources/META-INF/persistencePUtest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-24T12:07:58Z",
+      "side": 1,
+      "message": "They might be in a few more places also. The formatter doesn\u0027t seem to have a field for removing comment trailing spaces. I\u0027ll go back and fix that when I have a chance.",
+      "parentUuid": "aa5b639d_7708216e",
+      "revId": "1e61676b77dd09659027b8984f050df7e8538526",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
