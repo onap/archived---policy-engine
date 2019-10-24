@@ -542,6 +542,30 @@
     },
     {
       "key": {
+        "uuid": "13aa26c2_f678fd59",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/ClosedLoopDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-24T13:15:50Z",
+      "side": 1,
+      "message": ":-)",
+      "parentUuid": "62f48911_a57e02f0",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 50
+      },
+      "revId": "92aa81bd406b48098f4d297807d4325a1d600c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1badb75b_539eb1f3",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DecisionPolicyDictionaryControllerTest.java",
         "patchSetId": 2
