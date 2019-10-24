@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d2b132b8_9327cd1e",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/main/policyEditor.html",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-24T13:28:29Z",
+      "side": 0,
+      "message": "This at least has a license in it - which is why LF hasn\u0027t reported a problem with the file.",
+      "range": {
+        "startLine": 27,
+        "startChar": 33,
+        "endLine": 27,
+        "endChar": 115
+      },
+      "revId": "18998fee10abecb2ff1b2cdc3b99a3115d7de77c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
