@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6c23c9f3_eabec808",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/CSS/bootstrap/dist/js/bootstrap-modalmanager.min.js",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-24T12:12:43Z",
+      "side": 1,
+      "message": "Why no license? Is this something you developed yourself or was it copied from somewhere on the web?",
+      "revId": "53053dc95588e6ddf17d861173f0f6b2c9a6dc4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
