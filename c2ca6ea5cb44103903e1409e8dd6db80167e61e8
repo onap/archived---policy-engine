@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e42d4e2_19d1db00",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/XACMLPdpLoader.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-25T14:48:59Z",
+      "side": 1,
+      "message": "tabs again",
+      "revId": "c2ca6ea5cb44103903e1409e8dd6db80167e61e8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "560f1c8a_cf3f5f52",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/notifications/NotificationServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-25T14:48:59Z",
+      "side": 1,
+      "message": "Didn\u0027t seem to catch the tabs in this file.",
+      "revId": "c2ca6ea5cb44103903e1409e8dd6db80167e61e8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
