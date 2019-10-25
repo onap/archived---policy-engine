@@ -58,7 +58,7 @@ app.controller('editCLSiteController',  function ($scope, $modalInstance, messag
     				}   
     			},
     			error : function(data){
-    				alert("Error while saving.");
+    				Notification.error("Error while saving.");
     			}
     		});
     	} 

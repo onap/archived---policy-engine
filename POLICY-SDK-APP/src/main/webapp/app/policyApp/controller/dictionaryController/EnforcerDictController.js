@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-var editEnforcerTypeController =  function ($scope, $modalInstance, message, UserInfoServiceDS2){
+var editEnforcerTypeController =  function ($scope, $modalInstance, message, UserInfoServiceDS2, Notification){
     if(message.enforcerDictionaryData==null)
         $scope.label='Add Enforcing Type'
     else{
@@ -49,7 +49,7 @@ var editEnforcerTypeController =  function ($scope, $modalInstance, message, Use
                 $modalInstance.close({enforcerDictionaryDatas:$scope.enforcerDictionaryDatas});
             },
             error : function(data){
-                alert("Error while saving.");
+            	Notification.error("Error while saving.");
             }
         });
     };

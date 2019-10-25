@@ -59,7 +59,7 @@ app.controller("policyAdminController", function($scope, PolicyAppService, modal
 					console.log($scope.data);
 				},
 				error : function(data){
-					alert("Error Occured while saving Lockdown Value.");
+					Notification.error("Error Occured while saving Lockdown Value.");
 				}
 			});
 	    };

@@ -59,7 +59,7 @@ app.controller('editFWPortListController' , function ($scope, $modalInstance, me
     				}
     			},
     			error : function(data){
-    				alert("Error while saving.");
+    				Notification.error("Error while saving.");
     			}
     		});
     	}

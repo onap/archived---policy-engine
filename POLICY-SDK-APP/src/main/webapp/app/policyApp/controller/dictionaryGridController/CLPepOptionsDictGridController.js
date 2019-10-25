@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-app.controller('pepOptionsDictGridController', function ($scope, PolicyAppService, modalService, $modal){
+app.controller('pepOptionsDictGridController', function ($scope, PolicyAppService, modalService, $modal, Notification){
 	$( "#dialog" ).hide();
 
 
@@ -189,7 +189,7 @@ app.controller('pepOptionsDictGridController', function ($scope, PolicyAppServic
 					})}
 			},
 			error : function(data){
-				alert("Error while Searching.");
+				Notification.error("Error while Searching.");
 			}
 		});
 	};

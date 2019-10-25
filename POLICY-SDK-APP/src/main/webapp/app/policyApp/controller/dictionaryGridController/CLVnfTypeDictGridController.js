@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-app.controller('vnfTypeDictGridController', function ($scope, PolicyAppService, modalService, $modal){
+app.controller('vnfTypeDictGridController', function ($scope, PolicyAppService, modalService, $modal, Notification){
     $( "#dialog" ).hide();
     
     PolicyAppService.getData('getDictionary/get_VNFTypeData').then(function (data) {
@@ -187,7 +187,7 @@ app.controller('vnfTypeDictGridController', function ($scope, PolicyAppService, 
     				})}
     		},
     		error : function(data){
-    			alert("Error while Searching.");
+    			Notification.error("Error while Searching.");
     		}
     	});
     };

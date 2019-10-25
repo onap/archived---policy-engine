@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-app.controller('onapNameDictGridController', function ($scope, PolicyAppService, modalService, $modal, uiGridConstants,Grid){
+app.controller('onapNameDictGridController', function ($scope, PolicyAppService, modalService, $modal, uiGridConstants,Grid, Notification){
     $( "#dialog" ).hide();
     
     PolicyAppService.getData('getDictionary/get_OnapNameData').then(function (data) {
@@ -189,7 +189,7 @@ app.controller('onapNameDictGridController', function ($scope, PolicyAppService,
     				})}
     		},
     		error : function(data){
-    			alert("Error while Searching.");
+    			Notification.error("Error while Searching.");
     		}
     	});	
     };

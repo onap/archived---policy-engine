@@ -86,7 +86,7 @@ app.controller('editDescriptiveScopeController' , function ($scope, $modalInstan
 
     			},
     			error : function(data){
-    				alert("Error while saving.");
+    				Notification.error("Error while saving.");
     			}
     		});
     	}

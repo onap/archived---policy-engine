@@ -60,7 +60,7 @@ app.controller('editFWPrefixListController' ,  function ($scope, $modalInstance,
     					}
     				},
     				error : function(data){
-    					alert("Error while saving.");
+    					Notification.error("Error while saving.");
     				}
     			});
     		}else{
