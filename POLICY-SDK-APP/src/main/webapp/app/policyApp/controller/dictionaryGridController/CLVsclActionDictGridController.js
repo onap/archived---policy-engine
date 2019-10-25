@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-app.controller('vsclActionDictGridController', function ($scope, PolicyAppService, modalService, $modal){
+app.controller('vsclActionDictGridController', function ($scope, PolicyAppService, modalService, $modal, Notification){
     $( "#dialog" ).hide();
     
     PolicyAppService.getData('getDictionary/get_VSCLActionData').then(function (data) {
@@ -188,7 +188,7 @@ app.controller('vsclActionDictGridController', function ($scope, PolicyAppServic
     				})}
     		},
     		error : function(data){
-    			alert("Error while Searching.");
+    			Notification.error("Error while Searching.");
     		}
     	});
     };

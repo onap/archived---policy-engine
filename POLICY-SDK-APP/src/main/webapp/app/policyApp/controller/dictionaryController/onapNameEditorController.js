@@ -58,7 +58,7 @@ app.controller('editOnapNameController' ,  function ($scope, $modalInstance, mes
 					}
 				},
 				error : function(data){
-					alert("Error while saving.");
+					Notification.error("Error while saving.");
 				}
 			});
 		}

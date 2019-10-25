@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-app.controller('siteDictGridController', function ($scope, PolicyAppService, modalService, $modal){
+app.controller('siteDictGridController', function ($scope, PolicyAppService, modalService, $modal, Notification){
 	$( "#dialog" ).hide();
 
 	PolicyAppService.getData('getDictionary/get_ClosedLoopSiteData').then(function (data) {
@@ -187,7 +187,7 @@ app.controller('siteDictGridController', function ($scope, PolicyAppService, mod
 					})}
 			},
 			error : function(data){
-				alert("Error while Searching.");
+				Notification.error("Error while Searching.");
 			}
 		});
 	};

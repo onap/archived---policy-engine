@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-app.controller('brmsParamDictGridController', function ($scope, PolicyAppService,modalService, $modal){
+app.controller('brmsParamDictGridController', function ($scope, PolicyAppService,modalService, $modal, Notification){
 	$( "#dialog" ).hide();
 
 	PolicyAppService.getData('getDictionary/get_BRMSParamData').then(function (data) {
@@ -164,7 +164,7 @@ app.controller('brmsParamDictGridController', function ($scope, PolicyAppService
 					})}
 			},
 			error : function(data){
-				alert("Error while Searching.");
+				Notification.error("Error while Searching.");
 			}
 		});
 	};

@@ -58,7 +58,7 @@ app.controller('editMSLocationController' ,  function ($scope, $modalInstance, m
     				}
     			},
     			error : function(data){
-    				alert("Error while saving.");
+    				Notification.error("Error while saving.");
     			}
     		});
     	}

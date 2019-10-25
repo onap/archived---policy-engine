@@ -66,7 +66,7 @@ app.controller('editBRMSControllerController' ,  function ($scope, $modalInstanc
 							}
 						},
 						error : function(data){
-							alert("Error while saving.");
+							Notification.error("Error while saving.");
 						}
 					});
 				}else{

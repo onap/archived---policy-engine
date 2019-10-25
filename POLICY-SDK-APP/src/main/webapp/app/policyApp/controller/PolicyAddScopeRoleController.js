@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-app.controller('editRoleController' ,  function ($scope, PolicyAppService, $modalInstance, message){
+app.controller('editRoleController' ,  function ($scope, PolicyAppService, $modalInstance, message, Notification){
     if (message.editRoleData != null) {
         $scope.label='Edit Role'
         $scope.disableCd=true;
@@ -67,7 +67,7 @@ app.controller('editRoleController' ,  function ($scope, PolicyAppService, $moda
                 $modalInstance.close({rolesDatas:$scope.rolesDatas});
             },
             error : function(data){
-                alert("Error while saving Role.");
+            	Notification.error("Error while saving Role.");
             }
         });
     };
@@ -90,7 +90,7 @@ app.controller('editRoleController' ,  function ($scope, PolicyAppService, $moda
                 $modalInstance.close({rolesDatas:$scope.rolesDatas});
             },
             error : function(data) {
-                alert("Error while Creating Mechid scopes.");
+            	Notification.error("Error while Creating Mechid scopes.");
             }
         });
     };

@@ -59,7 +59,7 @@ app.controller('editFWActionListController' ,  function ($scope, $modalInstance,
     				}
     			},
     			error : function(data){
-    				alert("Error while saving.");
+    				Notification.error("Error while saving.");
     			}
     		});
     	}
