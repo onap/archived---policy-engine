@@ -343,7 +343,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 					 });
 				 },
 				 error : function(data){
-					 alert("Error While Retriving the Template Layout Pattren.");
+					 Notification.error("Error While Retriving the Template Layout Pattren.");
 				 }
 			 });		 
 		 }
@@ -589,7 +589,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                     
                 },
                 error : function(data){
-                    alert("Error While Retriving the Template Layout Pattren.");
+            	    Notification.error("Error While Retriving the Template Layout Pattren.");
                 }
             });
 

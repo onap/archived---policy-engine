@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-app.controller('attributeDictGridController', function ($scope, PolicyAppService, modalService, $modal){
+app.controller('attributeDictGridController', function ($scope, PolicyAppService, modalService, $modal, Notification){
 	$( "#dialog" ).hide();
 
 	PolicyAppService.getData('getDictionary/get_AttributeData').then(function (data) {
@@ -198,7 +198,7 @@ app.controller('attributeDictGridController', function ($scope, PolicyAppService
 					})}
 			},
 			error : function(data){
-				alert("Error while Searching.");
+				Notification.error("Error while Searching.");
 			}
 		});
 	};

@@ -117,7 +117,7 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
                      console.log( $scope.temp.policy.dynamicLayoutMap);
                  },
                  error : function(data){
-                     alert("Error While Retriving the Template Layout Pattren.");
+            	     Notification.error("Error While Retriving the Template Layout Pattren.");
                  }
              });
         }   
