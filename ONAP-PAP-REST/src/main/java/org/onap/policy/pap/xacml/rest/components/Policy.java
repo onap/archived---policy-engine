@@ -8,9 +8,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,7 +48,7 @@ import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
 
@@ -144,7 +144,7 @@ public abstract class Policy {
     /**
      * Return the data field of the PolicyAdapter that will be used when saving this policy with the savePolicies
      * method.
-     * 
+     *
      * @return Either the PolicyAdapter.getData() or PolicyAdapter.getPolicyData()
      */
     public abstract Object getCorrectPolicyDataObject();
@@ -327,12 +327,12 @@ public abstract class Policy {
 
     private static void loadWebapps() throws PAPException {
         if (actionHome == null || configHome == null) {
-            Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS));
+            Path webappsPath = Paths.get(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_WEBAPPS));
             // Sanity Check
             if (webappsPath == null) {
-                PolicyLogger.error("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
+                PolicyLogger.error("Invalid Webapps Path Location property : " + XacmlRestProperties.PROP_PAP_WEBAPPS);
                 throw new PAPException(
-                        "Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
+                        "Invalid Webapps Path Location property : " + XacmlRestProperties.PROP_PAP_WEBAPPS);
             }
             Path webappsPathConfig;
             Path webappsPathAction;

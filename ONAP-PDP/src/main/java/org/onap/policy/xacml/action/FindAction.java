@@ -60,7 +60,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 
 @SuppressWarnings("deprecation")
 public class FindAction {
@@ -159,7 +159,7 @@ public class FindAction {
                                     attribute.getAttributeValue().getValue().toString());
                             afterRemoveAssignments.add(attribute);
                         } else if (attribute.getAttributeId().stringValue().equalsIgnoreCase("body")) {
-                            String papPath = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
+                            String papPath = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_URL);
                             papPath = papPath.replace("/pap", "");
                             matchValues.put("body",
                                     attribute.getAttributeValue().getValue().toString().replace("$URL", papPath));

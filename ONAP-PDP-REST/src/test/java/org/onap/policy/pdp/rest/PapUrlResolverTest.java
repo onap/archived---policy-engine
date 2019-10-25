@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.Properties;
 import org.junit.Assert;
 import org.junit.Test;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 
 public class PapUrlResolverTest {
 
@@ -41,7 +41,7 @@ public class PapUrlResolverTest {
         String failed = "-1,-1,-1,-1";
         String succeeded = "-1,-1,-1,-1";
         PapUrlResolver rs = PapUrlResolver.getInstance(urls, failed, succeeded);
-        Assert.assertEquals(rs.getProperties().getProperty(XACMLRestProperties.PROP_PAP_URLS),
+        Assert.assertEquals(rs.getProperties().getProperty(XacmlRestProperties.PROP_PAP_URLS),
                 urls);
 
         rs.failed();
@@ -51,12 +51,12 @@ public class PapUrlResolverTest {
         Assert.assertFalse(rs.hasMoreUrls());
         Properties prop = rs.getProperties();
         Assert.assertEquals(df.format(new Date()) + ",-1,-1,-1",
-                prop.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS));
+                prop.getProperty(XacmlRestProperties.PROP_PAP_FAILED_URLS));
         Assert.assertEquals("-1," + df.format(new Date()) + ",-1,-1",
-                prop.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS));
+                prop.getProperty(XacmlRestProperties.PROP_PAP_SUCCEEDED_URLS));
 
-        failed = prop.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS);
-        succeeded = prop.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS);
+        failed = prop.getProperty(XacmlRestProperties.PROP_PAP_FAILED_URLS);
+        succeeded = prop.getProperty(XacmlRestProperties.PROP_PAP_SUCCEEDED_URLS);
         rs = PapUrlResolver.getInstance(urls, failed, succeeded);
         Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://two.localhost.com", rs.getUrl());
@@ -74,10 +74,10 @@ public class PapUrlResolverTest {
         Assert.assertFalse(rs.hasMoreUrls());
         prop = rs.getProperties();
         Assert.assertEquals("-1,-1,-1,-1",
-                prop.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS));
+                prop.getProperty(XacmlRestProperties.PROP_PAP_FAILED_URLS));
 
-        failed = prop.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS);
-        succeeded = prop.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS);
+        failed = prop.getProperty(XacmlRestProperties.PROP_PAP_FAILED_URLS);
+        succeeded = prop.getProperty(XacmlRestProperties.PROP_PAP_SUCCEEDED_URLS);
         rs = PapUrlResolver.getInstance(urls, failed, succeeded);
         Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://one.localhost.com", rs.getUrl());
@@ -85,8 +85,8 @@ public class PapUrlResolverTest {
         rs.getNext();
         Assert.assertFalse(rs.hasMoreUrls());
         prop = rs.getProperties();
-        failed = prop.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS);
-        succeeded = prop.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS);
+        failed = prop.getProperty(XacmlRestProperties.PROP_PAP_FAILED_URLS);
+        succeeded = prop.getProperty(XacmlRestProperties.PROP_PAP_SUCCEEDED_URLS);
         rs = PapUrlResolver.getInstance(urls, failed, succeeded);
         Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://one.localhost.com", rs.getUrl());
@@ -94,8 +94,8 @@ public class PapUrlResolverTest {
         rs.getNext();
         Assert.assertFalse(rs.hasMoreUrls());
         prop = rs.getProperties();
-        failed = prop.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS);
-        succeeded = prop.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS);
+        failed = prop.getProperty(XacmlRestProperties.PROP_PAP_FAILED_URLS);
+        succeeded = prop.getProperty(XacmlRestProperties.PROP_PAP_SUCCEEDED_URLS);
         rs = PapUrlResolver.getInstance(urls, failed, succeeded);
         Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://one.localhost.com", rs.getUrl());
@@ -104,7 +104,7 @@ public class PapUrlResolverTest {
         Assert.assertFalse(rs.hasMoreUrls());
 
         prop = rs.getProperties();
-        succeeded = prop.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS);
+        succeeded = prop.getProperty(XacmlRestProperties.PROP_PAP_SUCCEEDED_URLS);
     }
 
     @SuppressWarnings("unused")

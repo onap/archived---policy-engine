@@ -76,8 +76,8 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.components.HumanPolicyComponent;
 import org.onap.policy.controller.PolicyController;
 import org.onap.policy.controller.PolicyExportAndImportController;
-import org.onap.policy.rest.XACMLRest;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRest;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
@@ -192,9 +192,9 @@ public class PolicyManagerServlet extends HttpServlet {
         //
         // Common initialization
         //
-        XACMLRest.xacmlInit(servletConfig);
+        XacmlRest.xacmlInit(servletConfig);
         // init aes key from prop or env
-        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY));
+        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XacmlRestProperties.PROP_AES_KEY));
         //
         // Initialize ClosedLoop JSON
         //
@@ -202,7 +202,7 @@ public class PolicyManagerServlet extends HttpServlet {
     }
 
     private static void initializeJsonLoad() {
-        Path closedLoopJsonLocation = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_ADMIN_CLOSEDLOOP));
+        Path closedLoopJsonLocation = Paths.get(XACMLProperties.getProperty(XacmlRestProperties.PROP_ADMIN_CLOSEDLOOP));
         String location = closedLoopJsonLocation.toString();
         if (!location.endsWith("json")) {
             LOGGER.warn("JSONConfig file does not end with extension .json");

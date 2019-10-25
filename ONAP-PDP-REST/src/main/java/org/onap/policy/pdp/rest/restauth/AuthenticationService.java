@@ -42,7 +42,7 @@ import org.onap.policy.api.PolicyEngineException;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.utils.AAFPolicyClient;
 import org.onap.policy.utils.AAFPolicyException;
 import org.onap.policy.utils.PeCryptoUtils;
@@ -66,7 +66,7 @@ public class AuthenticationService {
      */
     private static void setProperty() {
         environment = XACMLProperties.getProperty("ENVIRONMENT", "DEVL");
-        String clientFile = XACMLProperties.getProperty(XACMLRestProperties.PROP_PEP_IDFILE);
+        String clientFile = XACMLProperties.getProperty(XacmlRestProperties.PROP_PEP_IDFILE);
         if (clientFile != null) {
             clientPath = Paths.get(clientFile);
         }

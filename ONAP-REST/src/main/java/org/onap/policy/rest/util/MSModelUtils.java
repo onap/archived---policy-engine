@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +64,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.json.JSONObject;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.DictionaryData;
 import org.yaml.snakeyaml.Yaml;
@@ -409,7 +410,7 @@ public class MSModelUtils {
     }
 
     public String checkRequiredPattern(int upper, int lower) {
-        String pattern = XACMLProperties.getProperty(XACMLRestProperties.PROP_XCORE_REQUIRED_PATTERN);
+        String pattern = XACMLProperties.getProperty(XacmlRestProperties.PROP_XCORE_REQUIRED_PATTERN);
         if (pattern != null && upper == Integer.parseInt(pattern.split(",")[1])
                 && lower == Integer.parseInt(pattern.split(",")[0])) {
             return REQUIREDTRUE;

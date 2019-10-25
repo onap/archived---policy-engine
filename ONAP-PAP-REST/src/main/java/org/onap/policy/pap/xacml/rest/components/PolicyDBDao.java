@@ -51,7 +51,7 @@ import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.PolicyDBException;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
@@ -218,9 +218,9 @@ public class PolicyDBDao {
     public PolicyDBDaoTransaction getNewAuditTransaction() {
         logger.debug("getNewAuditTransaction() as getNewAuditTransaction() called");
         // Use the standard transaction wait time in ms
-        int auditWaitMs = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT));
+        int auditWaitMs = Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_TRANS_WAIT));
         // Use the (extended) audit timeout time in ms
-        int auditTimeoutMs = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_TIMEOUT));
+        int auditTimeoutMs = Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_AUDIT_TIMEOUT));
         return new PolicyDbDaoTransactionInstance(auditTimeoutMs, auditWaitMs);
     }
 
@@ -249,7 +249,7 @@ public class PolicyDBDao {
      */
     public String[] getPapUrlUserPass() {
         logger.debug("getPapUrl() as getPapUrl() called");
-        String url = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
+        String url = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_URL);
         if (url == null) {
             return null;
         }
@@ -265,14 +265,14 @@ public class PolicyDBDao {
             urlUserPass[2] = commaSplit[2];
         }
         if (urlUserPass[1] == null || "".equals(urlUserPass[1])) {
-            String usernamePropertyValue = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
+            String usernamePropertyValue = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_USERID);
             if (usernamePropertyValue != null) {
                 urlUserPass[1] = usernamePropertyValue;
             }
         }
         if (urlUserPass[2] == null || "".equals(urlUserPass[2])) {
             String passwordPropertyValue =
-                    PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
+                    PeCryptoUtils.decrypt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_PASS));
             if (passwordPropertyValue != null) {
                 urlUserPass[2] = passwordPropertyValue;
             }
@@ -552,7 +552,7 @@ public class PolicyDBDao {
             final Criteria configDataQuery = session.createCriteria(cl.getName());
             @SuppressWarnings("unchecked")
             final List<T> configDataResult = configDataQuery.list();
-            Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS), type);
+            Path webappsPath = Paths.get(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_WEBAPPS), type);
 
             for (final T configData : configDataResult) {
                 String configName = null;

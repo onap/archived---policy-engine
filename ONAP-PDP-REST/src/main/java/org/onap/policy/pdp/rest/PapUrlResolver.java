@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,7 +31,7 @@ import java.util.Objects;
 import java.util.Properties;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.utils.PeCryptoUtils;
 
 public class PapUrlResolver {
@@ -96,12 +96,12 @@ public class PapUrlResolver {
         String papUrlFailedList = failedList;
         String papUrlSuccessList = succeededList;
         if (papUrlLists == null) {
-            papUrlLists = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URLS);
+            papUrlLists = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_URLS);
             if (papUrlLists == null) {
-                papUrlLists = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
+                papUrlLists = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_URL);
             }
-            papUrlFailedList = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS);
-            papUrlSuccessList = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS);
+            papUrlFailedList = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_FAILED_URLS);
+            papUrlSuccessList = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_SUCCEEDED_URLS);
         }
 
         String[] urls = papUrlLists.split(",");
@@ -116,12 +116,12 @@ public class PapUrlResolver {
 
             String userId = null;
             String pass = null;
-            userId = XACMLProperties.getProperty(urls[i] + "." + XACMLRestProperties.PROP_PAP_USERID);
+            userId = XACMLProperties.getProperty(urls[i] + "." + XacmlRestProperties.PROP_PAP_USERID);
             pass = XACMLProperties.getProperty(urls[i] + "."
-                    + PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)));
+                    + PeCryptoUtils.decrypt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_PASS)));
             if (userId == null || pass == null) {
-                userId = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-                pass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
+                userId = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_USERID);
+                pass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_PASS));
             }
             if (userId == null || pass == null) {
                 userId = "";
@@ -216,9 +216,9 @@ public class PapUrlResolver {
         failedPropertyString = failedPropertyString.substring(1);
         succeededPropertyString = succeededPropertyString.substring(1);
         urlPropertyString = urlPropertyString.substring(1);
-        prop.setProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS, failedPropertyString);
-        prop.setProperty(XACMLRestProperties.PROP_PAP_URLS, urlPropertyString);
-        prop.setProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS, succeededPropertyString);
+        prop.setProperty(XacmlRestProperties.PROP_PAP_FAILED_URLS, failedPropertyString);
+        prop.setProperty(XacmlRestProperties.PROP_PAP_URLS, urlPropertyString);
+        prop.setProperty(XacmlRestProperties.PROP_PAP_SUCCEEDED_URLS, succeededPropertyString);
         return prop;
     }
 
@@ -229,12 +229,12 @@ public class PapUrlResolver {
         }
         Properties prop = getProperties();
 
-        LOGGER.debug("Failed PAP Url List: " + prop.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS));
-        LOGGER.debug("Succeeded PAP Url List: " + prop.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS));
-        XACMLProperties.setProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS,
-                prop.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS));
-        XACMLProperties.setProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS,
-                prop.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS));
+        LOGGER.debug("Failed PAP Url List: " + prop.getProperty(XacmlRestProperties.PROP_PAP_FAILED_URLS));
+        LOGGER.debug("Succeeded PAP Url List: " + prop.getProperty(XacmlRestProperties.PROP_PAP_SUCCEEDED_URLS));
+        XACMLProperties.setProperty(XacmlRestProperties.PROP_PAP_FAILED_URLS,
+                prop.getProperty(XacmlRestProperties.PROP_PAP_FAILED_URLS));
+        XACMLProperties.setProperty(XacmlRestProperties.PROP_PAP_SUCCEEDED_URLS,
+                prop.getProperty(XacmlRestProperties.PROP_PAP_SUCCEEDED_URLS));
     }
 
     // iterates to the next available PAP url, according to the priority order
@@ -333,7 +333,7 @@ public class PapUrlResolver {
         // property)
         private Date setHandler(Object time) {
             if (time instanceof String) {
-                if ("-1".equals((String) time)) {
+                if ("-1".equals(time)) {
                     return null;
                 }
                 try {

@@ -47,7 +47,7 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.dao.PolicyDBException;
 import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
@@ -92,7 +92,7 @@ public class HandleIncomingNotifications {
         int retries;
         try {
             retries = Integer
-                    .parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_INCOMINGNOTIFICATION_TRIES));
+                    .parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_INCOMINGNOTIFICATION_TRIES));
         } catch (Exception e) {
             logger.error("xacml.rest.pap.incomingnotification.tries property not set, using a default of 3." + e);
             retries = 3;
@@ -546,7 +546,7 @@ public class HandleIncomingNotifications {
             subTypeName = policy.getActionBodyEntity().getActionBodyName();
             subTypeBody = policy.getActionBodyEntity().getActionBody();
         }
-        Path filePath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS).toString(), type);
+        Path filePath = Paths.get(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_WEBAPPS).toString(), type);
 
         if (subTypeBody == null) {
             subTypeBody = "";
@@ -573,7 +573,7 @@ public class HandleIncomingNotifications {
     Path getPolicySubFile(String inputFileName, String subFileType) {
         String filename = inputFileName;
         logger.info("getPolicySubFile(" + filename + ", " + subFileType + ")");
-        Path filePath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS), subFileType);
+        Path filePath = Paths.get(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_WEBAPPS), subFileType);
         File file = null;
 
         filename = FilenameUtils.removeExtension(filename);

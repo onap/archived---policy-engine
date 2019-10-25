@@ -69,7 +69,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.MicroserviceHeaderdeFaults;
@@ -850,7 +850,7 @@ public class CreateOptimizationController extends RestrictedBaseController {
 
     private OptimizationObject setOptimizationObjectValues(PolicyRestAdapter policyAdapter) {
         OptimizationObject optimizationObject = new OptimizationObject();
-        optimizationObject.setTemplateVersion(XACMLProperties.getProperty(XACMLRestProperties.TemplateVersion_OOF));
+        optimizationObject.setTemplateVersion(XACMLProperties.getProperty(XacmlRestProperties.TEMPLATE_VERSION_OOF));
 
         if (policyAdapter.getServiceType() != null) {
             optimizationObject.setService(policyAdapter.getServiceType());

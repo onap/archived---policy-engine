@@ -35,7 +35,7 @@ import java.util.UUID;
 
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
 import org.onap.policy.utils.PeCryptoUtils;
 
@@ -185,7 +185,7 @@ public class NotifyOtherPaps {
             int readTimeout;
             try {
                 readTimeout =
-                        Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_NOTIFY_TIMEOUT));
+                        Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_NOTIFY_TIMEOUT));
             } catch (Exception e) {
                 LOGGER.error("xacml.rest.pap.notify.timeoutms property not set, using a default.", e);
                 readTimeout = 10000;

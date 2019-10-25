@@ -42,7 +42,7 @@ import java.util.Properties;
 
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
@@ -101,7 +101,7 @@ public class CheckPdpProperties {
     private static void readFile() {
         String pdpFile;
         try {
-            pdpFile = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_IDFILE);
+            pdpFile = XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_IDFILE);
         } catch (Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot read the PDP ID File" + e);
             return;

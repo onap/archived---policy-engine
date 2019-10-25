@@ -39,7 +39,7 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.restAuth.CheckPDP;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
@@ -88,9 +88,9 @@ public class Heartbeat implements Runnable {
     public Heartbeat(PAPPolicyEngine papEngine2) {
         papEngine = papEngine2;
         this.heartbeatInterval =
-                Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_HEARTBEAT_INTERVAL, "10000"));
+                Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_HEARTBEAT_INTERVAL, "10000"));
         this.heartbeatTimeout =
-                Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_HEARTBEAT_TIMEOUT, "10000"));
+                Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_HEARTBEAT_TIMEOUT, "10000"));
     }
 
     @Override
@@ -189,7 +189,7 @@ public class Heartbeat implements Runnable {
                 // Do the connect
                 connection.connect();
                 if (connection.getResponseCode() == 204) {
-                    newStatus = connection.getHeaderField(XACMLRestProperties.PROP_PDP_HTTP_HEADER_HB);
+                    newStatus = connection.getHeaderField(XacmlRestProperties.PROP_PDP_HTTP_HEADER_HB);
                     if (LOGGER.isDebugEnabled()) {
                         LOGGER.debug("Heartbeat '" + pdp.getId() + "' status='" + newStatus + "'");
                     }

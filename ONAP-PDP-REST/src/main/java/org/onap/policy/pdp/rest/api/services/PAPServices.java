@@ -41,7 +41,7 @@ import org.onap.policy.api.PolicyException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.restauth.AuthenticationService;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
@@ -67,9 +67,9 @@ public class PAPServices {
         environment = AuthenticationService.getEnvironment();
         if (paps == null) {
             synchronized (papResourceLock) {
-                String urlList = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URLS);
+                String urlList = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_URLS);
                 if (urlList == null) {
-                    urlList = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
+                    urlList = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_URL);
                 }
                 paps = Arrays.asList(urlList.split(","));
             }
@@ -78,8 +78,8 @@ public class PAPServices {
 
     private String getPAPEncoding() {
         if (encoding == null) {
-            String userID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-            String pass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
+            String userID = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_USERID);
+            String pass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_PASS));
             Base64.Encoder encoder = Base64.getEncoder();
             encoding = encoder.encodeToString((userID + ":" + pass).getBytes(StandardCharsets.UTF_8));
         }

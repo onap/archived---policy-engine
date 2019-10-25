@@ -58,8 +58,8 @@ import org.onap.policy.common.logging.OnapLoggingUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.pdp.rest.jmx.PdpRestMonitor;
-import org.onap.policy.rest.XACMLRest;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRest;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.pdp.std.functions.PolicyList;
@@ -205,7 +205,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
         //
         // Initialize
         //
-        XACMLRest.xacmlInit(config);
+        XacmlRest.xacmlInit(config);
         // Load the Notification Delay.
         setNotificationDelay();
         // Load Queue size. Not sure if we really need to have the queue bounded, we should look further into this
@@ -243,7 +243,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
                     "Error loading properties with: XACMLProperties.getProperties()");
             throw new ServletException(e.getMessage(), e.getCause());
         }
-        if (properties.getProperty(XACMLRestProperties.PDP_RESOURCE_NAME) == null) {
+        if (properties.getProperty(XacmlRestProperties.PDP_RESOURCE_NAME) == null) {
             XACMLProperties.reloadProperties();
             try {
                 properties = XACMLProperties.getProperties();
@@ -269,7 +269,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
                 properties.getProperty("createUpdatePolicy.impl.className", CREATE_UPDATE_POLICY_SERVICE);
         setCreateUpdatePolicyConstructor(createUpdateResourceName);
 
-        PeCryptoUtils.initAesKey(properties.getProperty(XACMLRestProperties.PROP_AES_KEY));
+        PeCryptoUtils.initAesKey(properties.getProperty(XacmlRestProperties.PROP_AES_KEY));
 
         // Create an IntegrityMonitor
         try {
@@ -296,7 +296,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
         //
         // Kick off our thread to register with the PAP servlet.
         //
-        if (Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_REGISTER))) {
+        if (Boolean.parseBoolean(XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_REGISTER))) {
             XACMLPdpServlet.registerRunnable = new XACMLPdpRegisterThread(baseLoggingContext);
             XACMLPdpServlet.registerThread = new Thread(XACMLPdpServlet.registerRunnable);
             XACMLPdpServlet.registerThread.start();
@@ -321,9 +321,9 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
     }
 
     private static void setPDPResourceName(Properties properties) throws ServletException {
-        pdpResourceName = properties.getProperty(XACMLRestProperties.PDP_RESOURCE_NAME);
+        pdpResourceName = properties.getProperty(XacmlRestProperties.PDP_RESOURCE_NAME);
         if (pdpResourceName == null) {
-            PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, XACMLRestProperties.PDP_RESOURCE_NAME, "xacml.pdp");
+            PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, XacmlRestProperties.PDP_RESOURCE_NAME, "xacml.pdp");
             throw new ServletException("pdpResourceName is null");
         }
     }
@@ -335,7 +335,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
     private static void setNotificationDelay() {
         try {
             XACMLPdpServlet.notificationDelay =
-                    Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_DELAY));
+                    Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_NOTIFICATION_DELAY));
         } catch (NumberFormatException e) {
             logger.error("Error in notification delay format, Taking the default value.", e);
         }
@@ -445,7 +445,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
         // Dump our request out
         //
         if (logger.isDebugEnabled()) {
-            XACMLRest.dumpRequest(request);
+            XacmlRest.dumpRequest(request);
         }
 
         try {
@@ -658,7 +658,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
         loggingContext.metricEnded();
         PolicyLogger.metrics("Metric example posted here - 2 of 2");
 
-        XACMLRest.dumpRequest(request);
+        XacmlRest.dumpRequest(request);
 
         String pathInfo = request.getRequestURI();
         if (pathInfo != null && "/pdp/test".equals(pathInfo)) {
@@ -805,7 +805,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
         }
         if (returnHB) {
             synchronized (pdpStatusLock) {
-                response.addHeader(XACMLRestProperties.PROP_PDP_HTTP_HEADER_HB, status.getStatus().toString());
+                response.addHeader(XacmlRestProperties.PROP_PDP_HTTP_HEADER_HB, status.getStatus().toString());
             }
         }
         loggingContext.transactionEnded();
@@ -876,7 +876,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
             return;
         }
 
-        XACMLRest.dumpRequest(request);
+        XacmlRest.dumpRequest(request);
         //
         // Set our no-cache header
         //
