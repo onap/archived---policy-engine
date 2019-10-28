@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "972c1e05_ba7b074f",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/PolicyAddScopeRoleController.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-28T12:54:06Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces\n\nsame comment in other files",
+      "revId": "9e6402add6395813856322af1769838d208f395a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2050ed9_f9aabda6",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryController/BRMSControllerDictController.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-28T12:54:06Z",
+      "side": 1,
+      "message": "update license dates.\n\nsame comment for other files",
+      "revId": "9e6402add6395813856322af1769838d208f395a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3707fe2_f4528a37",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryController/BRMSControllerDictController.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-28T12:54:06Z",
+      "side": 1,
+      "message": "these tabs are ok since the whole file has them",
+      "revId": "9e6402add6395813856322af1769838d208f395a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
