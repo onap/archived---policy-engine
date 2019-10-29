@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-app.controller('serviceDictGridController', function ($scope, PolicyAppService, modalService, $modal){
+app.controller('serviceDictGridController', function ($scope, PolicyAppService, modalService, $modal, Notification){
 	$( "#dialog" ).hide();
 
 	PolicyAppService.getData('getDictionary/get_ClosedLoopServicesData').then(function (data) {
@@ -187,7 +187,7 @@ app.controller('serviceDictGridController', function ($scope, PolicyAppService, 
 					})}
 			},
 			error : function(data){
-				alert("Error while Searching.");
+				Notification.error("Error while Searching.");
 			}
 		});
 	};

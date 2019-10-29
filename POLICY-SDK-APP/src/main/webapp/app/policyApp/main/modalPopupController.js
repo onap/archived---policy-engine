@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,24 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-appDS2.controller('modalpopupController' ,  function ($scope, $modalInstance, message){
-	
-	$scope.message = message;
-	
-	
-	$scope.hello = function () {
+appDS2.controller('modalpopupController' ,  function ($scope, $modalInstance, message, Notification){
+    
+    $scope.message = message;
+    
+    
+    $scope.hello = function () {
         $modalInstance.close($scope.digitPattern);
     };
-	$modalInstance.ok = function() {
+    $modalInstance.ok = function() {
         //add the  ok functionality
-        alert("Logout");        
+        Notification.error("Logout");        
     };
     $modalInstance.cancel = function() {
         //add the cancel functionality
-        alert("Keep Log in");
+        Notification.error("Keep Log in");
     };
     $modalInstance.cancelbutton = function() {
         //add the cancel functionality
-        alert("Modal Waring popup close event");
+        Notification.error("Modal Waring popup close event");
     };
 });
