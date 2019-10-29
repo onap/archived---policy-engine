@@ -55,7 +55,7 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
     $scope.validateSuccess = true;
     var readValue = $scope.temp.policy.readOnly;
     if(readValue){
-    	 $scope.validateSuccess = false;
+        $scope.validateSuccess = false;
     }
     
     PolicyAppService.getData('getDictionary/get_BRMSControllerDataByName').then(function (data) {
@@ -102,8 +102,8 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
     $scope.addDataToFields = function(ruleName){
     	console.log(ruleName);   
         if(ruleName != null){
-        	 var uuu = "policyController/getBRMSTemplateData.htm";
-        	 var postData={policyData: ruleName};
+            var uuu = "policyController/getBRMSTemplateData.htm";
+            var postData={policyData: ruleName};
              $.ajax({
                  type : 'POST',
                  url : uuu,
@@ -112,12 +112,12 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
                  data: JSON.stringify(postData),
                  success : function(data){
                      $scope.$apply(function(){
-                    	 $scope.temp.policy.dynamicLayoutMap = data.policyData;
+                        $scope.temp.policy.dynamicLayoutMap = data.policyData;
                      });
                      console.log( $scope.temp.policy.dynamicLayoutMap);
                  },
                  error : function(data){
-                     alert("Error While Retriving the Template Layout Pattren.");
+                    Notification.error("Error While Retriving the Template Layout Pattren.");
                  }
              });
         }   
@@ -240,9 +240,9 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
     if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
     	$scope.temp.policy.attributes = [];
     }else{
-	   if($scope.temp.policy.attributes.length == 0){
-		   $scope.temp.policy.attributes = [];
-	   }
+      if($scope.temp.policy.attributes.length == 0){
+	      $scope.temp.policy.attributes = [];
+      }
    }
     
     $scope.attributeDatas = [{"attributes" : $scope.temp.policy.attributes}];

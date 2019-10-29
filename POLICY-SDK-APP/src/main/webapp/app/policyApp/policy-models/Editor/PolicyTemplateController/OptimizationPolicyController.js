@@ -264,7 +264,7 @@ angular.module('abs').controller('optimizationController', ['$scope', '$window',
 					 });
 				 },
 				 error : function(data){
-					 alert("Error While Retrieving the Template Layout Pattern.");
+					 Notification.error("Error While Retrieving the Template Layout Pattern.");
 				 }
 			 });		 
 		 }
@@ -476,7 +476,7 @@ angular.module('abs').controller('optimizationController', ['$scope', '$window',
                     $scope.$apply();
                 },
                 error : function(data){
-                    alert("Error While Retrieving the Template Layout Pattern.");
+                	Notification.error("Error While Retrieving the Template Layout Pattern.");
                 }
             });
         }
