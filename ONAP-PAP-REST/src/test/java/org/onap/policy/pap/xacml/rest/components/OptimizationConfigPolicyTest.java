@@ -22,26 +22,20 @@ package org.onap.policy.pap.xacml.rest.components;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
 
-import java.io.File;
-import java.util.Collections;
+import com.att.research.xacml.api.pap.PAPException;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+
 public class OptimizationConfigPolicyTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -61,14 +55,9 @@ public class OptimizationConfigPolicyTest {
         assertNull(policy.getCorrectPolicyDataObject());
     }
 
-    @PrepareForTest({OptimizationConfigPolicy.class})
-    @Test
-    public void testPrepareToSave() throws Exception {
-        // Need to mock internal dictionary retrieval
-        CommonClassDaoImpl impl = Mockito.mock(CommonClassDaoImpl.class);
-        PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(impl);
-        when(impl.getDataById(any(), anyString(), anyString())).thenReturn(null);
-
+    @Ignore
+    @Test(expected = NullPointerException.class)
+    public void testSave() throws Exception {
         PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
         OptimizationConfigPolicy policy = new OptimizationConfigPolicy(policyAdapter);
         policyAdapter.setHighestVersion(1);
@@ -76,33 +65,32 @@ public class OptimizationConfigPolicyTest {
         policyAdapter.setNewFileName("foo.xml");
         policyAdapter.setJsonBody("{ \"version\": \"1.0\"}");
         policyAdapter.setServiceType("foo");
-        policy.prepareToSave();
-        assertEquals(true, policy.isPreparedToSave());
+        try {
+            policy.savePolicies();
+        } catch (PAPException ex) {
+            fail("Expected different exception:  " + ex);
+        }
     }
 
-    @PrepareForTest({CreateNewOptimizationModel.class})
     @Test
-    public void testCreateModel() throws Exception {
-        // Mock file retrieval
-        File testFile = new File("testFile");
-        File[] testList = new File[1];
-        testList[0] = testFile;
-        File impl = Mockito.mock(File.class);
-        PowerMockito.whenNew(File.class).withAnyArguments().thenReturn(impl);
-        when(impl.listFiles()).thenReturn(testList);
-        when(impl.isFile()).thenReturn(true);
+    public void testAdvice() {
+        PolicyType policyType = new PolicyType();
+        PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
+        policyAdapter.setPolicyID("id");
+        policyAdapter.setHighestVersion(1);
+        policyAdapter.setPolicyType("Config");
+        policyAdapter.setNewFileName("newfile");
+        policyAdapter.setData(policyType);
+        policyAdapter.setJsonBody("{\"key\":\"value\"}");
+        policyAdapter.setServiceType("svcType");
 
-        // Mock internal dictionary retrieval
-        CommonClassDaoImpl daoImpl = Mockito.mock(CommonClassDaoImpl.class);
-        PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(daoImpl);
-        when(daoImpl.getDataById(any(), anyString(), anyString())).thenReturn(Collections.emptyList());
-
-        // Test create methods
-        String testFileName = "testFile.zip";
-        String testVal = "testVal";
-        CreateNewOptimizationModel model =
-                new CreateNewOptimizationModel(testFileName, testVal, testVal, testVal, testVal);
-        model.addValuesToNewModel();
-        model.saveImportService();
+        OptimizationConfigPolicy policy = new OptimizationConfigPolicy(policyAdapter);
+        try {
+            policy.savePolicies();
+        } catch (Exception ex) {
+            assertTrue(true);
+        }
+        AdviceExpressionsType expType = policy.getAdviceExpressions(1, "filename");
+        assertEquals(1, expType.getAdviceExpression().size());
     }
 }
