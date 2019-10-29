@@ -24,11 +24,15 @@ package org.onap.policy.pdp.rest.auth.test;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+
+import com.att.research.xacml.util.XACMLProperties;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import javax.servlet.ServletRequest;
 import org.junit.Test;
 import org.onap.policy.pdp.rest.restauth.AuthenticationService;
+import org.onap.policy.rest.XacmlRestProperties;
 
 public class AuthenticationServiceTest {
     private final String testCred = "python:test";
@@ -40,13 +44,16 @@ public class AuthenticationServiceTest {
         String systemKey = "xacml.properties";
 
         // Set the system property temporarily
-        String oldProperty = System.getProperty(systemKey);
         System.setProperty(systemKey, "xacml.pdp.properties");
-        ServletRequest request = mock(ServletRequest.class);
+        XACMLProperties.setProperty("enable_aaf", "false");
+        XACMLProperties.setProperty(XacmlRestProperties.PROP_PEP_IDFILE, "client.properties");
 
+        ServletRequest request = mock(ServletRequest.class);
+        AuthenticationService.getEnvironment();
         assertTrue(AuthenticationService.checkPermissions(null, basicCred, "getConfig", "DEVL", request));
 
         // Restore the original system property
+        String oldProperty = System.getProperty(systemKey);
         if (oldProperty != null) {
             System.setProperty(systemKey, oldProperty);
         } else {
