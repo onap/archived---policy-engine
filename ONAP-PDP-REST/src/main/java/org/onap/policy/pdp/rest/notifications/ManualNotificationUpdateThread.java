@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,7 +31,7 @@ import java.util.UUID;
 
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.utils.BusConsumer;
 import org.onap.policy.utils.BusPublisher;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
@@ -67,9 +67,9 @@ public class ManualNotificationUpdateThread implements Runnable {
     }
 
     /**
-     * 
+     *
      * This is our thread that runs on startup if the system is configured to UEB to accept manual update requests
-     * 
+     *
      */
     @Override
     public void run() {
@@ -85,7 +85,7 @@ public class ManualNotificationUpdateThread implements Runnable {
         if ("ueb".equals(propNotificationType)) {
             try {
                 setCluster();
-                String url = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_ID);
+                String url = XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_ID);
                 aURL = new URL(url);
                 topic = aURL.getHost() + aURL.getPort();
             } catch (NumberFormatException e) {
@@ -129,8 +129,8 @@ public class ManualNotificationUpdateThread implements Runnable {
         } else if ("dmaap".equals(propNotificationType)) {
             String dmaapServers = null;
             try {
-                dmaapServers = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_SERVERS);
-                topic = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_TOPIC);
+                dmaapServers = XACMLProperties.getProperty(XacmlRestProperties.PROP_NOTIFICATION_SERVERS);
+                topic = XACMLProperties.getProperty(XacmlRestProperties.PROP_NOTIFICATION_TOPIC);
                 setAAFCreds();
             } catch (Exception e) {
                 LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Unable to get DMaaP servers list:", e);
@@ -145,7 +145,7 @@ public class ManualNotificationUpdateThread implements Runnable {
             dmaapServers = dmaapServers.trim();
             topic = topic.trim();
 
-            String consumerTopic = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_TOPIC).trim();
+            String consumerTopic = XACMLProperties.getProperty(XacmlRestProperties.PROP_NOTIFICATION_TOPIC).trim();
             sendMessage(consumerTopic, "Starting-Topic");
             dmaapList = new ArrayList<>();
             for (String u : dmaapServers.split(",")) {
@@ -189,14 +189,14 @@ public class ManualNotificationUpdateThread implements Runnable {
     }
 
     private static void setCluster() {
-        clusterList = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_SERVERS);
+        clusterList = XACMLProperties.getProperty(XacmlRestProperties.PROP_NOTIFICATION_SERVERS);
         if (clusterList != null) {
             clusterList = clusterList.trim();
         }
     }
 
     private static void setPropNotification() {
-        propNotificationType = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_TYPE);
+        propNotificationType = XACMLProperties.getProperty(XacmlRestProperties.PROP_NOTIFICATION_TYPE);
     }
 
     private void sendMessage(String topic, String message) {

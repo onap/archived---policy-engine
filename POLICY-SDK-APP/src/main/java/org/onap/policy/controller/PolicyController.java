@@ -56,7 +56,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.model.PDPGroupContainer;
 import org.onap.policy.model.Roles;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.Datatype;
 import org.onap.policy.rest.jpa.FunctionDefinition;
@@ -104,7 +104,7 @@ public class PolicyController extends RestrictedBaseController {
     }
 
     public static String getDomain() {
-        return XACMLProperties.getProperty(XACMLRestProperties.PROP_ADMIN_DOMAIN, "urn");
+        return XACMLProperties.getProperty(XacmlRestProperties.PROP_ADMIN_DOMAIN, "urn");
     }
 
     private static final Object mapAccess = new Object();

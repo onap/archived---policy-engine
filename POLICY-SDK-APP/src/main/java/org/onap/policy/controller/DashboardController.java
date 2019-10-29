@@ -61,7 +61,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.dao.SystemLogDbDao;
 import org.onap.policy.model.PDPGroupContainer;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.utils.PolicyUtils;
@@ -351,7 +351,7 @@ public class DashboardController extends RestrictedBaseController {
             papStatus = "CANNOT_CONNECT";
             policyLogger.error("Error getting PAP status, PAP not responding to requests", e1);
         }
-        String papUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
+        String papUrl = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_URL);
         JSONObject object = new JSONObject();
         object.put("system", papUrl);
         object.put("status", papStatus);

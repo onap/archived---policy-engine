@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ import java.util.stream.Stream;
 import org.onap.policy.api.PolicyException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.utils.BusPublisher;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.http.HttpStatus;
@@ -99,7 +99,7 @@ public class NotificationService {
 
     private static void init() {
         if (dmaapServers == null || aafLogin == null || aafPassword == null) {
-            dmaapServers = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_SERVERS);
+            dmaapServers = XACMLProperties.getProperty(XacmlRestProperties.PROP_NOTIFICATION_SERVERS);
             aafLogin = XACMLProperties.getProperty("DMAAP_AAF_LOGIN");
             aafPassword = XACMLProperties.getProperty("DMAAP_AAF_PASSWORD");
             interval =

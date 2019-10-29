@@ -1,9 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-REST
- * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ *  Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +13,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
 package org.onap.policy.rest;
 
-public class XacmlAdminAuthorization {
+import static org.junit.Assert.assertNotNull;
 
-    public enum Role {
-        ROLE_GUEST("guest"),
-        ROLE_ADMIN("admin"),
-        ROLE_EDITOR("editor"),
-        ROLE_SUPERGUEST("super-guest"),
-        ROLE_SUPEREDITOR("super-editor"),
-        ROLE_SUPERADMIN("super-admin");
+import org.junit.Test;
 
-        String userRole;
+/**
+ * Test the XacmlAdminAuthorizaiton class.
+ *
+ * @author Liam Fallon (liam.fallon@est.tech)
+ */
+public class XacmlAdminAuthorizationTest {
 
-        Role(String userRole) {
-            this.userRole = userRole;
-        }
-
-        @Override
-        public String toString() {
-            return this.userRole;
-        }
+    @Test
+    public void test() {
+        assertNotNull(new XacmlAdminAuthorization());
     }
 }

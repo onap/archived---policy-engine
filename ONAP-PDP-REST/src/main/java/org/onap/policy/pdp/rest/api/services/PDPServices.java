@@ -8,9 +8,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -70,7 +70,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.XACMLPdpServlet;
 import org.onap.policy.pdp.rest.api.models.PDPResponse;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.std.Matches;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.w3c.dom.Document;
@@ -207,7 +207,7 @@ public class PDPServices {
                                 if (uri == 1) {
                                     configUrl = attribute.getAttributeValue().getValue().toString();
                                     pdpConfigLocation = configUrl.replace("$URL",
-                                            XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_WEBAPPS));
+                                            XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_WEBAPPS));
                                 } else {
                                     if (!("PDP".equalsIgnoreCase(attribute.getIssuer()))) {
                                         throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE
@@ -350,7 +350,7 @@ public class PDPServices {
 
     /**
      * Process Decision Result.
-     * 
+     *
      * @param result input from Response.
      * @return pdpResposne based on result.
      */
@@ -388,7 +388,7 @@ public class PDPServices {
 
     /**
      * Check for Decision for decision based calls.
-     * 
+     *
      * @param pdpResponseInput pdpResponse.
      * @param result result.
      * @return pdpResponse.
@@ -420,7 +420,7 @@ public class PDPServices {
 
     /**
      * Check if there is a configuration.
-     * 
+     *
      * @param advice advice.
      * @param configRetrieved boolean.
      * @param pdpResponse pdpResposneInput.
@@ -431,7 +431,7 @@ public class PDPServices {
             if (attribute.getDataTypeId().stringValue().endsWith("anyURI")) {
                 String configUrl = attribute.getAttributeValue().getValue().toString();
                 String pdpConfigLocation =
-                        configUrl.replace("$URL", XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_WEBAPPS));
+                        configUrl.replace("$URL", XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_WEBAPPS));
                 // If there is a configuration.
                 try {
                     LOGGER.debug("processDecisionResult: Configuration Call to : " + configUrl);
@@ -615,7 +615,7 @@ public class PDPServices {
 
     /**
      * Returns the requestFormat.
-     * 
+     *
      * @return the requestFormat.
      */
     public String getRequestFormat() {
@@ -624,7 +624,7 @@ public class PDPServices {
 
     /**
      * Set the Request Format.
-     * 
+     *
      * @param requestMode to set requestFormat.
      */
     public void setRequestFormat(String requestMode) {

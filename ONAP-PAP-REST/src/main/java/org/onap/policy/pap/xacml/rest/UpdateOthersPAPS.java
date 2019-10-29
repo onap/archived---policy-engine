@@ -44,7 +44,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.adapters.UpdateObjectData;
 import org.onap.policy.pap.xacml.rest.components.Policy;
 import org.onap.policy.pap.xacml.rest.util.JsonMessage;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
@@ -102,7 +102,7 @@ public class UpdateOthersPAPS {
         body.setNewPolicyName(request.getParameter("newPolicyName"));
         body.setOldPolicyName(request.getParameter("oldPolicyName"));
 
-        String currentPap = XACMLRestProperties.getProperty("xacml.rest.pap.url");
+        String currentPap = XacmlRestProperties.getProperty("xacml.rest.pap.url");
         List<Object> getPAPUrls = commonClassDao.getData(PolicyDBDaoEntity.class);
         if (getPAPUrls != null && !getPAPUrls.isEmpty()) {
             for (int i = 0; i < getPAPUrls.size(); i++) {
@@ -114,7 +114,7 @@ public class UpdateOthersPAPS {
                     Base64.Encoder encoder = Base64.getEncoder();
                     String txt;
                     try {
-                        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY));
+                        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XacmlRestProperties.PROP_AES_KEY));
                         txt = PeCryptoUtils.decrypt(password);
                     } catch (Exception e) {
                         policyLogger.debug(e);

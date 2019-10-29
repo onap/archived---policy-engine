@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ import org.onap.policy.api.UpdateType;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.PapUrlResolver;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 import com.att.research.xacml.api.pap.PDPPolicy;
@@ -61,7 +61,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 /**
  * NotificationController Checks for the Updated and Removed policies. It notifies the Server to send Notifications to
  * the Client.
- * 
+ *
  * @version 0.2
  *
  */
@@ -81,7 +81,7 @@ public class NotificationController {
     private static Boolean notificationFlag = false;
 
     public void check(PDPStatus newStatus, Map<String, PolicyDef> policyContainer) {
-    	
+
     	LOGGER.info("NotificationController: checking for updated and removed policies.");
         boolean isUpdated = false;
         boolean isRemoved = false;
@@ -101,7 +101,7 @@ public class NotificationController {
             LOGGER.info("There is an Update to the PDP");
             LOGGER.debug(oldStatus.getLoadedPolicies());
             LOGGER.debug(newStatus.getLoadedPolicies());
-            
+
             // Check if there is an Update/additions in the policy.
     		LOGGER.info("NotificationController: check for updated or new policies");
             for (PDPPolicy newPolicy : newStatus.getLoadedPolicies()) {
@@ -191,8 +191,8 @@ public class NotificationController {
     }
 
     private static void setPropNotification() {
-        propNotificationType = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_TYPE);
-        pdpURL = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_ID);
+        propNotificationType = XACMLProperties.getProperty(XacmlRestProperties.PROP_NOTIFICATION_TYPE);
+        pdpURL = XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_ID);
     }
 
     public static void sendNotification() {
@@ -382,7 +382,7 @@ public class NotificationController {
 
     private void removeFile(PDPPolicy oldPolicy) {
         try {
-            Path removedPolicyFile = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_CONFIG)
+            Path removedPolicyFile = Paths.get(XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_CONFIG)
                     + File.separator + oldPolicy.getId());
             Files.deleteIfExists(removedPolicyFile);
             boolean delete = false;
@@ -390,11 +390,11 @@ public class NotificationController {
             if (oldPolicy.getName().contains(".Config_")) {
                 delete = true;
                 dir = new File(
-                        XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_WEBAPPS) + File.separator + "Config");
+                        XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_WEBAPPS) + File.separator + "Config");
             } else if (oldPolicy.getName().contains(".Action_")) {
                 delete = true;
                 dir = new File(
-                        XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_WEBAPPS) + File.separator + "Action");
+                        XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_WEBAPPS) + File.separator + "Action");
             }
             if (delete) {
                 FileFilter fileFilter = new WildcardFileFilter(
@@ -412,7 +412,7 @@ public class NotificationController {
 
     private void callPap(String urlString, String type) {
         Path configLocation = Paths
-                .get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_WEBAPPS) + File.separator + type);
+                .get(XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_WEBAPPS) + File.separator + type);
         if (Files.notExists(configLocation)) {
             try {
                 Files.createDirectories(configLocation);

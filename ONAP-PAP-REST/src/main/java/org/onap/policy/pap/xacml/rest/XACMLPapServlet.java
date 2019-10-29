@@ -75,8 +75,8 @@ import org.onap.policy.pap.xacml.rest.handler.APIRequestHandler;
 import org.onap.policy.pap.xacml.rest.handler.PushPolicyHandler;
 import org.onap.policy.pap.xacml.rest.handler.SavePolicyHandler;
 import org.onap.policy.pap.xacml.restAuth.CheckPDP;
-import org.onap.policy.rest.XACMLRest;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRest;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.dao.PolicyDBException;
 import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.utils.PolicyUtils;
@@ -191,20 +191,20 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             }
 
             // Initialize
-            XACMLRest.xacmlInit(config);
+            XacmlRest.xacmlInit(config);
             // Load the properties
-            XACMLRest.loadXacmlProperties(null, null);
+            XacmlRest.loadXacmlProperties(null, null);
             /*
              * Retrieve the property values
              */
             setCommonProperties();
-            String papSiteName = XACMLProperties.getProperty(XACMLRestProperties.PAP_SITE_NAME);
+            String papSiteName = XACMLProperties.getProperty(XacmlRestProperties.PAP_SITE_NAME);
             if (papSiteName == null) {
                 PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "XACMLPapServlet",
                         " ERROR: Bad papSiteName property entry");
                 throw new PAPException("papSiteName is null");
             }
-            String papNodeType = XACMLProperties.getProperty(XACMLRestProperties.PAP_NODE_TYPE);
+            String papNodeType = XACMLProperties.getProperty(XacmlRestProperties.PAP_NODE_TYPE);
             if (papNodeType == null) {
                 PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "XACMLPapServlet",
                         " ERROR: Bad papNodeType property entry");
@@ -212,18 +212,18 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             }
             // Integer will throw an exception of anything is missing or
             // unrecognized
-            int papTransWait = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT));
+            int papTransWait = Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_TRANS_WAIT));
             int papTransTimeout =
-                    Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_TIMEOUT));
+                    Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_TRANS_TIMEOUT));
             int papAuditTimeout =
-                    Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_TIMEOUT));
+                    Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_AUDIT_TIMEOUT));
             // Boolean will default to false if anything is missing or
             // unrecognized
             boolean papAuditFlag =
-                    Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_RUN_AUDIT_FLAG));
+                    Boolean.parseBoolean(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_RUN_AUDIT_FLAG));
             boolean papFileSystemAudit =
-                    Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_FLAG));
-            String papDependencyGroups = XACMLProperties.getProperty(XACMLRestProperties.PAP_DEPENDENCY_GROUPS);
+                    Boolean.parseBoolean(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_AUDIT_FLAG));
+            String papDependencyGroups = XACMLProperties.getProperty(XacmlRestProperties.PAP_DEPENDENCY_GROUPS);
             if (papDependencyGroups == null) {
                 throw new PAPException("papDependencyGroups is null");
             }
@@ -272,7 +272,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             // we are about to call the PDPs and give them their configuration.
             // To do that we need to have the URL of this PAP so we can
             // construct the Policy file URLs
-            setPapUrl(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL));
+            setPapUrl(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_URL));
             // Create the policyDBDao
             setPolicyDbDao();
             // Load our PAP engine, first create a factory
@@ -284,7 +284,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 createDefaultGroupOnInit();
             }
             policyDbDao.setPapEngine(XACMLPapServlet.papEngine);
-            if (Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_RUN_AUDIT_FLAG))) {
+            if (Boolean.parseBoolean(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_RUN_AUDIT_FLAG))) {
                 /*
                  * Auditing the local File System groups to be in sync with the Database
                  */
@@ -314,7 +314,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             // Configurable - have the PAP servlet initiate sending the latest
             // PDP policy/pip configuration
             // to all its known PDP nodes.
-            if (Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_INITIATE_PDP_CONFIG))) {
+            if (Boolean.parseBoolean(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_INITIATE_PDP_CONFIG))) {
                 startInitiateThreadService(new Thread(this));
             }
             // After startup, the PAP does Heartbeat's to each of the PDPs
@@ -403,9 +403,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 papDependencyGroupsFlatArray[i] = papDependencyGroupsFlatArray[i].trim();
             }
             try {
-                if (XACMLProperties.getProperty(XACMLRestProperties.PAP_INTEGRITY_AUDIT_PERIOD_SECONDS) != null) {
+                if (XACMLProperties.getProperty(XacmlRestProperties.PAP_INTEGRITY_AUDIT_PERIOD_SECONDS) != null) {
                     papIntegrityAuditPeriodSeconds = Integer.parseInt(
-                            XACMLProperties.getProperty(XACMLRestProperties.PAP_INTEGRITY_AUDIT_PERIOD_SECONDS).trim());
+                            XACMLProperties.getProperty(XacmlRestProperties.PAP_INTEGRITY_AUDIT_PERIOD_SECONDS).trim());
                 }
             } catch (Exception e) {
                 String msg = "integrity_audit_period_seconds ";
@@ -423,35 +423,35 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     private static void setCommonProperties() throws PAPException {
         setConfigHome();
         setActionHome();
-        papDbDriver = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_DRIVER);
+        papDbDriver = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_DB_DRIVER);
         if (papDbDriver == null) {
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "XACMLPapServlet",
                     " ERROR: Bad papDbDriver property entry");
             throw new PAPException("papDbDriver is null");
         }
         setPapDbDriver(papDbDriver);
-        papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
+        papDbUrl = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_DB_URL);
         if (papDbUrl == null) {
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "XACMLPapServlet", " ERROR: Bad papDbUrl property entry");
             throw new PAPException("papDbUrl is null");
         }
         setPapDbUrl(papDbUrl);
-        papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
+        papDbUser = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_DB_USER);
         if (papDbUser == null) {
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "XACMLPapServlet",
                     " ERROR: Bad papDbUser property entry");
             throw new PAPException("papDbUser is null");
         }
         setPapDbUser(papDbUser);
-        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY));
-        papDbPd = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD));
+        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XacmlRestProperties.PROP_AES_KEY));
+        papDbPd = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_DB_PASSWORD));
         if (papDbPd == null) {
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "XACMLPapServlet",
                     " ERROR: Bad papDbPassword property entry");
             throw new PAPException("papDbPassword is null");
         }
         setPapDbPassword(papDbPd);
-        papResourceName = XACMLProperties.getProperty(XACMLRestProperties.PAP_RESOURCE_NAME);
+        papResourceName = XACMLProperties.getProperty(XacmlRestProperties.PAP_RESOURCE_NAME);
         if (papResourceName == null) {
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "XACMLPapServlet",
                     " ERROR: Bad papResourceName property entry");
@@ -464,11 +464,11 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         msPolicyName = XACMLProperties.getProperty("xacml.policy.msPolicyName");
         setMsPolicyName(msPolicyName);
         // PDPId File location
-        XACMLPapServlet.pdpFile = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_IDFILE);
+        XACMLPapServlet.pdpFile = XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_IDFILE);
         if (XACMLPapServlet.pdpFile == null) {
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " The PDP Id Authentication File Property is not valid: "
-                    + XACMLRestProperties.PROP_PDP_IDFILE);
-            throw new PAPException("The PDP Id Authentication File Property :" + XACMLRestProperties.PROP_PDP_IDFILE
+                    + XacmlRestProperties.PROP_PDP_IDFILE);
+            throw new PAPException("The PDP Id Authentication File Property :" + XacmlRestProperties.PROP_PDP_IDFILE
                     + " is not Valid. ");
         }
     }
@@ -564,7 +564,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         }
         try {
             loggingContext.metricStarted();
-            XACMLRest.dumpRequest(request);
+            XacmlRest.dumpRequest(request);
             loggingContext.metricEnded();
             PolicyLogger.metrics("XACMLPapServlet doPost dumpRequest");
             // since getParameter reads the content string, explicitly get the
@@ -784,7 +784,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         OnapLoggingContext loggingContext = OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         setLoggingContext(loggingContext, "doGet", "PAP.get");
         loggingContext.metricStarted();
-        XACMLRest.dumpRequest(request);
+        XacmlRest.dumpRequest(request);
         loggingContext.metricEnded();
         PolicyLogger.metrics("XACMLPapServlet doGet dumpRequest");
         String pathInfo = request.getRequestURI();
@@ -1004,7 +1004,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         String apiflag = request.getParameter("apiflag");
         // For Debug purposes
         if (!"api".equals(apiflag) && PolicyLogger.isDebugEnabled()) {
-            XACMLRest.dumpRequest(request);
+            XacmlRest.dumpRequest(request);
             PolicyLogger.metrics("XACMLPapServlet doPut dumpRequest");
         }
         loggingContext.metricEnded();
@@ -1207,7 +1207,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             return;
         }
         loggingContext.metricStarted();
-        XACMLRest.dumpRequest(request);
+        XacmlRest.dumpRequest(request);
         loggingContext.metricEnded();
         PolicyLogger.metrics("XACMLPapServlet doDelete dumpRequest");
         String groupId = request.getParameter(GROUPID);
@@ -1308,7 +1308,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     }
 
     protected String getPDPID(HttpServletRequest request) {
-        String pdpURL = request.getHeader(XACMLRestProperties.PROP_PDP_HTTP_HEADER_ID);
+        String pdpURL = request.getHeader(XacmlRestProperties.PROP_PDP_HTTP_HEADER_ID);
         if (pdpURL == null || pdpURL.isEmpty()) {
             // Should send back its port for identification
             LOGGER.warn(XACMLErrorConstants.ERROR_DATA_ISSUE + "PDP did not send custom header");
@@ -1318,7 +1318,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     }
 
     protected String getPDPJMX(HttpServletRequest request) {
-        String pdpJMMX = request.getHeader(XACMLRestProperties.PROP_PDP_HTTP_HEADER_JMX_PORT);
+        String pdpJMMX = request.getHeader(XacmlRestProperties.PROP_PDP_HTTP_HEADER_JMX_PORT);
         if (pdpJMMX == null || pdpJMMX.isEmpty()) {
             // Should send back its port for identification
             LOGGER.warn(XACMLErrorConstants.ERROR_DATA_ISSUE
@@ -1643,12 +1643,12 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 
     private static void loadWebapps() throws PAPException {
         if (actionHome == null || configHome == null) {
-            Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS));
+            Path webappsPath = Paths.get(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_WEBAPPS));
             // Sanity Check
             if (webappsPath == null) {
-                PolicyLogger.error("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
+                PolicyLogger.error("Invalid Webapps Path Location property : " + XacmlRestProperties.PROP_PAP_WEBAPPS);
                 throw new PAPException(
-                        "Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
+                        "Invalid Webapps Path Location property : " + XacmlRestProperties.PROP_PAP_WEBAPPS);
             }
             Path webappsPathConfig = Paths.get(webappsPath.toString() + File.separator + "Config");
             Path webappsPathAction = Paths.get(webappsPath.toString() + File.separator + "Action");

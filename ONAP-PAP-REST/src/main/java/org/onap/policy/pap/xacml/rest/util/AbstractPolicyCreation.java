@@ -25,14 +25,14 @@ import com.google.common.base.Joiner;
 
 import java.util.UUID;
 
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.springframework.stereotype.Component;
 
 @Component
 public abstract class AbstractPolicyCreation {
 
     public static String getDomain() {
-        return XACMLProperties.getProperty(XACMLRestProperties.PROP_ADMIN_DOMAIN, "urn");
+        return XACMLProperties.getProperty(XacmlRestProperties.PROP_ADMIN_DOMAIN, "urn");
     }
 
     public String newPolicyID() {

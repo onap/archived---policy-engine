@@ -56,7 +56,7 @@ import org.onap.policy.controller.CreateDcaeMicroServiceController;
 import org.onap.policy.controller.CreateFirewallController;
 import org.onap.policy.controller.CreateOptimizationController;
 import org.onap.policy.controller.PolicyController;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyVersion;
@@ -234,9 +234,9 @@ public class PolicyRestController extends RestrictedBaseController {
 
     private ResponseEntity<?> sendToPap(String body, String requestUri, HttpMethod method) {
         String papUrl = PolicyController.getPapUrl();
-        String papPass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
+        String papPass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_PASS));
         String encoding = Base64.getEncoder().encodeToString(
-                (XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)
+                (XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_USERID)
                 + ":" + papPass).getBytes(StandardCharsets.UTF_8));
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTHORIZATION, BASIC + encoding);
@@ -284,11 +284,11 @@ public class PolicyRestController extends RestrictedBaseController {
     }
 
     private String callPap(HttpServletRequest request, String method, String uriValue) {
-        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY));
-        String papPass = PeCryptoUtils.decrypt((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)));
+        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XacmlRestProperties.PROP_AES_KEY));
+        String papPass = PeCryptoUtils.decrypt((XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_PASS)));
 
         Base64.Encoder encoder = Base64.getEncoder();
-        String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)
+        String encoding = encoder.encodeToString((XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_USERID)
                 + ":" + papPass).getBytes(StandardCharsets.UTF_8));
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTHORIZATION, BASIC + encoding);

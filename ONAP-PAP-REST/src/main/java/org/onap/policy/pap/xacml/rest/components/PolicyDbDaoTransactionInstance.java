@@ -57,7 +57,7 @@ import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.PolicyDBException;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
@@ -102,8 +102,8 @@ public class PolicyDbDaoTransactionInstance implements PolicyDBDaoTransaction {
      */
     public PolicyDbDaoTransactionInstance(String test) {
         // call the constructor with arguments
-        this(Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_TIMEOUT)),
-                Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT)));
+        this(Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_TRANS_TIMEOUT)),
+                Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_TRANS_WAIT)));
     }
 
     public PolicyDbDaoTransactionInstance() {
@@ -798,7 +798,7 @@ public class PolicyDbDaoTransactionInstance implements PolicyDBDaoTransaction {
 
     private String processConfigPath(String inputConfigPath) {
         String configPath = inputConfigPath;
-        String webappsPath = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS);
+        String webappsPath = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_WEBAPPS);
         if (webappsPath == null) {
             logger.error("Webapps property does not exist");
             throw new IllegalArgumentException("Webapps property does not exist");

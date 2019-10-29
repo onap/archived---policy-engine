@@ -37,7 +37,7 @@ import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.pdp.rest.XACMLPdpServlet.PutRequest;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import com.att.research.xacml.util.XACMLProperties;
@@ -86,7 +86,7 @@ public class XACMLPdpRegisterThread implements Runnable {
         /*
         int seconds;
         try {
-            seconds = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_REGISTER_SLEEP));
+            seconds = Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_REGISTER_SLEEP));
         } catch (NumberFormatException e) {
             LOGGER.error( XACMLErrorConstants.ERROR_SYSTEM_ERROR +"REGISTER_SLEEP: ", e);
             seconds = 5;
@@ -96,7 +96,7 @@ public class XACMLPdpRegisterThread implements Runnable {
         }
         int retries;
         try {
-            retries = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_REGISTER_RETRIES));
+            retries = Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_REGISTER_RETRIES));
         } catch (NumberFormatException e) {
             LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +" REGISTER_SLEEP: ", e);
             retries = -1;
@@ -130,7 +130,7 @@ public class XACMLPdpRegisterThread implements Runnable {
                 //
                 // Get the list of PAP Servlet URLs from the property file
                 //
-                //String papUrlList = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
+                //String papUrlList = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_URL);
                 //String[] papUrls = papUrlList.split(",");
                 //PapUrlResolver.setPapUrls(papUrls);
                 URL url = new URL(papUrls.getUrl());
@@ -149,8 +149,8 @@ public class XACMLPdpRegisterThread implements Runnable {
                     connection.setRequestProperty("Authorization", "Basic " + encoding);
                     connection.setRequestProperty("Accept", "text/x-java-properties");
                     connection.setRequestProperty("Content-Type", "text/x-java-properties");
-                    connection.setRequestProperty(XACMLRestProperties.PROP_PDP_HTTP_HEADER_ID, XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_ID));
-                    connection.setRequestProperty(XACMLRestProperties.PROP_PDP_HTTP_HEADER_JMX_PORT, XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_JMX_PORT));
+                    connection.setRequestProperty(XacmlRestProperties.PROP_PDP_HTTP_HEADER_ID, XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_ID));
+                    connection.setRequestProperty(XacmlRestProperties.PROP_PDP_HTTP_HEADER_JMX_PORT, XACMLProperties.getProperty(XacmlRestProperties.PROP_PDP_JMX_PORT));
                     connection.setRequestProperty("X-ECOMP-RequestID", requestID.toString());
                     connection.setUseCaches(false);
                     //

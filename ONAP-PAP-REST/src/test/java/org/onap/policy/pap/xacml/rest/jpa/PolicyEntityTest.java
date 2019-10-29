@@ -35,7 +35,7 @@ import javax.persistence.Query;
 import org.junit.*;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
 import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
@@ -48,10 +48,10 @@ public class PolicyEntityTest {
     @Test
     public void testAllOps() {
         Properties properties = new Properties();
-        properties.put(XACMLRestProperties.PROP_PAP_DB_DRIVER, "org.h2.Driver");
-        properties.put(XACMLRestProperties.PROP_PAP_DB_URL, "jdbc:h2:file:./sql/xacmlTest");
-        properties.put(XACMLRestProperties.PROP_PAP_DB_USER, "sa");
-        properties.put(XACMLRestProperties.PROP_PAP_DB_PASSWORD, "");
+        properties.put(XacmlRestProperties.PROP_PAP_DB_DRIVER, "org.h2.Driver");
+        properties.put(XacmlRestProperties.PROP_PAP_DB_URL, "jdbc:h2:file:./sql/xacmlTest");
+        properties.put(XacmlRestProperties.PROP_PAP_DB_USER, "sa");
+        properties.put(XacmlRestProperties.PROP_PAP_DB_PASSWORD, "");
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("testPapPU", properties);
         EntityManager em = emf.createEntityManager();
         // Start a transaction

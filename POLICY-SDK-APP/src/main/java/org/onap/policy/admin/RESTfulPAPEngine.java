@@ -52,7 +52,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
@@ -95,7 +95,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
         //
         // Get our URL to the PAP servlet
         //
-        this.papServletUrlString = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
+        this.papServletUrlString = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_URL);
         if (StringUtils.isBlank(this.papServletUrlString)) {
             String message = "The property 'POLICYENGINE_ADMIN_ACTIVE' was not set during installation. "
                     + "Admin Console cannot call PAP.";
@@ -357,11 +357,11 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
     private Object sendToPap(String method, Object content, Class collectionTypeClass, Class responseContentClass,
             String... parameters) throws PAPException {
         HttpURLConnection connection = null;
-        String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
+        String papID = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_USERID);
         LOGGER.info("User Id is " + papID);
-        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY));
+        PeCryptoUtils.initAesKey(XACMLProperties.getProperty(XacmlRestProperties.PROP_AES_KEY));
         String papPass = PeCryptoUtils
-                .decrypt(PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)));
+                .decrypt(PeCryptoUtils.decrypt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_PASS)));
         Base64.Encoder encoder = Base64.getEncoder();
         String encoding = encoder.encodeToString((papID + ":" + papPass).getBytes(StandardCharsets.UTF_8));
         Object contentObj = content;

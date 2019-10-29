@@ -87,7 +87,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.GroupPolicyScopeList;
@@ -268,7 +268,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         String json = "";
         DCAEMicroServiceObject microServiceObject = new DCAEMicroServiceObject();
         MicroServiceModels returnModel = new MicroServiceModels();
-        microServiceObject.setTemplateVersion(XACMLProperties.getProperty(XACMLRestProperties.TemplateVersion_MS));
+        microServiceObject.setTemplateVersion(XACMLProperties.getProperty(XacmlRestProperties.TEMPLATE_VERSION_MS));
         if (policyAdapter.getServiceType() != null) {
             microServiceObject.setService(policyAdapter.getServiceType());
             microServiceObject.setVersion(policyAdapter.getVersion());

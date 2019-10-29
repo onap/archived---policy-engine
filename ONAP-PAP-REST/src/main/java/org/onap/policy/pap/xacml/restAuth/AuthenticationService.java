@@ -28,11 +28,11 @@ import java.util.StringTokenizer;
 
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.utils.PeCryptoUtils;
 
 public class AuthenticationService {
-    private String papId = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
+    private String papId = XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_USERID);
     private String papPass = null;
 
     /**
@@ -51,9 +51,9 @@ public class AuthenticationService {
         String usernameAndPassword = null;
 
         try {
-            String secretKey = XACMLProperties.getProperty(XACMLRestProperties.PROP_AES_KEY);
+            String secretKey = XACMLProperties.getProperty(XacmlRestProperties.PROP_AES_KEY);
             PeCryptoUtils.initAesKey(secretKey);
-            papPass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
+            papPass = PeCryptoUtils.decrypt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_PASS));
         } catch (Exception e) {
             PolicyLogger.error(e);
         }

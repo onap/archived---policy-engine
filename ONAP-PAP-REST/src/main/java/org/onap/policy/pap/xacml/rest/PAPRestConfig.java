@@ -32,7 +32,7 @@ import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.utils.PeCryptoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -65,7 +65,7 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
             setDbDriver(prop.getProperty("javax.persistence.jdbc.driver"));
             setDbUrl(prop.getProperty("javax.persistence.jdbc.url"));
             setDbUserName(prop.getProperty("javax.persistence.jdbc.user"));
-            PeCryptoUtils.initAesKey(prop.getProperty(XACMLRestProperties.PROP_AES_KEY));
+            PeCryptoUtils.initAesKey(prop.getProperty(XacmlRestProperties.PROP_AES_KEY));
             setDbPassword(PeCryptoUtils.decrypt(prop.getProperty("javax.persistence.jdbc.password")));
         } catch (Exception e) {
             LOGGER.error("Exception Occured while loading properties file" + e);

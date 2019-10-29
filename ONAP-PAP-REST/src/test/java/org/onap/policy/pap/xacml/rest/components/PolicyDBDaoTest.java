@@ -55,7 +55,7 @@ import org.onap.policy.pap.xacml.rest.DataToNotifyPdp;
 import org.onap.policy.pap.xacml.rest.components.PolicyDBDao.PolicyDBDaoTestClass;
 import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.pap.xacml.rest.policycontroller.PolicyCreation;
-import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.PolicyDBException;
 import org.onap.policy.rest.jpa.DatabaseLockEntity;
@@ -160,10 +160,10 @@ public class PolicyDBDaoTest {
 
     private static void setUpAuditDb() {
         Properties properties = new Properties();
-        properties.put(XACMLRestProperties.PROP_PAP_DB_DRIVER, "org.h2.Driver");
-        properties.put(XACMLRestProperties.PROP_PAP_DB_URL, "jdbc:h2:file:./sql/xacmlTest");
-        properties.put(XACMLRestProperties.PROP_PAP_DB_USER, "sa");
-        properties.put(XACMLRestProperties.PROP_PAP_DB_PASSWORD, "");
+        properties.put(XacmlRestProperties.PROP_PAP_DB_DRIVER, "org.h2.Driver");
+        properties.put(XacmlRestProperties.PROP_PAP_DB_URL, "jdbc:h2:file:./sql/xacmlTest");
+        properties.put(XacmlRestProperties.PROP_PAP_DB_USER, "sa");
+        properties.put(XacmlRestProperties.PROP_PAP_DB_PASSWORD, "");
 
         // create the DB and then close it
         Persistence.createEntityManagerFactory("testPapPU", properties).close();
@@ -568,7 +568,7 @@ public class PolicyDBDaoTest {
         try {
             // Add 1000 ms to the timeout just to be sure it actually times out
             int sleepTime =
-                    Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_TIMEOUT)) + 1000;
+                    Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_TRANS_TIMEOUT)) + 1000;
             if (logger.isDebugEnabled()) {
                 Date date = new java.util.Date();
                 logger.debug("\n\nPolicyDBDaoTest.threadingStabilityTest() " + "\n   sleepTime =  " + sleepTime
@@ -603,7 +603,7 @@ public class PolicyDBDaoTest {
         try {
             // Add 1000 ms to the timeout just to be sure it actually times out
             int sleepTime =
-                    Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_TIMEOUT)) + 1000;
+                    Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_TRANS_TIMEOUT)) + 1000;
             if (logger.isDebugEnabled()) {
                 Date date = new java.util.Date();
                 logger.debug("\n\nPolicyDBDaoTest.threadingStabilityTest() " + "\n   sleepTime =  " + sleepTime
@@ -636,9 +636,9 @@ public class PolicyDBDaoTest {
         b.close();
 
         // Now let's test the transaction wait time timeout. Shorten the wait time to 1000 ms
-        System.setProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT, "1000");
+        System.setProperty(XacmlRestProperties.PROP_PAP_TRANS_WAIT, "1000");
         // And let's lengthen the transaction timeout to 5000 ms
-        System.setProperty(XACMLRestProperties.PROP_PAP_TRANS_TIMEOUT, "5000");
+        System.setProperty(XacmlRestProperties.PROP_PAP_TRANS_TIMEOUT, "5000");
         // get a transacton
         PolicyDBDaoTransaction t1 = dbd.getNewTransaction();
         if (logger.isDebugEnabled()) {
