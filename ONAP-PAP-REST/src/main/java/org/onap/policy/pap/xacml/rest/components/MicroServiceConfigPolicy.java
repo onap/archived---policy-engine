@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,6 @@ import com.att.research.xacml.std.IdentifierImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Splitter;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -38,7 +37,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -52,7 +50,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
@@ -181,7 +178,7 @@ public class MicroServiceConfigPolicy extends Policy {
                     matching = getValueFromDictionary(policyAdapter.getServiceType());
                 } else {
                     String jsonVersion = StringUtils.replaceEach(rootNode.get("version").toString(),
-                            new String[] {"\""}, new String[] {""});
+                        new String[] {"\""}, new String[] {""});
                     matching = getValueFromDictionary(policyAdapter.getServiceType() + "-v" + jsonVersion);
                 }
                 if (matching != null && !matching.isEmpty()) {
@@ -261,7 +258,7 @@ public class MicroServiceConfigPolicy extends Policy {
                 accessURI = new URI(ACTION_ID);
             } catch (URISyntaxException e) {
                 PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "MicroServiceConfigPolicy",
-                        "Exception creating ACCESS URI");
+                    "Exception creating ACCESS URI");
             }
             accessAttributeDesignator.setCategory(CATEGORY_ACTION);
             accessAttributeDesignator.setDataType(STRING_DATATYPE);
@@ -281,7 +278,7 @@ public class MicroServiceConfigPolicy extends Policy {
                 configURI = new URI(RESOURCE_ID);
             } catch (URISyntaxException e) {
                 PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "MicroServiceConfigPolicy",
-                        "Exception creating Config URI");
+                    "Exception creating Config URI");
             }
             configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
             configAttributeDesignator.setDataType(STRING_DATATYPE);
@@ -321,8 +318,8 @@ public class MicroServiceConfigPolicy extends Policy {
             if (value.isContainerNode() && !value.isArray()) {
                 pullMatchValue(value); // RECURSIVE CALL
             } else {
-                newValue = StringUtils.replaceEach(value.toString(), new String[] {"[", "]", "\""},
-                        new String[] {"", "", ""});
+                newValue =
+                    StringUtils.replaceEach(value.toString(), new String[] {"[", "]", "\""}, new String[] {"", "", ""});
                 mapAttribute.put(key, newValue);
             }
         }
@@ -336,7 +333,7 @@ public class MicroServiceConfigPolicy extends Policy {
 
         CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
         List<Object> result =
-                dbConnection.getDataById(MicroServiceModels.class, "modelName:version", modelName + ":" + modelVersion);
+            dbConnection.getDataById(MicroServiceModels.class, "modelName:version", modelName + ":" + modelVersion);
         if (result != null && !result.isEmpty()) {
             MicroServiceModels model = (MicroServiceModels) result.get(0);
             ruleTemplate = model.getAnnotation();
@@ -345,7 +342,7 @@ public class MicroServiceConfigPolicy extends Policy {
     }
 
     // Data required for Advice part is setting here.
-    private AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
+    protected AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
         AdviceExpressionsType advices = new AdviceExpressionsType();
         AdviceExpressionType advice = new AdviceExpressionType();
         advice.setAdviceId("MSID");
