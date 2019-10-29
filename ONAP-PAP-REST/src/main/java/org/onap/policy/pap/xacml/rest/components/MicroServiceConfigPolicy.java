@@ -39,6 +39,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.onap.policy.common.logging.eelf.MessageCodes;
+import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.jpa.MicroServiceModels;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -52,16 +62,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
-import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.jpa.MicroServiceModels;
 
 public class MicroServiceConfigPolicy extends Policy {
 
@@ -91,7 +91,8 @@ public class MicroServiceConfigPolicy extends Policy {
         if (policyName.endsWith(".xml")) {
             policyName = policyName.replace(".xml", "");
         }
-        try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName + ".json")) {
+        try (PrintWriter out =
+            new PrintWriter(CONFIG_HOME + File.separator + policyName + ".json")) {
             out.println(jsonBody);
         } catch (Exception e) {
             LOGGER.error("Exception Occured While writing Configuration data" + e);
@@ -181,8 +182,9 @@ public class MicroServiceConfigPolicy extends Policy {
                     matching = getValueFromDictionary(policyAdapter.getServiceType());
                 } else {
                     String jsonVersion = StringUtils.replaceEach(rootNode.get("version").toString(),
-                            new String[] {"\""}, new String[] {""});
-                    matching = getValueFromDictionary(policyAdapter.getServiceType() + "-v" + jsonVersion);
+                        new String[] {"\""}, new String[] {""});
+                    matching =
+                        getValueFromDictionary(policyAdapter.getServiceType() + "-v" + jsonVersion);
                 }
                 if (matching != null && !matching.isEmpty()) {
                     matchMap = Splitter.on(",").withKeyValueSeparator("=").split(matching);
@@ -225,7 +227,8 @@ public class MicroServiceConfigPolicy extends Policy {
             // Match for riskType
             allOf.getMatch().add(createDynamicMatch("RiskType", policyAdapter.getRiskType()));
             // Match for riskLevel
-            allOf.getMatch().add(createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
+            allOf.getMatch()
+                .add(createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
             // Match for riskguard
             allOf.getMatch().add(createDynamicMatch("guard", policyAdapter.getGuard()));
             // Match for ttlDate
@@ -236,10 +239,10 @@ public class MicroServiceConfigPolicy extends Policy {
             anyOf.getAllOf().add(allOf);
 
             TargetType target = new TargetType();
-            ((TargetType) target).getAnyOf().add(anyOf);
+            target.getAnyOf().add(anyOf);
 
             // Adding the target to the policy element
-            configPolicy.setTarget((TargetType) target);
+            configPolicy.setTarget(target);
 
             RuleType rule = new RuleType();
             rule.setRuleId(policyAdapter.getRuleID());
@@ -261,7 +264,7 @@ public class MicroServiceConfigPolicy extends Policy {
                 accessURI = new URI(ACTION_ID);
             } catch (URISyntaxException e) {
                 PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "MicroServiceConfigPolicy",
-                        "Exception creating ACCESS URI");
+                    "Exception creating ACCESS URI");
             }
             accessAttributeDesignator.setCategory(CATEGORY_ACTION);
             accessAttributeDesignator.setDataType(STRING_DATATYPE);
@@ -281,7 +284,7 @@ public class MicroServiceConfigPolicy extends Policy {
                 configURI = new URI(RESOURCE_ID);
             } catch (URISyntaxException e) {
                 PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "MicroServiceConfigPolicy",
-                        "Exception creating Config URI");
+                    "Exception creating Config URI");
             }
             configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
             configAttributeDesignator.setDataType(STRING_DATATYPE);
@@ -301,11 +304,13 @@ public class MicroServiceConfigPolicy extends Policy {
             rule.setTarget(targetInRule);
             rule.setAdviceExpressions(getAdviceExpressions(version, policyName));
 
-            configPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
+            configPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()
+                .add(rule);
             policyAdapter.setPolicyData(configPolicy);
 
         } else {
-            PolicyLogger.error("Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
+            PolicyLogger.error(
+                "Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
         }
         setPreparedToSave(true);
         return true;
@@ -322,7 +327,7 @@ public class MicroServiceConfigPolicy extends Policy {
                 pullMatchValue(value); // RECURSIVE CALL
             } else {
                 newValue = StringUtils.replaceEach(value.toString(), new String[] {"[", "]", "\""},
-                        new String[] {"", "", ""});
+                    new String[] {"", "", ""});
                 mapAttribute.put(key, newValue);
             }
         }
@@ -335,8 +340,8 @@ public class MicroServiceConfigPolicy extends Policy {
         String modelVersion = service.split("-v")[1];
 
         CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
-        List<Object> result =
-                dbConnection.getDataById(MicroServiceModels.class, "modelName:version", modelName + ":" + modelVersion);
+        List<Object> result = dbConnection.getDataById(MicroServiceModels.class,
+            "modelName:version", modelName + ":" + modelVersion);
         if (result != null && !result.isEmpty()) {
             MicroServiceModels model = (MicroServiceModels) result.get(0);
             ruleTemplate = model.getAnnotation();
@@ -345,7 +350,7 @@ public class MicroServiceConfigPolicy extends Policy {
     }
 
     // Data required for Advice part is setting here.
-    private AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
+    protected AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
         AdviceExpressionsType advices = new AdviceExpressionsType();
         AdviceExpressionType advice = new AdviceExpressionType();
         advice.setAdviceId("MSID");
@@ -359,7 +364,8 @@ public class MicroServiceConfigPolicy extends Policy {
         AttributeValueType configNameAttributeValue = new AttributeValueType();
         configNameAttributeValue.setDataType(STRING_DATATYPE);
         configNameAttributeValue.getContent().add("Configuration");
-        assignment1.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue));
+        assignment1
+            .setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue));
 
         advice.getAttributeAssignmentExpression().add(assignment1);
         // For Config file Url if configurations are provided.
@@ -406,7 +412,8 @@ public class MicroServiceConfigPolicy extends Policy {
         AttributeValueType configNameAttributeValue4 = new AttributeValueType();
         configNameAttributeValue4.setDataType(STRING_DATATYPE);
         configNameAttributeValue4.getContent().add(Integer.toString(version));
-        assignment4.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue4));
+        assignment4
+            .setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue4));
 
         advice.getAttributeAssignmentExpression().add(assignment4);
 
@@ -418,7 +425,8 @@ public class MicroServiceConfigPolicy extends Policy {
         AttributeValueType configNameAttributeValue5 = new AttributeValueType();
         configNameAttributeValue5.setDataType(STRING_DATATYPE);
         configNameAttributeValue5.getContent().add(policyAdapter.getOnapName());
-        assignment5.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue5));
+        assignment5
+            .setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue5));
 
         advice.getAttributeAssignmentExpression().add(assignment5);
 
@@ -430,7 +438,8 @@ public class MicroServiceConfigPolicy extends Policy {
         AttributeValueType configNameAttributeValue7 = new AttributeValueType();
         configNameAttributeValue7.setDataType(STRING_DATATYPE);
         configNameAttributeValue7.getContent().add(policyAdapter.getServiceType());
-        assignment7.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue7));
+        assignment7
+            .setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue7));
 
         advice.getAttributeAssignmentExpression().add(assignment7);
 
@@ -444,7 +453,8 @@ public class MicroServiceConfigPolicy extends Policy {
             AttributeValueType configNameAttributeValue6 = new AttributeValueType();
             configNameAttributeValue6.setDataType(STRING_DATATYPE);
             configNameAttributeValue6.getContent().add(policyAdapter.getConfigName());
-            assignment6.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue6));
+            assignment6
+                .setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue6));
 
             advice.getAttributeAssignmentExpression().add(assignment6);
 
@@ -456,7 +466,8 @@ public class MicroServiceConfigPolicy extends Policy {
             AttributeValueType configNameAttributeValue8 = new AttributeValueType();
             configNameAttributeValue8.setDataType(STRING_DATATYPE);
             configNameAttributeValue8.getContent().add(policyAdapter.getUuid());
-            assignment8.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue8));
+            assignment8
+                .setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue8));
 
             advice.getAttributeAssignmentExpression().add(assignment8);
 
@@ -468,7 +479,8 @@ public class MicroServiceConfigPolicy extends Policy {
             AttributeValueType configNameAttributeValue9 = new AttributeValueType();
             configNameAttributeValue9.setDataType(STRING_DATATYPE);
             configNameAttributeValue9.getContent().add(policyAdapter.getLocation());
-            assignment9.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
+            assignment9
+                .setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
 
             advice.getAttributeAssignmentExpression().add(assignment9);
         } else {
@@ -477,7 +489,8 @@ public class MicroServiceConfigPolicy extends Policy {
                 String key = matchValue.getKey().trim();
                 if (value.contains("matching-true")) {
                     if (mapAttribute.containsKey(key)) {
-                        AttributeAssignmentExpressionType assignment9 = new AttributeAssignmentExpressionType();
+                        AttributeAssignmentExpressionType assignment9 =
+                            new AttributeAssignmentExpressionType();
                         assignment9.setAttributeId("matching:" + key);
                         assignment9.setCategory(CATEGORY_RESOURCE);
                         assignment9.setIssuer("");
@@ -485,7 +498,8 @@ public class MicroServiceConfigPolicy extends Policy {
                         AttributeValueType configNameAttributeValue9 = new AttributeValueType();
                         configNameAttributeValue9.setDataType(STRING_DATATYPE);
                         configNameAttributeValue9.getContent().add(mapAttribute.get(key));
-                        assignment9.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
+                        assignment9.setExpression(
+                            new ObjectFactory().createAttributeValue(configNameAttributeValue9));
 
                         advice.getAttributeAssignmentExpression().add(assignment9);
 
@@ -502,7 +516,8 @@ public class MicroServiceConfigPolicy extends Policy {
         AttributeValueType configNameAttributeValue10 = new AttributeValueType();
         configNameAttributeValue10.setDataType(STRING_DATATYPE);
         configNameAttributeValue10.getContent().add(policyAdapter.getPriority());
-        assignment10.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue10));
+        assignment10
+            .setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue10));
 
         advice.getAttributeAssignmentExpression().add(assignment10);
 
@@ -515,7 +530,8 @@ public class MicroServiceConfigPolicy extends Policy {
         AttributeValueType configNameAttributeValue11 = new AttributeValueType();
         configNameAttributeValue11.setDataType(STRING_DATATYPE);
         configNameAttributeValue11.getContent().add(policyAdapter.getRiskType());
-        assignment11.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue11));
+        assignment11
+            .setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue11));
 
         advice.getAttributeAssignmentExpression().add(assignment11);
 
@@ -527,7 +543,8 @@ public class MicroServiceConfigPolicy extends Policy {
         AttributeValueType configNameAttributeValue12 = new AttributeValueType();
         configNameAttributeValue12.setDataType(STRING_DATATYPE);
         configNameAttributeValue12.getContent().add(policyAdapter.getRiskLevel());
-        assignment12.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue12));
+        assignment12
+            .setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue12));
 
         advice.getAttributeAssignmentExpression().add(assignment12);
 
@@ -539,7 +556,8 @@ public class MicroServiceConfigPolicy extends Policy {
         AttributeValueType configNameAttributeValue13 = new AttributeValueType();
         configNameAttributeValue13.setDataType(STRING_DATATYPE);
         configNameAttributeValue13.getContent().add(policyAdapter.getGuard());
-        assignment13.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue13));
+        assignment13
+            .setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue13));
 
         advice.getAttributeAssignmentExpression().add(assignment13);
 
@@ -551,7 +569,8 @@ public class MicroServiceConfigPolicy extends Policy {
         AttributeValueType configNameAttributeValue14 = new AttributeValueType();
         configNameAttributeValue14.setDataType(STRING_DATATYPE);
         configNameAttributeValue14.getContent().add(policyAdapter.getTtlDate());
-        assignment14.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue14));
+        assignment14
+            .setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue14));
 
         advice.getAttributeAssignmentExpression().add(assignment14);
 

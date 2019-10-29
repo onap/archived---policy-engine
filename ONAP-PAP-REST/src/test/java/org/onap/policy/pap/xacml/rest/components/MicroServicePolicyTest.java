@@ -20,13 +20,20 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import com.att.research.xacml.api.pap.PAPException;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
+
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 public class MicroServicePolicyTest {
     @Rule
@@ -45,5 +52,47 @@ public class MicroServicePolicyTest {
         PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
         MicroServiceConfigPolicy policy = new MicroServiceConfigPolicy(policyAdapter);
         assertNull(policy.getCorrectPolicyDataObject());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testSave() {
+        PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
+        PolicyType policyType = new PolicyType();
+        policyAdapter.setPolicyID("id");
+        policyAdapter.setHighestVersion(1);
+        policyAdapter.setPolicyType("Config");
+        policyAdapter.setNewFileName("newfile");
+        policyAdapter.setData(policyType);
+        policyAdapter.setJsonBody("{\"key\":\"value\"}");
+        policyAdapter.setServiceType("svcType");
+        MicroServiceConfigPolicy policy = new MicroServiceConfigPolicy(policyAdapter);
+
+        try {
+            policy.savePolicies();
+        } catch (PAPException ex) {
+            fail("Expected different exception:  " + ex);
+        }
+    }
+
+    @Test
+    public void testAdvice() {
+        PolicyType policyType = new PolicyType();
+        PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
+        policyAdapter.setPolicyID("id");
+        policyAdapter.setHighestVersion(1);
+        policyAdapter.setPolicyType("Config");
+        policyAdapter.setNewFileName("newfile");
+        policyAdapter.setData(policyType);
+        policyAdapter.setJsonBody("{\"key\":\"value\"}");
+        policyAdapter.setServiceType("svcType");
+
+        MicroServiceConfigPolicy policy = new MicroServiceConfigPolicy(policyAdapter);
+        try {
+            policy.savePolicies();
+        } catch (Exception ex) {
+            assertTrue(true);
+        }
+        AdviceExpressionsType expType = policy.getAdviceExpressions(1, "filename");
+        assertEquals(1, expType.getAdviceExpression().size());
     }
 }

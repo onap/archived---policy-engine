@@ -30,6 +30,7 @@ import static org.mockito.Mockito.when;
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,6 +45,7 @@ import org.onap.policy.common.logging.OnapLoggingContext;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.pap.xacml.rest.elk.client.PolicyElasticSearchController;
+import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
 import org.onap.policy.xacml.std.pap.StdEngine;
@@ -93,8 +95,10 @@ public class DeleteHandlerTest {
         when(engine.getGroup(any())).thenReturn(null);
 
         // Mock elastic search
-        PolicyElasticSearchController controller = Mockito.mock(PolicyElasticSearchController.class);
-        PowerMockito.whenNew(PolicyElasticSearchController.class).withNoArguments().thenReturn(controller);
+        PolicyElasticSearchController controller =
+            Mockito.mock(PolicyElasticSearchController.class);
+        PowerMockito.whenNew(PolicyElasticSearchController.class).withNoArguments()
+            .thenReturn(controller);
 
         // Test deletion from PAP
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -121,5 +125,42 @@ public class DeleteHandlerTest {
         // Test check entity
         List<?> peResult = Collections.emptyList();
         assertEquals(DeleteHandler.checkPolicyGroupEntity(peResult), false);
+    }
+
+    @Test
+    public void testDoDeletePap() {
+        CommonClassDao dao = Mockito.mock(CommonClassDao.class);
+        DeleteHandler handler = new DeleteHandler(dao);
+
+        // Mock request
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setBodyContent(
+            "{\n\"PAPPolicyType\": \"StdPAPPolicy\", \"policyName\": \"foo.Config_name.1.xml\", \"deleteCondition\": \"All Versions\"\n}\n");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        try {
+            handler.doApiDeleteFromPap(request, response);
+        } catch (Exception ex) {
+            fail("Not expecting an exception: " + ex);
+        }
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testDoDeletePdp() {
+        CommonClassDao dao = Mockito.mock(CommonClassDao.class);
+        DeleteHandler handler = new DeleteHandler(dao);
+        OnapLoggingContext loggingContext = new OnapLoggingContext();
+
+        // Mock request
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setBodyContent(
+            "{\n\"PAPPolicyType\": \"StdPAPPolicy\", \"policyName\": \"foo.Config_name.1.xml\", \"deleteCondition\": \"All Versions\"\n}\n");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        try {
+            handler.doApiDeleteFromPdp(request, response, loggingContext);
+        } catch (IOException ex) {
+            fail("Expecting a different exception: " + ex);
+        }
     }
 }
