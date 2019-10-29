@@ -18,8 +18,10 @@
  * ============LICENSE_END=========================================================
  */
 
-angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$window', '$compile', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', function ($scope, $window, $compile, PolicyAppService, PolicyNavigator, modalService, $modal, Notification) {
-    $("#dialog").hide();
+angular.module('abs').controller('dcaeMicroServiceController', 
+		['$scope', '$window', '$compile', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', 
+			function ($scope, $window, $compile, PolicyAppService, PolicyNavigator, modalService, $modal, Notification) {
+			$("#dialog").hide();
     
     $scope.policyNavigator;
     $scope.isCheck = false;
@@ -343,7 +345,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 					 });
 				 },
 				 error : function(data){
-					 alert("Error While Retriving the Template Layout Pattren.");
+					 Notification.error("Error While Retriving the Template Layout Pattren.");
 				 }
 			 });		 
 		 }
@@ -589,7 +591,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                     
                 },
                 error : function(data){
-                    alert("Error While Retriving the Template Layout Pattren.");
+                	Notification.error("Error While Retriving the Template Layout Pattren.");
                 }
             });
 
