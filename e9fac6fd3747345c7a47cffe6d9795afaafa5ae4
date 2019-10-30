@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "3a5da115_8362ff05",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryController/BRMSDependencyDictController.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-30T13:34:12Z",
+      "side": 1,
+      "message": "I suggested that it was ok to leave them, since the whole file has them and only a couple of lines are being changed (and this should be deprecated at some point).",
+      "parentUuid": "4b7aa4b7_eea9efce",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 1
+      },
+      "revId": "e9fac6fd3747345c7a47cffe6d9795afaafa5ae4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b90d9f20_ffd1a169",
         "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryGridController/onapNameDictGridController.js",
         "patchSetId": 1
@@ -71,6 +95,23 @@
     },
     {
       "key": {
+        "uuid": "e0cd68a1_ec449b89",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/BRMSParamPolicyController.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-30T13:34:12Z",
+      "side": 1,
+      "message": "since tabs are used inconsistently through-out this file, perhaps all tabs should be changed to spaces",
+      "revId": "e9fac6fd3747345c7a47cffe6d9795afaafa5ae4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "129f2f13_bdf10f41",
         "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/js/controllers/policyManager.js",
         "patchSetId": 1
@@ -88,6 +129,23 @@
         "endLine": 22,
         "endChar": 144
       },
+      "revId": "e9fac6fd3747345c7a47cffe6d9795afaafa5ae4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10e29634_6df939ac",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/js/controllers/policyManager.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-30T13:34:12Z",
+      "side": 1,
+      "message": "tab \u003d\u003e space",
       "revId": "e9fac6fd3747345c7a47cffe6d9795afaafa5ae4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
