@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa06bdea_a24f8772",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/elk/ElkConnectorTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-30T14:24:54Z",
+      "side": 1,
+      "message": "sonar: don\u0027t need the \"{\" and \"}\"\n\nsame comment below",
+      "revId": "e606d4fcc702cb60871c1717f722025d147b1855",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
