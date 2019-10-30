@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "5d8398bb_71bb64a2",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/MicroServiceConfigPolicy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-30T13:24:47Z",
+      "side": 1,
+      "message": "is this right?  I thought it had to all be alphabetical and \"org\" comes after \"oasis\".\n\nsame comment for other files",
+      "revId": "8223fd5d9045750914cc3a9f56058fbe335c38ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed20d030_4c9931a8",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/MicroServicePolicyTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-30T13:24:47Z",
+      "side": 1,
+      "message": "remove the try/catch wrapper - junit will fail it if it\u0027s the wrong exception type\n\nsame comment below and in other files",
+      "revId": "8223fd5d9045750914cc3a9f56058fbe335c38ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "522bcea3_fa9c0d9f",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/OptimizationConfigPolicyTest.java",
         "patchSetId": 2
@@ -68,6 +102,47 @@
       "revId": "8223fd5d9045750914cc3a9f56058fbe335c38ef",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d373154f_e00d345b",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/OptimizationConfigPolicyTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-30T13:24:47Z",
+      "side": 1,
+      "message": "Yes, use this instead of the try/catch block:\n\n  assertThatThrownBy(() -\u003e policy.savePolicies);",
+      "parentUuid": "5932d7c5_fced9b5f",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 29
+      },
+      "revId": "8223fd5d9045750914cc3a9f56058fbe335c38ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66055667_df597b34",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/elk/ElkConnectorTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-30T13:24:47Z",
+      "side": 1,
+      "message": "use assertj: assertThatIllegalArgumentException()\n\nsame comment below",
+      "revId": "8223fd5d9045750914cc3a9f56058fbe335c38ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
