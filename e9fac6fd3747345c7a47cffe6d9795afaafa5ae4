@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61333f32_0a01033b",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryController/BRMSControllerDictController.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-30T08:03:29Z",
+      "side": 1,
+      "message": "tabs",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 1
+      },
+      "revId": "e9fac6fd3747345c7a47cffe6d9795afaafa5ae4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b7aa4b7_eea9efce",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryController/BRMSDependencyDictController.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-30T08:03:29Z",
+      "side": 1,
+      "message": "tabs",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 1
+      },
+      "revId": "e9fac6fd3747345c7a47cffe6d9795afaafa5ae4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b90d9f20_ffd1a169",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryGridController/onapNameDictGridController.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-30T08:03:29Z",
+      "side": 1,
+      "message": "Line longer than 120 characters",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 139
+      },
+      "revId": "e9fac6fd3747345c7a47cffe6d9795afaafa5ae4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "129f2f13_bdf10f41",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/js/controllers/policyManager.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-30T08:03:29Z",
+      "side": 1,
+      "message": "Longer than 120 characters",
+      "range": {
+        "startLine": 21,
+        "startChar": 1,
+        "endLine": 22,
+        "endChar": 144
+      },
+      "revId": "e9fac6fd3747345c7a47cffe6d9795afaafa5ae4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
