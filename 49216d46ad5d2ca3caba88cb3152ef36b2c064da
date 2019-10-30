@@ -16,6 +16,24 @@
       "revId": "49216d46ad5d2ca3caba88cb3152ef36b2c064da",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a89b234_3ad3ba99",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/auth/test/AuthenticationServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-30T07:46:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99e0ae1f_19c8689f",
+      "revId": "49216d46ad5d2ca3caba88cb3152ef36b2c064da",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
