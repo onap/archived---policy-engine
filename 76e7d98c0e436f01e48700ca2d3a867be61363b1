@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "50586ec7_6d9852ce",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/BRMSParamPolicyController.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-30T15:35:26Z",
+      "side": 1,
+      "message": "tabs again :-)",
+      "revId": "76e7d98c0e436f01e48700ca2d3a867be61363b1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7ebd3ba_a235eda7",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/js/controllers/policyManager.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-30T15:35:26Z",
+      "side": 1,
+      "message": "tab",
+      "revId": "76e7d98c0e436f01e48700ca2d3a867be61363b1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
