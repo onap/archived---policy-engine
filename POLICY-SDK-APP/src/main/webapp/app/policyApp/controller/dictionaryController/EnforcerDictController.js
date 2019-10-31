@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-var editEnforcerTypeController =  function ($scope, $modalInstance, message, UserInfoServiceDS2){
+var editEnforcerTypeController =  function ($scope, $modalInstance, message, UserInfoServiceDS2, Notification){
     if(message.enforcerDictionaryData==null)
         $scope.label='Add Enforcing Type'
     else{
@@ -25,14 +25,14 @@ var editEnforcerTypeController =  function ($scope, $modalInstance, message, Use
         $scope.disableCd=true;
     }
     $scope.editEnforcerType = message.enforcerDictionaryData;
-	
-	/*getting user info from session*/
-	var userid = null;
-	UserInfoServiceDS2.getFunctionalMenuStaticDetailSession()
-	  	.then(function (response) {	  		
-	  		userid = response.userid;	  	
-	 });
-	
+    
+    /*getting user info from session*/
+    var userid = null;
+    UserInfoServiceDS2.getFunctionalMenuStaticDetailSession()
+          .then(function (response) {              
+              userid = response.userid;          
+     });
+    
     $scope.saveEnforcerType = function(enforcerDictionaryData) {
         var uuu = "saveDictionary/enforcer_dictionary/save_enforcerType";
         var postData={enforcerDictionaryData: enforcerDictionaryData, userid: userid};
@@ -49,7 +49,7 @@ var editEnforcerTypeController =  function ($scope, $modalInstance, message, Use
                 $modalInstance.close({enforcerDictionaryDatas:$scope.enforcerDictionaryDatas});
             },
             error : function(data){
-                alert("Error while saving.");
+                Notification.error("Error while saving.");
             }
         });
     };
