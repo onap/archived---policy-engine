@@ -22,7 +22,6 @@
 package org.onap.policy.pap.xacml.rest.components;
 
 import com.att.research.xacml.util.XACMLProperties;
-
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -33,7 +32,6 @@ import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XacmlRestProperties;
@@ -58,7 +56,7 @@ public class NotifyOtherPaps {
      */
     public void notifyOthers(long entityId, String entityType, String newGroupId) {
         LOGGER.debug("notifyOthers(long entityId, String entityType, long newGroupId) as notifyOthers(" + entityId + ","
-                + entityType + "," + newGroupId + ") called");
+            + entityType + "," + newGroupId + ") called");
         failedPaps = new ArrayList<>();
 
         List<?> otherServers = PolicyDbDao.getPolicyDbDaoInstance().getOtherServers();
@@ -70,7 +68,7 @@ public class NotifyOtherPaps {
         }
     }
 
-    private void startNotifyThreads(List<?> otherServers, long entityId, String entityType, String newGroupId) {
+    protected void startNotifyThreads(List<?> otherServers, long entityId, String entityType, String newGroupId) {
         LinkedList<Thread> notifyThreads = new LinkedList<>();
         // we're going to run notifications in parallel threads to speed things
         // up
@@ -144,11 +142,11 @@ public class NotifyOtherPaps {
                     return;
                 }
                 if (newGroupId == null) {
-                    url = new URL(otherPap + "?policydbdaourl=" + papUrl + "&entityid=" + entityId + "&entitytype="
-                            + entityType);
+                    url = new URL(
+                        otherPap + "?policydbdaourl=" + papUrl + "&entityid=" + entityId + "&entitytype=" + entityType);
                 } else {
                     url = new URL(otherPap + "?policydbdaourl=" + papUrl + "&entityid=" + entityId + "&entitytype="
-                            + entityType + "&extradata=" + newGroupId);
+                        + entityType + "&extradata=" + newGroupId);
                 }
             } catch (MalformedURLException e) {
                 LOGGER.warn("Caught MalformedURLException on: new URL()", e);
@@ -188,7 +186,7 @@ public class NotifyOtherPaps {
             int readTimeout;
             try {
                 readTimeout =
-                        Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_NOTIFY_TIMEOUT));
+                    Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_NOTIFY_TIMEOUT));
             } catch (Exception e) {
                 LOGGER.error("xacml.rest.pap.notify.timeoutms property not set, using a default.", e);
                 readTimeout = 10000;
@@ -217,7 +215,7 @@ public class NotifyOtherPaps {
                     LOGGER.info("PolicyDBDao: NotifyOtherThread received response 200 from pap server on notify");
                 } else {
                     LOGGER.warn("PolicyDBDao: NotifyOtherThread connection response code not 200, received: "
-                            + connection.getResponseCode());
+                        + connection.getResponseCode());
                     failedPaps.add(dbdEntity);
                 }
             } catch (Exception e) {
