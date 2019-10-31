@@ -65,31 +65,13 @@
             <artifactId>maven-model</artifactId>
             <version>3.5.3</version>
         </dependency>
-        <!--
-            CLM security fix - force use of xstream
-            Remove this if a new version of drools-verifier is upgraded
-            that upgrades to xstream.
-        -->
-        <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.drools</groupId>
-            <artifactId>drools-verifier</artifactId>
-            <version>6.5.0.Final</version>
+            <artifactId>drools-verifier-drl</artifactId>
             <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>com.lowagie</groupId>
                     <artifactId>itext</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.thoughtworks.xstream</groupId>
-                    <artifactId>xstream</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
