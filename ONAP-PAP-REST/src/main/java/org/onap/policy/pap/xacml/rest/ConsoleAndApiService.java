@@ -3,6 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,8 +44,8 @@ import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.pap.xacml.rest.components.PolicyDBDao;
-import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTransaction;
+import org.onap.policy.pap.xacml.rest.components.PolicyDbDao;
+import org.onap.policy.pap.xacml.rest.components.PolicyDbDaoTransaction;
 import org.onap.policy.pap.xacml.rest.handler.PushPolicyHandler;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDP;
@@ -56,6 +57,15 @@ import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 
 public class ConsoleAndApiService {
 
+    private static final String SPACE_UNIMPLEMENTED = " UNIMPLEMENTED";
+    private static final String XACMLPAPSERVLET_DO_AC_PUT_COMMIT_TRANS = "XACMLPapServlet doACPut commitTransaction";
+    private static final String UNIMPLEMENTED = "UNIMPLEMENTED";
+    private static final String APPLICATION_JSON = "application/json";
+    private static final String CONTENT_TYPE = "content-type";
+    private static final String TO_GROUP = ",to group=";
+    private static final String PDP_ID = "pdpId";
+    private static final String XACML_PAP_SERVLET_DO_AC_PUT = "XACMLPapServlet.doACPut";
+    private static final String UNKNOWN_GROUP_ID = "Unknown groupId '";
     private static final Logger LOGGER = FlexLogger.getLogger(ConsoleAndApiService.class);
     private static final Logger auditLogger = FlexLogger.getLogger("auditLogger");
     private static final String ADD_GROUP_ERROR = "addGroupError";
@@ -83,7 +93,7 @@ public class ConsoleAndApiService {
      */
     public void doAcPost(HttpServletRequest request, HttpServletResponse response, String groupId,
             OnapLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
-        PolicyDBDaoTransaction doAcPostTransaction = null;
+        PolicyDbDaoTransaction doAcPostTransaction = null;
         try {
             String groupName = request.getParameter("groupName");
             String groupDescription = request.getParameter("groupDescription");
@@ -101,9 +111,9 @@ public class ConsoleAndApiService {
                 } catch (UnsupportedEncodingException e) {
                     LOGGER.error(e);
                 }
-                PolicyDBDaoTransaction newGroupTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
+                PolicyDbDaoTransaction newGroupTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
                 try {
-                    newGroupTransaction.createGroup(PolicyDBDao.createNewPDPGroupId(unescapedName), unescapedName,
+                    newGroupTransaction.createGroup(PolicyDbDao.createNewPdpGroupId(unescapedName), unescapedName,
                             unescapedDescription, PAPSERVLETDOACPOST);
                     papEngine.newGroup(unescapedName, unescapedDescription);
                     loggingContext.metricStarted();
@@ -137,7 +147,7 @@ public class ConsoleAndApiService {
                 LOGGER.error(e);
             }
             if (group == null) {
-                String message = "Unknown groupId '" + groupId + "'";
+                String message = UNKNOWN_GROUP_ID + groupId + "'";
                 // for fixing Header Manipulation of Fortify issue
                 if (!message.matches(REGEX)) {
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -171,7 +181,7 @@ public class ConsoleAndApiService {
                 StdPDPGroup updatedGroup = null;
                 StdPDPPolicy policyForSafetyCheck = new StdPDPPolicy();
                 for (String policyId : policyIdList) {
-                    PolicyDBDaoTransaction addPolicyToGroupTransaction =
+                    PolicyDbDaoTransaction addPolicyToGroupTransaction =
                             XACMLPapServlet.getPolicyDbDao().getNewTransaction();
                     try {
                         // Copying the policy to the file system and updating groups
@@ -227,13 +237,13 @@ public class ConsoleAndApiService {
                  */
 
                 // Get new transaction to perform updateGroup()
-                PolicyDBDaoTransaction acPutTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
+                PolicyDbDaoTransaction acPutTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
                 try {
                     // Assume that this is an update of an existing PDP
                     // Group
                     loggingContext.setServiceName("PolicyEngineAPI:PAP.updateGroup");
                     try {
-                        acPutTransaction.updateGroup(updatedGroup, "XACMLPapServlet.doACPut", userId);
+                        acPutTransaction.updateGroup(updatedGroup, XACML_PAP_SERVLET_DO_AC_PUT, userId);
                     } catch (Exception e) {
                         PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, XACMLPAPSERVLET,
                                 " Error occurred when notifying PAPs of a group change: " + e);
@@ -279,8 +289,6 @@ public class ConsoleAndApiService {
                 loggingContext.transactionEnded();
                 auditLogger.info(SUCCESS);
                 LOGGER.info(TRANSENDED);
-
-                return;
             } else if (request.getParameter("default") != null) {
                 // Args: group=<groupId> default=true <= make default
                 // change the current default group to be the one identified in
@@ -292,7 +300,7 @@ public class ConsoleAndApiService {
                 // It should never be the case that multiple groups are
                 // currently marked as the default, but protect against that
                 // anyway.
-                PolicyDBDaoTransaction setDefaultGroupTransaction =
+                PolicyDbDaoTransaction setDefaultGroupTransaction =
                         XACMLPapServlet.getPolicyDbDao().getNewTransaction();
                 try {
                     setDefaultGroupTransaction.changeDefaultGroup(group, PAPSERVLETDOACPOST);
@@ -316,20 +324,19 @@ public class ConsoleAndApiService {
                 }
                 auditLogger.info(SUCCESS);
                 LOGGER.info(TRANSENDED);
-                return;
-            } else if (request.getParameter("pdpId") != null) {
+            } else if (request.getParameter(PDP_ID) != null) {
                 doAcPostTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
                 // Args: group=<groupId> pdpId=<pdpId> <= move PDP to group
                 loggingContext.setServiceName("AC:PAP.movePDP");
-                String pdpId = request.getParameter("pdpId");
+                String pdpId = request.getParameter(PDP_ID);
                 OnapPDP pdp = papEngine.getPDP(pdpId);
-                OnapPDPGroup originalGroup = papEngine.getPDPGroup(pdp);
+                final OnapPDPGroup originalGroup = papEngine.getPDPGroup(pdp);
                 try {
                     doAcPostTransaction.movePdp(pdp, group, PAPSERVLETDOACPOST);
                 } catch (Exception e) {
                     doAcPostTransaction.rollbackTransaction();
                     PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, XACMLPAPSERVLET,
-                            " Error while moving pdp in the database: " + "pdp=" + pdp.getId() + ",to group="
+                            " Error while moving pdp in the database: " + "pdp=" + pdp.getId() + TO_GROUP
                                     + group.getId());
                     throw new PAPException(e.getMessage());
                 }
@@ -351,14 +358,12 @@ public class ConsoleAndApiService {
                 loggingContext.transactionEnded();
                 auditLogger.info(SUCCESS);
                 PolicyLogger.audit(TRANSENDED);
-                return;
             }
         } catch (PAPException e) {
             PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, XACMLPAPSERVLET, " AC POST exception");
             loggingContext.transactionEnded();
             PolicyLogger.audit(TRANSACTIONFAILED);
             setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-            return;
         }
     }
 
@@ -376,7 +381,7 @@ public class ConsoleAndApiService {
             OnapLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
         try {
             String parameterDefault = request.getParameter("default");
-            String pdpId = request.getParameter("pdpId");
+            String pdpId = request.getParameter(PDP_ID);
             String pdpGroup = request.getParameter("getPDPGroup");
             if ("".equals(groupId)) {
                 // request IS from AC but does not identify a group by name
@@ -391,7 +396,7 @@ public class ConsoleAndApiService {
                         LOGGER.debug("GET Default group req from '" + request.getRequestURL() + "'");
                     }
                     response.setStatus(HttpServletResponse.SC_OK);
-                    response.setHeader("content-type", "application/json");
+                    response.setHeader(CONTENT_TYPE, APPLICATION_JSON);
                     try {
                         response.getOutputStream().close();
                     } catch (IOException e) {
@@ -420,7 +425,7 @@ public class ConsoleAndApiService {
                             LOGGER.debug("GET pdp '" + pdpId + "' req from '" + request.getRequestURL() + "'");
                         }
                         response.setStatus(HttpServletResponse.SC_OK);
-                        response.setHeader("content-type", "application/json");
+                        response.setHeader(CONTENT_TYPE, APPLICATION_JSON);
                         try {
                             response.getOutputStream().close();
                         } catch (IOException e) {
@@ -447,7 +452,7 @@ public class ConsoleAndApiService {
                             LOGGER.debug("GET PDP '" + pdpId + "' Group req from '" + request.getRequestURL() + "'");
                         }
                         response.setStatus(HttpServletResponse.SC_OK);
-                        response.setHeader("content-type", "application/json");
+                        response.setHeader(CONTENT_TYPE, APPLICATION_JSON);
                         try {
                             response.getOutputStream().close();
                         } catch (IOException e) {
@@ -478,7 +483,7 @@ public class ConsoleAndApiService {
                         LOGGER.debug("GET All groups req");
                     }
                     response.setStatus(HttpServletResponse.SC_OK);
-                    response.setHeader("content-type", "application/json");
+                    response.setHeader(CONTENT_TYPE, APPLICATION_JSON);
                     try {
                         response.getOutputStream().close();
                     } catch (IOException e) {
@@ -499,7 +504,7 @@ public class ConsoleAndApiService {
                 LOGGER.error(e);
             }
             if (group == null) {
-                String message = "Unknown groupId '" + groupId + "'";
+                String message = UNKNOWN_GROUP_ID + groupId + "'";
                 // for fixing Header Manipulation of Fortify issue
                 if (!message.matches(REGEX)) {
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -532,7 +537,7 @@ public class ConsoleAndApiService {
                     LOGGER.debug("GET group '" + group.getId() + "' req from '" + request.getRequestURL() + "'");
                 }
                 response.setStatus(HttpServletResponse.SC_OK);
-                response.setHeader("content-type", "application/json");
+                response.setHeader(CONTENT_TYPE, APPLICATION_JSON);
                 try {
                     response.getOutputStream().close();
                 } catch (IOException e) {
@@ -554,13 +559,12 @@ public class ConsoleAndApiService {
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " UNIMPLEMENTED ");
             loggingContext.transactionEnded();
             PolicyLogger.audit(TRANSACTIONFAILED);
-            setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
+            setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, UNIMPLEMENTED);
         } catch (PAPException e) {
             PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, XACMLPAPSERVLET, " AC Get exception");
             loggingContext.transactionEnded();
             PolicyLogger.audit(TRANSACTIONFAILED);
             setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-            return;
         }
     }
 
@@ -576,7 +580,7 @@ public class ConsoleAndApiService {
      */
     public void doAcPut(HttpServletRequest request, HttpServletResponse response, String groupId,
             OnapLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
-        PolicyDBDaoTransaction acPutTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
+        PolicyDbDaoTransaction acPutTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
         try {
             String userId = request.getParameter("userId");
             // for PUT operations the group may or may not need to exist before
@@ -587,7 +591,7 @@ public class ConsoleAndApiService {
             // for remaining operations the group must exist before the
             // operation can be done
             if (group == null) {
-                String message = "Unknown groupId '" + groupId + "'";
+                String message = UNKNOWN_GROUP_ID + groupId + "'";
                 PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
                 loggingContext.transactionEnded();
                 PolicyLogger.audit(TRANSACTIONFAILED);
@@ -608,11 +612,10 @@ public class ConsoleAndApiService {
                 auditLogger.info(SUCCESS);
                 PolicyLogger.audit(TRANSENDED);
                 acPutTransaction.rollbackTransaction();
-                return;
-            } else if (request.getParameter("pdpId") != null) {
+            } else if (request.getParameter(PDP_ID) != null) {
                 // ARGS: group=<groupId> pdpId=<pdpId/URL> <= create a new PDP
                 // or Update an Existing one
-                String pdpId = request.getParameter("pdpId");
+                String pdpId = request.getParameter(PDP_ID);
                 if (papEngine.getPDP(pdpId) == null) {
                     loggingContext.setServiceName("AC:PAP.createPDP");
                 } else {
@@ -661,18 +664,18 @@ public class ConsoleAndApiService {
                         // this is a request to create a new PDP object
                         try {
                             acPutTransaction.addPdpToGroup(pdp.getId(), group.getId(), pdp.getName(),
-                                    pdp.getDescription(), pdp.getJmxPort(), "XACMLPapServlet.doACPut");
+                                    pdp.getDescription(), pdp.getJmxPort(), XACML_PAP_SERVLET_DO_AC_PUT);
                             papEngine.newPDP(pdp.getId(), group, pdp.getName(), pdp.getDescription(), pdp.getJmxPort());
                         } catch (Exception e) {
                             PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, XACMLPAPSERVLET,
                                     " Error while adding pdp to group in the database: " + "pdp=" + (pdp.getId())
-                                            + ",to group=" + group.getId());
+                                            + TO_GROUP + group.getId());
                             throw new PAPException(e.getMessage());
                         }
                     } else {
                         // this is a request to update the pdp
                         try {
-                            acPutTransaction.updatePdp(pdp, "XACMLPapServlet.doACPut");
+                            acPutTransaction.updatePdp(pdp, XACML_PAP_SERVLET_DO_AC_PUT);
                             papEngine.updatePDP(pdp);
                         } catch (Exception e) {
                             PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, XACMLPAPSERVLET,
@@ -691,15 +694,14 @@ public class ConsoleAndApiService {
                     loggingContext.metricStarted();
                     acPutTransaction.commitTransaction();
                     loggingContext.metricEnded();
-                    PolicyLogger.metrics("XACMLPapServlet doACPut commitTransaction");
+                    PolicyLogger.metrics(XACMLPAPSERVLET_DO_AC_PUT_COMMIT_TRANS);
                     loggingContext.transactionEnded();
                     auditLogger.info(SUCCESS);
                     PolicyLogger.audit(TRANSENDED);
-                    return;
                 } else {
                     try {
                         PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, XACMLPAPSERVLET,
-                                " Error while adding pdp to group in the database: " + "pdp=null" + ",to group="
+                                " Error while adding pdp to group in the database: " + "pdp=null" + TO_GROUP
                                         + group.getId());
                         throw new PAPException("PDP is null");
                     } catch (Exception e) {
@@ -711,12 +713,11 @@ public class ConsoleAndApiService {
                 // <= add a PIP to pip config, or replace it if it already
                 // exists (lenient operation)
                 loggingContext.setServiceName("AC:PAP.putPIP");
-                PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " UNIMPLEMENTED");
+                PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + UNIMPLEMENTED);
                 loggingContext.transactionEnded();
                 PolicyLogger.audit(TRANSACTIONFAILED);
-                setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
+                setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, UNIMPLEMENTED);
                 acPutTransaction.rollbackTransaction();
-                return;
             } else {
                 // Assume that this is an update of an existing PDP Group
                 // ARGS: group=<groupId> <= Update an Existing Group
@@ -742,7 +743,7 @@ public class ConsoleAndApiService {
                 } catch (Exception e) {
                     LOGGER.error(e);
                 }
-                if (objectFromJson == null || !(objectFromJson instanceof StdPDPGroup)
+                if (!(objectFromJson instanceof StdPDPGroup)
                         || !((StdPDPGroup) objectFromJson).getId().equals(group.getId())) {
                     PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Group update had bad input. id="
                             + group.getId() + " objectFromJSON=" + objectFromJson);
@@ -763,7 +764,7 @@ public class ConsoleAndApiService {
                     if ("delete".equals(((StdPDPGroup) objectFromJson).getOperation())) {
                         acPutTransaction.updateGroup((StdPDPGroup) objectFromJson, "XACMLPapServlet.doDelete", userId);
                     } else {
-                        acPutTransaction.updateGroup((StdPDPGroup) objectFromJson, "XACMLPapServlet.doACPut", userId);
+                        acPutTransaction.updateGroup((StdPDPGroup) objectFromJson, XACML_PAP_SERVLET_DO_AC_PUT, userId);
                     }
                 } catch (Exception e) {
                     PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW + " Error while updating group in the database: "
@@ -789,13 +790,12 @@ public class ConsoleAndApiService {
                 loggingContext.metricStarted();
                 acPutTransaction.commitTransaction();
                 loggingContext.metricEnded();
-                PolicyLogger.metrics("XACMLPapServlet doACPut commitTransaction");
+                PolicyLogger.metrics(XACMLPAPSERVLET_DO_AC_PUT_COMMIT_TRANS);
                 // Group changed, which might include changing the policies
                 getPapInstance().groupChanged(group, loggingContext);
                 loggingContext.transactionEnded();
                 auditLogger.info(SUCCESS);
                 PolicyLogger.audit(TRANSENDED);
-                return;
             }
         } catch (PAPException e) {
             LOGGER.debug(e);
@@ -804,7 +804,6 @@ public class ConsoleAndApiService {
             loggingContext.transactionEnded();
             PolicyLogger.audit(TRANSACTIONFAILED);
             setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-            return;
         }
     }
 
@@ -820,18 +819,18 @@ public class ConsoleAndApiService {
      */
     public void doAcDelete(HttpServletRequest request, HttpServletResponse response, String groupId,
             OnapLoggingContext loggingContext, PAPPolicyEngine papEngine) throws IOException {
-        PolicyDBDaoTransaction removePdpOrGroupTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
+        PolicyDbDaoTransaction removePdpOrGroupTransaction = XACMLPapServlet.getPolicyDbDao().getNewTransaction();
         try {
             // for all DELETE operations the group must exist before the
             // operation can be done
             loggingContext.setServiceName("AC:PAP.delete");
             OnapPDPGroup group = papEngine.getGroup(groupId);
             if (group == null) {
-                String message = "Unknown groupId '" + groupId + "'";
+                String message = UNKNOWN_GROUP_ID + groupId + "'";
                 PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
                 loggingContext.transactionEnded();
                 PolicyLogger.audit(TRANSACTIONFAILED);
-                setResponseError(response, HttpServletResponse.SC_NOT_FOUND, "Unknown groupId '" + groupId + "'");
+                setResponseError(response, HttpServletResponse.SC_NOT_FOUND, UNKNOWN_GROUP_ID + groupId + "'");
                 removePdpOrGroupTransaction.rollbackTransaction();
                 return;
             }
@@ -841,15 +840,14 @@ public class ConsoleAndApiService {
                 // group=<groupId> policy=<policyId> [delete=<true|false>] <=
                 // delete policy file from group
                 loggingContext.setServiceName("AC:PAP.deletePolicy");
-                PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " UNIMPLEMENTED");
+                PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + SPACE_UNIMPLEMENTED);
                 loggingContext.transactionEnded();
                 PolicyLogger.audit(TRANSACTIONFAILED);
-                setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
+                setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, UNIMPLEMENTED);
                 removePdpOrGroupTransaction.rollbackTransaction();
-                return;
-            } else if (request.getParameter("pdpId") != null) {
+            } else if (request.getParameter(PDP_ID) != null) {
                 // ARGS: group=<groupId> pdpId=<pdpId> <= delete PDP
-                String pdpId = request.getParameter("pdpId");
+                String pdpId = request.getParameter(PDP_ID);
                 OnapPDP pdp = papEngine.getPDP(pdpId);
                 removePdpFromGroup(removePdpOrGroupTransaction, pdp, papEngine);
                 // adjust the status of the group, which may have changed when
@@ -862,21 +860,19 @@ public class ConsoleAndApiService {
                 loggingContext.metricStarted();
                 removePdpOrGroupTransaction.commitTransaction();
                 loggingContext.metricEnded();
-                PolicyLogger.metrics("XACMLPapServlet doACPut commitTransaction");
+                PolicyLogger.metrics(XACMLPAPSERVLET_DO_AC_PUT_COMMIT_TRANS);
                 loggingContext.transactionEnded();
                 auditLogger.info(SUCCESS);
                 PolicyLogger.audit(TRANSENDED);
-                return;
             } else if (request.getParameter("pipId") != null) {
                 // group=<groupId> pipId=<pipEngineId> <= delete PIP config for
                 // given engine
                 loggingContext.setServiceName("AC:PAP.deletePIPConfig");
-                PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " UNIMPLEMENTED");
+                PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + SPACE_UNIMPLEMENTED);
                 loggingContext.transactionEnded();
                 PolicyLogger.audit(TRANSACTIONFAILED);
-                setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
+                setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, UNIMPLEMENTED);
                 removePdpOrGroupTransaction.rollbackTransaction();
-                return;
             } else {
                 // ARGS: group=<groupId> movePDPsToGroupId=<movePDPsToGroupId>
                 // <= delete a group and move all its PDPs to the given group
@@ -904,11 +900,10 @@ public class ConsoleAndApiService {
                 loggingContext.metricStarted();
                 removePdpOrGroupTransaction.commitTransaction();
                 loggingContext.metricEnded();
-                PolicyLogger.metrics("XACMLPapServlet doACPut commitTransaction");
+                PolicyLogger.metrics(XACMLPAPSERVLET_DO_AC_PUT_COMMIT_TRANS);
                 loggingContext.transactionEnded();
                 auditLogger.info(SUCCESS);
                 PolicyLogger.audit(TRANSENDED);
-                return;
             }
         } catch (PAPException e) {
             removePdpOrGroupTransaction.rollbackTransaction();
@@ -916,11 +911,10 @@ public class ConsoleAndApiService {
             loggingContext.transactionEnded();
             PolicyLogger.audit(TRANSACTIONFAILED);
             setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-            return;
         }
     }
 
-    private void deleteGroup(PolicyDBDaoTransaction removePdpOrGroupTransaction, OnapPDPGroup group,
+    private void deleteGroup(PolicyDbDaoTransaction removePdpOrGroupTransaction, OnapPDPGroup group,
             OnapPDPGroup moveToGroup, PAPPolicyEngine papEngine) throws PAPException {
         try {
             removePdpOrGroupTransaction.deleteGroup(group, moveToGroup, "XACMLPapServlet.doACDelete");
@@ -932,7 +926,7 @@ public class ConsoleAndApiService {
         }
     }
 
-    private void removePdpFromGroup(PolicyDBDaoTransaction removePdpOrGroupTransaction, OnapPDP pdp,
+    private void removePdpFromGroup(PolicyDbDaoTransaction removePdpOrGroupTransaction, OnapPDP pdp,
             PAPPolicyEngine papEngine) throws PAPException {
         try {
             removePdpOrGroupTransaction.removePdpFromGroup(pdp.getId(), "XACMLPapServlet.doACDelete");
@@ -962,6 +956,5 @@ public class ConsoleAndApiService {
         } catch (IOException e) {
             LOGGER.error("Error setting Error response Header ", e);
         }
-        return;
     }
 }

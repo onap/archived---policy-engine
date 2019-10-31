@@ -3,6 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,15 +70,15 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.components.HandleIncomingNotifications;
-import org.onap.policy.pap.xacml.rest.components.PolicyDBDao;
-import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTransaction;
+import org.onap.policy.pap.xacml.rest.components.PolicyDbDao;
+import org.onap.policy.pap.xacml.rest.components.PolicyDbDaoTransaction;
 import org.onap.policy.pap.xacml.rest.handler.APIRequestHandler;
 import org.onap.policy.pap.xacml.rest.handler.PushPolicyHandler;
 import org.onap.policy.pap.xacml.rest.handler.SavePolicyHandler;
 import org.onap.policy.pap.xacml.restAuth.CheckPDP;
 import org.onap.policy.rest.XacmlRest;
 import org.onap.policy.rest.XacmlRestProperties;
-import org.onap.policy.rest.dao.PolicyDBException;
+import org.onap.policy.rest.dao.PolicyDbException;
 import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
@@ -135,7 +136,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     // The heartbeat thread.
     private static Heartbeat heartbeat = null;
     private static Thread heartbeatThread = null;
-    private static PolicyDBDao policyDbDao;
+    private static PolicyDbDao policyDbDao;
     /*
      * papEngine - This is our engine workhorse that manages the PDP Groups and Nodes.
      */
@@ -290,7 +291,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                  */
 
                 // get an AuditTransaction to lock out all other transactions
-                PolicyDBDaoTransaction auditTrans = policyDbDao.getNewAuditTransaction();
+                PolicyDbDaoTransaction auditTrans = policyDbDao.getNewAuditTransaction();
 
                 LOGGER.info("PapServlet: calling auditLocalFileSystem for PDP group audit");
                 LOGGER.info("PapServlet: old group is " + papEngine.getDefaultGroup().toString());
@@ -333,7 +334,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
     }
 
     private void createDefaultGroupOnInit() {
-        PolicyDBDaoTransaction addNewGroup = null;
+        PolicyDbDaoTransaction addNewGroup = null;
         try {
             addNewGroup = policyDbDao.getNewTransaction();
             OnapPDPGroup group = papEngine.getDefaultGroup();
@@ -372,13 +373,13 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 
     private static void setPolicyDbDao() throws ServletException {
         try {
-            policyDbDao = PolicyDBDao.getPolicyDBDaoInstance();
+            policyDbDao = PolicyDbDao.getPolicyDbDaoInstance();
         } catch (Exception e) {
             throw new ServletException("Unable to Create Policy DBDao Instance", e);
         }
     }
 
-    public static PolicyDBDao getPolicyDbDao() {
+    public static PolicyDbDao getPolicyDbDao() {
         return policyDbDao;
     }
 
@@ -532,7 +533,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             throws ServletException, IOException {
         OnapLoggingContext loggingContext = OnapLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
         setLoggingContext(loggingContext, "doPost", "PAP.post");
-        PolicyDBDaoTransaction pdpTransaction = null;
+        PolicyDbDaoTransaction pdpTransaction = null;
         try {
             loggingContext.metricStarted();
             im.startTransaction();
@@ -618,7 +619,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                         XACMLPapServlet.papEngine.newPDP(id, XACMLPapServlet.papEngine.getDefaultGroup(), id,
                                 "Registered on first startup", Integer.parseInt(jmxport));
                     } catch (NullPointerException | PAPException | IllegalArgumentException | IllegalStateException
-                            | PersistenceException | PolicyDBException e) {
+                            | PersistenceException | PolicyDbException e) {
                         pdpTransaction.rollbackTransaction();
                         String message = "Failed to create new PDP for id: " + id;
                         PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " " + message);
@@ -1340,7 +1341,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
      */
     public void updateGroupsFromAPI(HttpServletRequest request, HttpServletResponse response, String groupId,
             OnapLoggingContext loggingContext) throws IOException {
-        PolicyDBDaoTransaction acPutTransaction = policyDbDao.getNewTransaction();
+        PolicyDbDaoTransaction acPutTransaction = policyDbDao.getNewTransaction();
         PolicyLogger.audit("PolicyDBDaoTransaction started for updateGroupsFromAPI");
         try {
             String userId = request.getParameter("userId");
@@ -1717,7 +1718,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
         return papEngine;
     }
 
-    public static PolicyDBDaoTransaction getDbDaoTransaction() {
+    public static PolicyDbDaoTransaction getDbDaoTransaction() {
         return policyDbDao.getNewTransaction();
     }
 
