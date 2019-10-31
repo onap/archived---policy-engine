@@ -3,6 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,8 +49,8 @@ import org.onap.policy.pap.xacml.rest.components.FirewallConfigPolicy;
 import org.onap.policy.pap.xacml.rest.components.MicroServiceConfigPolicy;
 import org.onap.policy.pap.xacml.rest.components.OptimizationConfigPolicy;
 import org.onap.policy.pap.xacml.rest.components.Policy;
-import org.onap.policy.pap.xacml.rest.components.PolicyDBDao;
-import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTransaction;
+import org.onap.policy.pap.xacml.rest.components.PolicyDbDao;
+import org.onap.policy.pap.xacml.rest.components.PolicyDbDaoTransaction;
 import org.onap.policy.pap.xacml.rest.elk.client.PolicyElasticSearchController;
 import org.onap.policy.pap.xacml.rest.util.AbstractPolicyCreation;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
@@ -71,34 +72,65 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * The Class PolicyCreation.
+ */
 @RestController
 @RequestMapping("/")
 public class PolicyCreation extends AbstractPolicyCreation {
-
     private static final Logger LOGGER = FlexLogger.getLogger(PolicyCreation.class);
 
+    // Recurring constants
+    private static final String INVALID_ATTRIBUTE = "invalidAttribute";
+    private static final String SUCCESS = "success";
+    private static final String ERROR = "error";
+    private static final String POLICY_NAME = "policyName";
+
     private String ruleID = "";
-    private PolicyDBDao policyDBDao;
-    String CLName = null;
+    private String clName = null;
 
     private static CommonClassDao commonClassDao;
 
+    /**
+     * Gets the common class dao.
+     *
+     * @return the common class dao
+     */
     public static CommonClassDao getCommonClassDao() {
         return commonClassDao;
     }
 
+    /**
+     * Sets the common class dao.
+     *
+     * @param commonClassDao the new common class dao
+     */
     public static void setCommonClassDao(CommonClassDao commonClassDao) {
         PolicyCreation.commonClassDao = commonClassDao;
     }
 
+    /**
+     * Instantiates a new policy creation.
+     *
+     * @param commonClassDao the common class dao
+     */
     @Autowired
     public PolicyCreation(CommonClassDao commonClassDao) {
         PolicyCreation.commonClassDao = commonClassDao;
     }
 
-    public PolicyCreation() {
-    }
+    /**
+     * Instantiates a new policy creation.
+     */
+    public PolicyCreation() {}
 
+    /**
+     * Save policy.
+     *
+     * @param policyData the policy data
+     * @param response the response
+     * @return the response entity
+     */
     @RequestMapping(value = "/policycreation/save_policy", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> savePolicy(@RequestBody PolicyRestAdapter policyData, HttpServletResponse response) {
@@ -116,8 +148,8 @@ public class PolicyCreation extends AbstractPolicyCreation {
             if (policyData.getTtlDate() == null) {
                 policyData.setTtlDate("NA");
             } else {
-                String dateTTL = policyData.getTtlDate();
-                String newDate = convertDate(dateTTL);
+                String dateTtl = policyData.getTtlDate();
+                String newDate = convertDate(dateTtl);
                 policyData.setTtlDate(newDate);
             }
 
@@ -195,8 +227,8 @@ public class PolicyCreation extends AbstractPolicyCreation {
                     body = "policyExists";
                     status = HttpStatus.CONFLICT;
                     response.setStatus(HttpServletResponse.SC_CONFLICT);
-                    response.addHeader("error", "policyExists");
-                    response.addHeader("policyName", policyData.getPolicyName());
+                    response.addHeader(ERROR, "policyExists");
+                    response.addHeader(POLICY_NAME, policyData.getPolicyName());
                     return new ResponseEntity<>(body, status);
                 }
             } else {
@@ -205,7 +237,7 @@ public class PolicyCreation extends AbstractPolicyCreation {
                     body = "policyNotAvailableForEdit";
                     status = HttpStatus.NOT_FOUND;
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    response.addHeader("error", body);
+                    response.addHeader(ERROR, body);
                     response.addHeader("message",
                             policyData.getPolicyName() + " does not exist on the PAP and cannot be updated.");
                     return new ResponseEntity<>(body, status);
@@ -264,22 +296,22 @@ public class PolicyCreation extends AbstractPolicyCreation {
                 } else if ("BRMS_Param".equalsIgnoreCase(policyConfigType)) {
                     policyData.setOnapName("DROOLS");
                     policyData.setConfigName("BRMS_PARAM_RULE");
-                    Map<String, String> drlRuleAndUIParams = new HashMap<>();
+                    Map<String, String> drlRuleAndUiParams = new HashMap<>();
                     if (policyData.getApiflag() == null) {
                         // If there is any dynamic field create the matches here
                         String key = "templateName";
                         String value = policyData.getRuleName();
-                        drlRuleAndUIParams.put(key, value);
+                        drlRuleAndUiParams.put(key, value);
                         if (policyData.getRuleData().size() > 0) {
                             for (Object keyValue : policyData.getRuleData().keySet()) {
-                                drlRuleAndUIParams.put(keyValue.toString(),
+                                drlRuleAndUiParams.put(keyValue.toString(),
                                         policyData.getRuleData().get(keyValue).toString());
                             }
                         }
-                        policyData.setBrmsParamBody(drlRuleAndUIParams);
+                        policyData.setBrmsParamBody(drlRuleAndUiParams);
                     } else {
-                        drlRuleAndUIParams = policyData.getBrmsParamBody();
-                        String modelName = drlRuleAndUIParams.get("templateName");
+                        drlRuleAndUiParams = policyData.getBrmsParamBody();
+                        String modelName = drlRuleAndUiParams.get("templateName");
                         PolicyLogger.info("Template name from API is: " + modelName);
 
                         BRMSParamTemplate template = (BRMSParamTemplate) commonClassDao
@@ -291,9 +323,9 @@ public class PolicyCreation extends AbstractPolicyCreation {
                             body = message;
                             status = HttpStatus.BAD_REQUEST;
                             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                            response.addHeader("error", message);
+                            response.addHeader(ERROR, message);
                             response.addHeader("modelName", modelName);
-                            return new ResponseEntity<String>(body, status);
+                            return new ResponseEntity<>(body, status);
                         }
                     }
                     newPolicy = new CreateBrmsParamPolicy(policyData);
@@ -329,15 +361,15 @@ public class PolicyCreation extends AbstractPolicyCreation {
                         for (Object attribute : policyData.getRuleAlgorithmschoices()) {
                             if (attribute instanceof LinkedHashMap<?, ?>) {
                                 String label = ((LinkedHashMap<?, ?>) attribute).get("id").toString();
+                                dynamicRuleAlgorithmLabels.add(label);
                                 String key =
                                         ((LinkedHashMap<?, ?>) attribute).get("dynamicRuleAlgorithmField1").toString();
+                                dynamicRuleAlgorithmField1.add(key);
                                 String rule =
                                         ((LinkedHashMap<?, ?>) attribute).get("dynamicRuleAlgorithmCombo").toString();
+                                dynamicRuleAlgorithmCombo.add(rule);
                                 String value =
                                         ((LinkedHashMap<?, ?>) attribute).get("dynamicRuleAlgorithmField2").toString();
-                                dynamicRuleAlgorithmLabels.add(label);
-                                dynamicRuleAlgorithmField1.add(key);
-                                dynamicRuleAlgorithmCombo.add(rule);
                                 dynamicRuleAlgorithmField2.add(value);
                             }
                         }
@@ -347,15 +379,15 @@ public class PolicyCreation extends AbstractPolicyCreation {
                     ActionPolicyDict jsonData = ((ActionPolicyDict) commonClassDao.getEntityItem(ActionPolicyDict.class,
                             "attributeName", actionDictValue));
                     if (jsonData != null) {
-                        String actionBodyString = jsonData.getBody();
                         String actionDictHeader = jsonData.getHeader();
-                        String actionDictType = jsonData.getType();
-                        String actionDictUrl = jsonData.getUrl();
-                        String actionDictMethod = jsonData.getMethod();
                         policyData.setActionDictHeader(actionDictHeader);
+                        String actionDictType = jsonData.getType();
                         policyData.setActionDictType(actionDictType);
+                        String actionDictUrl = jsonData.getUrl();
                         policyData.setActionDictUrl(actionDictUrl);
+                        String actionDictMethod = jsonData.getMethod();
                         policyData.setActionDictMethod(actionDictMethod);
+                        String actionBodyString = jsonData.getBody();
                         if (actionBodyString != null) {
                             policyData.setActionBody(actionBodyString);
                         }
@@ -381,17 +413,8 @@ public class PolicyCreation extends AbstractPolicyCreation {
                 newPolicy = new ActionPolicy(policyData, commonClassDao);
             } else if ("Decision".equalsIgnoreCase(policyType)) {
                 if (policyData.getApiflag() == null) {
-                    Map<String, String> settingsMap = new HashMap<>();
                     Map<String, String> treatmentMap = new HashMap<>();
-                    List<String> dynamicRuleAlgorithmLabels = new LinkedList<>();
-                    List<String> dynamicRuleAlgorithmCombo = new LinkedList<>();
-                    List<String> dynamicRuleAlgorithmField1 = new LinkedList<>();
-                    List<String> dynamicRuleAlgorithmField2 = new LinkedList<>();
-                    List<Object> dynamicVariableList = new LinkedList<>();
-                    List<String> dataTypeList = new LinkedList<>();
-                    List<String> errorCodeList = new LinkedList<>();
-                    List<String> treatmentList = new LinkedList<>();
-
+                    Map<String, String> settingsMap = new HashMap<>();
                     if (!policyData.getSettings().isEmpty()) {
                         for (Object settingsData : policyData.getSettings()) {
                             if (settingsData instanceof LinkedHashMap<?, ?>) {
@@ -401,20 +424,25 @@ public class PolicyCreation extends AbstractPolicyCreation {
                             }
                         }
                     }
+
+                    List<String> dynamicRuleAlgorithmLabels = new LinkedList<>();
+                    List<String> dynamicRuleAlgorithmField1 = new LinkedList<>();
+                    List<String> dynamicRuleAlgorithmCombo = new LinkedList<>();
+                    List<String> dynamicRuleAlgorithmField2 = new LinkedList<>();
                     if (policyData.getRuleAlgorithmschoices() != null
-                            && policyData.getRuleAlgorithmschoices().size() > 0) {
+                            && !policyData.getRuleAlgorithmschoices().isEmpty()) {
                         for (Object attribute : policyData.getRuleAlgorithmschoices()) {
                             if (attribute instanceof LinkedHashMap<?, ?>) {
                                 String label = ((LinkedHashMap<?, ?>) attribute).get("id").toString();
+                                dynamicRuleAlgorithmLabels.add(label);
                                 String key =
                                         ((LinkedHashMap<?, ?>) attribute).get("dynamicRuleAlgorithmField1").toString();
+                                dynamicRuleAlgorithmField1.add(key);
                                 String rule =
                                         ((LinkedHashMap<?, ?>) attribute).get("dynamicRuleAlgorithmCombo").toString();
+                                dynamicRuleAlgorithmCombo.add(rule);
                                 String value =
                                         ((LinkedHashMap<?, ?>) attribute).get("dynamicRuleAlgorithmField2").toString();
-                                dynamicRuleAlgorithmLabels.add(label);
-                                dynamicRuleAlgorithmField1.add(key);
-                                dynamicRuleAlgorithmCombo.add(rule);
                                 dynamicRuleAlgorithmField2.add(value);
                             }
                         }
@@ -475,6 +503,11 @@ public class PolicyCreation extends AbstractPolicyCreation {
                         }
                     }
 
+                    List<Object> dynamicVariableList = new LinkedList<>();
+                    List<String> dataTypeList = new LinkedList<>();
+                    List<String> errorCodeList = new LinkedList<>();
+                    List<String> treatmentList = new LinkedList<>();
+
                     policyData.setDynamicRuleAlgorithmLabels(dynamicRuleAlgorithmLabels);
                     policyData.setDynamicRuleAlgorithmCombo(dynamicRuleAlgorithmCombo);
                     policyData.setDynamicRuleAlgorithmField1(dynamicRuleAlgorithmField1);
@@ -493,21 +526,21 @@ public class PolicyCreation extends AbstractPolicyCreation {
             if (newPolicy != null) {
                 newPolicy.prepareToSave();
             } else {
-                body = "error";
+                body = ERROR;
                 status = HttpStatus.INTERNAL_SERVER_ERROR;
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                response.addHeader("error", "error");
+                response.addHeader(ERROR, ERROR);
                 return new ResponseEntity<>(body, status);
             }
 
-            PolicyDBDaoTransaction policyDBDaoTransaction = null;
+            PolicyDbDaoTransaction policyDbDaoTransaction = null;
             try {
-                policyDBDao = PolicyDBDao.getPolicyDBDaoInstance();
-                policyDBDaoTransaction = policyDBDao.getNewTransaction();
-                policyDBDaoTransaction.createPolicy(newPolicy, policyData.getUserId());
+                PolicyDbDao policyDbDao = PolicyDbDao.getPolicyDbDaoInstance();
+                policyDbDaoTransaction = policyDbDao.getNewTransaction();
+                policyDbDaoTransaction.createPolicy(newPolicy, policyData.getUserId());
                 successMap = newPolicy.savePolicies();
-                if (successMap.containsKey("success")) {
-                    policyDBDaoTransaction.commitTransaction();
+                if (successMap.containsKey(SUCCESS)) {
+                    policyDbDaoTransaction.commitTransaction();
                     if (policyData.isEditPolicy()) {
                         commonClassDao.update(policyVersionDao);
                     } else {
@@ -519,78 +552,86 @@ public class PolicyCreation extends AbstractPolicyCreation {
                     } catch (Exception e) {
                         LOGGER.error("Error Occured while saving policy to Elastic Database" + e);
                     }
-                    body = "success";
+                    body = SUCCESS;
                     status = HttpStatus.OK;
                     response.setStatus(HttpServletResponse.SC_OK);
-                    response.addHeader("successMapKey", "success");
-                    response.addHeader("policyName", policyData.getNewFileName());
+                    response.addHeader("successMapKey", SUCCESS);
+                    response.addHeader(POLICY_NAME, policyData.getNewFileName());
 
                     // get message from the SafetyCheckerResults if present
                     String safetyCheckerResponse = policyData.getClWarning();
-                    String existingCLName = policyData.getExistingCLName();
+                    String existingClName = policyData.getExistingCLName();
 
                     // if safetyCheckerResponse is not null add a header to send back with response
                     if (safetyCheckerResponse != null) {
                         PolicyLogger.info("SafetyCheckerResponse message: " + safetyCheckerResponse);
                         response.addHeader("safetyChecker", safetyCheckerResponse);
-                        response.addHeader("newCLName", CLName);
-                        response.addHeader("conflictCLName", existingCLName);
+                        response.addHeader("newCLName", clName);
+                        response.addHeader("conflictCLName", existingClName);
                     } else {
                         PolicyLogger.info("SafetyCheckerResponse was empty or null.");
                     }
 
-                } else if (successMap.containsKey("invalidAttribute")) {
-                    String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Action Attribute";
+                } else if (successMap.containsKey(INVALID_ATTRIBUTE)) {
                     LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Could not fine "
                             + policyData.getActionAttribute() + " in the ActionPolicyDict table.");
-                    body = "invalidAttribute";
+                    body = INVALID_ATTRIBUTE;
                     status = HttpStatus.BAD_REQUEST;
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    response.addHeader("invalidAttribute", policyData.getActionAttribute());
-                    response.addHeader("error", message);
-                    response.addHeader("policyName", policyData.getPolicyName());
+                    response.addHeader(INVALID_ATTRIBUTE, policyData.getActionAttribute());
+
+                    String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Action Attribute";
+                    response.addHeader(ERROR, message);
+                    response.addHeader(POLICY_NAME, policyData.getPolicyName());
                 } else if (successMap.containsKey("fwdberror")) {
-                    policyDBDaoTransaction.rollbackTransaction();
+                    policyDbDaoTransaction.rollbackTransaction();
                     body = "fwdberror";
                     status = HttpStatus.BAD_REQUEST;
                     String message = XACMLErrorConstants.ERROR_DATA_ISSUE
                             + "Error when inserting Firewall ConfigBody data into the database.";
                     PolicyLogger.error(message);
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    response.addHeader("error", message);
-                    response.addHeader("policyName", policyData.getPolicyName());
-                } else if (successMap.get("error").equals("Validation Failed")) {
-                    policyDBDaoTransaction.rollbackTransaction();
+                    response.addHeader(ERROR, message);
+                    response.addHeader(POLICY_NAME, policyData.getPolicyName());
+                } else if (successMap.get(ERROR).equals("Validation Failed")) {
+                    policyDbDaoTransaction.rollbackTransaction();
                     String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Error Validating the Policy on the PAP.";
                     PolicyLogger.error(message);
                     body = "Validation";
                     status = HttpStatus.BAD_REQUEST;
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    response.addHeader("error", message);
-                    response.addHeader("policyName", policyData.getPolicyName());
+                    response.addHeader(ERROR, message);
+                    response.addHeader(POLICY_NAME, policyData.getPolicyName());
                 } else {
-                    policyDBDaoTransaction.rollbackTransaction();
-                    body = "error";
+                    policyDbDaoTransaction.rollbackTransaction();
+                    body = ERROR;
                     status = HttpStatus.INTERNAL_SERVER_ERROR;
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                    response.addHeader("error", "error");
+                    response.addHeader(ERROR, ERROR);
                 }
             } catch (Exception e) {
                 LOGGER.error("Exception Occured : ", e);
-                if (policyDBDaoTransaction != null) {
-                    policyDBDaoTransaction.rollbackTransaction();
+                if (policyDbDaoTransaction != null) {
+                    policyDbDaoTransaction.rollbackTransaction();
                 }
             }
         } catch (Exception e) {
             LOGGER.error("Exception Occured : " + e.getMessage(), e);
-            body = "error";
-            response.addHeader("error", e.getMessage());
+            body = ERROR;
+            response.addHeader(ERROR, e.getMessage());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(body, status);
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class})
+    /**
+     * Message not readable exception handler.
+     *
+     * @param req the req
+     * @param exception the exception
+     * @return the response entity
+     */
+    @ExceptionHandler({ HttpMessageNotReadableException.class })
     public ResponseEntity<String> messageNotReadableExceptionHandler(HttpServletRequest req,
             HttpMessageNotReadableException exception) {
         LOGGER.error("Request not readable: {}", exception);
@@ -602,13 +643,17 @@ public class PolicyCreation extends AbstractPolicyCreation {
         return new ResponseEntity<>(message.toString(), HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Gets the policy version data.
+     *
+     * @param dbCheckPolicyName the db check policy name
+     * @return the policy version data
+     */
     public PolicyVersion getPolicyVersionData(String dbCheckPolicyName) {
         PolicyVersion entityItem =
-                (PolicyVersion) commonClassDao.getEntityItem(PolicyVersion.class, "policyName", dbCheckPolicyName);
-        if (entityItem != null) {
-            if (entityItem.getPolicyName().equals(dbCheckPolicyName)) {
-                return entityItem;
-            }
+                (PolicyVersion) commonClassDao.getEntityItem(PolicyVersion.class, POLICY_NAME, dbCheckPolicyName);
+        if (entityItem != null && entityItem.getPolicyName().equals(dbCheckPolicyName)) {
+            return entityItem;
         }
         return entityItem;
     }

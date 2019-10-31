@@ -3,6 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,12 +53,12 @@ import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.DataToNotifyPdp;
-import org.onap.policy.pap.xacml.rest.components.PolicyDBDao.PolicyDBDaoTestClass;
+import org.onap.policy.pap.xacml.rest.components.PolicyDbDao.PolicyDbDaoTestClass;
 import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.pap.xacml.rest.policycontroller.PolicyCreation;
 import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.dao.PolicyDBException;
+import org.onap.policy.rest.dao.PolicyDbException;
 import org.onap.policy.rest.jpa.DatabaseLockEntity;
 import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
@@ -71,9 +72,9 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 public class PolicyDBDaoTest {
     private static Logger logger = FlexLogger.getLogger(PolicyDBDaoTest.class);
 
-    static PolicyDBDaoTestClass d;
-    static PolicyDBDao dbd;
-    static PolicyDBDao dbd2;
+    static PolicyDbDaoTestClass d;
+    static PolicyDbDao dbd;
+    static PolicyDbDao dbd2;
     private static Path repository;
     static StdEngine stdEngine = null;
     static SessionFactory sessionFactory = null;
@@ -83,14 +84,14 @@ public class PolicyDBDaoTest {
         System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/xacml.pap.properties");
         try {
             sessionFactory = setupH2DbDaoImpl("testdbdao");
-            dbd = PolicyDBDao.getPolicyDBDaoInstance();
-            dbd2 = PolicyDBDao.getPolicyDBDaoInstance();
+            dbd = PolicyDbDao.getPolicyDbDaoInstance();
+            dbd2 = PolicyDbDao.getPolicyDbDaoInstance();
         } catch (Exception e) {
             Assert.fail();
         }
 
-        d = PolicyDBDao.getPolicyDBDaoTestClass();
-        PolicyDBDao.setJunit(true);
+        d = PolicyDbDao.getPolicyDbDaoTestClass();
+        PolicyDbDao.setJunit(true);
         repository = Paths.get("src/test/resources/pdps");
         stdEngine = new StdEngine(repository);
         dbd.setPapEngine(stdEngine);
@@ -125,7 +126,7 @@ public class PolicyDBDaoTest {
         sessionBuilder.addProperties(properties);
         SessionFactory sessionFac = sessionBuilder.buildSessionFactory();
 
-        new PolicyDBDao(sessionFac);
+        new PolicyDbDao(sessionFac);
         PolicyDbDaoTransactionInstance.setJunit(true);
         new PolicyDbDaoTransactionInstance(sessionFac);
         CommonClassDaoImpl.setSessionfactory(sessionFac);
@@ -181,7 +182,7 @@ public class PolicyDBDaoTest {
     }
 
     @Test
-    public void getPolicyNameAndVersionFromPolicyFileNameTest() throws PolicyDBException {
+    public void getPolicyNameAndVersionFromPolicyFileNameTest() throws PolicyDbException {
         String policyName = "com.Decision_testname.1.xml";
         String[] expectedNameAndVersion = new String[2];
         expectedNameAndVersion[0] = "com.Decision_testname";
@@ -250,7 +251,7 @@ public class PolicyDBDaoTest {
             fail();
         }
 
-        PolicyDBDaoTransaction transaction = dbd.getNewTransaction();
+        PolicyDbDaoTransaction transaction = dbd.getNewTransaction();
         try {
             transaction.createPolicy(policyObject, "testuser1");
             transaction.commitTransaction();
@@ -292,10 +293,10 @@ public class PolicyDBDaoTest {
 
     @Test
     public void groupTransactions() {
-        PolicyDBDaoTransaction group = dbd.getNewTransaction();
+        PolicyDbDaoTransaction group = dbd.getNewTransaction();
         String groupName = "test group 1";
         try {
-            group.createGroup(PolicyDBDao.createNewPDPGroupId(groupName), groupName, "this is a test group",
+            group.createGroup(PolicyDbDao.createNewPdpGroupId(groupName), groupName, "this is a test group",
                     "testuser");
             group.commitTransaction();
         } catch (Exception e) {
@@ -307,7 +308,7 @@ public class PolicyDBDaoTest {
         session.getTransaction().begin();
         Query getGroup =
                 session.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
-        getGroup.setParameter("groupId", PolicyDBDao.createNewPDPGroupId(groupName));
+        getGroup.setParameter("groupId", PolicyDbDao.createNewPdpGroupId(groupName));
         getGroup.setParameter("deleted", false);
         List<?> groups = getGroup.list();
         GroupEntity groupEntity = (GroupEntity) groups.get(0);
@@ -318,7 +319,7 @@ public class PolicyDBDaoTest {
 
         group = dbd.getNewTransaction();
         try {
-            OnapPDPGroup groupToDelete = new StdPDPGroup(PolicyDBDao.createNewPDPGroupId(groupName), Paths.get("/"));
+            OnapPDPGroup groupToDelete = new StdPDPGroup(PolicyDbDao.createNewPdpGroupId(groupName), Paths.get("/"));
             group.deleteGroup(groupToDelete, null, "testuser");
             group.commitTransaction();
         } catch (Exception e) {
@@ -330,7 +331,7 @@ public class PolicyDBDaoTest {
         session2.getTransaction().begin();
         Query getGroup2 =
                 session2.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
-        getGroup2.setParameter("groupId", PolicyDBDao.createNewPDPGroupId(groupName));
+        getGroup2.setParameter("groupId", PolicyDbDao.createNewPdpGroupId(groupName));
         getGroup2.setParameter("deleted", false);
         List<?> groups2 = getGroup2.list();
         groups2 = getGroup2.list();
@@ -344,7 +345,7 @@ public class PolicyDBDaoTest {
         // add a pdp to a group
         group = dbd.getNewTransaction();
         try {
-            group.createGroup(PolicyDBDao.createNewPDPGroupId(groupName), groupName, "test group", "testuser");
+            group.createGroup(PolicyDbDao.createNewPdpGroupId(groupName), groupName, "test group", "testuser");
             group.commitTransaction();
         } catch (Exception e) {
             group.rollbackTransaction();
@@ -354,7 +355,7 @@ public class PolicyDBDaoTest {
 
         group = dbd.getNewTransaction();
         try {
-            group.addPdpToGroup("http://localhost:4344/pdp/", PolicyDBDao.createNewPDPGroupId(groupName), "primary",
+            group.addPdpToGroup("http://localhost:4344/pdp/", PolicyDbDao.createNewPdpGroupId(groupName), "primary",
                     "the main pdp", 3232, "testuser");
             group.commitTransaction();
         } catch (Exception e) {
@@ -406,7 +407,7 @@ public class PolicyDBDaoTest {
         // add some pdps to groups
         group = dbd.getNewTransaction();
         try {
-            group.createGroup(PolicyDBDao.createNewPDPGroupId("testgroup1"), "testgroup1", "test group", "testuser");
+            group.createGroup(PolicyDbDao.createNewPdpGroupId("testgroup1"), "testgroup1", "test group", "testuser");
             group.commitTransaction();
         } catch (Exception e) {
             group.rollbackTransaction();
@@ -415,7 +416,7 @@ public class PolicyDBDaoTest {
         }
         group = dbd.getNewTransaction();
         try {
-            group.createGroup(PolicyDBDao.createNewPDPGroupId("testgroup2"), "testgroup2", "test group", "testuser");
+            group.createGroup(PolicyDbDao.createNewPdpGroupId("testgroup2"), "testgroup2", "test group", "testuser");
             group.commitTransaction();
         } catch (Exception e) {
             group.rollbackTransaction();
@@ -425,7 +426,7 @@ public class PolicyDBDaoTest {
 
         group = dbd.getNewTransaction();
         try {
-            group.addPdpToGroup("http://localhost:4344/pdp/", PolicyDBDao.createNewPDPGroupId("testgroup1"), "primary",
+            group.addPdpToGroup("http://localhost:4344/pdp/", PolicyDbDao.createNewPdpGroupId("testgroup1"), "primary",
                     "the main pdp", 3232, "testuser");
             group.commitTransaction();
         } catch (Exception e) {
@@ -435,7 +436,7 @@ public class PolicyDBDaoTest {
         }
         group = dbd.getNewTransaction();
         try {
-            group.addPdpToGroup("http://localhost:4345/pdp/", PolicyDBDao.createNewPDPGroupId("testgroup1"),
+            group.addPdpToGroup("http://localhost:4345/pdp/", PolicyDbDao.createNewPdpGroupId("testgroup1"),
                     "secondary", "the second pdp", 3233, "testuser");
             group.commitTransaction();
         } catch (Exception e) {
@@ -458,8 +459,8 @@ public class PolicyDBDaoTest {
 
         group = dbd.getNewTransaction();
         try {
-            OnapPDPGroup groupToDelete = new StdPDPGroup(PolicyDBDao.createNewPDPGroupId("testgroup1"), Paths.get("/"));
-            OnapPDPGroup groupToMoveTo = new StdPDPGroup(PolicyDBDao.createNewPDPGroupId("testgroup2"), Paths.get("/"));
+            OnapPDPGroup groupToDelete = new StdPDPGroup(PolicyDbDao.createNewPdpGroupId("testgroup1"), Paths.get("/"));
+            OnapPDPGroup groupToMoveTo = new StdPDPGroup(PolicyDbDao.createNewPdpGroupId("testgroup2"), Paths.get("/"));
             group.deleteGroup(groupToDelete, groupToMoveTo, "testuser");
             group.commitTransaction();
         } catch (Exception e) {
@@ -497,12 +498,12 @@ public class PolicyDBDaoTest {
 
         group = dbd.getNewTransaction();
         try {
-            OnapPDPGroup groupToDelete = new StdPDPGroup(PolicyDBDao.createNewPDPGroupId("testgroup2"), Paths.get("/"));
+            OnapPDPGroup groupToDelete = new StdPDPGroup(PolicyDbDao.createNewPdpGroupId("testgroup2"), Paths.get("/"));
             OnapPDPGroup groupToMoveTo = null;
             group.deleteGroup(groupToDelete, groupToMoveTo, "testuser");
             group.commitTransaction();
             Assert.fail();
-        } catch (PolicyDBException pe) {
+        } catch (PolicyDbException pe) {
             // good, can't delete group with pdps
             group.rollbackTransaction();
         } catch (Exception e) {
@@ -563,7 +564,7 @@ public class PolicyDBDaoTest {
                     + "******************************\n\n");
         }
 
-        PolicyDBDaoTransaction t = dbd.getNewTransaction();
+        PolicyDbDaoTransaction t = dbd.getNewTransaction();
         Assert.assertTrue(t.isTransactionOpen());
         try {
             // Add 1000 ms to the timeout just to be sure it actually times out
@@ -591,7 +592,7 @@ public class PolicyDBDaoTest {
             logger.debug("\n\nPolicyDBDaoTest.threadingStabilityTest() " + "\n   a = dbd.getNewTransaction() "
                     + "\n   TimeStamp = " + date.getTime() + "\n\n");
         }
-        PolicyDBDaoTransaction a = dbd.getNewTransaction();
+        PolicyDbDaoTransaction a = dbd.getNewTransaction();
         if (logger.isDebugEnabled()) {
             Date date = new java.util.Date();
             logger.debug(
@@ -618,7 +619,7 @@ public class PolicyDBDaoTest {
             logger.debug("\n\nPolicyDBDaoTest.threadingStabilityTest() " + "\n   b = dbd.getNewTransaction() "
                     + "\n   TimeStamp = " + date.getTime() + "\n\n");
         }
-        PolicyDBDaoTransaction b = dbd.getNewTransaction();
+        PolicyDbDaoTransaction b = dbd.getNewTransaction();
         if (logger.isDebugEnabled()) {
             Date date = new java.util.Date();
             logger.debug(
@@ -640,7 +641,7 @@ public class PolicyDBDaoTest {
         // And let's lengthen the transaction timeout to 5000 ms
         System.setProperty(XacmlRestProperties.PROP_PAP_TRANS_TIMEOUT, "5000");
         // get a transacton
-        PolicyDBDaoTransaction t1 = dbd.getNewTransaction();
+        PolicyDbDaoTransaction t1 = dbd.getNewTransaction();
         if (logger.isDebugEnabled()) {
             Date date = new java.util.Date();
             logger.debug(
@@ -653,7 +654,7 @@ public class PolicyDBDaoTest {
         // but will collide at the DB. Remember that the wait time is only 1000 ms
         try {
             // Now the 2nd transaction has a wait timeout in 1000 ms
-            PolicyDBDaoTransaction t2 = dbd2.getNewTransaction();
+            PolicyDbDaoTransaction t2 = dbd2.getNewTransaction();
             /*
              * Give it plenty of time to time out the second transaction It will actually hang right here until
              * it either gets the lock from the DB or the request for the DB lock times out. The timers are very

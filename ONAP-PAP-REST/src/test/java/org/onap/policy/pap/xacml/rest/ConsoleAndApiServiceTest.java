@@ -3,6 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,13 +54,13 @@ import org.mockito.Mockito;
 import org.onap.policy.common.logging.OnapLoggingContext;
 import org.onap.policy.pap.xacml.rest.components.ConfigPolicy;
 import org.onap.policy.pap.xacml.rest.components.Policy;
-import org.onap.policy.pap.xacml.rest.components.PolicyDBDao;
+import org.onap.policy.pap.xacml.rest.components.PolicyDbDao;
 import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTest;
-import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTransaction;
+import org.onap.policy.pap.xacml.rest.components.PolicyDbDaoTransaction;
 import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.pap.xacml.rest.policycontroller.PolicyCreation;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.dao.PolicyDBException;
+import org.onap.policy.rest.dao.PolicyDbException;
 import org.onap.policy.xacml.std.pap.StdEngine;
 import org.onap.policy.xacml.std.pap.StdPDP;
 import org.springframework.mock.web.DelegatingServletInputStream;
@@ -88,7 +89,7 @@ public class ConsoleAndApiServiceTest {
     private static final String APIFLAG = "apiflag";
     private static final String ENVIRONMENT_HEADER = "Environment";
     private static final OnapLoggingContext logContext = Mockito.mock(OnapLoggingContext.class);
-    private static PolicyDBDao dbd;
+    private static PolicyDbDao dbd;
     private static StdEngine stdEngine = null;
     private static SessionFactory sessionFactory = null;
     private static List<String> headers = new ArrayList<>();
@@ -109,9 +110,9 @@ public class ConsoleAndApiServiceTest {
     public static void setUpBeforeClass() throws Exception {
         System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/xacml.pap.properties");
         sessionFactory = PolicyDBDaoTest.setupH2DbDaoImpl("testConsoleApi");
-        PolicyDBDao.setJunit(true);
-        dbd = PolicyDBDao.getPolicyDBDaoInstance();
-        PolicyDBDao.setJunit(true);
+        PolicyDbDao.setJunit(true);
+        dbd = PolicyDbDao.getPolicyDbDaoInstance();
+        PolicyDbDao.setJunit(true);
         consoleAndApi = new ConsoleAndApiService();
 
         servletConfig = Mockito.mock(MockServletConfig.class);
@@ -292,7 +293,7 @@ public class ConsoleAndApiServiceTest {
         assertTrue(HttpServletResponse.SC_OK == httpServletResponse.getStatus());
     }
 
-    private static void populatePolicyInDb() throws IOException, PolicyDBException {
+    private static void populatePolicyInDb() throws IOException, PolicyDbException {
         CommonClassDaoImpl.setSessionfactory(sessionFactory);
         PolicyCreation.setCommonClassDao(new CommonClassDaoImpl());
         Policy policyObject = new ConfigPolicy();
@@ -317,7 +318,7 @@ public class ConsoleAndApiServiceTest {
         policyObject.policyAdapter.setParentPath(IOUtils.toString(
                 ConsoleAndApiServiceTest.class.getClassLoader().getResourceAsStream("Config_SampleTest1206.1.xml")));
 
-        PolicyDBDaoTransaction transaction = dbd.getNewTransaction();
+        PolicyDbDaoTransaction transaction = dbd.getNewTransaction();
         transaction.createPolicy(policyObject, API);
         transaction.commitTransaction();
     }

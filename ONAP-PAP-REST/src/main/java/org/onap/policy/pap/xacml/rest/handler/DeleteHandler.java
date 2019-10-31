@@ -3,6 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +41,7 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
-import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTransaction;
+import org.onap.policy.pap.xacml.rest.components.PolicyDbDaoTransaction;
 import org.onap.policy.pap.xacml.rest.elk.client.PolicyElasticSearchController;
 import org.onap.policy.pap.xacml.rest.model.RemoveGroupPolicy;
 import org.onap.policy.pap.xacml.rest.util.JPAUtils;
@@ -453,7 +454,7 @@ public class DeleteHandler {
     }
 
     private String deletePolicyFromPdpGroup(OnapPDPGroup group, OnapLoggingContext loggingContext, String userId) {
-        PolicyDBDaoTransaction acPutTransaction = XACMLPapServlet.getDbDaoTransaction();
+        PolicyDbDaoTransaction acPutTransaction = XACMLPapServlet.getDbDaoTransaction();
         String response = null;
         loggingContext.setServiceName("API:PAP.DeleteHandler");
         OnapPDPGroup existingGroup = null;

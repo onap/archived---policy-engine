@@ -3,6 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +49,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.rest.XacmlRestProperties;
-import org.onap.policy.rest.dao.PolicyDBException;
+import org.onap.policy.rest.dao.PolicyDbException;
 import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
 import org.onap.policy.rest.jpa.PolicyEntity;
@@ -84,10 +85,19 @@ public class HandleIncomingNotifications {
         // Default Constructor
     }
 
+    /**
+     * Handle the incoming HTTP notification.
+     *
+     * @param url the URL
+     * @param entityId the entity id
+     * @param entityType the entity type
+     * @param extraData extra data
+     * @param xacmlPapServlet the servlet to use
+     */
     public void handleIncomingHttpNotification(String url, String entityId, String entityType, String extraData,
             XACMLPapServlet xacmlPapServlet) {
         logger.info("DBDao url: " + url + " has reported an update on " + entityType + " entity " + entityId);
-        PolicyDBDaoTransaction transaction = PolicyDBDao.getPolicyDBDaoInstance().getNewTransaction();
+        PolicyDbDaoTransaction transaction = PolicyDbDao.getPolicyDbDaoInstance().getNewTransaction();
         // although its named retries, this is the total number of tries
         int retries;
         try {
@@ -103,6 +113,7 @@ public class HandleIncomingNotifications {
             retries = 1;
         }
         int pauseBetweenRetries = 1000;
+
         switch (entityType) {
 
             case POLICY_NOTIFICATION:
@@ -112,7 +123,7 @@ public class HandleIncomingNotifications {
                         break;
                     } catch (Exception e) {
                         logger.debug(e);
-                        PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+                        PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                                 "Caught exception on handleIncomingPolicyChange(" + url + ", " + entityId + ", "
                                         + extraData + ")");
                     }
@@ -131,7 +142,7 @@ public class HandleIncomingNotifications {
                         break;
                     } catch (Exception e) {
                         logger.debug(e);
-                        PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+                        PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                                 "Caught exception on handleIncomingPdpChange(" + url + ", " + entityId + ", "
                                         + transaction + ")");
                     }
@@ -150,7 +161,7 @@ public class HandleIncomingNotifications {
                         break;
                     } catch (Exception e) {
                         logger.debug(e);
-                        PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+                        PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                                 "Caught exception on handleIncomingGroupChange(" + url + ", " + entityId + ", "
                                         + extraData + ", " + transaction + ", " + xacmlPapServlet + ")");
                     }
@@ -162,14 +173,25 @@ public class HandleIncomingNotifications {
                     }
                 }
                 break;
+
+            default:
         }
         // no changes should be being made in this function, we still need to
         // close
         transaction.rollbackTransaction();
     }
 
-    private void handleIncomingGroupChange(String groupId, String extraData, PolicyDBDaoTransaction transaction)
-            throws PAPException, PolicyDBException {
+    /**
+     * Handle an incoming group change.
+     *
+     * @param groupId the group ID
+     * @param extraData extra data
+     * @param transaction the transaction
+     * @throws PAPException on PAP exceptions
+     * @throws PolicyDbException on Policy DB exceptions
+     */
+    private void handleIncomingGroupChange(String groupId, String extraData, PolicyDbDaoTransaction transaction)
+            throws PAPException, PolicyDbException {
         GroupEntity groupRecord = null;
         long groupIdLong = -1;
         try {
@@ -180,7 +202,7 @@ public class HandleIncomingNotifications {
         try {
             groupRecord = transaction.getGroup(groupIdLong);
         } catch (Exception e) {
-            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                     "Caught Exception trying to get pdp group record with transaction.getGroup(" + groupIdLong + ");");
             throw new PAPException("Could not get local group " + groupIdLong);
         }
@@ -191,7 +213,7 @@ public class HandleIncomingNotifications {
         // does group folder exist
         OnapPDPGroup localGroup = null;
         try {
-            localGroup = PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().getGroup(groupRecord.getGroupId());
+            localGroup = PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().getGroup(groupRecord.getGroupId());
         } catch (Exception e) {
             logger.warn("Caught PAPException trying to get local pdp group with papEngine.getGroup(" + groupId + ");",
                     e);
@@ -199,7 +221,7 @@ public class HandleIncomingNotifications {
         if (localGroup == null && extraData != null) {
             // here we can try to load an old group id from the extraData
             try {
-                localGroup = PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().getGroup(extraData);
+                localGroup = PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().getGroup(extraData);
             } catch (Exception e) {
                 logger.warn(
                         "Caught PAPException trying to get local pdp group with papEngine.getGroup(" + extraData + ");",
@@ -210,17 +232,17 @@ public class HandleIncomingNotifications {
             OnapPDPGroup newLocalGroup = null;
             if (extraData != null) {
                 try {
-                    newLocalGroup = PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().getGroup(extraData);
+                    newLocalGroup = PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().getGroup(extraData);
                 } catch (PAPException e) {
-                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                             "Caught PAPException trying to get new pdp group with papEngine.getGroup(" + extraData
                                     + ");");
                 }
             }
             try {
-                PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().removeGroup(localGroup, newLocalGroup);
+                PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().removeGroup(localGroup, newLocalGroup);
             } catch (NullPointerException | PAPException e) {
-                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                         "Caught PAPException trying to get remove pdp group with papEngine.removeGroup(" + localGroup
                                 + ", " + newLocalGroup + ");");
                 throw new PAPException("Could not remove group " + groupId);
@@ -228,18 +250,21 @@ public class HandleIncomingNotifications {
         } else if (localGroup == null) {
             // creating a new group
             try {
-                PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().newGroup(groupRecord.getgroupName(),
+                PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().newGroup(groupRecord.getgroupName(),
                         groupRecord.getDescription());
             } catch (NullPointerException | PAPException e) {
-                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
-                        "Caught PAPException trying to create pdp group with papEngine.newGroup(groupRecord.getgroupName(), groupRecord.getDescription());");
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
+                        "Caught PAPException trying to create pdp group with "
+                                + "papEngine.newGroup(groupRecord.getgroupName(), groupRecord.getDescription());");
                 throw new PAPException("Could not create group " + groupRecord);
             }
             try {
-                localGroup = PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().getGroup(groupRecord.getGroupId());
+                localGroup = PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().getGroup(groupRecord.getGroupId());
             } catch (PAPException e1) {
-                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, PolicyDBDao.POLICYDBDAO_VAR,
-                        "Caught PAPException trying to get pdp group we just created with papEngine.getGroup(groupRecord.getGroupId());\nAny PDPs or policies in the new group may not have been added");
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, PolicyDbDao.POLICYDBDAO_VAR,
+                        "Caught PAPException trying to get pdp group we just created with "
+                                + "papEngine.getGroup(groupRecord.getGroupId());\nAny PDPs "
+                                + "or policies in the new group may not have been added");
                 return;
             }
             // add possible pdps to group
@@ -247,11 +272,12 @@ public class HandleIncomingNotifications {
             for (Object pdpO : pdpsInGroup) {
                 PdpEntity pdp = (PdpEntity) pdpO;
                 try {
-                    PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().newPDP(pdp.getPdpId(), localGroup,
+                    PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().newPDP(pdp.getPdpId(), localGroup,
                             pdp.getPdpName(), pdp.getDescription(), pdp.getJmxPort());
                 } catch (NullPointerException | PAPException e) {
-                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
-                            "Caught PAPException trying to get create pdp with papEngine.newPDP(pdp.getPdpId(), localGroup, pdp.getPdpName(), pdp.getDescription(), pdp.getJmxPort());");
+                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
+                            "Caught PAPException trying to get create pdp with papEngine.newPDP(pdp.getPdpId(), "
+                                    + "localGroup, pdp.getPdpName(), pdp.getDescription(), pdp.getJmxPort());");
                     throw new PAPException("Could not create pdp " + pdp);
                 }
             }
@@ -271,36 +297,36 @@ public class HandleIncomingNotifications {
             // set default if it should be
             if (!localGroupClone.isDefaultGroup() && groupRecord.isDefaultGroup()) {
                 try {
-                    PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().setDefaultGroup(localGroup);
+                    PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().setDefaultGroup(localGroup);
                     return;
                 } catch (PAPException e) {
-                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                             "Caught PAPException trying to set default group with papEngine.SetDefaultGroup("
                                     + localGroupClone + ");");
                     throw new PAPException("Could not set default group to " + localGroupClone);
                 }
             }
             boolean needToUpdate = false;
-            if (updateGroupPoliciesInFileSystem(localGroupClone, localGroup, groupRecord, transaction)) {
+            if (updateGroupPoliciesInFileSystem(localGroupClone, localGroup, groupRecord)) {
                 needToUpdate = true;
             }
-            if (!PolicyDBDao.stringEquals(localGroupClone.getId(), groupRecord.getGroupId())
-                    || !PolicyDBDao.stringEquals(localGroupClone.getName(), groupRecord.getgroupName())) {
+            if (!PolicyDbDao.stringEquals(localGroupClone.getId(), groupRecord.getGroupId())
+                    || !PolicyDbDao.stringEquals(localGroupClone.getName(), groupRecord.getgroupName())) {
                 // changing ids
                 // we do not want to change the id, the papEngine will do this
                 // for us, it needs to know the old id
                 localGroupClone.setName(groupRecord.getgroupName());
                 needToUpdate = true;
             }
-            if (!PolicyDBDao.stringEquals(localGroupClone.getDescription(), groupRecord.getDescription())) {
+            if (!PolicyDbDao.stringEquals(localGroupClone.getDescription(), groupRecord.getDescription())) {
                 localGroupClone.setDescription(groupRecord.getDescription());
                 needToUpdate = true;
             }
             if (needToUpdate) {
                 try {
-                    PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().updateGroup(localGroupClone);
+                    PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().updateGroup(localGroupClone);
                 } catch (PAPException e) {
-                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                             "Caught PAPException trying to update group with papEngine.updateGroup(" + localGroupClone
                                     + ");");
                     throw new PAPException("Could not update group " + localGroupClone);
@@ -312,7 +338,7 @@ public class HandleIncomingNotifications {
     // this will also handle removes, since incoming pdpGroup has no policies
     // internally, we are just going to add them all in from the db
     private boolean updateGroupPoliciesInFileSystem(OnapPDPGroup pdpGroup, OnapPDPGroup oldPdpGroup,
-            GroupEntity groupRecord, PolicyDBDaoTransaction transaction) throws PAPException, PolicyDBException {
+            GroupEntity groupRecord) throws PAPException, PolicyDbException {
         if (!(pdpGroup instanceof StdPDPGroup)) {
             throw new PAPException("group is not a StdPDPGroup");
         }
@@ -327,7 +353,7 @@ public class HandleIncomingNotifications {
         }
         for (PolicyEntity policy : groupRecord.getPolicies()) {
             String pdpPolicyName =
-                    PolicyDBDao.getPolicyDBDaoInstance().getPdpPolicyName(policy.getPolicyName(), policy.getScope());
+                    PolicyDbDao.getPolicyDbDaoInstance().getPdpPolicyName(policy.getPolicyName(), policy.getScope());
             if (group.getPolicy(pdpPolicyName) == null) {
                 didUpdate = true;
                 if (currentPolicySet.containsKey(pdpPolicyName)) {
@@ -337,7 +363,7 @@ public class HandleIncomingNotifications {
                             "PolicyDBDao: Adding the new policy to the PDP group after notification: " + pdpPolicyName);
                     InputStream policyStream = new ByteArrayInputStream(policy.getPolicyData().getBytes());
                     group.copyPolicyToFile(pdpPolicyName, policyStream);
-                    ((StdPDPPolicy) (group.getPolicy(pdpPolicyName))).setName(PolicyDBDao.getPolicyDBDaoInstance()
+                    ((StdPDPPolicy) (group.getPolicy(pdpPolicyName))).setName(PolicyDbDao.getPolicyDbDaoInstance()
                             .removeExtensionAndVersionFromPolicyName(pdpPolicyName));
                     try {
                         policyStream.close();
@@ -356,7 +382,7 @@ public class HandleIncomingNotifications {
         return didUpdate;
     }
 
-    private void handleIncomingPdpChange(String pdpId, PolicyDBDaoTransaction transaction) throws PAPException {
+    private void handleIncomingPdpChange(String pdpId, PolicyDbDaoTransaction transaction) throws PAPException {
         // get pdp
         long pdpIdLong = -1;
         try {
@@ -368,7 +394,7 @@ public class HandleIncomingNotifications {
         try {
             pdpRecord = transaction.getPdp(pdpIdLong);
         } catch (Exception e) {
-            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                     "Caught Exception trying to get pdp record with transaction.getPdp(" + pdpIdLong + ");");
             throw new PAPException("Could not get local pdp " + pdpIdLong);
         }
@@ -377,15 +403,15 @@ public class HandleIncomingNotifications {
         }
         OnapPDP localPdp = null;
         try {
-            localPdp = PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().getPDP(pdpRecord.getPdpId());
+            localPdp = PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().getPDP(pdpRecord.getPdpId());
         } catch (PAPException e) {
             logger.warn("Caught PAPException trying to get local pdp  with papEngine.getPDP(" + pdpId + ");", e);
         }
         if (localPdp != null && pdpRecord.isDeleted()) {
             try {
-                PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().removePDP(localPdp);
+                PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().removePDP(localPdp);
             } catch (PAPException e) {
-                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                         "Caught PAPException trying to get remove pdp with papEngine.removePDP(" + localPdp + ");");
                 throw new PAPException("Could not remove pdp " + pdpId);
             }
@@ -395,17 +421,18 @@ public class HandleIncomingNotifications {
             OnapPDPGroup localGroup = null;
             try {
                 localGroup =
-                        PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().getGroup(pdpRecord.getGroup().getGroupId());
+                        PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().getGroup(pdpRecord.getGroup().getGroupId());
             } catch (PAPException e1) {
-                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, PolicyDBDao.POLICYDBDAO_VAR,
-                        "Caught PAPException trying to get local group to add pdp to with papEngine.getGroup(pdpRecord.getGroup().getGroupId());");
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, PolicyDbDao.POLICYDBDAO_VAR,
+                        "Caught PAPException trying to get local group to add pdp to with "
+                                + "papEngine.getGroup(pdpRecord.getGroup().getGroupId());");
                 throw new PAPException("Could not get local group");
             }
             try {
-                PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().newPDP(pdpRecord.getPdpId(), localGroup,
+                PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().newPDP(pdpRecord.getPdpId(), localGroup,
                         pdpRecord.getPdpName(), pdpRecord.getDescription(), pdpRecord.getJmxPort());
             } catch (NullPointerException | PAPException e) {
-                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                         "Caught PAPException trying to create pdp with papEngine.newPDP(" + pdpRecord.getPdpId() + ", "
                                 + localGroup + ", " + pdpRecord.getPdpName() + ", " + pdpRecord.getDescription() + ", "
                                 + pdpRecord.getJmxPort() + ");");
@@ -413,41 +440,41 @@ public class HandleIncomingNotifications {
             }
         } else {
             boolean needToUpdate = false;
-            if (!PolicyDBDao.stringEquals(localPdp.getId(), pdpRecord.getPdpId())
-                    || !PolicyDBDao.stringEquals(localPdp.getName(), pdpRecord.getPdpName())) {
+            if (!PolicyDbDao.stringEquals(localPdp.getId(), pdpRecord.getPdpId())
+                    || !PolicyDbDao.stringEquals(localPdp.getName(), pdpRecord.getPdpName())) {
                 // again, we don't want to change the id, the papEngine will do
                 // this
                 localPdp.setName(pdpRecord.getPdpName());
                 needToUpdate = true;
             }
-            if (!PolicyDBDao.stringEquals(localPdp.getDescription(), pdpRecord.getDescription())) {
+            if (!PolicyDbDao.stringEquals(localPdp.getDescription(), pdpRecord.getDescription())) {
                 localPdp.setDescription(pdpRecord.getDescription());
                 needToUpdate = true;
             }
             String localPdpGroupId = null;
             try {
-                localPdpGroupId = PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().getPDPGroup(localPdp).getId();
+                localPdpGroupId = PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().getPDPGroup(localPdp).getId();
             } catch (PAPException e) {
                 // could be null or something, just warn at this point
-                logger.warn(
-                        "Caught PAPException trying to get id of local group that pdp is in with localPdpGroupId = papEngine.getPDPGroup(localPdp).getId();",
-                        e);
+                logger.warn("Caught PAPException trying to get id of local group that pdp is in with "
+                        + "localPdpGroupId = papEngine.getPDPGroup(localPdp).getId();", e);
             }
-            if (!PolicyDBDao.stringEquals(localPdpGroupId, pdpRecord.getGroup().getGroupId())) {
+            if (!PolicyDbDao.stringEquals(localPdpGroupId, pdpRecord.getGroup().getGroupId())) {
                 OnapPDPGroup newPdpGroup = null;
                 try {
-                    newPdpGroup = PolicyDBDao.getPolicyDBDaoInstance().getPapEngine()
+                    newPdpGroup = PolicyDbDao.getPolicyDbDaoInstance().getPapEngine()
                             .getGroup(pdpRecord.getGroup().getGroupId());
                 } catch (PAPException e) {
                     // ok, now we have an issue. Time to stop things
-                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
-                            "Caught PAPException trying to get id of local group to move pdp to with papEngine.getGroup(pdpRecord.getGroup().getGroupId());");
+                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
+                            "Caught PAPException trying to get id of local group to move pdp to with "
+                                    + "papEngine.getGroup(pdpRecord.getGroup().getGroupId());");
                     throw new PAPException("Could not get local group");
                 }
                 try {
-                    PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().movePDP(localPdp, newPdpGroup);
+                    PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().movePDP(localPdp, newPdpGroup);
                 } catch (PAPException e) {
-                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                             "Caught PAPException trying to move pdp with papEngine.movePDP(localPdp, newPdpGroup);");
                     throw new PAPException("Could not move pdp " + localPdp);
                 }
@@ -458,9 +485,9 @@ public class HandleIncomingNotifications {
             }
             if (needToUpdate) {
                 try {
-                    PolicyDBDao.getPolicyDBDaoInstance().getPapEngine().updatePDP(localPdp);
+                    PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().updatePDP(localPdp);
                 } catch (PAPException e) {
-                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                             "Caught PAPException trying to update pdp with papEngine.updatePdp(" + localPdp + ");");
                     throw new PAPException("Could not update pdp " + localPdp);
                 }
@@ -492,22 +519,22 @@ public class HandleIncomingNotifications {
 
                 if (policy.getConfigurationData() != null) {
                     subFile =
-                            getPolicySubFile(policy.getConfigurationData().getConfigurationName(), PolicyDBDao.CONFIG);
+                            getPolicySubFile(policy.getConfigurationData().getConfigurationName(), PolicyDbDao.CONFIG);
                 } else if (policy.getActionBodyEntity() != null) {
-                    subFile = getPolicySubFile(policy.getActionBodyEntity().getActionBodyName(), PolicyDBDao.ACTION);
+                    subFile = getPolicySubFile(policy.getActionBodyEntity().getActionBodyName(), PolicyDbDao.ACTION);
                 }
 
                 if (subFile != null) {
                     Files.deleteIfExists(subFile);
                 }
                 if (policy.getConfigurationData() != null) {
-                    writePolicySubFile(policy, PolicyDBDao.CONFIG);
+                    writePolicySubFile(policy, PolicyDbDao.CONFIG);
                 } else if (policy.getActionBodyEntity() != null) {
                     writePolicySubFile(policy, action);
                 }
             }
         } catch (IOException e1) {
-            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, PolicyDBDao.POLICYDBDAO_VAR,
+            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, PolicyDbDao.POLICYDBDAO_VAR,
                     "Error occurred while performing [" + action + "] of Policy File: " + policyName);
         } finally {
             session.close();
@@ -520,8 +547,8 @@ public class HandleIncomingNotifications {
         String type = null;
         String subTypeName = null;
         String subTypeBody = null;
-        if (PolicyDBDao.CONFIG.equalsIgnoreCase(policyType)) {
-            type = PolicyDBDao.CONFIG;
+        if (PolicyDbDao.CONFIG.equalsIgnoreCase(policyType)) {
+            type = PolicyDbDao.CONFIG;
             subTypeName = FilenameUtils.removeExtension(policy.getConfigurationData().getConfigurationName());
             subTypeBody = policy.getConfigurationData().getConfigBody();
 
@@ -541,12 +568,12 @@ public class HandleIncomingNotifications {
                     subTypeName = subTypeName + ".txt";
                 }
             }
-        } else if (PolicyDBDao.ACTION.equalsIgnoreCase(policyType)) {
-            type = PolicyDBDao.ACTION;
+        } else if (PolicyDbDao.ACTION.equalsIgnoreCase(policyType)) {
+            type = PolicyDbDao.ACTION;
             subTypeName = policy.getActionBodyEntity().getActionBodyName();
             subTypeBody = policy.getActionBodyEntity().getActionBody();
         }
-        Path filePath = Paths.get(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_WEBAPPS).toString(), type);
+        Path filePath = Paths.get(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_WEBAPPS), type);
 
         if (subTypeBody == null) {
             subTypeBody = "";
@@ -560,11 +587,10 @@ public class HandleIncomingNotifications {
             try (FileWriter fileWriter = new FileWriter(file, false)) {
                 // false to overwrite
                 fileWriter.write(subTypeBody);
-                fileWriter.close();
                 success = true;
             }
         } catch (Exception e) {
-            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDBDao.POLICYDBDAO_VAR,
+            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                     "Exception occured while creating Configuration File for Policy : " + policy.getPolicyName());
         }
         return success;

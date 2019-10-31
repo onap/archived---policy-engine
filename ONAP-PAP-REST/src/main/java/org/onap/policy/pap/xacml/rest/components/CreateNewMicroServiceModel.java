@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,7 +165,7 @@ public class CreateNewMicroServiceModel {
             returnReferenceList.put(modelName, utils.getReferenceAttributes());
             msAttributes.setRefAttribute(returnReferenceList);
 
-            if (!PolicyDBDao.isNullOrEmpty(utils.getListConstraints())) {
+            if (!PolicyDbDao.isNullOrEmpty(utils.getListConstraints())) {
                 LinkedHashMap<String, String> enumList = new LinkedHashMap<>();
                 String[] listArray = utils.getListConstraints().split("#");
                 for (String str : listArray) {

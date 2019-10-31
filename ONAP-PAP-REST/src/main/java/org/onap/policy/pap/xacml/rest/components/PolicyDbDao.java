@@ -53,7 +53,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.dao.PolicyDBException;
+import org.onap.policy.rest.dao.PolicyDbException;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
 import org.onap.policy.rest.jpa.DatabaseLockEntity;
@@ -71,9 +71,12 @@ import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class PolicyDbDao.
+ */
 @Component
-public class PolicyDBDao {
-    private static final Logger logger = FlexLogger.getLogger(PolicyDBDao.class);
+public class PolicyDbDao {
+    private static final Logger logger = FlexLogger.getLogger(PolicyDbDao.class);
     public static final String JSON_CONFIG = "JSON";
     public static final String XML_CONFIG = "XML";
     public static final String PROPERTIES_CONFIG = "PROPERTIES";
@@ -100,7 +103,10 @@ public class PolicyDBDao {
     public static final String POLICYDBDAO_VAR = "PolicyDBDao";
     public static final String DUP_POLICYID = "Somehow, more than one policy with the id ";
     public static final String FOUND_IN_DB = " were found in the database";
-    private static PolicyDBDao currentInstance = null;
+
+    private static final String AUDIT_STR = "Audit";
+
+    private static PolicyDbDao currentInstance = null;
     private static boolean isJunit = false;
     private static SessionFactory sessionfactory;
     private List<?> otherServers;
@@ -110,40 +116,58 @@ public class PolicyDBDao {
      * Gets the current instance of PolicyDBDao.
      *
      * @return The instance of PolicyDBDao or throws exception if the given instance is null.
-     * @throws IllegalStateException if a PolicyDBDao instance is null. Call
-     *         createPolicyDBDaoInstance (EntityManagerFactory emf) to get this.
+     * @throws IllegalStateException if a PolicyDBDao instance is null. Call createPolicyDBDaoInstance
+     *         (EntityManagerFactory emf) to get this.
      */
-    public static PolicyDBDao getPolicyDBDaoInstance() {
+    public static PolicyDbDao getPolicyDbDaoInstance() {
         logger.debug("getPolicyDBDaoInstance() as getPolicyDBDaoInstance() called");
         if (currentInstance != null) {
             return currentInstance;
         } else {
-            currentInstance = new PolicyDBDao("init");
+            currentInstance = new PolicyDbDao("init");
         }
         return currentInstance;
     }
 
+    /**
+     * Sets the pap engine.
+     *
+     * @param papEngine2 the new pap engine
+     */
     public void setPapEngine(PAPPolicyEngine papEngine2) {
         this.papEngine = papEngine2;
     }
 
+    /**
+     * Instantiates a new policy db dao.
+     *
+     * @param sessionFactory the session factory
+     */
     @Autowired
-    public PolicyDBDao(SessionFactory sessionFactory) {
-        PolicyDBDao.sessionfactory = sessionFactory;
+    public PolicyDbDao(SessionFactory sessionFactory) {
+        PolicyDbDao.sessionfactory = sessionFactory;
     }
 
-    public PolicyDBDao() {
+    /**
+     * Instantiates a new policy db dao.
+     */
+    public PolicyDbDao() {
         // Default Constructor
     }
 
-    public PolicyDBDao(String init) {
+    /**
+     * Initialize the DAO.
+     *
+     * @param init initiation parameters
+     */
+    public PolicyDbDao(String init) {
         // not needed in this release
         if (!register()) {
             PolicyLogger
                     .error("This server's PolicyDBDao instance could not be registered and may not reveive updates");
         }
 
-        otherServers = getRemotePolicyDBDaoList();
+        otherServers = getRemotePolicyDbDaoList();
         if (logger.isDebugEnabled()) {
             logger.debug("Number of remote PolicyDBDao instances: " + otherServers.size());
         }
@@ -152,8 +176,15 @@ public class PolicyDBDao {
         }
     }
 
-    // not static because we are going to be using the instance's emf
-    // waitTime in ms to wait for lock, or -1 to wait forever (no)
+    /**
+     * Start a synchronized transaction.
+     *
+     * <p>Not static because we are going to be using the instance's emf waitTime in ms to wait for lock, or -1 to wait
+     * forever (no)
+     *
+     * @param session the session
+     * @param waitTime the wait time
+     */
     @SuppressWarnings("deprecation")
     public void startTransactionSynced(Session session, int waitTime) {
         logger.debug("\n\nstartTransactionSynced(Hibernate Session,int waitTime) as " + "\n   startTransactionSynced("
@@ -179,17 +210,17 @@ public class PolicyDBDao {
     }
 
     /**
-     * Gets the list of other registered PolicyDBDaos from the database
+     * Gets the list of other registered PolicyDBDaos from the database.
      *
      * @return List (type PolicyDBDaoEntity) of other PolicyDBDaos
      */
-    private List<?> getRemotePolicyDBDaoList() {
+    private List<?> getRemotePolicyDbDaoList() {
         logger.debug("getRemotePolicyDBDaoList() as getRemotePolicyDBDaoList() called");
-        List<?> policyDBDaoEntityList = new LinkedList<>();
+        List<?> policyDbDaoEntityList = new LinkedList<>();
         Session session = sessionfactory.openSession();
         try {
             Criteria cr = session.createCriteria(PolicyDBDaoEntity.class);
-            policyDBDaoEntityList = cr.list();
+            policyDbDaoEntityList = cr.list();
         } catch (Exception e) {
             PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, POLICYDBDAO_VAR,
                     "Exception querying for other registered PolicyDBDaos");
@@ -201,21 +232,29 @@ public class PolicyDBDao {
                 logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement" + e);
             }
         }
-        return policyDBDaoEntityList;
+        return policyDbDaoEntityList;
     }
 
-    public PolicyDBDaoTransaction getNewTransaction() {
+    /**
+     * Gets the new transaction.
+     *
+     * @return the new transaction
+     */
+    public PolicyDbDaoTransaction getNewTransaction() {
         logger.debug("getNewTransaction() as getNewTransaction() called");
         return new PolicyDbDaoTransactionInstance("init");
     }
 
-    /*
-     * Because the normal transactions are not used in audits, we can use the same transaction
-     * mechanism to get a transaction and obtain the emlock and the DB lock. We just need to provide
-     * different transaction timeout values in ms because the audit will run longer than normal
-     * transactions.
+    /**
+     * Get a new audit transaction.
+     *
+     * <p>Because the normal transactions are not used in audits, we can use the same transaction mechanism to get a
+     * transaction and obtain the emlock and the DB lock. We just need to provide different transaction timeout values
+     * in ms because the audit will run longer than normal transactions.
+     *
+     * @return the new audit transaction
      */
-    public PolicyDBDaoTransaction getNewAuditTransaction() {
+    public PolicyDbDaoTransaction getNewAuditTransaction() {
         logger.debug("getNewAuditTransaction() as getNewAuditTransaction() called");
         // Use the standard transaction wait time in ms
         int auditWaitMs = Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_TRANS_WAIT));
@@ -229,6 +268,7 @@ public class PolicyDBDao {
      *
      * @param one A String or null to compare
      * @param two A String or null to compare
+     * @return true, if successful
      */
     public static boolean stringEquals(String one, String two) {
         logger.debug("stringEquals(String one, String two) as stringEquals(" + one + ", " + two + ") called");
@@ -242,8 +282,7 @@ public class PolicyDBDao {
     }
 
     /**
-     * Returns the url of this local pap server, removing the username and password, if they are
-     * present
+     * Returns the url of this local pap server, removing the username and password, if they are present.
      *
      * @return The url of this local pap server
      */
@@ -256,6 +295,12 @@ public class PolicyDBDao {
         return splitPapUrlUserPass(url);
     }
 
+    /**
+     * Split the user and password of a PAP URL.
+     *
+     * @param url the URL
+     * @return the user and password
+     */
     public String[] splitPapUrlUserPass(String url) {
         String[] urlUserPass = new String[3];
         String[] commaSplit = url.split(",");
@@ -283,7 +328,7 @@ public class PolicyDBDao {
     }
 
     /**
-     * Register the PolicyDBDao instance in the PolicyDBDaoEntity table
+     * Register the PolicyDBDao instance in the PolicyDBDaoEntity table.
      *
      * @return Boolean, were we able to register?
      */
@@ -325,24 +370,24 @@ public class PolicyDBDao {
             }
         }
         logger.debug("\nPolicyDBDao.register. Database locking and concurrency control is initialized\n");
-        PolicyDBDaoEntity foundPolicyDBDaoEntity = null;
+        PolicyDBDaoEntity foundPolicyDbDaoEntity = null;
         Criteria cr = session.createCriteria(PolicyDBDaoEntity.class);
         cr.add(Restrictions.eq("policyDBDaoUrl", url[0]));
         List<?> data = cr.list();
         if (!data.isEmpty()) {
-            foundPolicyDBDaoEntity = (PolicyDBDaoEntity) data.get(0);
+            foundPolicyDbDaoEntity = (PolicyDBDaoEntity) data.get(0);
         }
 
         // encrypt the password
         String txt = PeCryptoUtils.encrypt(url[2]);
-        if (foundPolicyDBDaoEntity == null) {
-            PolicyDBDaoEntity newPolicyDBDaoEntity = new PolicyDBDaoEntity();
-            newPolicyDBDaoEntity.setPolicyDBDaoUrl(url[0]);
-            newPolicyDBDaoEntity.setDescription("PAP server at " + url[0]);
-            newPolicyDBDaoEntity.setUsername(url[1]);
-            newPolicyDBDaoEntity.setPassword(txt);
+        if (foundPolicyDbDaoEntity == null) {
+            PolicyDBDaoEntity newPolicyDbDaoEntity = new PolicyDBDaoEntity();
+            newPolicyDbDaoEntity.setPolicyDBDaoUrl(url[0]);
+            newPolicyDbDaoEntity.setDescription("PAP server at " + url[0]);
+            newPolicyDbDaoEntity.setUsername(url[1]);
+            newPolicyDbDaoEntity.setPassword(txt);
             try {
-                session.persist(newPolicyDBDaoEntity);
+                session.persist(newPolicyDbDaoEntity);
                 session.getTransaction().commit();
             } catch (Exception e) {
                 logger.debug(e);
@@ -356,13 +401,13 @@ public class PolicyDBDao {
             }
         } else {
             // just want to update in order to change modified date
-            if (url[1] != null && !stringEquals(url[1], foundPolicyDBDaoEntity.getUsername())) {
-                foundPolicyDBDaoEntity.setUsername(url[1]);
+            if (url[1] != null && !stringEquals(url[1], foundPolicyDbDaoEntity.getUsername())) {
+                foundPolicyDbDaoEntity.setUsername(url[1]);
             }
-            if (txt != null && !stringEquals(txt, foundPolicyDBDaoEntity.getPassword())) {
-                foundPolicyDBDaoEntity.setPassword(txt);
+            if (txt != null && !stringEquals(txt, foundPolicyDbDaoEntity.getPassword())) {
+                foundPolicyDbDaoEntity.setPassword(txt);
             }
-            foundPolicyDBDaoEntity.preUpdate();
+            foundPolicyDbDaoEntity.preUpdate();
             try {
                 session.getTransaction().commit();
             } catch (Exception e) {
@@ -381,12 +426,20 @@ public class PolicyDBDao {
         return true;
     }
 
-    /*
-     * This method is called during all pushPolicy transactions and makes sure the file system group
-     * is in sync with the database groupentity
+    /**
+     * Synchronize group policies in the fuile system.
+     *
+     * <p>This method is called during all pushPolicy transactions and makes sure the file system group is in sync with
+     * the database group entity
+     *
+     * @param pdpGroup the pdp group
+     * @param groupentity the groupentity
+     * @return the std PDP group
+     * @throws PAPException the PAP exception
+     * @throws PolicyDbException the policy db exception
      */
     public StdPDPGroup synchronizeGroupPoliciesInFileSystem(StdPDPGroup pdpGroup, GroupEntity groupentity)
-            throws PAPException, PolicyDBException {
+            throws PAPException, PolicyDbException {
 
         HashMap<String, PDPPolicy> currentPolicyMap = new HashMap<>();
         HashSet<String> newPolicyIdSet = new HashSet<>();
@@ -431,8 +484,8 @@ public class PolicyDBDao {
                 } catch (Exception e) {
                     logger.debug(e);
                     PolicyLogger.error(
-                            "PolicyDBDao: Exception occurred while attempting to delete the old version of the policy file from the group. "
-                                    + e.getMessage());
+                            "PolicyDBDao: Exception occurred while attempting to delete the old version of the policy"
+                                    + " file from the group. " + e.getMessage());
                 }
             }
         }
@@ -443,24 +496,32 @@ public class PolicyDBDao {
         return pdpGroup;
     }
 
-    public String removeExtensionAndVersionFromPolicyName(String originalPolicyName) throws PolicyDBException {
+    /**
+     * Removes the extension and version from policy name.
+     *
+     * @param originalPolicyName the original policy name
+     * @return the string
+     * @throws PolicyDbException the policy db exception
+     */
+    public String removeExtensionAndVersionFromPolicyName(String originalPolicyName) throws PolicyDbException {
         return getPolicyNameAndVersionFromPolicyFileName(originalPolicyName)[0];
     }
 
     /**
-     * Splits apart the policy name and version from a policy file path
+     * Splits apart the policy name and version from a policy file path.
      *
-     * @param originalPolicyName: a policy file name ex: Config_policy.2.xml
+     * @param originalPolicyName the original policy name
      * @return An array [0]: The policy name, [1]: the policy version, as a string
+     * @throws PolicyDbException the policy db exception
      */
-    public String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName) throws PolicyDBException {
+    public String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName) throws PolicyDbException {
         String policyName = originalPolicyName;
         String[] nameAndVersion = new String[2];
         try {
             policyName = removeFileExtension(policyName);
             nameAndVersion[0] = policyName.substring(0, policyName.lastIndexOf('.'));
             if (isNullOrEmpty(nameAndVersion[0])) {
-                throw new PolicyDBException();
+                throw new PolicyDbException();
             }
         } catch (Exception e) {
             nameAndVersion[0] = originalPolicyName;
@@ -469,7 +530,7 @@ public class PolicyDBDao {
         try {
             nameAndVersion[1] = policyName.substring(policyName.lastIndexOf('.') + 1);
             if (isNullOrEmpty(nameAndVersion[1])) {
-                throw new PolicyDBException();
+                throw new PolicyDbException();
             }
         } catch (Exception e) {
             nameAndVersion[1] = "1";
@@ -478,6 +539,13 @@ public class PolicyDBDao {
         return nameAndVersion;
     }
 
+    /**
+     * Get the PDP policy by name.
+     *
+     * @param name The name to get
+     * @param scope The scope to use
+     * @return the policy.
+     */
     public String getPdpPolicyName(String name, String scope) {
         String finalName = "";
         finalName += scope;
@@ -491,6 +559,11 @@ public class PolicyDBDao {
         return fileName.substring(0, fileName.lastIndexOf('.'));
     }
 
+    /**
+     * Audit local database.
+     *
+     * @param papEngine2 the pap engine 2
+     */
     public void auditLocalDatabase(PAPPolicyEngine papEngine2) {
         logger.debug("PolicyDBDao.auditLocalDatabase() is called");
         try {
@@ -502,6 +575,12 @@ public class PolicyDBDao {
         }
     }
 
+    /**
+     * Audit local file system.
+     *
+     * @param group the group
+     * @return the std PDP group
+     */
     public StdPDPGroup auditLocalFileSystem(StdPDPGroup group) {
 
         logger.info("Starting Local File System group audit");
@@ -519,7 +598,7 @@ public class PolicyDBDao {
                 updatedGroup = synchronizeGroupPoliciesInFileSystem(group, dbgroup);
                 logger.info("Group was updated during file system audit: " + updatedGroup.toString());
             }
-        } catch (PAPException | PolicyDBException e) {
+        } catch (PAPException | PolicyDbException e) {
             logger.error(e);
         } catch (Exception e) {
             logger.error(e);
@@ -534,9 +613,8 @@ public class PolicyDBDao {
         return updatedGroup;
     }
 
-    /*
-     * This method is called at startup to recreate config data from DB to the file system.
-     *
+    /**
+     * Synchronize config data in file system.
      */
     public void synchronizeConfigDataInFileSystem() {
 
@@ -588,6 +666,9 @@ public class PolicyDBDao {
         session.close();
     }
 
+    /**
+     * Delete all group tables.
+     */
     public void deleteAllGroupTables() {
         logger.debug("PolicyDBDao.deleteAllGroupTables() called");
         Session session = sessionfactory.openSession();
@@ -603,13 +684,17 @@ public class PolicyDBDao {
         session.close();
     }
 
+    /**
+     * Audit groups.
+     *
+     * @param papEngine2 the pap engine 2
+     */
     @SuppressWarnings("unchecked")
     public void auditGroups(PAPPolicyEngine papEngine2) {
         logger.debug("PolicyDBDao.auditGroups() called");
 
         Session session = sessionfactory.openSession();
         session.getTransaction().begin();
-        final String AUDIT_STR = "Audit";
         try {
 
             Set<OnapPDPGroup> groups = papEngine2.getOnapPDPGroups();
@@ -621,7 +706,7 @@ public class PolicyDBDao {
                     groupEntity.setDescription(grp.getDescription());
                     groupEntity.setDefaultGroup(grp.isDefaultGroup());
                     groupEntity.setCreatedBy(AUDIT_STR);
-                    groupEntity.setGroupId(createNewPDPGroupId(grp.getId()));
+                    groupEntity.setGroupId(createNewPdpGroupId(grp.getId()));
                     groupEntity.setModifiedBy(AUDIT_STR);
                     session.persist(groupEntity);
                     Set<OnapPDP> pdps = grp.getOnapPdps();
@@ -681,6 +766,13 @@ public class PolicyDBDao {
 
     }
 
+    /**
+     * Gets the config file.
+     *
+     * @param filename the filename
+     * @param policy the policy
+     * @return the config file
+     */
     public String getConfigFile(String filename, PolicyRestAdapter policy) {
         if (policy == null) {
             return getConfigFile(filename, (String) null);
@@ -690,6 +782,13 @@ public class PolicyDBDao {
 
     // copied from ConfigPolicy.java and modified
     // Here we are adding the extension for the configurations file based on the
+    /**
+     * Gets the config file.
+     *
+     * @param inputFilename the input filename
+     * @param configType the config type
+     * @return the config file
+     */
     // config type selection for saving.
     public String getConfigFile(String inputFilename, String configType) {
         String filename = inputFilename;
@@ -715,6 +814,12 @@ public class PolicyDBDao {
         return filename;
     }
 
+    /**
+     * Gets the name scope and version from pdp policy.
+     *
+     * @param fileName the file name
+     * @return the name scope and version from pdp policy
+     */
     public String[] getNameScopeAndVersionFromPdpPolicy(String fileName) {
         String[] splitByDots = fileName.split("\\.");
         if (splitByDots.length < 3) {
@@ -738,7 +843,13 @@ public class PolicyDBDao {
         return returnArray;
     }
 
-    public static String createNewPDPGroupId(String name) {
+    /**
+     * Creates the new PDP group id.
+     *
+     * @param name the name
+     * @return the string
+     */
+    public static String createNewPdpGroupId(String name) {
         String id = name;
         // replace "bad" characters with sequences that will be ok for file
         // names and properties keys.
@@ -761,7 +872,7 @@ public class PolicyDBDao {
     }
 
     /**
-     * Checks if any of the given strings are empty or null
+     * Checks if any of the given strings are empty or null.
      *
      * @param strings One or more Strings (or nulls) to check if they are null or empty
      * @return true if one or more of the given strings are empty or null
@@ -775,45 +886,107 @@ public class PolicyDBDao {
         return false;
     }
 
+    /**
+     * Gets the other servers.
+     *
+     * @return the other servers
+     */
     public List<?> getOtherServers() {
         return otherServers;
     }
 
+    /**
+     * Sets the other servers.
+     *
+     * @param otherServers the new other servers
+     */
     public void setOtherServers(List<?> otherServers) {
         this.otherServers = otherServers;
     }
 
+    /**
+     * Gets the pap engine.
+     *
+     * @return the pap engine
+     */
     public PAPPolicyEngine getPapEngine() {
         return papEngine;
     }
 
+    /**
+     * Checks if is junit.
+     *
+     * @return true, if is junit
+     */
     public static boolean isJunit() {
         return isJunit;
     }
 
+    /**
+     * Sets the junit.
+     *
+     * @param isJunit the new junit
+     */
     public static void setJunit(boolean isJunit) {
-        PolicyDBDao.isJunit = isJunit;
+        PolicyDbDao.isJunit = isJunit;
     }
 
-    public static PolicyDBDaoTestClass getPolicyDBDaoTestClass() {
-        return new PolicyDBDao().new PolicyDBDaoTestClass();
+    /**
+     * Gets the policy DB dao test class.
+     *
+     * @return the policy DB dao test class
+     */
+    public static PolicyDbDaoTestClass getPolicyDbDaoTestClass() {
+        return new PolicyDbDao().new PolicyDbDaoTestClass();
     }
 
-    final class PolicyDBDaoTestClass {
+    /**
+     * The Class PolicyDBDaoTestClass.
+     */
+    final class PolicyDbDaoTestClass {
+
+        /**
+         * Gets the config file.
+         *
+         * @param filename the filename
+         * @param scope the scope
+         * @param policy the policy
+         * @return the config file
+         */
         String getConfigFile(String filename, String scope, PolicyRestAdapter policy) {
-            return scope + "." + PolicyDBDao.this.getConfigFile(filename, policy);
+            return scope + "." + PolicyDbDao.this.getConfigFile(filename, policy);
         }
 
-        String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName) throws PolicyDBException {
-            return PolicyDBDao.this.getPolicyNameAndVersionFromPolicyFileName(originalPolicyName);
+        /**
+         * Gets the policy name and version from policy file name.
+         *
+         * @param originalPolicyName the original policy name
+         * @return the policy name and version from policy file name
+         * @throws PolicyDbException the policy db exception
+         */
+        String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName) throws PolicyDbException {
+            return PolicyDbDao.this.getPolicyNameAndVersionFromPolicyFileName(originalPolicyName);
         }
 
+        /**
+         * Gets the name scope and version from pdp policy.
+         *
+         * @param fileName the file name
+         * @return the name scope and version from pdp policy
+         */
         String[] getNameScopeAndVersionFromPdpPolicy(String fileName) {
-            return PolicyDBDao.this.getNameScopeAndVersionFromPdpPolicy(fileName);
+            return PolicyDbDao.this.getNameScopeAndVersionFromPdpPolicy(fileName);
         }
 
+        /**
+         * Gets the pdp policy name.
+         *
+         * @param name the name
+         * @param scope the scope
+         * @return the pdp policy name
+         */
         String getPdpPolicyName(String name, String scope) {
-            return PolicyDBDao.this.getPdpPolicyName(name, scope);
+            return PolicyDbDao.this.getPdpPolicyName(name, scope);
         }
     }
 

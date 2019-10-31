@@ -3,6 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +39,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.dao.PolicyDBException;
+import org.onap.policy.rest.dao.PolicyDbException;
 import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
 import org.onap.policy.xacml.std.pap.StdEngine;
@@ -49,7 +50,7 @@ public class HandleIncomingNotificationsTest {
     private static final String PDP = "pdp";
     private static final String GROUP = "group";
     private static final String ONE = "1";
-    private static PolicyDBDao dbd;
+    private static PolicyDbDao dbd;
     private static StdEngine stdEngine = null;
     private static SessionFactory sessionFactory = null;
     private static HandleIncomingNotifications handleIncomingNotifications;
@@ -67,9 +68,9 @@ public class HandleIncomingNotificationsTest {
         System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/xacml.pap.properties");
         sessionFactory = PolicyDBDaoTest.setupH2DbDaoImpl("testHandleIncoming");
         handleIncomingNotifications = new HandleIncomingNotifications(sessionFactory);
-        PolicyDBDao.setJunit(true);
-        dbd = PolicyDBDao.getPolicyDBDaoInstance();
-        PolicyDBDao.setJunit(true);
+        PolicyDbDao.setJunit(true);
+        dbd = PolicyDbDao.getPolicyDbDaoInstance();
+        PolicyDbDao.setJunit(true);
         populateDb();
     }
 
@@ -96,7 +97,7 @@ public class HandleIncomingNotificationsTest {
         handleIncomingNotifications.handleIncomingHttpNotification(null, TWO, PDP, null, null);
     }
 
-    private static void populateDb() throws PolicyDBException, IOException {
+    private static void populateDb() throws PolicyDbException, IOException {
         groupEntity = new GroupEntity();
         groupEntity.setCreatedBy(API);
         groupEntity.setDefaultGroup(false);
@@ -133,7 +134,7 @@ public class HandleIncomingNotificationsTest {
         session.close();
     }
 
-    private static void populatePolicyInDb() throws PolicyDBException, IOException {
+    private static void populatePolicyInDb() throws PolicyDbException, IOException {
         Policy policyObject = new ConfigPolicy();
         policyObject.policyAdapter = new PolicyRestAdapter();
         policyObject.policyAdapter.setConfigName("testpolicyhandle");
@@ -157,7 +158,7 @@ public class HandleIncomingNotificationsTest {
         policyObject.policyAdapter
                 .setParentPath(IOUtils.toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml")));
 
-        PolicyDBDaoTransaction transaction = dbd.getNewTransaction();
+        PolicyDbDaoTransaction transaction = dbd.getNewTransaction();
         transaction.createPolicy(policyObject, "testuser1");
         transaction.commitTransaction();
 

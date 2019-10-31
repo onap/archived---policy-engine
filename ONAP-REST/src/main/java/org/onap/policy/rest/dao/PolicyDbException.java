@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,30 +22,30 @@
 package org.onap.policy.rest.dao;
 
 /**
- * PolicyDBException extends <code>Exception</code> to implement exceptions thrown by Policy Database transactions. 
- * 
+ * PolicyDBException extends <code>Exception</code> to implement exceptions thrown by Policy Database transactions.
+ *
  * @version 0.1
  */
-public class PolicyDBException extends Exception {
+public class PolicyDbException extends Exception {
     private static final long serialVersionUID = -6162444281003852781L;
 
-    public PolicyDBException() {
+    public PolicyDbException() {
         // Empty constructor
     }
-    
-    public PolicyDBException(String message) {
+
+    public PolicyDbException(String message) {
         super(message);
     }
-    
-    public PolicyDBException(Throwable cause){
+
+    public PolicyDbException(Throwable cause) {
         super(cause);
     }
-    
-    public PolicyDBException(String message, Throwable cause) {
+
+    public PolicyDbException(String message, Throwable cause) {
         super(message, cause);
     }
-    
-    public PolicyDBException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+
+    public PolicyDbException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
