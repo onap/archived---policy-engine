@@ -20,14 +20,14 @@
 
 package org.onap.policy.pap.xacml.rest.service;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.junit.Test;
 
 public class ImportServiceTest {
@@ -38,5 +38,41 @@ public class ImportServiceTest {
         HttpServletResponse response = new MockHttpServletResponse();
         service.doImportMicroServicePut(request, response);
         assertEquals(response.getHeader("error"), "missing");
+    }
+
+    @Test
+    public void testImportBRMS() {
+        ImportService service = new ImportService();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setupAddParameter("serviceName", "serviceName");
+        request.setupAddParameter("importService", "BRMSPARAM");
+        request.setBodyContent("foo");
+        HttpServletResponse response = new MockHttpServletResponse();
+        assertThatCode(() -> service.doImportMicroServicePut(request, response)).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testImportMS() {
+        ImportService service = new ImportService();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setupAddParameter("serviceName", "serviceName");
+        request.setupAddParameter("importService", "MICROSERVICE");
+        request.setupAddParameter("fileName", "fileName");
+        request.setBodyContent("foo");
+        HttpServletResponse response = new MockHttpServletResponse();
+        assertThatThrownBy(() -> service.doImportMicroServicePut(request, response))
+            .isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    public void testImportOpt() {
+        ImportService service = new ImportService();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setupAddParameter("serviceName", "serviceName");
+        request.setupAddParameter("importService", "OPTIMIZATION");
+        request.setupAddParameter("fileName", "fileName");
+        request.setBodyContent("foo");
+        HttpServletResponse response = new MockHttpServletResponse();
+        assertThatThrownBy(() -> service.doImportMicroServicePut(request, response)).isInstanceOf(Exception.class);
     }
 }

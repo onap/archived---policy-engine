@@ -30,10 +30,9 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -74,7 +73,8 @@ public class ImportService {
             StringBuilder builder = new StringBuilder();
             int ch;
             try {
-                while ((ch = request.getInputStream().read()) != -1) {
+                ServletInputStream stream = request.getInputStream();
+                while ((ch = stream.read()) != -1) {
                     builder.append((char) ch);
                 }
             } catch (IOException e) {
@@ -115,7 +115,7 @@ public class ImportService {
                     }
                     PolicyLogger.info("Request from API to import new Service");
                     try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                            new FileOutputStream(extractDir + File.separator + randomID + type), "utf-8"))) {
+                        new FileOutputStream(extractDir + File.separator + randomID + type), "utf-8"))) {
                         writer.write(xmi);
                     } catch (IOException e) {
                         logger.error(e);
@@ -125,7 +125,7 @@ public class ImportService {
                 } else {
                     InputStream inputStream = null;
                     try (FileOutputStream outputStream =
-                            new FileOutputStream(extractDir + File.separator + randomID + ".zip")) {
+                        new FileOutputStream(extractDir + File.separator + randomID + ".zip")) {
                         inputStream = request.getInputStream();
                         byte[] buffer = new byte[4096];
                         int bytesRead = -1;
@@ -178,7 +178,7 @@ public class ImportService {
                 }
                 PolicyLogger.info("Request from API to import new Optimization Service Model");
                 try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream(extractDir + File.separator + randomID + type), "utf-8"))) {
+                    new FileOutputStream(extractDir + File.separator + randomID + type), "utf-8"))) {
                     writer.write(yml);
                 } catch (IOException e) {
                     logger.error(e);
