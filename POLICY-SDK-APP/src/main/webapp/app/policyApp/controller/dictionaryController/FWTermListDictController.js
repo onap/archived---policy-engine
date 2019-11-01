@@ -142,77 +142,54 @@ app.controller('editFWTermListController' , function ($scope, $modalInstance, me
     PolicyAppService.getData('getDictionary/get_PrefixListDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.prefixListDictionaryDatas = JSON.parse($scope.data.prefixListDictionaryDatas);
-    	console.log($scope.prefixListDictionaryDatas);
     	for(i = 0; i < $scope.prefixListDictionaryDatas.length; i++){
 			var key  = $scope.prefixListDictionaryDatas[i];
 			$scope.groupAddresses.push(key);
 		}
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_ZoneDictionaryDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.zoneDictionaryDatas = JSON.parse($scope.data.zoneDictionaryDatas);
-    	console.log($scope.zoneDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_AddressGroupDictionaryDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.addressGroupDictionaryDatas = JSON.parse($scope.data.addressGroupDictionaryDatas);
-    	console.log($scope.addressGroupDictionaryDatas);
     	for(i = 0; i < $scope.addressGroupDictionaryDatas.length; i++){
 			var key  = $scope.addressGroupDictionaryDatas[i];
 			$scope.groupAddresses.push(key);
 		}
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_ServiceListDictionaryDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.serviceListDictionaryDatas = JSON.parse($scope.data.serviceListDictionaryDatas);
-    	console.log($scope.serviceListDictionaryDatas);
     	for(i = 0; i < $scope.serviceListDictionaryDatas.length; i++){
 			var key  = $scope.serviceListDictionaryDatas[i];
 			$scope.groupServices.push(key);
 		}
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_ServiceGroupDictionaryDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.serviceGroupDictionaryDatas = JSON.parse($scope.data.serviceGroupDictionaryDatas);
-    	console.log($scope.serviceGroupDictionaryDatas);
     	for(i = 0; i < $scope.serviceGroupDictionaryDatas.length; i++){
 			var key  = $scope.serviceGroupDictionaryDatas[i];
 			$scope.groupServices.push(key);
 		}
     }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_ActionListDictionaryDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.actionListDictionaryDatas = JSON.parse($scope.data.actionListDictionaryDatas);
-    	console.log($scope.actionListDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 
 	
@@ -251,7 +228,6 @@ app.controller('editFWTermListController' , function ($scope, $modalInstance, me
     				if($scope.termListDictionaryDatas == "Duplicate"){
     					Notification.error("FW TermList Dictionary exists with Same Term Name.")
     				}else{      
-    					console.log($scope.termListDictionaryDatas);
     					$modalInstance.close({termListDictionaryDatas:$scope.termListDictionaryDatas});
     				}
     			},
