@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
  */
 
 app.controller('policyDashboardCRUDDataController', function ($scope, PolicyAppService, modalService, $modal){
-	console.log("policyDashboardCRUDDataController called");
 	
 	$('#dashBoardAdvanceSearch').hide();
 	
@@ -31,7 +30,6 @@ app.controller('policyDashboardCRUDDataController', function ($scope, PolicyAppS
 
 		var j = data;
 		$scope.data = JSON.parse(j.data);
-		console.log($scope.data);
 		$scope.papStatusCRUDDatas =JSON.parse($scope.data.papStatusCRUDData);
         if($scope.papStatusCRUDDatas != null){
             for(i = 0; i < $scope.papStatusCRUDDatas.length; i++){
@@ -41,8 +39,6 @@ app.controller('policyDashboardCRUDDataController', function ($scope, PolicyAppS
             $scope.papCRUDTableDatas = $scope.papCRUDTableDatasTemp;
         } 
 		
-	},function(error){
-		console.log("failed");
 	});
 
 	$scope.papCRUDStatusDatas = {
@@ -106,12 +102,6 @@ app.controller('policyDashboardCRUDDataController', function ($scope, PolicyAppS
    
     $scope.startAdvancedSearch = function(data){
     	
-		 console.log("startAdvancedSearch called");
-		 console.log(data.isDelected);
-		 console.log(data.stage);
-		 console.log(data.scope);
-		 console.log(data.ttlDate_after);
-		 console.log(data.ttlDate_before);
 		 
 		 if(data.scope == null){
 			 return;
@@ -127,13 +117,11 @@ app.controller('policyDashboardCRUDDataController', function ($scope, PolicyAppS
  			contentType: 'application/json',
  			data: JSON.stringify(postData),
  			success : function(data){
- 				 console.log("dashboardAdvancedSearch data returned: " + data);
  				
                  $scope.$apply(function(){  
                 	
      				var j = data;
      				$scope.data = JSON.parse(j.data);
-     				console.log($scope.data);
      				$scope.papStatusCRUDDatas =JSON.parse($scope.data.policyStatusCRUDData);
      				
      				$scope.papCRUDTableDatasTemp = [];
@@ -148,7 +136,6 @@ app.controller('policyDashboardCRUDDataController', function ($scope, PolicyAppS
                });
  			},
  			error : function(data){
- 				console.log("dashboardAdvancedSearch Failed: data returned as " + data);
  			}
  		});
     };

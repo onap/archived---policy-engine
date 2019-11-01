@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-app.controller('editPSGroupPolicyScopeController' ,  function ($scope, $modalInstance, message, PolicyAppService, UserInfoServiceDS2, Notification){
+app.controller('editPSGroupPolicyScopeController' ,  
+    function ($scope, $modalInstance, message, PolicyAppService, UserInfoServiceDS2, Notification){
 	$scope.edit = false;
     if(message.groupPolicyScopeListData==null)
         $scope.label='Add New Group Policy Scope'
@@ -30,41 +31,25 @@ app.controller('editPSGroupPolicyScopeController' ,  function ($scope, $modalIns
     PolicyAppService.getData('getDictionary/get_PSServiceDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.psServiceDictionaryDatas = JSON.parse($scope.data.psServiceDictionaryDatas);
-    	console.log($scope.psServiceDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_PSTypeDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.psTypeDictionaryDatas = JSON.parse($scope.data.psTypeDictionaryDatas);
-    	console.log($scope.psTypeDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_PSResourceDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.psResourceDictionaryDatas = JSON.parse($scope.data.psResourceDictionaryDatas);
-    	console.log($scope.psResourceDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_PSClosedLoopDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.psClosedLoopDictionaryDatas = JSON.parse($scope.data.psClosedLoopDictionaryDatas);
-    	console.log($scope.psClosedLoopDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 	
 	/*getting user info from session*/
@@ -79,7 +64,6 @@ app.controller('editPSGroupPolicyScopeController' ,  function ($scope, $modalIns
     if($scope.edit){
     	if(message.groupPolicyScopeListData.groupList != null){
     		var splitValue = message.groupPolicyScopeListData.groupList.split(",");
-    		console.log(splitValue);
     		$scope.splittedGroupListValues = [];
     		var splitResource = splitValue[0].split("=");
     		$scope.editPSGroupPolicyScope1.resource.push(splitResource[1]);
@@ -97,7 +81,6 @@ app.controller('editPSGroupPolicyScopeController' ,  function ($scope, $modalIns
     	if(!regex.test(groupPolicyScopeListData.groupName)) {
     		Notification.error("Enter Valid Policy Scope Group Name without spaces or special characters");
     	}else{
-    		console.log(groupPolicyScopeListData1);
     		if(groupPolicyScopeListData1.resource[0] != undefined && groupPolicyScopeListData1.type[0] != undefined && groupPolicyScopeListData1.service[0] != undefined && groupPolicyScopeListData1.closedloop[0] != undefined){
     			var uuu = "saveDictionary/ps_dictionary/save_psGroupPolicyScope";
     			var postData={groupPolicyScopeListData: groupPolicyScopeListData,
@@ -116,7 +99,6 @@ app.controller('editPSGroupPolicyScopeController' ,  function ($scope, $modalIns
     					}else if($scope.groupPolicyScopeListDatas == "DuplicateGroup"){
     						Notification.error("GroupPolicyScope Dictionary exists with Same Group List.")
     					}else{      
-    						console.log($scope.groupPolicyScopeListDatas);
     						$modalInstance.close({groupPolicyScopeListDatas:$scope.groupPolicyScopeListDatas});
     					}
     				},

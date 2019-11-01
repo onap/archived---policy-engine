@@ -17,7 +17,9 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-angular.module('abs').controller('fwPolicyController', ['$scope', '$window', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', function ($scope, $window, PolicyAppService, PolicyNavigator, modalService, $modal, Notification) {
+angular.module('abs').controller('fwPolicyController', 
+    ['$scope', '$window', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', 
+    function ($scope, $window, PolicyAppService, PolicyNavigator, modalService, $modal, Notification) {
     $("#dialog").hide();
     
     $scope.policyNavigator;
@@ -26,14 +28,14 @@ angular.module('abs').controller('fwPolicyController', ['$scope', '$window', 'Po
     
     if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
     	$scope.temp.policy = {
-    			policyType : "Config",
-    			configPolicyType : "Firewall Config"
+        	policyType : "Config",
+        	configPolicyType : "Firewall Config"
     	}
     };
     
     $scope.refresh = function(){
     	if($scope.refreshCheck){
-    		$scope.policyNavigator.refresh();
+        $scope.policyNavigator.refresh();
     	}
     	$scope.modal('createNewPolicy', true);
     	$scope.temp.policy = "";
@@ -48,72 +50,47 @@ angular.module('abs').controller('fwPolicyController', ['$scope', '$window', 'Po
     	changeMonth: true,
     	changeYear: true,
     	onSelect: function(date) {
-    		angular.element($('#ttlDate')).triggerHandler('input');
+        angular.element($('#ttlDate')).triggerHandler('input');
     	}
     });
-		
+    
     PolicyAppService.getData('getDictionary/get_SecurityZoneDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.securityZoneDictionaryDatas = JSON.parse($scope.data.securityZoneDictionaryDatas);
-    	console.log($scope.securityZoneDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_TermListDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.termListDictionaryDatas = JSON.parse($scope.data.termListDictionaryDatas);
-    	console.log($scope.termListDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_FWDictionaryListDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.fwDictListDictionaryDatas = JSON.parse($scope.data.fwDictListDictionaryDatas);
-    	console.log($scope.fwDictListDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_FWParentListDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.fwParentListDictionaryDatas = JSON.parse($scope.data.fwParentListDictionaryDatas);
-    	console.log($scope.fwParentListDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_TagPickerNameByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.fwTagPickerDictionaryDatas = JSON.parse($scope.data.fwTagPickerDictionaryDatas);
-    	console.log($scope.fwTagPickerDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_RiskTypeDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.riskTypeDictionaryDatas = JSON.parse($scope.data.riskTypeDictionaryDatas);
-    	console.log($scope.riskTypeDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 
     $scope.viewFWRule = function(policy){
-        console.log(policy);
         var uuu = "policyController/ViewFWPolicyRule.htm";
         var postData={policyData: policy};
         $.ajax({
@@ -136,85 +113,81 @@ angular.module('abs').controller('fwPolicyController', ['$scope', '$window', 'Po
     
     $scope.saveFWPolicy = function(policy){
     	if(policy.itemContent != undefined){
-    		$scope.refreshCheck = true; 
+        $scope.refreshCheck = true; 
         	$scope.policyNavigator = policy.itemContent;
         	policy.itemContent = "";
     	}
     	$scope.savebutton = false;
-        console.log(policy);
         var uuu = "policycreation/save_policy";
-		var postData={policyData: policy};
-		$.ajax({
-			type : 'POST',
-			url : uuu,
-			dataType: 'json',
-			contentType: 'application/json',
-			data: JSON.stringify(postData),
-			success : function(data){
-				$scope.$apply(function(){
-					$scope.data=data.policyData;
-					if($scope.data == 'success'){
-						$scope.temp.policy.readOnly = 'true';
-						$scope.pushStatus=data.policyData.split("&")[1];
-						if($scope.pushStatus=="successPush"){
-							Notification.success("Policy pushed successfully");
-						}
-						Notification.success("Policy Saved Successfully.");	
-					}else if ($scope.data == 'PolicyExists'){
-						$scope.savebutton = true;
-						Notification.error("Policy Already Exists with Same Name in Scope.");
-					}
-				});
-				console.log($scope.data);
-			},
-			error : function(data){
-				Notification.error("Error Occured while saving Policy.");
-			}
-		});
+    var postData={policyData: policy};
+    $.ajax({
+    	type : 'POST',
+    	url : uuu,
+    	dataType: 'json',
+    	contentType: 'application/json',
+    	data: JSON.stringify(postData),
+    	success : function(data){
+        $scope.$apply(function(){
+        	$scope.data=data.policyData;
+        	if($scope.data == 'success'){
+            $scope.temp.policy.readOnly = 'true';
+            $scope.pushStatus=data.policyData.split("&")[1];
+            if($scope.pushStatus=="successPush"){
+            	Notification.success("Policy pushed successfully");
+            }
+            Notification.success("Policy Saved Successfully.");	
+        	}else if ($scope.data == 'PolicyExists'){
+            $scope.savebutton = true;
+            Notification.error("Policy Already Exists with Same Name in Scope.");
+        	}
+        });
+    	},
+    	error : function(data){
+        Notification.error("Error Occured while saving Policy.");
+    	}
+    });
     };
     
     $scope.validatePolicy = function(policy){
-    	console.log(policy);
     	document.getElementById("validate").innerHTML = "";
          var uuu = "policyController/validate_policy.htm";
- 		var postData={policyData: policy};
- 		$.ajax({
- 			type : 'POST',
- 			url : uuu,
- 			dataType: 'json',
- 			contentType: 'application/json',
- 			data: JSON.stringify(postData),
- 			success : function(data){
- 				$scope.$apply(function(){
- 					$scope.validateData = data.data.replace(/\"/g, "");
-						$scope.data=data.data.substring(1,8);
- 						var size = data.data.length;
- 						if($scope.data == 'success'){
- 							Notification.success("Validation Success.");
- 							$scope.savebutton = false;
- 							if (size > 18){
- 								var displayWarning = data.data.substring(19,size);
- 								document.getElementById("validate").innerHTML = "Safe Policy Warning Message  :  "+displayWarning;
- 								document.getElementById("validate").style.color = "white";
- 								document.getElementById("validate").style.backgroundColor = "skyblue";
- 							}	
- 						}else{
- 							Notification.error("Validation Failed.");
- 							document.getElementById("validate").innerHTML = $scope.validateData;
- 							document.getElementById("validate").style.color = "white";
- 							document.getElementById("validate").style.backgroundColor = "red";
- 							$scope.savebutton = true;
- 						}
- 						
- 				});
- 				console.log($scope.data);
- 				
- 			},
- 			error : function(data){
- 				Notification.error("Validation Failed.");
- 				$scope.savebutton = true; 
- 			}
- 		});
+     var postData={policyData: policy};
+     $.ajax({
+     	type : 'POST',
+     	url : uuu,
+     	dataType: 'json',
+     	contentType: 'application/json',
+     	data: JSON.stringify(postData),
+     	success : function(data){
+         $scope.$apply(function(){
+         	$scope.validateData = data.data.replace(/\"/g, "");
+            $scope.data=data.data.substring(1,8);
+             var size = data.data.length;
+             if($scope.data == 'success'){
+             	Notification.success("Validation Success.");
+             	$scope.savebutton = false;
+             	if (size > 18){
+                 var displayWarning = data.data.substring(19,size);
+                 document.getElementById("validate").innerHTML = "Safe Policy Warning Message  :  "+displayWarning;
+                 document.getElementById("validate").style.color = "white";
+                 document.getElementById("validate").style.backgroundColor = "skyblue";
+             	}	
+             }else{
+             	Notification.error("Validation Failed.");
+             	document.getElementById("validate").innerHTML = $scope.validateData;
+             	document.getElementById("validate").style.color = "white";
+             	document.getElementById("validate").style.backgroundColor = "red";
+             	$scope.savebutton = true;
+             }
+             
+         });
+         
+     	},
+     	error : function(data){
+         Notification.error("Validation Failed.");
+         $scope.savebutton = true; 
+     	}
+     });
     };
     
     if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
@@ -222,12 +195,12 @@ angular.module('abs').controller('fwPolicyController', ['$scope', '$window', 'Po
     	$scope.temp.policy.fwattributes = [];
     }else{
 	   if($scope.temp.policy.attributes.length == 0){
-		   $scope.temp.policy.attributes = [];
+       $scope.temp.policy.attributes = [];
 	   }
 	   if($scope.temp.policy.fwPolicyType == 'Parent Policy'){
-		   if($scope.temp.policy.fwattributes.length == 0){
-			   $scope.temp.policy.fwattributes = [];
-		   }
+       if($scope.temp.policy.fwattributes.length == 0){
+    	   $scope.temp.policy.fwattributes = [];
+       }
 	   }
    }
     
