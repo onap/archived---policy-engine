@@ -63,46 +63,29 @@ angular.module('abs').controller('brmsParamPolicyController',
     PolicyAppService.getData('getDictionary/get_BRMSControllerDataByName').then(function (data) {
         var j = data;
         $scope.data = JSON.parse(j.data);
-        console.log($scope.data);
         $scope.brmsControllerDatas = JSON.parse($scope.data.brmsControllerDictionaryDatas);
-        console.log($scope.brmsControllerDatas);
-    }, function (error) {
-        console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_BRMSDependencyDataByName').then(function (data) {
         var j = data;
         $scope.data = JSON.parse(j.data);
-        console.log($scope.data);
         $scope.brmsDependencyDatas = JSON.parse($scope.data.brmsDependencyDictionaryDatas);
-        console.log($scope.brmsDependencyDatas);
-    }, function (error) {
-        console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_BRMSParamDataByName').then(function (data) {
         var j = data;
         $scope.data = JSON.parse(j.data);
-        console.log($scope.data);
         $scope.brmsParamDictionaryDatas = JSON.parse($scope.data.brmsParamDictionaryDatas);
-        console.log($scope.brmsParamDictionaryDatas);
-    }, function (error) {
-        console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_RiskTypeDataByName').then(function (data) {
         var j = data;
         $scope.data = JSON.parse(j.data);
-        console.log($scope.data);
         $scope.riskTypeDictionaryDatas = JSON.parse($scope.data.riskTypeDictionaryDatas);
-        console.log($scope.riskTypeDictionaryDatas);
-    }, function (error) {
-        console.log("failed");
     });
     
     $scope.temp.policy.dynamicLayoutMap = {};
     $scope.addDataToFields = function(ruleName){
-        console.log(ruleName);   
         if(ruleName != null){
             var uuu = "policyController/getBRMSTemplateData.htm";
             var postData={policyData: ruleName};
@@ -116,7 +99,6 @@ angular.module('abs').controller('brmsParamPolicyController',
                      $scope.$apply(function(){
                         $scope.temp.policy.dynamicLayoutMap = data.policyData;
                      });
-                     console.log( $scope.temp.policy.dynamicLayoutMap);
                  },
                  error : function(data){
                     Notification.error("Error While Retriving the Template Layout Pattren.");
@@ -128,7 +110,6 @@ angular.module('abs').controller('brmsParamPolicyController',
     $scope.showbrmsrule = true;
     
     $scope.ShowRule = function(policy){
-        console.log(policy);
         var uuu = "policyController/ViewBRMSParamPolicyRule.htm";
         var postData={policyData: policy};
         $.ajax({
@@ -186,7 +167,6 @@ angular.module('abs').controller('brmsParamPolicyController',
                         Notification.error("Policy Already Exists with Same Name in Scope.");
                     }
                 });
-                console.log($scope.data);
             },
             error : function(data){
                 Notification.error("Error Occured while saving Policy.");
@@ -196,7 +176,6 @@ angular.module('abs').controller('brmsParamPolicyController',
     };
 
     $scope.validatePolicy = function(policy){
-        console.log(policy);
         document.getElementById("validate").innerHTML = "";
         var uuu = "policyController/validate_policy.htm";
          var postData={policyData: policy};
@@ -230,7 +209,6 @@ angular.module('abs').controller('brmsParamPolicyController',
                          }
                          
                  });
-                 console.log($scope.data);
              },
              error : function(data){
                  Notification.error("Validation Failed.");

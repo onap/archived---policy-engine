@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,51 +23,31 @@ app.controller('msHeaderDefaultValuesDictGridController', function ($scope, Poli
     PolicyAppService.getData('getDictionary/get_MicroServiceHeaderDefaultsData').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.microServiceHeaderDefaultDatas = JSON.parse($scope.data.microServiceHeaderDefaultDatas);
-    	console.log("microServiceHeaderDefaultDatas: " + $scope.microServiceHeaderDefaultDatas);
-    }, function (error) {
-    	console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_MicroServiceModelsDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
-    	console.log($scope.data);
     	$scope.microServiceModelsDictionaryDatas = JSON.parse($scope.data.microServiceModelsDictionaryDatas);
-    	console.log($scope.microServiceModelsDictionaryDatas);
-    }, function (error) {
-    	console.log("failed");
     });
     
 	PolicyAppService.getData('getDictionary/get_RiskTypeDataByName').then(function (data) {
 		var j = data;
 		$scope.data = JSON.parse(j.data);
-		console.log("riskTypeDictionaryDatas: " + $scope.data);
 		$scope.riskTypeDictionaryDatas = JSON.parse($scope.data.riskTypeDictionaryDatas);
-		console.log($scope.riskTypeDictionaryDatas);
-	}, function (error) {
-		console.log("failed");
 	});
 	
 	PolicyAppService.getData('getDictionary/get_OnapNameDataByName').then(function (data) {
 		var j = data;
 		$scope.data = JSON.parse(j.data);
-		console.log($scope.data);
 		$scope.onapNameDictionaryDatas = JSON.parse($scope.data.onapNameDictionaryDatas);
-		console.log($scope.onapNameDictionaryDatas);
-	}, function (error) {
-		console.log("failed");
 	});
 
 	PolicyAppService.getData('get_DCAEPriorityValues').then(function (data) {
 		var j = data;
 		$scope.data = JSON.parse(j.data);
-		console.log($scope.data);
 		$scope.priorityDatas = JSON.parse($scope.data.priorityDatas);
-		console.log($scope.priorityDatas);
-	}, function (error) {
-		console.log("failed");
 	});
 	
     PolicyAppService.getData('get_LockDownData').then(function(data){
@@ -81,8 +61,6 @@ app.controller('msHeaderDefaultValuesDictGridController', function ($scope, Poli
     		$scope.msHeaderDefaultValuesDictionaryGrid.columnDefs[0].visible = true;
     		$scope.gridApi.grid.refresh();
     	}
-    },function(error){
-    	console.log("failed");
     });
 	
     $scope.msHeaderDefaultValuesDictionaryGrid = {
@@ -116,7 +94,6 @@ app.controller('msHeaderDefaultValuesDictGridController', function ($scope, Poli
             }
         });
         modalInstance.result.then(function(response){
-            console.log('response', response);
             $scope.microServiceHeaderDefaultDatas=response.microServiceHeaderDefaultDatas;
         });
     };
@@ -137,7 +114,6 @@ app.controller('msHeaderDefaultValuesDictGridController', function ($scope, Poli
             }
         });
         modalInstance.result.then(function(response){
-            console.log('response', response);
             $scope.modelAttributeDictionaryDataa = response.modelAttributeDictionaryDatas;
         });
     };
@@ -157,7 +133,6 @@ app.controller('msHeaderDefaultValuesDictGridController', function ($scope, Poli
                         $scope.$apply(function(){$scope.microServiceHeaderDefaultDatas=data.microServiceHeaderDefaultDatas;});
                     },
                     error : function(data){
-                        console.log(data);
                         modalService.showFailure("Fail","Error while deleting: "+ data.responseText);
                     }
                 });
