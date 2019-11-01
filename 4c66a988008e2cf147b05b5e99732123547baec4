@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5bcd62cc_ecc29866",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/js/controllers/policySearchManager.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-01T20:52:18Z",
+      "side": 1,
+      "message": "wonder what happened to the indentation here?",
+      "revId": "4c66a988008e2cf147b05b5e99732123547baec4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
