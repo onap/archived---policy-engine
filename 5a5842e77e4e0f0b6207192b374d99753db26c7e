@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7cb6484_a24c5d9f",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/HandleIncomingNotifications.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-01T13:14:48Z",
+      "side": 1,
+      "message": "maybe move this line outside of the \"try\" block, so that it doesn\u0027t get set until after the file is flushed \u0026 closed.",
+      "revId": "5a5842e77e4e0f0b6207192b374d99753db26c7e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29620615_df18f6d6",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/dao/PolicyDbExceptionTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-01T13:14:48Z",
+      "side": 1,
+      "message": "I\u0027d suggest using ExceptionsTester to test this class - can probably replace all of these tests with a single line",
+      "revId": "5a5842e77e4e0f0b6207192b374d99753db26c7e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
