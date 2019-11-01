@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75ca51dd_510943ec",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-01T20:48:21Z",
+      "side": 1,
+      "message": "we should remove scope\u003dtest in policy-endpoints; anything using that starts a rest server using policy-endpoints will be dependent on this.  Once that\u0027s done, we can probably remove it from these other repos",
+      "revId": "46b5b531eada52e963f9ca196473a6c1bd8cbf37",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
