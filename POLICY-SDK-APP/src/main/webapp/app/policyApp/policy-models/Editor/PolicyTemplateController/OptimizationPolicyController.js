@@ -68,27 +68,18 @@ angular.module('abs').controller('optimizationController',
     PolicyAppService.getData('getDictionary/get_OnapNameDataByName').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
     $scope.onapNameDictionaryDatas = JSON.parse($scope.data.onapNameDictionaryDatas);
-    console.log($scope.onapNameDictionaryDatas);
-    }, function (error) {
-    console.log("failed");
     });
 
     PolicyAppService.getData('get_DCAEPriorityValues').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
     $scope.priorityDatas = JSON.parse($scope.data.priorityDatas);
-    console.log($scope.priorityDatas);
-    }, function (error) {
-    console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_OptimizationModelsDataByName').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
     var inputModelList = JSON.parse($scope.data.optimizationModelsDictionaryDatas);
     var unique = {};
     var uniqueList = [];
@@ -99,26 +90,18 @@ angular.module('abs').controller('optimizationController',
     }
     }
     $scope.optimizationModelsDictionaryDatas = uniqueList;
-    console.log($scope.optimizationModelsDictionaryDatas);
-    }, function (error) {
-    console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_RiskTypeDataByName').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
     $scope.riskTypeDictionaryDatas = JSON.parse($scope.data.riskTypeDictionaryDatas);
-    console.log($scope.riskTypeDictionaryDatas);
-    }, function (error) {
-    console.log("failed");
     });
 
      $scope.choices = [];
      $scope.attributeDatas = [{"attributes" : $scope.choices}];
      $scope.isInitEditTemplate = true;  //just initially create the edit template, didn't click add button yet.
      $scope.addNewChoice = function(value) {
-     console.log("input value : " + value);
      if(value != undefined){
     if (value.startsWith('div.')){
         value = value.replace('div.','');
@@ -237,7 +220,6 @@ angular.module('abs').controller('optimizationController',
     }
      
      $scope.removeChoice = function(value) {
-     console.log(value);
      if(value != undefined){
      var c = document.getElementById("div."+value).childElementCount;
      
@@ -250,7 +232,6 @@ angular.module('abs').controller('optimizationController',
      };
      
      $scope.pullVersion = function(serviceName) {
-     console.log(serviceName);
      if(serviceName != undefined){
      var uuu = "policyController/getModelServiceVersionData.htm";
      var postData={policyData: serviceName};
@@ -301,20 +282,6 @@ angular.module('abs').controller('optimizationController',
                     $scope.optimizationModelData = data[0].optimizationModelData;
                     $scope.optimizationJsonDate = data[0].jsonValue;
                         $scope.dataOrderInfo = null;
-                    $scope.dataOrderInfo = data[0].dataOrderInfo;
-                    console.log("data[0].dataOrderInfo: " + data[0].dataOrderInfo);
-                    console.log("$scope.dataOrderInfo: " + $scope.dataOrderInfo);    
-                    if(data[0].allManyTrueKeys){
-                        console.log("$scope.allManyTrueKeys: " + $scope.allManyTrueKeys);
-                    }
-                    console.log("$scope.optimizationJsonDate: " + $scope.optimizationJsonDate);    
-                    var attributes = $scope.optimizationModelData.attributes;
-                    var refAttributes = $scope.optimizationModelData.ref_attributes;
-                    var subAttributes =     $scope.optimizationModelData.sub_attributes;   
-                    console.log("attributes: " +attributes);                    
-                    console.log("subAttributes: " + subAttributes);    
-                    console.log("refAttributes: " + refAttributes);    
-                    
                     var headDefautlsData  = data[0].headDefautlsData;
                     if(headDefautlsData != null){
                         $scope.temp.policy.onapName = headDefautlsData.onapName;
@@ -357,7 +324,6 @@ angular.module('abs').controller('optimizationController',
                                conpairService = service;
                            }
                            if(valueModel.localeCompare(conpairService) == 0){
-                               console.log(valueCompare);    
                                dictionaryList.push(dictionary[m]);
                                if (!dictionaryNameList.includes(dictionary[m].name)){
                                dictionaryNameList.push(dictionary[m].name)
@@ -413,7 +379,6 @@ angular.module('abs').controller('optimizationController',
                                 var n = getNumOfDigits(extraElements[a], index+1);
                                     
                                     var key = extraElements[a].substring(0, index+n+1); //include @x in key also by n+2 since x can be 1,12, etc
-                                console.log("key: " + key);
                                 checkData.push(key);
                             }
                             }
@@ -426,13 +391,11 @@ angular.module('abs').controller('optimizationController',
                             //var newKey = unique[i].substring(0, unique[i].length-2);
                             var index = unique[i].lastIndexOf("@");
                             var newKey = unique[i].substring(0, index);
-                            console.log("newKey: " + newKey);    
                             $scope.addNewChoice(newKey);
                             }
                         }else{
 
                           for (i = 0; i < $scope.labelManyKeys.length; i++) {
-                          console.log("dataOrderInfo["+i+"]"+  dataOrderInfo[i]);
                               var label = $scope.labelManyKeys[i];
                               // first add parent/label level
                           for (k = 0; k < unique.length; k++){
@@ -521,7 +484,6 @@ angular.module('abs').controller('optimizationController',
     
     function getList(attribute) {
     var enumName = attribute;
-    console.log("In getList: attribute => " + attribute);
     if(attribute){
        if(attribute.includes(":")){
            enumName = attribute.split(":")[0];
@@ -592,7 +554,6 @@ angular.module('abs').controller('optimizationController',
     
         for (key in layOutData) {
         array = isArray(layOutData[key]);
-        console.log("key: " + key , "value: " + layOutData[key]);
        
         if (!!layOutData[key] && typeof(layOutData[key])=="object") {
             
@@ -666,7 +627,6 @@ angular.module('abs').controller('optimizationController',
             if(allkeys){
                 for (var k = 0; k < allkeys.length; k++) {
                 var keyValue = allkeys[k];
-                console.log(" keyValue:jsonObject["+keyValue+ "]: " + jsonObject[keyValue]);
                 if(jsonObject[keyValue]){
                     var tempObject = jsonObject[keyValue];
                     if(tempObject && tempObject[key]){
@@ -752,14 +712,11 @@ angular.module('abs').controller('optimizationController',
     }  
 
     $scope.validContionalRequired = function(parentId) {
-        console.log("ng-blur event: parentId : " + parentId);
         var c = document.getElementById(parentId).children;
         var i;
         var hasValue = false;
         for (i = 0; i < c.length; i++) {
         if(c[i].getAttribute("data-conditional")){
-            console.log(c[i].getAttribute("data-conditional"));
-            console.log(c[i].value);
             if(c[i].value != null && c[i].value.trim() != ""){
             hasValue = true;
             }
@@ -801,7 +758,6 @@ angular.module('abs').controller('optimizationController',
        orderValue = orderValue.split(',') ;
        
        for (i = 0; i < orderValue.length; i++) {
-       console.log("orderValue["+i+"]"+  orderValue[i]);
        var key = orderValue[i].trim();
      
         //--- Create labels first {"label" : newKey, "level" : baseLevel, "array" : array};
@@ -831,7 +787,6 @@ angular.module('abs').controller('optimizationController',
                      var defaultValue = layOutElementList[j].defaultValue.toString().trim();
                      var isRequired = layOutElementList[j].isRequired;
                      
-                     console.log("layOutElementList[" +j+ "]: id:" + layOutElementList[j].id + ", attributekey:"+ layOutElementList[j].attributekey + ", attirbuteLabel:" + layOutElementList[j].attirbuteLabel);
                   
                      if (layOutElementList[j].type == "dropBox"){ 
                     $scope.dropBoxLayout(attirbuteLabel, attributekey, layOutElementList[j].array, defaultValue, layOutElementList[j].list, isRequired);
@@ -966,8 +921,6 @@ angular.module('abs').controller('optimizationController',
         firstChild_element.className += ' children_group';  //here is a div with a group of children.
     }
     }
-    console.log('firstChild_Id: ' + firstChild_Id);
-    console.log('divID: ' + divID);
     
     if (defaultValue.length > 0){    
     if(defaultValue.includes(":")){
@@ -1016,7 +969,6 @@ angular.module('abs').controller('optimizationController',
     var subAttributes = $scope.optimizationModelData.subattributes;
         var jsonObject = JSON.parse(subAttributes);    
         var lablInfo = findVal(jsonObject, lableName);
-    console.log("findValue : " + lableName +": "+ lablInfo);
     var star = "";
     var required = null;
     if(lablInfo){
@@ -1218,7 +1170,6 @@ angular.module('abs').controller('optimizationController',
     if(plainAttributeKeys != null){
         for(a = 0; a < plainAttributeKeys.length; a++){
         var splitPlainAttributeKey = plainAttributeKeys[a].split(splitAt);
-        console.log("splitPlainAttributeKey: " + splitPlainAttributeKey);    
         var searchElement = document.getElementById(splitPlainAttributeKey[0]);
         var key = splitPlainAttributeKey[0];
         
@@ -1243,12 +1194,10 @@ angular.module('abs').controller('optimizationController',
                 }
             jsonPolicy[key]= multiSlect;
             }else{
-            console.log(" searchElement.value = > " + searchElement.value);
             jsonPolicy[key]= searchElement.value;
             }
             } else {
                 if(searchElement.value != null){
-            console.log(" searchElement.value = > " + searchElement.value);
                 jsonPolicy[key]= searchElement.value;
                 }
             }
@@ -1282,7 +1231,6 @@ angular.module('abs').controller('optimizationController',
             Notification.error("Policy Already Exists with Same Name in Scope.");
         }
                 });
-                console.log($scope.data);
             },
             error : function(data){
             Notification.error("Error Occured while saving Policy.");
@@ -1298,7 +1246,6 @@ angular.module('abs').controller('optimizationController',
     if(plainAttributeKeys != null){
         for(a = 0; a < plainAttributeKeys.length; a++){
         var splitPlainAttributeKey = plainAttributeKeys[a].split(splitAt);
-        console.log(splitPlainAttributeKey[1]);    
         var searchElement = document.getElementById(splitPlainAttributeKey[0]);
         var key = splitPlainAttributeKey[0];
         if(searchElement == null || searchElement.nodeName == 'BUTTON'){
@@ -1365,7 +1312,6 @@ angular.module('abs').controller('optimizationController',
              }
              
          });
-         console.log($scope.data);    
      },
      error : function(data){
          Notification.error("Validation Failed.");
