@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7460ac02_ae6a72c3",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/daoimpl/PolicyValidationDaoImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-04T20:24:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c07d9bd_21797e2d",
+      "revId": "4f4d8fafb863053d4bce1d09b25ed8bc905740a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70e55b8c_e904d6d7",
         "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/daoimpl/PolicyValidationDaoImplTest.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-04T20:03:45Z",
       "side": 1,
       "message": "remove try/catch wrapper - same comment below",
+      "revId": "4f4d8fafb863053d4bce1d09b25ed8bc905740a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8832ff1_0bec04f9",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/daoimpl/PolicyValidationDaoImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-04T20:24:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70e55b8c_e904d6d7",
       "revId": "4f4d8fafb863053d4bce1d09b25ed8bc905740a6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
