@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bdfba93_e6c42bec",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/HeartbeatTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-04T20:11:36Z",
+      "side": 1,
+      "message": "sonar: change \"() -\u003e hb.run()\" to \"hb::run\"",
+      "revId": "198c5f8e00a6e6ac64f895387416c1962f70027b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1462a02_d1b1de18",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/UpdatePdpThreadTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-04T20:11:36Z",
+      "side": 1,
+      "message": "thread::run",
+      "revId": "198c5f8e00a6e6ac64f895387416c1962f70027b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7aa8724_552824dc",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/NotifyOtherPapsTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-04T20:11:36Z",
+      "side": 1,
+      "message": "this should be done in @After (or @AfterClass) so that it still gets restored even if the test fails",
+      "revId": "198c5f8e00a6e6ac64f895387416c1962f70027b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9259430e_bd12bdeb",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/service/ImportServiceTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-04T20:11:36Z",
+      "side": 1,
+      "message": "this is ok, but would be better if tested for a specific exception type, if there is one that\u0027s expected",
+      "revId": "198c5f8e00a6e6ac64f895387416c1962f70027b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
