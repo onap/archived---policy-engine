@@ -16,6 +16,24 @@
       "revId": "46b5b531eada52e963f9ca196473a6c1bd8cbf37",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d567a3a_bd6cdeb9",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-04T08:43:52Z",
+      "side": 1,
+      "message": "OK, if we do that, then we shouldn\u0027t need this dependency peppered through all the repos, right?",
+      "parentUuid": "75ca51dd_510943ec",
+      "revId": "46b5b531eada52e963f9ca196473a6c1bd8cbf37",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
