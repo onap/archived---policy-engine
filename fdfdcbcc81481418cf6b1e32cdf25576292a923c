@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0acf3c91_29513654",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-05T14:46:10Z",
+      "side": 1,
+      "message": "better to use configBodyData.isEmpty(), or StringUtils.isBlank(), depending on whether or not the body can be null\n\nsame comment below",
+      "revId": "fdfdcbcc81481418cf6b1e32cdf25576292a923c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
