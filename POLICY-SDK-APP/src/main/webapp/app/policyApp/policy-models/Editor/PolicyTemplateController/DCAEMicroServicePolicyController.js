@@ -71,60 +71,38 @@ angular.module('abs').controller('dcaeMicroServiceController',
     PolicyAppService.getData('getDictionary/get_OnapNameDataByName').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
     $scope.onapNameDictionaryDatas = JSON.parse($scope.data.onapNameDictionaryDatas);
-    console.log($scope.onapNameDictionaryDatas);
-    }, function (error) {
-    console.log("failed");
     });
 
     PolicyAppService.getData('get_DCAEPriorityValues').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
     $scope.priorityDatas = JSON.parse($scope.data.priorityDatas);
-    console.log($scope.priorityDatas);
-    }, function (error) {
-    console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_GroupPolicyScopeDataByName').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
     $scope.groupPolicyScopeListDatas = JSON.parse($scope.data.groupPolicyScopeListDatas);
-    console.log($scope.groupPolicyScopeListDatas);
-    }, function (error) {
-    console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_MicroServiceConfigNameDataByName').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
-    console.log("$scope.data.microServiceConfigNameDictionaryDatas : " + $scope.data.microServiceConfigNameDictionaryDatas);
     if($scope.data.microServiceConfigNameDictionaryDatas){
          $scope.microServiceCongigNameDictionaryDatas = JSON.parse($scope.data.microServiceConfigNameDictionaryDatas);
     }
-    console.log($scope.microServiceCongigNameDictionaryDatas);
-    }, function (error) {
-    console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_MicroServiceLocationDataByName').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
     $scope.microServiceLocationDictionaryDatas = JSON.parse($scope.data.microServiceLocationDictionaryDatas);
-    console.log($scope.microServiceLocationDictionaryDatas);
-    }, function (error) {
-    console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_MicroServiceModelsDataByName').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
     var inputModelList = JSON.parse($scope.data.microServiceModelsDictionaryDatas);
     var unique = {};
     var uniqueList = [];
@@ -135,55 +113,37 @@ angular.module('abs').controller('dcaeMicroServiceController',
     }
     }
     $scope.microServiceModelsDictionaryDatas = uniqueList;
-    console.log($scope.microServiceModelsDictionaryDatas);
-    }, function (error) {
-    console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_DCAEUUIDDataByName').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
     $scope.dcaeUUIDDictionaryDatas = JSON.parse($scope.data.dcaeUUIDDictionaryDatas);
-    console.log($scope.dcaeUUIDDictionaryDatas);
-    }, function (error) {
-    console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_RiskTypeDataByName').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
     $scope.riskTypeDictionaryDatas = JSON.parse($scope.data.riskTypeDictionaryDatas);
-    console.log($scope.riskTypeDictionaryDatas);
-    }, function (error) {
-    console.log("failed");
     });
 
     PolicyAppService.getData('getDictionary/get_MicroServiceAttributeData').then(function (data) {
     var j = data;
     $scope.data = JSON.parse(j.data);
-    console.log($scope.data);
     $scope.microServiceAttributeDictionaryDatas = JSON.parse($scope.data.microServiceAttributeDictionaryDatas);
-    console.log($scope.microServiceAttributeDictionaryDatas);
-    }, function (error) {
-    console.log("failed");
     });
         
 
      $scope.choices = [];
      $scope.attributeDatas = [{"attributes" : $scope.choices}];
      addNewChoice = function(value) {
-     console.log("input key : " + value);
      var isFoundInRuleData = false;
      if(value != undefined){
     if (value.startsWith('div.')){
         value = value.replace('div.','');
     }
     
-    console.log(" document.getElementById : div."+value);
     var parentElement = document.getElementById("div."+value);
-    console.log("parentElement : " + parentElement);
     var div = document.getElementById(value+"@0");
     if(div != null){
         var clone = div.cloneNode(true); 
@@ -196,8 +156,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
                 clone.value = $scope.temp.policy.ruleData[clone.id];
                 isFoundInRuleData = true;
             }
-            console.log("  clone.value :" +  clone.value);
-            console.log(" clone.id :" + clone.id);
             if(!isFoundInRuleData && isInitViewEdit){
             return;
             }
@@ -255,8 +213,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
         for(var i=0; i<inputs.length; i++){
         if ($scope.temp.policy.ruleData!=undefined){
             var checkValue = $scope.temp.policy.ruleData[inputs[i].id];
-            console.log("  checkValue.value :" +  checkValue);
-            console.log(" inputs["+i+"].id :" + inputs[i].id);
             if (checkValue!=undefined && checkValue != "undefined"){
             document.getElementById(inputs[i].id).value = checkValue;
                 plainAttributeKeys.push(inputs[i].id);
@@ -301,7 +257,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
      
     
      removeChoice = function(value) {
-     console.log(value);
      if(value != undefined){
      var c = document.getElementById("div."+value).childElementCount;
      
@@ -329,7 +284,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
     }
      
      $scope.pullVersion = function(serviceName) {
-     console.log(serviceName);
      if(serviceName != undefined){
      var uuu = "policyController/getModelServiceVersioneData.htm";
      var postData={policyData: serviceName};
@@ -369,7 +323,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
             var uuu = "policyController/getDCAEMSTemplateData.htm";
             var postData={policyData: service};
             
-            console.log("service: " +service);
             
             var dataOrderInfo = "";
             
@@ -392,19 +345,12 @@ angular.module('abs').controller('dcaeMicroServiceController',
                     $scope.dcaeJsonDate = data[0].jsonValue;
                         $scope.dataOrderInfo = null;
                     $scope.dataOrderInfo = data[0].dataOrderInfo;
-                    console.log("data[0].dataOrderInfo: " + data[0].dataOrderInfo);
-                    console.log("$scope.dataOrderInfo: " + $scope.dataOrderInfo);    
                     
                     if(data[0].allManyTrueKeys){
-                        console.log("$scope.allManyTrueKeys: " + $scope.allManyTrueKeys);
                     }
-                    console.log("$scope.dcaeJsonDate: " + $scope.dcaeJsonDate);    
                     var attributes = $scope.dcaeModelData.attributes;                    
-                    console.log("attributes: " +attributes);                    
                     var refAttributes = $scope.dcaeModelData.ref_attributes;
                     var subAttributes =     $scope.dcaeModelData.sub_attributes;                    
-                    console.log("subAttributes: " + subAttributes);    
-                    console.log("refAttributes: " + refAttributes);    
                     var headDefautlsData  = data[0].headDefautlsData;
                     if(headDefautlsData != null){
                         $scope.temp.policy.onapName = headDefautlsData.onapName;
@@ -440,7 +386,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
                                conpairService = service;
                            }
                            if(valueModel.localeCompare(conpairService) == 0){
-                               console.log(valueCompare);    
                                dictionaryList.push(dictionary[m]);
                                if (!dictionaryNameList.includes(dictionary[m].name)){
                                dictionaryNameList.push(dictionary[m].name)
@@ -464,7 +409,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
                     var checkData = [];
                     var data = [];
                         // If ruleData contains extra elements created by clicked add button 
-                        console.log("$scope.temp.policy.ruleData:" + $scope.temp.policy.ruleData);
                         if($scope.temp.policy.ruleData != null){
                             var propNames = Object.getOwnPropertyNames($scope.temp.policy.ruleData);
                             propNames.forEach(function(name) {
@@ -492,7 +436,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
                                 var n = getNumOfDigits(extraElements[a], index+1);
                                     
                                     var key = extraElements[a].substring(0, index+n+1); //include @x in key also by n+2 since x can be 1,12, etc
-                                console.log("key: " + key);
                                 checkData.push(key);
                             }
                             }
@@ -506,7 +449,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
                             var lastIndex = unique[i].lastIndexOf("@");
                             if(firstIndex == lastIndex){    
                                 var newKey = unique[i].substring(0, firstIndex);
-                                console.log("root element: " + newKey);
                                 parentLevelElements.push(newKey);
                                 unique[i] = "*processed*";
                             }
@@ -531,7 +473,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
                                 if(unique[i] != "*processed*"){
                                 var index = unique[i].lastIndexOf("@");
                                 var newKey = unique[i].substring(0, index);
-                                console.log("newKey: " + newKey);    
                                 
                                 var newElement = document.getElementById("div."+unique[j]);
                                 //check weather it has been created already
@@ -635,7 +576,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
     
     function getList(attribute) {
         var enumName = attribute;
-        console.log("In getList: attribute => " + attribute);
         if(attribute){
            if(attribute.includes(":")){
                enumName = attribute.split(":")[0];
@@ -705,7 +645,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
     
         for (key in layOutData) {
         array = isArray(layOutData[key]);
-        console.log("key: " + key , "value: " + layOutData[key]);
         
         if (!!layOutData[key] && typeof(layOutData[key])=="object") {
             
@@ -783,7 +722,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
             var jsonObject = JSON.parse(subAttributes);    
             
                 var lablInfo = findVal(jsonObject, attributekey);
-            console.log("deconstructJSON:findValue : " + attributekey +": "+ lablInfo);
             if (lablInfo){
                 if(lablInfo.includes('required-true')){
                 isRequired = true;
@@ -801,7 +739,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
                if(allkeys){
                    for (var k = 0; k < allkeys.length; k++) {
                   var keyValue = allkeys[k];
-                  console.log(" keyValue:jsonObject["+keyValue+ "]: " + jsonObject[keyValue]);
                   if(jsonObject[keyValue]){
                      var tempObject = jsonObject[keyValue];
                      if(tempObject && tempObject[key]){
@@ -898,14 +835,11 @@ angular.module('abs').controller('dcaeMicroServiceController',
     
     
         $scope.validContionalRequired = function(parentId) {
-            console.log("ng-blur event: parentId : " + parentId);
             var c = document.getElementById(parentId).children;
             var i;
             var hasValue = false;
             for (i = 0; i < c.length; i++) {
             if(c[i].getAttribute("data-conditional")){
-                console.log(c[i].getAttribute("data-conditional"));
-                console.log(c[i].value);
                 if(c[i].value != null && c[i].value.trim() != ""){
                 hasValue = true;
                 }
@@ -947,7 +881,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
                 orderValue = orderValue.split(',') ;
                 
                 for (var i = 0; i < orderValue.length; i++) {
-                console.log("orderValue["+i+"]"+  orderValue[i]);
                 var key = orderValue[i].trim();
               
                  //--- Create labels first {"label" : newKey, "level" : baseLevel, "array" : array};
@@ -978,8 +911,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
                   var description = layOutElementList[j].description;
                   var isRequired = layOutElementList[j].isRequired;
                                
-                               console.log("layOutElementList[" +j+ "]: id:" + layOutElementList[j].id + ", attributekey:"+ layOutElementList[j].attributekey + ", attirbuteLabel:" + layOutElementList[j].attirbuteLabel);
-                               console.log("layOutElementList[" +j+ "]: type:" + layOutElementList[j].type);
                                if (layOutElementList[j].type == "dropBox"){ 
                          $scope.dropBoxLayout(attirbuteLabel, attributekey, layOutElementList[j].array, defaultValue, layOutElementList[j].list, isRequired, description);
                                     
@@ -1167,8 +1098,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
         }
     }
     }
-    console.log('firstChild_Id: ' + firstChild_Id);
-    console.log('divID: ' + divID);
     
     if(dataType != "boolean" && defaultValue.length > 0){    
     if(defaultValue.includes(":")){
@@ -1217,7 +1146,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
     var subAttributes = $scope.dcaeModelData.sub_attributes;
         var jsonObject = JSON.parse(subAttributes);    
         var lablInfo = findVal(jsonObject, lableName);
-    console.log("findValue : " + lableName +": "+ lablInfo);
     var star = "";
     var required = null;
     if(lablInfo){
@@ -1390,7 +1318,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
     PolicyAppService.getData(dictParamsSplit[0]).then(function (data) {
         var j = data;
         $scope.data = JSON.parse(j.data);
-        console.log($scope.data);
         $scope.listDictionarys = JSON.parse($scope.data[dictParamsSplit[1]]);
         for (i=0; i < $scope.listDictionarys.length; i += 1) {
         option = document.createElement('option');
@@ -1398,8 +1325,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
         option.appendChild(document.createTextNode($scope.listDictionarys[i]));
         listField.appendChild(option);
         }
-    }, function (error) {
-        console.log("failed");
     });
 
     }
@@ -1511,7 +1436,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
     if(plainAttributeKeys != null){
     for(a = 0; a < plainAttributeKeys.length; a++){
         var splitPlainAttributeKey = plainAttributeKeys[a].split(splitAt);
-        console.log("splitPlainAttributeKey: " + splitPlainAttributeKey);    
         var searchElement = document.getElementById(splitPlainAttributeKey[0]);
         var key = splitPlainAttributeKey[0];
         if(searchElement == null){
@@ -1537,7 +1461,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
                 }
             jsonPolicy[key]= multiSlect;
             }else{
-            console.log(" searchElement.value = > " + searchElement.value);
             if(splitPlainAttributeKey[1]!= undefined && splitPlainAttributeKey[1] == "boolean"){
                 jsonPolicy[key]= false;
                 for(var i=0; i<booleanTrueElements.length; i++){                
@@ -1553,7 +1476,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
             } else {
                 if(searchElement.value != null){
                 jsonPolicy[key]= searchElement.value;                
-            console.log(" searchElement.value = > " + searchElement.value);
             if(splitPlainAttributeKey[1] == "boolean"){
                 jsonPolicy[key]= false;
                 for(var i=0; i<booleanTrueElements.length; i++){                
@@ -1594,7 +1516,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
             Notification.error("Policy Already Exists with Same Name in Scope.");
         }
                 });
-                console.log($scope.data);
             },
             error : function(data){
             Notification.error("Error Occured while saving Policy.");
@@ -1610,7 +1531,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
     if(plainAttributeKeys != null){
         for(a = 0; a < plainAttributeKeys.length; a++){
         var splitPlainAttributeKey = plainAttributeKeys[a].split(splitAt);
-        console.log(splitPlainAttributeKey[1]);    
         var searchElement = document.getElementById(splitPlainAttributeKey[0]);
         var key = splitPlainAttributeKey[0];
         if(searchElement == null){
@@ -1656,16 +1576,13 @@ angular.module('abs').controller('dcaeMicroServiceController',
            
                  
         if(checkedValue){
-        console.log("checkedValue:" + checkedValue);
         for(var i=0; i<x.length; x++){
-               console.log("checkbox id: " + x[i].id);
               booleanTrueElements.push(x[i].id)
         }    
         }
     }
         var uuu = "policyController/validate_policy.htm";
 
-        console.log("$scope.isCheck:" + $scope.isCheck);
         
         if($scope.isCheck == true){
         if(("configName" in policy) == false){
@@ -1720,7 +1637,6 @@ angular.module('abs').controller('dcaeMicroServiceController',
              }
              
          });
-         console.log($scope.data);    
      },
      error : function(data){
          Notification.error("Validation Failed.");
