@@ -19,12 +19,12 @@
  */
 app.controller('editBRMSControllerController' ,  function ($scope, $modalInstance, message, UserInfoServiceDS2, Notification){
     if(message.brmsControllerDictionaryDatas==null)
-        $scope.label='Add New BRMS Controller'
+        $scope.label='Add New BRMS Controller';
     else{
     	if(message.disabled){
-    		$scope.label='View BRMS Controller'
+    		$scope.label='View BRMS Controller';
     	}else{
-    		$scope.label='Edit BRMS Controller'
+    		$scope.label='Edit BRMS Controller';
     	}
         $scope.disableCd=true;
     }
@@ -57,7 +57,7 @@ app.controller('editBRMSControllerController' ,  function ($scope, $modalInstanc
 							$scope.$apply(function(){
 								$scope.brmsControllerDictionaryDatas=data.brmsControllerDictionaryDatas;});
 							if($scope.brmsControllerDictionaryDatas == "Duplicate"){
-								Notification.error("BRMS Controller Dictionary exists with Same Controller Name.")
+								Notification.error("BRMS Controller Dictionary exists with Same Controller Name.");
 							}else if($scope.brmsControllerDictionaryDatas == "Error"){
 								Notification.error("BRMS Controller is not in proper required format");
 							}else{      
