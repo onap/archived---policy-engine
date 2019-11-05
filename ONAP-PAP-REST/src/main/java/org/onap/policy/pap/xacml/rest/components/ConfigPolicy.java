@@ -130,6 +130,7 @@ public class ConfigPolicy extends Policy {
      * FORM VALIDATION WILL BE DONE BY THE PAP-ADMIN before creating JSON object...
      * BODY VALIDATION WILL BE DONE BY THE PAP-REST after receiving and deserializing the JSON object
      */
+    @Override
     public boolean validateConfigForm() {
 
         isValidForm = true;
@@ -154,12 +155,12 @@ public class ConfigPolicy extends Policy {
                 }
                 break;
             case PROPERTIES_CONFIG:
-                if (!PolicyUtils.isPropValid(configBodyData) || configBodyData.equals("")) {
+                if (!PolicyUtils.isPropValid(configBodyData) || "" .equals(configBodyData)) {
                     isValidForm = false;
                 }
                 break;
             case OTHER_CONFIG:
-                if (configBodyData.equals("")) {
+                if ("".equals(configBodyData)) {
                     isValidForm = false;
                 }
                 break;
@@ -226,7 +227,7 @@ public class ConfigPolicy extends Policy {
 
             String fileName = policyAdapter.getNewFileName();
             String name = fileName.substring(fileName.lastIndexOf("\\") + 1);
-            if ((name == null) || (name.equals(""))) {
+            if ((name == null) || ("".equals(name))) {
                 name = fileName.substring(fileName.lastIndexOf("/") + 1);
             }
             allOfOne.getMatch().add(createMatch("PolicyName", name));
@@ -377,7 +378,7 @@ public class ConfigPolicy extends Policy {
             fileName = FilenameUtils.removeExtension(fileName);
             fileName = fileName + ".xml";
             String name = fileName.substring(fileName.lastIndexOf("\\") + 1);
-            if ((name == null) || (name.equals(""))) {
+            if ((name == null) || ("".equals(name))) {
                 name = fileName.substring(fileName.lastIndexOf("/") + 1);
             }
             attributeValue3.getContent().add(name);
