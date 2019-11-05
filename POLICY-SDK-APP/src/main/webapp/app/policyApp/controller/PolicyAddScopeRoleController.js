@@ -19,14 +19,14 @@
  */
 app.controller('editRoleController' ,  function ($scope, PolicyAppService, $modalInstance, message, Notification){
     if (message.editRoleData != null) {
-        $scope.label='Edit Role'
+        $scope.label='Edit Role';
         $scope.disableCd=true;
     } else {
-        $scope.label='Add Role'
+        $scope.label='Add Role';
         $scope.disableCd=false;
         message.editRoleData = {
             role : "mechid"
-        }
+        };
     }
 
     $scope.editRole = message.editRoleData;

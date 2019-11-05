@@ -26,7 +26,7 @@ app.controller('policyRolesController', function ($scope, PolicyAppService, moda
         var j = data;
         $scope.data = JSON.parse(j.data);
         $scope.lockdowndata = JSON.parse($scope.data.lockdowndata);
-        if ($scope.lockdowndata[0].lockdown == true) {
+        if ($scope.lockdowndata[0].lockdown) {
             $scope.isDisabled = true;
         } else {
             $scope.isDisabled = false;
@@ -66,8 +66,8 @@ app.controller('policyRolesController', function ($scope, PolicyAppService, moda
     $scope.editRoleName = null;
 
     $scope.editRolesWindow = function(editRoleData) {
-        if ($scope.lockdowndata[0].lockdown == true) {
-            Notification.error("Policy Application has been Locked")
+        if ($scope.lockdowndata[0].lockdown) {
+            Notification.error("Policy Application has been Locked");
         } else {
             $scope.editRoleName = editRoleData;
             var modalInstance = $modal.open({
