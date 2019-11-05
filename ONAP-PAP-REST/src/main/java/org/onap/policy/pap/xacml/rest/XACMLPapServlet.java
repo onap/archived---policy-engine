@@ -1101,7 +1101,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                     setResponseError(response, HttpServletResponse.SC_FORBIDDEN, message);
                     return;
                 }
-                if (apiflag.equalsIgnoreCase("addPolicyToGroup")) {
+                if ("addPolicyToGroup".equalsIgnoreCase(apiflag)) {
                     try {
                         updateGroupsFromAPI(request, response, groupId, loggingContext);
                     } catch (IOException e) {
