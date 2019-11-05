@@ -19,12 +19,12 @@
  */
 app.controller('editBRMSDependencyController', function ($scope, $modalInstance, message, UserInfoServiceDS2, Notification){
     if(message.brmsDependencyDictionaryDatas==null)
-        $scope.label='Add New BRMS Dependency'
+        $scope.label='Add New BRMS Dependency';
     else{
     	if(message.disabled){
-    		$scope.label='View BRMS Dependency'
+    		$scope.label='View BRMS Dependency';
     	}else{
-    		$scope.label='Edit BRMS Dependency'
+    		$scope.label='Edit BRMS Dependency';
     	}
         $scope.disableCd=true;
     }
@@ -57,7 +57,7 @@ app.controller('editBRMSDependencyController', function ($scope, $modalInstance,
 							$scope.$apply(function(){
 								$scope.brmsDependencyDictionaryDatas=data.brmsDependencyDictionaryDatas;});
 							if($scope.brmsDependencyDictionaryDatas == "Duplicate"){
-								Notification.error("BRMS Dependency Dictionary exists with Same Dependency Name.")
+								Notification.error("BRMS Dependency Dictionary exists with Same Dependency Name.");
 							}else if($scope.brmsDependencyDictionaryDatas == "Error"){
 								Notification.error("BRMS Dependency is not in proper format Maven dependency Format");
 							}else{
