@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +18,34 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.rest.jpa;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
-public class CommonDictionaryJPATest {
+public class CommonDictionaryJpaTest {
 
-    private static Logger logger = FlexLogger.getLogger(CommonDictionaryJPATest.class);
+    private static Logger logger = FlexLogger.getLogger(CommonDictionaryJpaTest.class);
     private UserInfo userInfo;
 
+    /**
+     * Initiations for testing.
+     * 
+     * @throws Exception on test initiation errors
+     */
     @Before
     public void setUp() throws Exception {
         logger.info("setUp: Entering");
@@ -44,16 +56,16 @@ public class CommonDictionaryJPATest {
     }
 
     @Test
-    public void testAttribute(){
+    public void testAttribute() {
         Attribute data = new Attribute();
         data.setId(1);
         assertTrue(1 == data.getId());
         data.setCategoryBean(new Category());
-        assertTrue(data.getCategoryBean()!=null);
+        assertTrue(data.getCategoryBean() != null);
         data.setConstraintType(new ConstraintType());
-        assertTrue(data.getConstraintType()!=null);
+        assertTrue(data.getConstraintType() != null);
         data.setConstraintValues(new HashSet<>());
-        assertTrue(data.getConstraintValues()!=null);
+        assertTrue(data.getConstraintValues() != null);
         data.addConstraintValue(new ConstraintValue());
         data.removeConstraintValue(new ConstraintValue());
         data.removeAllConstraintValues();
@@ -68,7 +80,7 @@ public class CommonDictionaryJPATest {
         data.setXacmlId("Test");
         assertTrue("Test".equals(data.getXacmlId()));
         data.setDatatypeBean(new Datatype());
-        assertTrue(data.getDatatypeBean()!=null);
+        assertTrue(data.getDatatypeBean() != null);
         data.setIsDesignator(true);
         assertTrue(data.isDesignator());
         data.setIssuer("Test");
@@ -80,17 +92,66 @@ public class CommonDictionaryJPATest {
         data.setSelectorPath("Test");
         assertTrue("Test".equals(data.getSelectorPath()));
         data.setCreatedDate(new Date());
-        assertTrue(data.getCreatedDate()!=null);
+        assertTrue(data.getCreatedDate() != null);
         data.setModifiedDate(new Date());
-        assertTrue(data.getModifiedDate()!=null);
+        assertTrue(data.getModifiedDate() != null);
         data.setUserCreatedBy(userInfo);
-        assertTrue(data.getUserCreatedBy()!=null);
+        assertTrue(data.getUserCreatedBy() != null);
         data.setUserModifiedBy(userInfo);
-        assertTrue(data.getUserModifiedBy()!=null);
+        assertTrue(data.getUserModifiedBy() != null);
+
+        ConstraintValue constraintValue = new ConstraintValue("Greeting", "Hello");
+        data.getConstraintValues().add(constraintValue);
+        assertEquals("Hello", data.getConstraintValues().iterator().next().getValue());
+
+        data.removeConstraintValue(constraintValue);
+        assertTrue(data.getConstraintValues().isEmpty());
+
+        data.addConstraintValue(constraintValue);
+        assertEquals("Hello", data.getConstraintValues().iterator().next().getValue());
+
+        data.setConstraintValues(null);
+        assertNull(data.getConstraintValues());
+
+        data.addConstraintValue(constraintValue);
+        assertEquals("Hello", data.getConstraintValues().iterator().next().getValue());
+
+        data.removeAllConstraintValues();
+        assertTrue(data.getConstraintValues().isEmpty());
+
+        data.setConstraintValues(null);
+        assertNull(data.getConstraintValues());
+
+        data.removeAllConstraintValues();
+        assertNull(data.getConstraintValues());
+
+        data.addConstraintValue(constraintValue);
+        assertEquals("Hello", data.getConstraintValues().iterator().next().getValue());
+
+        data.setConstraintValues(null);
+        assertNull(data.getConstraintValues());
+
+        Set<ConstraintValue> constraintValueSet = new LinkedHashSet<>();
+        constraintValueSet.add(constraintValue);
+
+        data.setConstraintValues(null);
+        assertNull(data.getConstraintValues());
+
+        data.setConstraintValues(constraintValueSet);
+        assertEquals("Hello", data.getConstraintValues().iterator().next().getValue());
+
+        Attribute data2 = new Attribute(data);
+        assertEquals("Hello", data2.getConstraintValues().iterator().next().getValue());
+
+        data.setIsDesignator(true);
+        assertTrue(data.isDesignator());
+
+        data.setIsDesignator(false);
+        assertFalse(data.isDesignator());
     }
 
     @Test
-    public void testOnapName(){
+    public void testOnapName() {
         OnapName data = new OnapName();
         data.preUpdate();
         data.prePersist();
@@ -101,17 +162,17 @@ public class CommonDictionaryJPATest {
         data.setDescription("Test");
         assertTrue("Test".equals(data.getDescription()));
         data.setCreatedDate(new Date());
-        assertTrue(data.getCreatedDate()!=null);
+        assertTrue(data.getCreatedDate() != null);
         data.setModifiedDate(new Date());
-        assertTrue(data.getModifiedDate()!=null);
+        assertTrue(data.getModifiedDate() != null);
         data.setUserCreatedBy(userInfo);
-        assertTrue(data.getUserCreatedBy()!=null);
+        assertTrue(data.getUserCreatedBy() != null);
         data.setUserModifiedBy(userInfo);
-        assertTrue(data.getUserModifiedBy()!=null);
+        assertTrue(data.getUserModifiedBy() != null);
     }
 
     @Test
-    public void testRiskType(){
+    public void testRiskType() {
         RiskType data = new RiskType();
         data.preUpdate();
         data.prePersist();
@@ -122,17 +183,17 @@ public class CommonDictionaryJPATest {
         data.setDescription("Test");
         assertTrue("Test".equals(data.getDescription()));
         data.setCreatedDate(new Date());
-        assertTrue(data.getCreatedDate()!=null);
+        assertTrue(data.getCreatedDate() != null);
         data.setModifiedDate(new Date());
-        assertTrue(data.getModifiedDate()!=null);
+        assertTrue(data.getModifiedDate() != null);
         data.setUserCreatedBy(userInfo);
-        assertTrue(data.getUserCreatedBy()!=null);
+        assertTrue(data.getUserCreatedBy() != null);
         data.setUserModifiedBy(userInfo);
-        assertTrue(data.getUserModifiedBy()!=null);
+        assertTrue(data.getUserModifiedBy() != null);
     }
 
     @Test
-    public void testSafePolicyWarning(){
+    public void testSafePolicyWarning() {
         SafePolicyWarning data = new SafePolicyWarning();
         data.setId(1);
         assertTrue(1 == data.getId());

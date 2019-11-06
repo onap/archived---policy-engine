@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +20,8 @@
  */
 
 package org.onap.policy.rest.jpa;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -43,76 +46,89 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * The persistent class for the Attribute database table.
  * 
  */
 @Entity
-@Table(name="Attribute")
-@NamedQuery(name="Attribute.findAll", query="SELECT a FROM Attribute a order by  a.priority asc, a.xacmlId asc")
+@Table(name = "Attribute")
+@NamedQuery(name = "Attribute.findAll", query = "SELECT a FROM Attribute a order by  a.priority asc, a.xacmlId asc")
+
+/**
+ * Gets the user modified by.
+ *
+ * @return the user modified by
+ */
+@Getter
+
+/**
+ * Sets the user modified by.
+ *
+ * @param userModifiedBy the new user modified by
+ */
+@Setter
 public class Attribute implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    //bi-directional many-to-one association to Category
+    // bi-directional many-to-one association to Category
     @ManyToOne
-    @JoinColumn(name="constraint_type", nullable=true)
+    @JoinColumn(name = "constraint_type", nullable = true)
     @JsonIgnore
     private ConstraintType constraintType;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="created_date", updatable=false)
+    @Column(name = "created_date", updatable = false)
     private Date createdDate;
 
-    @Column(name="description", nullable=true, length=2048)
+    @Column(name = "description", nullable = true, length = 2048)
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="modified_date", nullable=false)
+    @Column(name = "modified_date", nullable = false)
     private Date modifiedDate;
 
-    @Column(name="PRIORITY", nullable=true)
+    @Column(name = "PRIORITY", nullable = true)
     @OrderBy("asc")
     private String priority;
 
-    @Column(name="ATTRIBUTE_VALUE", nullable=true)
+    @Column(name = "ATTRIBUTE_VALUE", nullable = true)
     @OrderBy("asc")
     private String attributeValue;
 
-    @Column(name="xacml_id",  unique = true, nullable=false)
+    @Column(name = "xacml_id", unique = true, nullable = false)
     @OrderBy("asc")
     private String xacmlId = "urn";
 
-    //bi-directional many-to-one association to ConstraintValue
-    @OneToMany(mappedBy="attribute", orphanRemoval=true, cascade=CascadeType.REMOVE)
+    // bi-directional many-to-one association to ConstraintValue
+    @OneToMany(mappedBy = "attribute", orphanRemoval = true, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<ConstraintValue> constraintValues = new HashSet<>();
 
-    //bi-directional many-to-one association to Category
+    // bi-directional many-to-one association to Category
     @ManyToOne
-    @JoinColumn(name="category")
+    @JoinColumn(name = "category")
     @JsonIgnore
     private Category categoryBean;
 
-    //bi-directional many-to-one association to Datatype
+    // bi-directional many-to-one association to Datatype
     @ManyToOne
-    @JoinColumn(name="datatype")
+    @JoinColumn(name = "datatype")
     private Datatype datatypeBean;
 
-    @Column(name="is_designator", nullable=false)
+    @Column(name = "is_designator", nullable = false)
     @JsonIgnore
     private char isDesignator = '1';
 
-    @Column(name="selector_path", nullable=true, length=2048)
+    @Column(name = "selector_path", nullable = true, length = 2048)
     private String selectorPath;
-
-
 
     @Transient
     private String issuer = null;
@@ -121,38 +137,34 @@ public class Attribute implements Serializable {
     private boolean mustBePresent = false;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="created_by")
+    @JoinColumn(name = "created_by")
     private UserInfo userCreatedBy;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="modified_by")
+    @JoinColumn(name = "modified_by")
     private UserInfo userModifiedBy;
 
-    public UserInfo getUserCreatedBy() {
-        return userCreatedBy;
-    }
-
-    public void setUserCreatedBy(UserInfo userCreatedBy) {
-        this.userCreatedBy = userCreatedBy;
-    }
-
-    public UserInfo getUserModifiedBy() {
-        return userModifiedBy;
-    }
-
-    public void setUserModifiedBy(UserInfo userModifiedBy) {
-        this.userModifiedBy = userModifiedBy;
-    }
-
-
+    /**
+     * Default constructor.
+     */
     public Attribute() {
-        //An empty constructor
+        // An empty constructor
     }
 
+    /**
+     * Constructor with domain.
+     * 
+     * @param domain the domain to use to construct the object
+     */
     public Attribute(String domain) {
         this.xacmlId = domain;
     }
 
+    /**
+     * Copy constructor.
+     * 
+     * @param copy the copy to copy from
+     */
     public Attribute(Attribute copy) {
         this(copy.getXacmlId() + ":(0)");
         this.constraintType = copy.getConstraintType();
@@ -166,78 +178,45 @@ public class Attribute implements Serializable {
         }
     }
 
+    /**
+     * Called before an instance is persisted.
+     */
     @PrePersist
-    public void	prePersist() {
+    public void prePersist() {
         Date date = new Date();
         this.createdDate = date;
         this.modifiedDate = date;
     }
 
+    /**
+     * Called before an instance is updated.
+     */
     @PreUpdate
     public void preUpdate() {
         this.modifiedDate = new Date();
     }
 
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public ConstraintType getConstraintType() {
-        return this.constraintType;
-    }
-
-    public void setConstraintType(ConstraintType constraintType) {
-        this.constraintType = constraintType;
-    }
-
-    public Date getCreatedDate() {
-        return this.createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getModifiedDate() {
-        return this.modifiedDate;
-    }
-
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public String getXacmlId() {
-        return this.xacmlId;
-    }
-
-
-    public void setXacmlId(String xacmlId) {
-        this.xacmlId = xacmlId;
-    }
-
-    public Set<ConstraintValue> getConstraintValues() {
-        return this.constraintValues;
-    }
-
+    /**
+     * Sets the constraint values.
+     *
+     * @param constraintValues the new constraint values
+     */
     public void setConstraintValues(Set<ConstraintValue> constraintValues) {
+        if (this.constraintValues == null) {
+            this.constraintValues = new HashSet<>();
+        }
         for (ConstraintValue value : this.constraintValues) {
             value.setAttribute(this);
         }
         this.constraintValues = constraintValues;
     }
 
+    /**
+     * Adds the constraint value.
+     *
+     * @param constraintValue the constraint value
+     * @return the constraint value
+     */
     public ConstraintValue addConstraintValue(ConstraintValue constraintValue) {
         if (this.constraintValues == null) {
             this.constraintValues = new HashSet<>();
@@ -248,6 +227,12 @@ public class Attribute implements Serializable {
         return constraintValue;
     }
 
+    /**
+     * Removes the constraint value.
+     *
+     * @param constraintValue the constraint value
+     * @return the constraint value
+     */
     public ConstraintValue removeConstraintValue(ConstraintValue constraintValue) {
         this.constraintValues.remove(constraintValue);
         constraintValue.setAttribute(null);
@@ -255,6 +240,9 @@ public class Attribute implements Serializable {
         return constraintValue;
     }
 
+    /**
+     * Removes the all constraint values.
+     */
     public void removeAllConstraintValues() {
         if (this.constraintValues == null) {
             return;
@@ -265,63 +253,61 @@ public class Attribute implements Serializable {
         this.constraintValues.clear();
     }
 
-    public Category getCategoryBean() {
-        return this.categoryBean;
-    }
-
-    public void setCategoryBean(Category categoryBean) {
-        this.categoryBean = categoryBean;
-    }
-
-    public Datatype getDatatypeBean() {
-        return this.datatypeBean;
-    }
-
-    public void setDatatypeBean(Datatype datatypeBean) {
-        this.datatypeBean = datatypeBean;
-    }
-
-    public char getIsDesignator() {
-        return this.isDesignator;
-    }
-
-    public void setIsDesignator(char is) {
-        this.isDesignator = is;
-    }
-
-    public String getSelectorPath() {
-        return this.selectorPath;
-    }
-
-    public void setSelectorPath(String path) {
-        this.selectorPath = path;
-    }
-
+    /**
+     * Gets the issuer.
+     *
+     * @return the issuer
+     */
     @Transient
     public String getIssuer() {
         return issuer;
     }
 
+    /**
+     * Sets the issuer.
+     *
+     * @param issuer the new issuer
+     */
     @Transient
     public void setIssuer(String issuer) {
         this.issuer = issuer;
     }
 
+    /**
+     * Checks if is must be present.
+     *
+     * @return true, if is must be present
+     */
     @Transient
     public boolean isMustBePresent() {
         return mustBePresent;
     }
 
+    /**
+     * Sets the must be present.
+     *
+     * @param mustBePresent the new must be present
+     */
     @Transient
     public void setMustBePresent(boolean mustBePresent) {
         this.mustBePresent = mustBePresent;
     }
 
+    /**
+     * Checks if is designator.
+     *
+     * @return true, if is designator
+     */
     @Transient
     public boolean isDesignator() {
         return this.isDesignator == '1';
     }
 
+    /**
+     * Sets the checks if is designator.
+     *
+     * @param is the new checks if is designator
+     */
     @Transient
     public void setIsDesignator(boolean is) {
         if (is) {
@@ -330,21 +316,4 @@ public class Attribute implements Serializable {
             this.isDesignator = '0';
         }
     }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
-
-    public String getAttributeValue() {
-        return attributeValue;
-    }
-
-    public void setAttributeValue(String attributeValue) {
-        this.attributeValue = attributeValue;
-    }
 }
-
