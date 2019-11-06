@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.rest.jpa;
 
 import java.io.Serializable;
@@ -30,14 +32,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import lombok.Data;
 
 /**
  * The persistent class for the ObadviceExpressions database table.
  * 
  */
 @Entity
-@Table(name="AttributeAssignment")
-@NamedQuery(name="AttributeAssignment.findAll", query="SELECT a FROM AttributeAssignment a")
+@Table(name = "AttributeAssignment")
+@NamedQuery(name = "AttributeAssignment.findAll", query = "SELECT a FROM AttributeAssignment a")
+@Data
 public class AttributeAssignment implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -50,45 +54,21 @@ public class AttributeAssignment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="attribute_id")
+    @Column(name = "attribute_id")
     private int attributeId;
 
-    //bi-directional many-to-one association to Obadvice
-    @Column(name="expression", nullable=false)
+    // bi-directional many-to-one association to Obadvice
+    @Column(name = "expression", nullable = false)
     private String expression;
 
-    //bi-directional many-to-one association to Obadvice
+    // bi-directional many-to-one association to Obadvice
     @ManyToOne
     private Obadvice obadvice;
 
     public AttributeAssignment() {
-        //An empty constructor
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getAttributeId() {
-        return this.attributeId;
-    }
-
-    public void setAttributeId(int attributeId) {
-        this.attributeId = attributeId;
-    }
-
-    public String getExpression() {
-        return expression;
-    }
-
-    public void setExpression(String expression) {
-        this.expression = expression;
+        // An empty constructor
     }
 }
