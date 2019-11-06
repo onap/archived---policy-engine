@@ -3,6 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +30,11 @@ import org.onap.policy.pap.xacml.rest.service.DictionaryService;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 public class DictionaryHandlerImpl implements DictionaryHandler {
+    // Recurring constants
+    private static final String UPDATE = "update";
+    private static final String OPERATION2 = "operation";
+    private static final String ERROR = "error";
+
     /*
      * Get Equivalent for Dictionary Services.
      */
@@ -153,30 +159,30 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
                     extendedOptions(dictionaryType, request, response, true);
             }
         } catch (Exception e) {
-            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Error Querying the Database: " + e.getMessage();
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "DictionaryHandler", " Error Querying the Database.");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.addHeader("error", "dictionaryDBQuery");
-            response.addHeader("error", message);
+            response.addHeader(ERROR, "dictionaryDBQuery");
+            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Error Querying the Database: " + e.getMessage();
+            response.addHeader(ERROR, message);
         }
     }
 
     /**
      * Can be used to extend the services.
-     * <p>
-     * getflag=true indicates Get Request. getflag=false indicates Put Request.
+     * 
+     * <p>getflag=true indicates Get Request. getflag=false indicates Put Request.
      *
      * @return
      */
     @Override
     public String extendedOptions(String dictionaryType, HttpServletRequest request, HttpServletResponse response,
-            boolean getflag) {
+                    boolean getflag) {
         // Default code
-        String message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Invalid Dictionary in Request.";
         PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "DictionaryHandler", " Invalid Dictionary in Request.");
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        response.setHeader("error", "dictionary");
-        response.addHeader("error", message);
+        response.setHeader(ERROR, "dictionary");
+        String message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Invalid Dictionary in Request.";
+        response.addHeader(ERROR, message);
         return null;
     }
 
@@ -184,7 +190,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
     public void doDictionaryAPIPut(HttpServletRequest request, HttpServletResponse response) {
         String result = null;
         String dictionaryType = request.getParameter("dictionaryType");
-        String operation = request.getParameter("operation");
+        String operation = request.getParameter(OPERATION2);
         try {
             DictionaryService dictionary = new DictionaryService();
             switch (dictionaryType) {
@@ -308,31 +314,31 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
                     }
             }
         } catch (Exception e) {
-            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Error Updating the Database: " + e.getMessage();
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPapServlet", " Error Updating the Database.");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.addHeader("error", message);
+            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Error Updating the Database: " + e.getMessage();
+            response.addHeader(ERROR, message);
             return;
         }
         if (("Success").equalsIgnoreCase(result)) {
             response.setStatus(HttpServletResponse.SC_OK);
             response.addHeader("successMapKey", "success");
-            if (operation.equalsIgnoreCase("update")) {
-                response.addHeader("operation", "updateDictionary");
+            if (operation.equalsIgnoreCase(UPDATE)) {
+                response.addHeader(OPERATION2, "updateDictionary");
             } else {
-                response.addHeader("operation", "createDictionary");
+                response.addHeader(OPERATION2, "createDictionary");
             }
         } else if (("Duplicate").equalsIgnoreCase(result)) {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
-            response.addHeader("error", "dictionaryItemExists");
+            response.addHeader(ERROR, "dictionaryItemExists");
         } else if (("DuplicateGroup").equalsIgnoreCase(result)) {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
-            response.addHeader("error", "duplicateGroup");
+            response.addHeader(ERROR, "duplicateGroup");
         } else {
             String message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Error Updating the Database.";
             PolicyLogger.error(message);
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.addHeader("error", message);
+            response.addHeader(ERROR, message);
         }
     }
 }

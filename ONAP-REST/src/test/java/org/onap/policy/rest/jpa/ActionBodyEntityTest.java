@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,43 +26,46 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+
 import java.util.Date;
+
 import org.junit.Test;
 
 public class ActionBodyEntityTest {
-  @Test
-  public void testEntity() {
-    // Set up test data
-    String value = "testVal";
-    Date date = new Date();
-    ActionBodyEntity entity = new ActionBodyEntity();
-    entity.prePersist();
-    ActionBodyEntity entity2 = new ActionBodyEntity();
-    ActionBodyEntity entity3 = new ActionBodyEntity();
+    @Test
+    public void testEntity() {
+        // Set up test data
+        String value = "testVal";
+        ActionBodyEntity entity = new ActionBodyEntity();
+        entity.prePersist();
 
-    // Test set and get
-    entity3.preUpdate();
-    entity3.setActionBody(value);
-    assertEquals(value, entity3.getActionBody());
-    entity3.setActionBodyName(value);
-    assertEquals(value, entity3.getActionBodyName());
-    entity3.setCreatedBy(value);
-    assertEquals(value, entity3.getCreatedBy());
-    entity3.setModifiedBy(value);
-    assertEquals(value, entity3.getModifiedBy());
-    entity3.setModifiedDate(date);
-    assertEquals(date, entity3.getModifiedDate());
-    assertEquals(0, entity3.getVersion());
-    assertNull(entity3.getCreatedDate());
-    entity3.setDeleted(true);
-    assertEquals(true, entity3.isDeleted());
-    assertEquals(0, entity3.getActionBodyId());
+        // Test set and get
+        ActionBodyEntity entity0 = new ActionBodyEntity();
+        entity0.preUpdate();
+        entity0.setActionBody(value);
+        assertEquals(value, entity0.getActionBody());
+        entity0.setActionBodyName(value);
+        assertEquals(value, entity0.getActionBodyName());
+        entity0.setCreatedBy(value);
+        assertEquals(value, entity0.getCreatedBy());
+        entity0.setModifiedBy(value);
+        assertEquals(value, entity0.getModifiedBy());
 
-    // Test equals method combinations
-    assertEquals(false, entity.equals(null));
-    assertEquals(true, entity.equals(entity));
-    assertEquals(false, entity.equals(value));
-    assertEquals(false, entity.equals(entity2));
-    assertThat(entity.hashCode(), is(not(0)));
-  }
+        Date date = new Date();
+        entity0.setModifiedDate(date);
+        assertEquals(date, entity0.getModifiedDate());
+        assertEquals(0, entity0.getVersion());
+        assertNull(entity0.getCreatedDate());
+        entity0.setDeleted(true);
+        assertEquals(true, entity0.isDeleted());
+        assertEquals(0, entity0.getActionBodyId());
+
+        // Test equals method combinations
+        assertEquals(false, entity.equals(null));
+        assertEquals(true, entity.equals(entity));
+        assertEquals(false, entity.equals((Object) value));
+        ActionBodyEntity entity1 = new ActionBodyEntity();
+        assertEquals(false, entity.equals(entity1));
+        assertThat(entity.hashCode(), is(not(0)));
+    }
 }
