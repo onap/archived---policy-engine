@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "ae7098bd_0e37e7b3",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/ActionBodyEntity.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-06T13:57:52Z",
+      "side": 1,
+      "message": "FYI: I\u0027m addressing a sonar in drools-pdp - should remove the \"@NamedQueries\" wrapper as it is no longer needed in java8\n\nsame comment applies to some of the other files",
+      "revId": "dad1d7d048848e2ea6ed76147ba0abf4df6e7bcc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dccade94_13f51810",
         "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/ActionDictionaryJpaTest.java",
         "patchSetId": 2

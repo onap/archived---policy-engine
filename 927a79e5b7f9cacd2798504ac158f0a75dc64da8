@@ -22,6 +22,30 @@
       "revId": "927a79e5b7f9cacd2798504ac158f0a75dc64da8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "910c611d_ad8412b7",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/ActionBodyEntity.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-06T13:57:52Z",
+      "side": 0,
+      "message": "lombok generates isDeleted() for this boolean",
+      "parentUuid": "1f093e6f_bb3a2cbd",
+      "range": {
+        "startLine": 185,
+        "startChar": 1,
+        "endLine": 191,
+        "endChar": 0
+      },
+      "revId": "927a79e5b7f9cacd2798504ac158f0a75dc64da8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
