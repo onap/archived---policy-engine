@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a05e0204_24c5ff4c",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DictionaryHandlerImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-06T17:34:50Z",
+      "side": 1,
+      "message": "Yes, I did, it was pulled into the review because it calls getGroupName(), I had changed the field name to \"name\" and hat changed the method name, but there were too many side effects so I backed it out.",
+      "parentUuid": "c8548cbf_6a9def55",
+      "revId": "f4ec47c009cdc385a7efed02dda5d26f2ec31b57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "312dcad3_2276d7ee",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/AddressGroup.java",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-06T15:10:51Z",
       "side": 1,
       "message": "is this preferable over \"groupName\"?",
+      "revId": "f4ec47c009cdc385a7efed02dda5d26f2ec31b57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "875cb827_b154b201",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/AddressGroup.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-06T17:34:50Z",
+      "side": 1,
+      "message": "I agree \"groupName\" would be better and I had changed the field name to that. However, it turned out that in other parts of policy-engine, code is accessing the fields directly in the database and changing the field name broke that code, so i changed it back.",
+      "parentUuid": "312dcad3_2276d7ee",
       "revId": "f4ec47c009cdc385a7efed02dda5d26f2ec31b57",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
