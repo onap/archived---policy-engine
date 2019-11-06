@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7a28956_fa4924cc",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/Attribute.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-06T12:53:18Z",
+      "side": 1,
+      "message": "I didn\u0027t want to change this code from the original but it looks odd to me. Here, we traverse the old constraintValues set, and call setAttribute() on each constraint in the old set. Then we go and overwrite our constraintValues set with the new set.\n\nCould we get a policy engine expert to look at this please?",
+      "range": {
+        "startLine": 205,
+        "startChar": 0,
+        "endLine": 211,
+        "endChar": 49
+      },
+      "revId": "3020cb012b31e7391a41be50b737ba2c3f7f1e89",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
