@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dccade94_13f51810",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/ActionDictionaryJpaTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-06T13:27:54Z",
+      "side": 1,
+      "message": "Could have switched to assertNotNull - but I\u0027m ok with leaving it alone.",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 50
+      },
+      "revId": "dad1d7d048848e2ea6ed76147ba0abf4df6e7bcc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

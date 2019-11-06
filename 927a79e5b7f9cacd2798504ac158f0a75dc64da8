@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f093e6f_bb3a2cbd",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/ActionBodyEntity.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-06T13:27:54Z",
+      "side": 0,
+      "message": "Must not have been needed.",
+      "range": {
+        "startLine": 185,
+        "startChar": 1,
+        "endLine": 191,
+        "endChar": 0
+      },
+      "revId": "927a79e5b7f9cacd2798504ac158f0a75dc64da8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
