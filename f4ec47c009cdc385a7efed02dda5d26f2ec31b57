@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8548cbf_6a9def55",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DictionaryHandlerImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-06T15:10:51Z",
+      "side": 1,
+      "message": "did you intend to remove this file from the review?",
+      "revId": "f4ec47c009cdc385a7efed02dda5d26f2ec31b57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "312dcad3_2276d7ee",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/AddressGroup.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-06T15:10:51Z",
+      "side": 1,
+      "message": "is this preferable over \"groupName\"?",
+      "revId": "f4ec47c009cdc385a7efed02dda5d26f2ec31b57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
