@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8558613a_ee2ed307",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/Category.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-07T10:55:42Z",
+      "side": 0,
+      "message": "parts.length is always greater than zero so this check can be removed.",
+      "range": {
+        "startLine": 189,
+        "startChar": 0,
+        "endLine": 189,
+        "endChar": 35
+      },
+      "revId": "f4ec47c009cdc385a7efed02dda5d26f2ec31b57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c5a7359_73f77bb3",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/Category.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-07T10:55:42Z",
+      "side": 0,
+      "message": "parts.length can never be \u003c\u003d 0 so this check is not needed.",
+      "range": {
+        "startLine": 193,
+        "startChar": 1,
+        "endLine": 195,
+        "endChar": 13
+      },
+      "revId": "f4ec47c009cdc385a7efed02dda5d26f2ec31b57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
