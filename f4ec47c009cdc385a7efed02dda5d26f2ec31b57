@@ -45,6 +45,52 @@
       "revId": "f4ec47c009cdc385a7efed02dda5d26f2ec31b57",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "40dd2293_589269d0",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/Category.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-07T10:55:42Z",
+      "side": 0,
+      "message": "This check is not needed because parts.length is always \u003e 0",
+      "range": {
+        "startLine": 189,
+        "startChar": 0,
+        "endLine": 189,
+        "endChar": 35
+      },
+      "revId": "f4ec47c009cdc385a7efed02dda5d26f2ec31b57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "621dc67d_3296eede",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/Category.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-07T10:55:42Z",
+      "side": 0,
+      "message": "This check is not needed because parts.length can never be \u003c\u003d 0",
+      "range": {
+        "startLine": 193,
+        "startChar": 1,
+        "endLine": 195,
+        "endChar": 13
+      },
+      "revId": "f4ec47c009cdc385a7efed02dda5d26f2ec31b57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
