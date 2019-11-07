@@ -41,7 +41,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
-import org.onap.policy.rest.jpa.BRMSParamTemplate;
+import org.onap.policy.rest.jpa.BrmsParamTemplate;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -64,9 +64,9 @@ public class BRMSDictionaryControllerTest {
         when(commonClassDao.getEntityItem(UserInfo.class, "userLoginId", "testing")).thenReturn(userInfo);
         List<String> brms = new ArrayList<String>();
         brms.add("BRMS-Model");
-        when(commonClassDao.getDataByColumn(BRMSParamTemplate.class, "name")).thenReturn(brms);
-        doNothing().when(commonClassDao).delete(new BRMSParamTemplate());
-        doNothing().when(commonClassDao).save(new BRMSParamTemplate());
+        when(commonClassDao.getDataByColumn(BrmsParamTemplate.class, "name")).thenReturn(brms);
+        doNothing().when(commonClassDao).delete(new BrmsParamTemplate());
+        doNothing().when(commonClassDao).save(new BrmsParamTemplate());
         controller = new BRMSDictionaryController();
         request = Mockito.mock(HttpServletRequest.class);
         response = new MockHttpServletResponse();

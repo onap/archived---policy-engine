@@ -40,9 +40,9 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.components.CreateBRMSRuleTemplate;
 import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
-import org.onap.policy.rest.jpa.BRMSController;
-import org.onap.policy.rest.jpa.BRMSDependency;
-import org.onap.policy.rest.jpa.BRMSParamTemplate;
+import org.onap.policy.rest.jpa.BrmsController;
+import org.onap.policy.rest.jpa.BrmsDependency;
+import org.onap.policy.rest.jpa.BrmsParamTemplate;
 import org.onap.policy.rest.jpa.OnapName;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.utils.PolicyUtils;
@@ -99,7 +99,7 @@ public class BRMSDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSParamDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getDataByEntity(response, brmsParamDatas, ruleName, BRMSParamTemplate.class);
+        utils.getDataByEntity(response, brmsParamDatas, ruleName, BrmsParamTemplate.class);
     }
 
     @RequestMapping(
@@ -108,7 +108,7 @@ public class BRMSDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSParamDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getData(response, brmsParamDatas, BRMSParamTemplate.class);
+        utils.getData(response, brmsParamDatas, BrmsParamTemplate.class);
     }
 
     @RequestMapping(value = {"/brms_dictionary/set_BRMSParamData"}, method = {RequestMethod.POST})
@@ -129,24 +129,24 @@ public class BRMSDictionaryController {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
 
-            BRMSParamTemplate bRMSParamTemplateData;
+            BrmsParamTemplate bRMSParamTemplateData;
             String userId = null;
             if (fromAPI) {
                 bRMSParamTemplateData =
-                        mapper.readValue(root.get(dictionaryFields).toString(), BRMSParamTemplate.class);
+                        mapper.readValue(root.get(dictionaryFields).toString(), BrmsParamTemplate.class);
                 userId = "API";
             } else {
                 bRMSParamTemplateData =
-                        mapper.readValue(root.get("brmsParamDictionaryData").toString(), BRMSParamTemplate.class);
+                        mapper.readValue(root.get("brmsParamDictionaryData").toString(), BrmsParamTemplate.class);
                 userId = root.get(userid).textValue();
             }
             UserInfo userInfo = utils.getUserInfo(userId);
 
             List<Object> duplicateData = commonClassDao.checkDuplicateEntry(bRMSParamTemplateData.getRuleName(),
-                    ruleName, BRMSParamTemplate.class);
+                    ruleName, BrmsParamTemplate.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
-                BRMSParamTemplate data = (BRMSParamTemplate) duplicateData.get(0);
+                BrmsParamTemplate data = (BrmsParamTemplate) duplicateData.get(0);
                 if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     bRMSParamTemplateData.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
@@ -168,7 +168,7 @@ public class BRMSDictionaryController {
                     } else {
                         commonClassDao.update(bRMSParamTemplateData);
                     }
-                    responseString = mapper.writeValueAsString(commonClassDao.getData(BRMSParamTemplate.class));
+                    responseString = mapper.writeValueAsString(commonClassDao.getData(BrmsParamTemplate.class));
                 } else {
                     responseString = duplicateResponseString;
                 }
@@ -197,7 +197,7 @@ public class BRMSDictionaryController {
     @RequestMapping(value = {"/brms_dictionary/remove_brmsParam"}, method = {RequestMethod.POST})
     public void removeBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.removeData(request, response, brmsParamDatas, BRMSParamTemplate.class);
+        utils.removeData(request, response, brmsParamDatas, BrmsParamTemplate.class);
     }
 
     @RequestMapping(
@@ -206,7 +206,7 @@ public class BRMSDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSDependencyDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getDataByEntity(response, brmsDependencyDatas, dependencyName, BRMSDependency.class);
+        utils.getDataByEntity(response, brmsDependencyDatas, dependencyName, BrmsDependency.class);
     }
 
     @RequestMapping(
@@ -215,7 +215,7 @@ public class BRMSDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSDependencyDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getData(response, brmsDependencyDatas, BRMSDependency.class);
+        utils.getData(response, brmsDependencyDatas, BrmsDependency.class);
     }
 
     @RequestMapping(value = {"/brms_dictionary/save_BRMSDependencyData"}, method = {RequestMethod.POST})
@@ -229,23 +229,23 @@ public class BRMSDictionaryController {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
 
-            BRMSDependency brmsDependency;
+            BrmsDependency brmsDependency;
             String userId = null;
             if (fromAPI) {
-                brmsDependency = mapper.readValue(root.get(dictionaryFields).toString(), BRMSDependency.class);
+                brmsDependency = mapper.readValue(root.get(dictionaryFields).toString(), BrmsDependency.class);
                 userId = "API";
             } else {
                 brmsDependency =
-                        mapper.readValue(root.get("brmsDependencyDictionaryData").toString(), BRMSDependency.class);
+                        mapper.readValue(root.get("brmsDependencyDictionaryData").toString(), BrmsDependency.class);
                 userId = root.get(userid).textValue();
             }
             UserInfo userInfo = utils.getUserInfo(userId);
 
             List<Object> duplicateData = commonClassDao.checkDuplicateEntry(brmsDependency.getDependencyName(),
-                    dependencyName, BRMSDependency.class);
+                    dependencyName, BrmsDependency.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
-                BRMSDependency data = (BRMSDependency) duplicateData.get(0);
+                BrmsDependency data = (BrmsDependency) duplicateData.get(0);
                 if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     brmsDependency.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
@@ -277,7 +277,7 @@ public class BRMSDictionaryController {
                             brmsDependency.setModifiedDate(new Date());
                             commonClassDao.update(brmsDependency);
                         }
-                        responseString = mapper.writeValueAsString(commonClassDao.getData(BRMSDependency.class));
+                        responseString = mapper.writeValueAsString(commonClassDao.getData(BrmsDependency.class));
                     } else {
                         responseString = duplicateResponseString;
                     }
@@ -305,7 +305,7 @@ public class BRMSDictionaryController {
     public void removeBRMSDependencyDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.removeData(request, response, brmsDependencyDatas, BRMSDependency.class);
+        utils.removeData(request, response, brmsDependencyDatas, BrmsDependency.class);
     }
 
     @RequestMapping(
@@ -314,7 +314,7 @@ public class BRMSDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSControllerDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getDataByEntity(response, brmsControllerDatas, controllerName, BRMSController.class);
+        utils.getDataByEntity(response, brmsControllerDatas, controllerName, BrmsController.class);
     }
 
     @RequestMapping(
@@ -323,7 +323,7 @@ public class BRMSDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSControllerDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getData(response, brmsControllerDatas, BRMSController.class);
+        utils.getData(response, brmsControllerDatas, BrmsController.class);
     }
 
     @RequestMapping(value = {"/brms_dictionary/save_BRMSControllerData"}, method = {RequestMethod.POST})
@@ -336,23 +336,23 @@ public class BRMSDictionaryController {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
-            BRMSController brmsController;
+            BrmsController brmsController;
             String userId = null;
             if (fromAPI) {
-                brmsController = mapper.readValue(root.get(dictionaryFields).toString(), BRMSController.class);
+                brmsController = mapper.readValue(root.get(dictionaryFields).toString(), BrmsController.class);
                 userId = "API";
             } else {
                 brmsController =
-                        mapper.readValue(root.get("brmsControllerDictionaryData").toString(), BRMSController.class);
+                        mapper.readValue(root.get("brmsControllerDictionaryData").toString(), BrmsController.class);
                 userId = root.get(userid).textValue();
             }
             UserInfo userInfo = utils.getUserInfo(userId);
 
             List<Object> duplicateData = commonClassDao.checkDuplicateEntry(brmsController.getControllerName(),
-                    controllerName, BRMSController.class);
+                    controllerName, BrmsController.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
-                BRMSController data = (BRMSController) duplicateData.get(0);
+                BrmsController data = (BrmsController) duplicateData.get(0);
                 if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     brmsController.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
@@ -409,16 +409,16 @@ public class BRMSDictionaryController {
     public void removeBRMSControllerDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.removeData(request, response, brmsControllerDatas, BRMSController.class);
+        utils.removeData(request, response, brmsControllerDatas, BrmsController.class);
     }
 
-    public BRMSDependency getDependencyDataByID(String dependencyName) {
-        return (BRMSDependency) commonClassDao.getEntityItem(BRMSDependency.class,
+    public BrmsDependency getDependencyDataByID(String dependencyName) {
+        return (BrmsDependency) commonClassDao.getEntityItem(BrmsDependency.class,
                 BRMSDictionaryController.dependencyName, dependencyName);
     }
 
-    public BRMSController getControllerDataByID(String controllerName) {
-        return (BRMSController) commonClassDao.getEntityItem(BRMSController.class,
+    public BrmsController getControllerDataByID(String controllerName) {
+        return (BrmsController) commonClassDao.getEntityItem(BrmsController.class,
                 BRMSDictionaryController.controllerName, controllerName);
     }
 }

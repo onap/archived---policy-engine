@@ -1,9 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-REST
- * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ *  Copyright (C) 2018 Ericsson. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,36 +13,34 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
 package org.onap.policy.rest.jpa;
 
-import java.io.Serializable;
+import com.att.research.xacml.api.Identifier;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-@Entity
-@Table(name = "DatabaseLockEntity")
-public class DatabaseLockEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
-    @Id
-    @Column(name = "lock_key")
-    private int lockKey = 1;
+/**
+ * Dummy category identifier class.
+ */
+public class DummyIdentifier implements Identifier {
 
-    public DatabaseLockEntity() {
-        // An empty constructor
+    @Override
+    public String stringValue() {
+        return this.getClass().getName();
     }
 
-    public int getKey() {
-        return lockKey;
+    @Override
+    public URI getUri() {
+        try {
+            return new URI(this.getClass().getName());
+        } catch (URISyntaxException e) {
+            return null;
+        }
     }
-
-    public void setKey(int key) {
-        this.lockKey = key;
-    }
-
 }

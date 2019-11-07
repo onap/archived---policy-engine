@@ -66,7 +66,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.controller.BRMSDictionaryController;
 import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.jpa.BRMSParamTemplate;
+import org.onap.policy.rest.jpa.BrmsParamTemplate;
 
 public class CreateBrmsParamPolicy extends Policy {
 
@@ -189,7 +189,7 @@ public class CreateBrmsParamPolicy extends Policy {
         params.put("templateName", templateName);
         List<Object> result = dbConnection.getDataByQuery(queryString, params);
         if (!result.isEmpty()) {
-            BRMSParamTemplate template = (BRMSParamTemplate) result.get(0);
+            BrmsParamTemplate template = (BrmsParamTemplate) result.get(0);
             ruleTemplate = template.getRule();
         }
         return ruleTemplate;
