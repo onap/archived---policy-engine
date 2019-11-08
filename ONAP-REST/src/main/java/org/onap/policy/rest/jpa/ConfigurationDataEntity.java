@@ -46,7 +46,10 @@ import javax.persistence.Version;
  * The Entity class to persist a policy object configuration data
  */
 
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * The Class ConfigurationDataEntity.
@@ -60,7 +63,10 @@ import lombok.EqualsAndHashCode;
         @NamedQuery(name = "ConfigurationDataEntity.deleteAll", query = "DELETE FROM ConfigurationDataEntity WHERE 1=1")
     }
 )
-@EqualsAndHashCode
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 //@formatter:on
 
 public class ConfigurationDataEntity implements Serializable {
@@ -107,13 +113,6 @@ public class ConfigurationDataEntity implements Serializable {
     private boolean deleted = false;
 
     /**
-     * Instantiates a new configuration data entity.
-     */
-    public ConfigurationDataEntity() {
-        // An empty constructor
-    }
-
-    /**
      * Pre persist.
      */
     @PrePersist
@@ -129,176 +128,5 @@ public class ConfigurationDataEntity implements Serializable {
     @PreUpdate
     public void preUpdate() {
         this.modifiedDate = new Date();
-    }
-
-    /**
-     * Gets the configuration data id.
-     *
-     * @return the configurationDataId
-     */
-    public long getConfigurationDataId() {
-        return configurationDataId;
-    }
-
-    /**
-     * Sets the configuration name.
-     *
-     * @param configurationName the new configuration name
-     */
-    public void setConfigurationName(String configurationName) {
-        this.configurationName = configurationName;
-    }
-
-    /**
-     * Gets the configuration name.
-     *
-     * @return the configuration name
-     */
-    public String getConfigurationName() {
-        return this.configurationName;
-    }
-
-    /**
-     * Gets the config type.
-     *
-     * @return the configType
-     */
-    public String getConfigType() {
-        return configType;
-    }
-
-    /**
-     * Sets the config type.
-     *
-     * @param configType the configType to set
-     */
-    public void setConfigType(String configType) {
-        this.configType = configType;
-    }
-
-    /**
-     * Gets the config body.
-     *
-     * @return the configBody
-     */
-    public String getConfigBody() {
-        return configBody;
-    }
-
-    /**
-     * Sets the config body.
-     *
-     * @param configBody the configBody to set
-     */
-    public void setConfigBody(String configBody) {
-        this.configBody = configBody;
-    }
-
-    /**
-     * Gets the created by.
-     *
-     * @return the createdBy
-     */
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    /**
-     * Sets the created by.
-     *
-     * @param createdBy the createdBy to set
-     */
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    /**
-     * Gets the description.
-     *
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets the description.
-     *
-     * @param description the description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Gets the modified by.
-     *
-     * @return the modifiedBy
-     */
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
-
-    /**
-     * Sets the modified by.
-     *
-     * @param modifiedBy the modifiedBy to set
-     */
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
-    /**
-     * Gets the modified date.
-     *
-     * @return the modifiedDate
-     */
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
-    /**
-     * Sets the modified date.
-     *
-     * @param modifiedDate the modifiedDate to set
-     */
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    /**
-     * Gets the version.
-     *
-     * @return the version
-     */
-    public int getVersion() {
-        return version;
-    }
-
-    /**
-     * Gets the created date.
-     *
-     * @return the createdDate
-     */
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    /**
-     * Checks if is deleted.
-     *
-     * @return the deleted
-     */
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    /**
-     * Sets the deleted.
-     *
-     * @param deleted the deleted to set
-     */
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 }

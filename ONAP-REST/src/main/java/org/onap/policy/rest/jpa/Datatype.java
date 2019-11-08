@@ -41,6 +41,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * The persistent class for the Datatype database table.
  *
@@ -48,6 +52,9 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "Datatype")
 @NamedQuery(name = "Datatype.findAll", query = "SELECT d FROM Datatype d")
+@Getter
+@Setter
+@ToString
 public class Datatype implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -132,96 +139,6 @@ public class Datatype implements Serializable {
     }
 
     /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getId() {
-        return this.id;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param id the new id
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Gets the checks if is standard.
-     *
-     * @return the checks if is standard
-     */
-    public char getIsStandard() {
-        return this.isStandard;
-    }
-
-    /**
-     * Sets the checks if is standard.
-     *
-     * @param isStandard the new checks if is standard
-     */
-    public void setIsStandard(char isStandard) {
-        this.isStandard = isStandard;
-    }
-
-    /**
-     * Gets the xacml id.
-     *
-     * @return the xacml id
-     */
-    public String getXacmlId() {
-        return this.xacmlId;
-    }
-
-    /**
-     * Sets the xacml id.
-     *
-     * @param xacmlId the new xacml id
-     */
-    public void setXacmlId(String xacmlId) {
-        this.xacmlId = xacmlId;
-    }
-
-    /**
-     * Gets the short name.
-     *
-     * @return the short name
-     */
-    public String getShortName() {
-        return shortName;
-    }
-
-    /**
-     * Sets the short name.
-     *
-     * @param shortName the new short name
-     */
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    /**
-     * Gets the attributes.
-     *
-     * @return the attributes
-     */
-    public Set<Attribute> getAttributes() {
-        return this.attributes;
-    }
-
-    /**
-     * Sets the attributes.
-     *
-     * @param attributes the new attributes
-     */
-    public void setAttributes(Set<Attribute> attributes) {
-        this.attributes = attributes;
-    }
-
-    /**
      * Adds the attribute.
      *
      * @param attribute the attribute
@@ -261,24 +178,6 @@ public class Datatype implements Serializable {
     }
 
     /**
-     * Gets the functions.
-     *
-     * @return the functions
-     */
-    public Set<FunctionDefinition> getFunctions() {
-        return this.functions;
-    }
-
-    /**
-     * Sets the functions.
-     *
-     * @param functions the new functions
-     */
-    public void setFunctions(Set<FunctionDefinition> functions) {
-        this.functions = functions;
-    }
-
-    /**
      * Adds the function.
      *
      * @param function the function
@@ -289,24 +188,6 @@ public class Datatype implements Serializable {
         function.setDatatypeBean(this);
 
         return function;
-    }
-
-    /**
-     * Gets the arguments.
-     *
-     * @return the arguments
-     */
-    public Set<FunctionArgument> getArguments() {
-        return this.arguments;
-    }
-
-    /**
-     * Sets the arguments.
-     *
-     * @param argument the new arguments
-     */
-    public void setArguments(Set<FunctionArgument> argument) {
-        this.arguments = argument;
     }
 
     /**
@@ -374,17 +255,4 @@ public class Datatype implements Serializable {
     public boolean isCustom() {
         return this.isStandard == Datatype.CUSTOM;
     }
-
-    /**
-     * To string.
-     *
-     * @return the string
-     */
-    @Transient
-    @Override
-    public String toString() {
-        return "Datatype [id=" + id + ", isStandard=" + isStandard + ", xacmlId=" + xacmlId + ", shortName=" + shortName
-                        + ", attributes=" + attributes + ", functions=" + functions + ", arguments=" + arguments + "]";
-    }
-
 }

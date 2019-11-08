@@ -39,12 +39,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * The Class BrmsDependency.
  */
 @Entity
 @Table(name = "BrmsDependency")
 @NamedQuery(name = "BrmsDependency.findAll", query = "SELECT b from BrmsDependency b ")
+@Getter
+@Setter
 public class BrmsDependency implements Serializable {
     private static final long serialVersionUID = -7005622785653160761L;
 
@@ -95,149 +100,5 @@ public class BrmsDependency implements Serializable {
     @PreUpdate
     public void preUpdate() {
         this.modifiedDate = new Date();
-    }
-
-    /**
-     * Gets the description.
-     *
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets the description.
-     *
-     * @param description the new description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Gets the created date.
-     *
-     * @return the created date
-     */
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    /**
-     * Sets the created date.
-     *
-     * @param createdDate the new created date
-     */
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    /**
-     * Gets the user created by.
-     *
-     * @return the user created by
-     */
-    public UserInfo getUserCreatedBy() {
-        return userCreatedBy;
-    }
-
-    /**
-     * Sets the user created by.
-     *
-     * @param userCreatedBy the new user created by
-     */
-    public void setUserCreatedBy(UserInfo userCreatedBy) {
-        this.userCreatedBy = userCreatedBy;
-    }
-
-    /**
-     * Gets the modified date.
-     *
-     * @return the modified date
-     */
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
-    /**
-     * Sets the modified date.
-     *
-     * @param modifiedDate the new modified date
-     */
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    /**
-     * Gets the user modified by.
-     *
-     * @return the user modified by
-     */
-    public UserInfo getUserModifiedBy() {
-        return userModifiedBy;
-    }
-
-    /**
-     * Sets the user modified by.
-     *
-     * @param userModifiedBy the new user modified by
-     */
-    public void setUserModifiedBy(UserInfo userModifiedBy) {
-        this.userModifiedBy = userModifiedBy;
-    }
-
-    /**
-     * Gets the dependency.
-     *
-     * @return the dependency
-     */
-    public String getDependency() {
-        return dependency;
-    }
-
-    /**
-     * Sets the dependency.
-     *
-     * @param dependency the new dependency
-     */
-    public void setDependency(String dependency) {
-        this.dependency = dependency;
-    }
-
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param id the new id
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Gets the dependency name.
-     *
-     * @return the dependency name
-     */
-    public String getDependencyName() {
-        return dependencyName;
-    }
-
-    /**
-     * Sets the dependency name.
-     *
-     * @param dependencyName the new dependency name
-     */
-    public void setDependencyName(String dependencyName) {
-        this.dependencyName = dependencyName;
     }
 }

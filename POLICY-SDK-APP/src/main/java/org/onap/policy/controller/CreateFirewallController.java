@@ -66,7 +66,7 @@ import org.onap.policy.rest.adapter.TermCollector;
 import org.onap.policy.rest.adapter.VendorSpecificData;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.AddressGroup;
-import org.onap.policy.rest.jpa.FWTagPicker;
+import org.onap.policy.rest.jpa.FwTagPicker;
 import org.onap.policy.rest.jpa.GroupServiceList;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PrefixList;
@@ -490,9 +490,9 @@ public class CreateFirewallController extends RestrictedBaseController {
             String networkRole = "";
             for (String tag : tagCollectorList) {
                 tags = new Tags();
-                List<Object> tagListData = commonClassDao.getData(FWTagPicker.class);
+                List<Object> tagListData = commonClassDao.getData(FwTagPicker.class);
                 for (int tagCounter = 0; tagCounter < tagListData.size(); tagCounter++) {
-                    FWTagPicker jpaTagPickerList = (FWTagPicker) tagListData.get(tagCounter);
+                    FwTagPicker jpaTagPickerList = (FwTagPicker) tagListData.get(tagCounter);
                     if (jpaTagPickerList.getTagPickerName().equals(tag)) {
                         String tagValues = jpaTagPickerList.getTagValues();
                         tagList = new ArrayList<>();

@@ -33,6 +33,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * The persistent class for the ConstraintValues database table.
  *
@@ -40,6 +44,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ConstraintValues")
 @NamedQuery(name = "ConstraintValue.findAll", query = "SELECT c FROM ConstraintValue c")
+@Getter
+@Setter
+@NoArgsConstructor
 public class ConstraintValue implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -59,10 +66,6 @@ public class ConstraintValue implements Serializable {
     @JoinColumn(name = "attribute_id")
     private Attribute attribute;
 
-    public ConstraintValue() {
-        // An empty constructor
-    }
-
     public ConstraintValue(String property, String value) {
         this.property = property;
         this.value = value;
@@ -71,38 +74,6 @@ public class ConstraintValue implements Serializable {
     public ConstraintValue(ConstraintValue value) {
         this.property = value.getProperty();
         this.value = value.getValue();
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getProperty() {
-        return this.property;
-    }
-
-    public void setProperty(String property) {
-        this.property = property;
-    }
-
-    public String getValue() {
-        return this.value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public Attribute getAttribute() {
-        return this.attribute;
-    }
-
-    public void setAttribute(Attribute attribute) {
-        this.attribute = attribute;
     }
 
     @Override

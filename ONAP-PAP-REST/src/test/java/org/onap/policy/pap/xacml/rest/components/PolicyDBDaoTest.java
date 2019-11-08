@@ -312,7 +312,7 @@ public class PolicyDBDaoTest {
         getGroup.setParameter("deleted", false);
         List<?> groups = getGroup.list();
         GroupEntity groupEntity = (GroupEntity) groups.get(0);
-        Assert.assertEquals(groupName, groupEntity.getgroupName());
+        Assert.assertEquals(groupName, groupEntity.getGroupName());
         Assert.assertEquals("this is a test group", groupEntity.getDescription());
         session.getTransaction().commit();
         session.close();
@@ -375,7 +375,7 @@ public class PolicyDBDaoTest {
             Assert.fail();
         }
         PdpEntity pdp = (PdpEntity) pdps.get(0);
-        Assert.assertEquals(groupName, pdp.getGroup().getgroupName());
+        Assert.assertEquals(groupName, pdp.getGroup().getGroupName());
         Assert.assertEquals(pdp.getPdpName(), "primary");
         session3.getTransaction().commit();
         session3.close();
@@ -451,7 +451,7 @@ public class PolicyDBDaoTest {
         getPdp3.setParameter("deleted", false);
         List<?> pdps3 = getPdp3.list();
         for (Object obj : pdps3) {
-            Assert.assertEquals("testgroup1", ((PdpEntity) obj).getGroup().getgroupName());
+            Assert.assertEquals("testgroup1", ((PdpEntity) obj).getGroup().getGroupName());
         }
 
         session5.getTransaction().commit();
@@ -490,7 +490,7 @@ public class PolicyDBDaoTest {
         getPdp4.setParameter("deleted", false);
         List<?> pdps4 = getPdp4.list();
         for (Object obj : pdps4) {
-            Assert.assertEquals("testgroup2", ((PdpEntity) obj).getGroup().getgroupName());
+            Assert.assertEquals("testgroup2", ((PdpEntity) obj).getGroup().getGroupName());
         }
 
         session7.getTransaction().commit();

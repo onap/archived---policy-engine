@@ -39,12 +39,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * The Class DescriptiveScope.
  */
 @Entity
 @Table(name = "DescriptiveScope")
 @NamedQuery(name = "DescriptiveScope.findAll", query = "Select p from DescriptiveScope p")
+@Getter
+@Setter
 public class DescriptiveScope implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -80,42 +85,6 @@ public class DescriptiveScope implements Serializable {
     private UserInfo userModifiedBy;
 
     /**
-     * Gets the user created by.
-     *
-     * @return the user created by
-     */
-    public UserInfo getUserCreatedBy() {
-        return userCreatedBy;
-    }
-
-    /**
-     * Sets the user created by.
-     *
-     * @param userCreatedBy the new user created by
-     */
-    public void setUserCreatedBy(UserInfo userCreatedBy) {
-        this.userCreatedBy = userCreatedBy;
-    }
-
-    /**
-     * Gets the user modified by.
-     *
-     * @return the user modified by
-     */
-    public UserInfo getUserModifiedBy() {
-        return userModifiedBy;
-    }
-
-    /**
-     * Sets the user modified by.
-     *
-     * @param userModifiedBy the new user modified by
-     */
-    public void setUserModifiedBy(UserInfo userModifiedBy) {
-        this.userModifiedBy = userModifiedBy;
-    }
-
-    /**
      * Pre persist.
      */
     @PrePersist
@@ -131,24 +100,6 @@ public class DescriptiveScope implements Serializable {
     @PreUpdate
     public void preUpdate() {
         this.modifiedDate = new Date();
-    }
-
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getId() {
-        return this.id;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param id the new id
-     */
-    public void setId(int id) {
-        this.id = id;
     }
 
     /**
@@ -168,77 +119,4 @@ public class DescriptiveScope implements Serializable {
     public void setScopeName(String descriptiveScopeName) {
         this.descriptiveScopeName = descriptiveScopeName;
     }
-
-    /**
-     * Gets the search.
-     *
-     * @return the search
-     */
-    public String getSearch() {
-        return search;
-    }
-
-    /**
-     * Sets the search.
-     *
-     * @param search the new search
-     */
-    public void setSearch(String search) {
-        this.search = search;
-    }
-
-    /**
-     * Gets the created date.
-     *
-     * @return the created date
-     */
-    public Date getCreatedDate() {
-        return this.createdDate;
-    }
-
-    /**
-     * Sets the created date.
-     *
-     * @param createdDate the new created date
-     */
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    /**
-     * Gets the description.
-     *
-     * @return the description
-     */
-    public String getDescription() {
-        return this.description;
-    }
-
-    /**
-     * Sets the description.
-     *
-     * @param description the new description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Gets the modified date.
-     *
-     * @return the modified date
-     */
-    public Date getModifiedDate() {
-        return this.modifiedDate;
-    }
-
-    /**
-     * Sets the modified date.
-     *
-     * @param modifiedDate the new modified date
-     */
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
 }

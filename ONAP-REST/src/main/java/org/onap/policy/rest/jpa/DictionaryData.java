@@ -29,9 +29,14 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(name = "DictionaryData")
 @NamedQuery(name = "DictionaryData.findAll", query = "SELECT v FROM DictionaryData v ")
+@Getter
+@Setter
 public class DictionaryData {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -46,37 +51,4 @@ public class DictionaryData {
 
     @Column(name = "dictionaryDataByName", nullable = false, length = 1024)
     private String dictionaryDataByName;
-
-    public String getDictionaryUrl() {
-        return dictionaryUrl;
-    }
-
-    public void setDictionaryUrl(String dictionaryUrl) {
-        this.dictionaryUrl = dictionaryUrl;
-    }
-
-    public String getDictionaryDataByName() {
-        return dictionaryDataByName;
-    }
-
-    public void setDictionaryDataByName(String dictionaryDataByName) {
-        this.dictionaryDataByName = dictionaryDataByName;
-    }
-
-    public String getDictionaryName() {
-        return dictionaryName;
-    }
-
-    public void setDictionaryName(String dictionaryName) {
-        this.dictionaryName = dictionaryName;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
 }

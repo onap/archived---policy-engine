@@ -1008,7 +1008,7 @@ public class PolicyDbDaoTransactionInstance implements PolicyDbDaoTransaction {
             }
 
             if (group.getName() != null
-                    && !PolicyDbDao.stringEquals(group.getName(), groupToUpdateInDb.getgroupName())) {
+                    && !PolicyDbDao.stringEquals(group.getName(), groupToUpdateInDb.getGroupName())) {
                 // we need to check if the new id exists in the database
                 String newGrpId = PolicyDbDao.createNewPdpGroupId(group.getName());
                 Query checkGroupQuery = session.createQuery(PolicyDbDao.GROUPENTITY_SELECT);
