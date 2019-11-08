@@ -98,9 +98,10 @@ public class ActionDictionaryJpaTest {
         assertTrue(data.getFunctionDefinition() != null);
         data.setId(1);
         assertTrue(1 == data.getId());
-        data.isBag();
-        data.toString();
+        assertFalse(data.isBag());
+        assertEquals("FunctionArgument(id=1", data.toString().substring(0, 21));
         data.setIsBag(1);
+        assertTrue(data.isBag());
         assertTrue(1 == data.getIsBag());
         new FunctionArgument(data);
     }
@@ -116,10 +117,10 @@ public class ActionDictionaryJpaTest {
         assertTrue(data.getDatatypeBean() != null);
         data.setFunctionArguments(new ArrayList<>());
         assertTrue(data.getFunctionArguments() != null);
-        data.setHigherOrderArg_LB(1);
-        assertTrue(1 == data.getHigherOrderArg_LB());
-        data.setHigherOrderArg_UB(1);
-        assertTrue(1 == data.getHigherOrderArg_UB());
+        data.setHigherOrderArgLb(1);
+        assertTrue(1 == data.getHigherOrderArgLb());
+        data.setHigherOrderArgUb(1);
+        assertTrue(1 == data.getHigherOrderArgUb());
         data.setId(1);
         assertTrue(1 == data.getId());
         data.setIsBagReturn(1);
@@ -130,11 +131,19 @@ public class ActionDictionaryJpaTest {
         assertTrue("Test".equals(data.getShortname()));
         data.setXacmlid("Test");
         assertTrue("Test".equals(data.getXacmlid()));
-        data.toString();
-        data.isBagReturn();
-        data.isHigherOrder();
-        data.addFunctionArgument(new FunctionArgument());
-        data.removeFunctionArgument(new FunctionArgument());
+        assertTrue(data.toString().startsWith("FunctionDefinition(id=1"));
+        assertTrue(data.isBagReturn());
+        data.setIsBagReturn(0);
+        assertTrue(data.isHigherOrder());
+        assertFalse(data.isBagReturn());
+        data.setIsHigherOrder(0);
+        assertFalse(data.isHigherOrder());
+        FunctionArgument functionArgument = new FunctionArgument();
+        functionArgument.setId(12345);
+        data.addFunctionArgument(functionArgument);
+        assertEquals(12345, data.getFunctionArguments().iterator().next().getId());
+        data.removeFunctionArgument(functionArgument);
+        assertTrue(data.getFunctionArguments().isEmpty());
     }
 
     @Test

@@ -20,14 +20,14 @@ use onap_sdk;
 
 INSERT INTO policyeditorscopes (`id`, `scopename`, `created_date`, `created_by`, `modified_date`, `modified_by`) VALUES ('1', 'com', '2017-06-01 11:45:36', 'demo', '2017-06-01 11:45:36', 'demo');
 
-alter table IntegrityAuditEntity modify jdbcUrl varchar(200) not null; 
+alter table IntegrityAuditEntity modify jdbcUrl varchar(200) not null;
 
-alter table `onap_sdk`.`microservicemodels` 
-add column `enumValues` longtext null default null after `version`, 
+alter table `onap_sdk`.`microservicemodels`
+add column `enumValues` longtext null default null after `version`,
 add column `annotation` longtext null after `enumValues`;
 
-drop table if exists FWTag; 
-CREATE TABLE FWTag(
+drop table if exists FwTag;
+CREATE TABLE FwTag(
 Id int NOT NULL AUTO_INCREMENT,
 tagName VARCHAR(45) NOT NULL,
 description VARCHAR(1024),
@@ -39,8 +39,8 @@ MODIFIED_BY VARCHAR(45) NOT NULL,
 PRIMARY KEY(ID)
 );
 
-drop table if exists FWTagPicker; 
-CREATE TABLE FWTagPicker(
+drop table if exists FwTagPicker;
+CREATE TABLE FwTagPicker(
 ID INT NOT NULL AUTO_INCREMENT,
 tagPickerName VARCHAR(45) NOT NULL,
 DESCRIPTION VARCHAR(1024),
@@ -79,7 +79,7 @@ controller longtext not null,
 primary key(id)
 );
 
-drop table if exists microserviceattribute; 
+drop table if exists microserviceattribute;
 CREATE TABLE microserviceattribute(
 ID INT NOT NULL AUTO_INCREMENT,
 name VARCHAR(255) NOT NULL,

@@ -39,12 +39,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * The Class BRMSController.
  */
 @Entity
 @Table(name = "BrmsController")
 @NamedQuery(name = "BrmsController.findAll", query = "SELECT b from BrmsController b ")
+@Getter
+@Setter
 public class BrmsController implements Serializable {
     private static final long serialVersionUID = -8666947569754164177L;
 
@@ -96,149 +101,4 @@ public class BrmsController implements Serializable {
     public void preUpdate() {
         this.modifiedDate = new Date();
     }
-
-    /**
-     * Gets the description.
-     *
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets the description.
-     *
-     * @param description the new description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Gets the created date.
-     *
-     * @return the created date
-     */
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    /**
-     * Sets the created date.
-     *
-     * @param createdDate the new created date
-     */
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    /**
-     * Gets the user created by.
-     *
-     * @return the user created by
-     */
-    public UserInfo getUserCreatedBy() {
-        return userCreatedBy;
-    }
-
-    /**
-     * Sets the user created by.
-     *
-     * @param userCreatedBy the new user created by
-     */
-    public void setUserCreatedBy(UserInfo userCreatedBy) {
-        this.userCreatedBy = userCreatedBy;
-    }
-
-    /**
-     * Gets the modified date.
-     *
-     * @return the modified date
-     */
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
-    /**
-     * Sets the modified date.
-     *
-     * @param modifiedDate the new modified date
-     */
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    /**
-     * Gets the user modified by.
-     *
-     * @return the user modified by
-     */
-    public UserInfo getUserModifiedBy() {
-        return userModifiedBy;
-    }
-
-    /**
-     * Sets the user modified by.
-     *
-     * @param userModifiedBy the new user modified by
-     */
-    public void setUserModifiedBy(UserInfo userModifiedBy) {
-        this.userModifiedBy = userModifiedBy;
-    }
-
-    /**
-     * Gets the controller.
-     *
-     * @return the controller
-     */
-    public String getController() {
-        return controller;
-    }
-
-    /**
-     * Sets the controller.
-     *
-     * @param controller the new controller
-     */
-    public void setController(String controller) {
-        this.controller = controller;
-    }
-
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param id the new id
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Gets the controller name.
-     *
-     * @return the controller name
-     */
-    public String getControllerName() {
-        return controllerName;
-    }
-
-    /**
-     * Sets the controller name.
-     *
-     * @param controllerName the new controller name
-     */
-    public void setControllerName(String controllerName) {
-        this.controllerName = controllerName;
-    }
-
 }

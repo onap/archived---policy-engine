@@ -42,8 +42,8 @@ import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionList;
 import org.onap.policy.rest.jpa.AddressGroup;
-import org.onap.policy.rest.jpa.FWTag;
-import org.onap.policy.rest.jpa.FWTagPicker;
+import org.onap.policy.rest.jpa.FwTag;
+import org.onap.policy.rest.jpa.FwTagPicker;
 import org.onap.policy.rest.jpa.FirewallDictionaryList;
 import org.onap.policy.rest.jpa.GroupServiceList;
 import org.onap.policy.rest.jpa.PortList;
@@ -1013,7 +1013,7 @@ public class FirewallDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getTagPickerNameEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getDataByEntity(response, fwTagPickerDatas, tagPickerName, FWTagPicker.class);
+        utils.getDataByEntity(response, fwTagPickerDatas, tagPickerName, FwTagPicker.class);
     }
 
     @RequestMapping(
@@ -1022,7 +1022,7 @@ public class FirewallDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getTagPickerDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getData(response, fwTagPickerDatas, FWTagPicker.class);
+        utils.getData(response, fwTagPickerDatas, FwTagPicker.class);
     }
 
     @RequestMapping(value = {"/fw_dictionary/save_fwTagPicker"}, method = {RequestMethod.POST})
@@ -1034,15 +1034,15 @@ public class FirewallDictionaryController {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
-            FWTagPicker fwTagPicker;
+            FwTagPicker fwTagPicker;
             TagGridValues data;
             String userId = "";
             if (fromAPI) {
-                fwTagPicker = mapper.readValue(root.get(dictionaryFields).toString(), FWTagPicker.class);
+                fwTagPicker = mapper.readValue(root.get(dictionaryFields).toString(), FwTagPicker.class);
                 data = mapper.readValue(root.get(dictionaryFields).toString(), TagGridValues.class);
                 userId = "API";
             } else {
-                fwTagPicker = mapper.readValue(root.get("fwTagPickerDictionaryData").toString(), FWTagPicker.class);
+                fwTagPicker = mapper.readValue(root.get("fwTagPickerDictionaryData").toString(), FwTagPicker.class);
                 data = mapper.readValue(root.get("fwTagPickerDictionaryData").toString(), TagGridValues.class);
                 userId = root.get(userid).textValue();
             }
@@ -1051,10 +1051,10 @@ public class FirewallDictionaryController {
             UserInfo userInfo = utils.getUserInfo(userId);
 
             List<Object> duplicateData = commonClassDao.checkDuplicateEntry(fwTagPicker.getTagPickerName(),
-                    tagPickerName, FWTagPicker.class);
+                    tagPickerName, FwTagPicker.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
-                FWTagPicker data1 = (FWTagPicker) duplicateData.get(0);
+                FwTagPicker data1 = (FwTagPicker) duplicateData.get(0);
                 if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     fwTagPicker.setId(data1.getId());
                 } else if ((request.getParameter(operation) != null
@@ -1073,7 +1073,7 @@ public class FirewallDictionaryController {
                     fwTagPicker.setModifiedDate(new Date());
                     commonClassDao.update(fwTagPicker);
                 }
-                responseString = mapper.writeValueAsString(commonClassDao.getData(FWTagPicker.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(FwTagPicker.class));
             } else {
                 responseString = duplicateResponseString;
             }
@@ -1092,7 +1092,7 @@ public class FirewallDictionaryController {
     public void removeFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.removeData(request, response, fwTagPickerDatas, FWTagPicker.class);
+        utils.removeData(request, response, fwTagPickerDatas, FwTagPicker.class);
     }
 
     @RequestMapping(
@@ -1101,7 +1101,7 @@ public class FirewallDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getTagDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getData(response, fwTagDatas, FWTag.class);
+        utils.getData(response, fwTagDatas, FwTag.class);
     }
 
     @RequestMapping(
@@ -1110,7 +1110,7 @@ public class FirewallDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getTagNameEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getDataByEntity(response, fwTagDatas, "fwTagName", FWTag.class);
+        utils.getDataByEntity(response, fwTagDatas, "fwTagName", FwTag.class);
     }
 
     @RequestMapping(value = {"/fw_dictionary/save_fwTag"}, method = {RequestMethod.POST})
@@ -1122,15 +1122,15 @@ public class FirewallDictionaryController {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
-            FWTag fwTag;
+            FwTag fwTag;
             TagGridValues tagGridValues;
             String userId = "";
             if (fromAPI) {
-                fwTag = mapper.readValue(root.get(dictionaryFields).toString(), FWTag.class);
+                fwTag = mapper.readValue(root.get(dictionaryFields).toString(), FwTag.class);
                 tagGridValues = mapper.readValue(root.get(dictionaryFields).toString(), TagGridValues.class);
                 userId = "API";
             } else {
-                fwTag = mapper.readValue(root.get("fwTagDictionaryData").toString(), FWTag.class);
+                fwTag = mapper.readValue(root.get("fwTagDictionaryData").toString(), FwTag.class);
                 tagGridValues = mapper.readValue(root.get("fwTagDictionaryData").toString(), TagGridValues.class);
                 userId = root.get(userid).textValue();
             }
@@ -1138,10 +1138,10 @@ public class FirewallDictionaryController {
 
             UserInfo userInfo = utils.getUserInfo(userId);
             List<Object> duplicateData =
-                    commonClassDao.checkDuplicateEntry(fwTag.getFwTagName(), "fwTagName", FWTag.class);
+                    commonClassDao.checkDuplicateEntry(fwTag.getFwTagName(), "fwTagName", FwTag.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
-                FWTag data = (FWTag) duplicateData.get(0);
+                FwTag data = (FwTag) duplicateData.get(0);
                 if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     fwTag.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
@@ -1160,7 +1160,7 @@ public class FirewallDictionaryController {
                     fwTag.setModifiedDate(new Date());
                     commonClassDao.update(fwTag);
                 }
-                responseString = mapper.writeValueAsString(commonClassDao.getData(FWTag.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(FwTag.class));
             } else {
                 responseString = duplicateResponseString;
             }
@@ -1179,7 +1179,7 @@ public class FirewallDictionaryController {
     public void removeFirewallTagDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.removeData(request, response, fwTagDatas, FWTag.class);
+        utils.removeData(request, response, fwTagDatas, FwTag.class);
     }
 }
 

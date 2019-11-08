@@ -36,9 +36,16 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "ConstraintType")
 @NamedQuery(name = "ConstraintType.findAll", query = "SELECT a FROM ConstraintType a")
+@Getter
+@Setter
+@NoArgsConstructor
 public class ConstraintType implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -75,10 +82,6 @@ public class ConstraintType implements Serializable {
     @OneToMany(mappedBy = "constraintType")
     private Set<Attribute> attributes = new HashSet<>();
 
-    public ConstraintType() {
-        // An empty constructor
-    }
-
     public ConstraintType(String constraintType) {
         this();
         this.constraintType = constraintType;
@@ -87,38 +90,6 @@ public class ConstraintType implements Serializable {
     public ConstraintType(String constraintType, String description) {
         this(constraintType);
         this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getConstraintType() {
-        return constraintType;
-    }
-
-    public void setConstraintType(String constraintType) {
-        this.constraintType = constraintType;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Set<Attribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Set<Attribute> attributes) {
-        this.attributes = attributes;
     }
 
     public static String[] getRangeTypes() {

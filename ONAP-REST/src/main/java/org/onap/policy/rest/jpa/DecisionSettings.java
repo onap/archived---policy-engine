@@ -40,6 +40,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * The Class DecisionSettings.
  */
@@ -50,6 +53,8 @@ import javax.persistence.Transient;
     name = "DecisionSettings.findAll",
     query = "SELECT a FROM DecisionSettings a order by  a.priority asc, a.xacmlId asc"
 )
+@Getter
+@Setter
 //@formatter:on
 public class DecisionSettings implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -98,42 +103,6 @@ public class DecisionSettings implements Serializable {
     private UserInfo userModifiedBy;
 
     /**
-     * Gets the user created by.
-     *
-     * @return the user created by
-     */
-    public UserInfo getUserCreatedBy() {
-        return userCreatedBy;
-    }
-
-    /**
-     * Sets the user created by.
-     *
-     * @param userCreatedBy the new user created by
-     */
-    public void setUserCreatedBy(UserInfo userCreatedBy) {
-        this.userCreatedBy = userCreatedBy;
-    }
-
-    /**
-     * Gets the user modified by.
-     *
-     * @return the user modified by
-     */
-    public UserInfo getUserModifiedBy() {
-        return userModifiedBy;
-    }
-
-    /**
-     * Sets the user modified by.
-     *
-     * @param userModifiedBy the new user modified by
-     */
-    public void setUserModifiedBy(UserInfo userModifiedBy) {
-        this.userModifiedBy = userModifiedBy;
-    }
-
-    /**
      * Pre persist.
      */
     @PrePersist
@@ -149,171 +118,5 @@ public class DecisionSettings implements Serializable {
     @PreUpdate
     public void preUpdate() {
         this.modifiedDate = new Date();
-    }
-
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getId() {
-        return this.id;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param id the new id
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Gets the created date.
-     *
-     * @return the created date
-     */
-    public Date getCreatedDate() {
-        return this.createdDate;
-    }
-
-    /**
-     * Sets the created date.
-     *
-     * @param createdDate the new created date
-     */
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    /**
-     * Gets the description.
-     *
-     * @return the description
-     */
-    public String getDescription() {
-        return this.description;
-    }
-
-    /**
-     * Sets the description.
-     *
-     * @param description the new description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Gets the modified date.
-     *
-     * @return the modified date
-     */
-    public Date getModifiedDate() {
-        return this.modifiedDate;
-    }
-
-    /**
-     * Sets the modified date.
-     *
-     * @param modifiedDate the new modified date
-     */
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    /**
-     * Gets the xacml id.
-     *
-     * @return the xacml id
-     */
-    public String getXacmlId() {
-        return this.xacmlId;
-    }
-
-    /**
-     * Sets the xacml id.
-     *
-     * @param xacmlId the new xacml id
-     */
-    public void setXacmlId(String xacmlId) {
-        this.xacmlId = xacmlId;
-    }
-
-    /**
-     * Gets the datatype bean.
-     *
-     * @return the datatype bean
-     */
-    public Datatype getDatatypeBean() {
-        return this.datatypeBean;
-    }
-
-    /**
-     * Sets the datatype bean.
-     *
-     * @param datatypeBean the new datatype bean
-     */
-    public void setDatatypeBean(Datatype datatypeBean) {
-        this.datatypeBean = datatypeBean;
-    }
-
-    /**
-     * Gets the issuer.
-     *
-     * @return the issuer
-     */
-    @Transient
-    public String getIssuer() {
-        return issuer;
-    }
-
-    /**
-     * Sets the issuer.
-     *
-     * @param issuer the new issuer
-     */
-    @Transient
-    public void setIssuer(String issuer) {
-        this.issuer = issuer;
-    }
-
-    /**
-     * Checks if is must be present.
-     *
-     * @return true, if is must be present
-     */
-    @Transient
-    public boolean isMustBePresent() {
-        return mustBePresent;
-    }
-
-    /**
-     * Sets the must be present.
-     *
-     * @param mustBePresent the new must be present
-     */
-    @Transient
-    public void setMustBePresent(boolean mustBePresent) {
-        this.mustBePresent = mustBePresent;
-    }
-
-    /**
-     * Gets the priority.
-     *
-     * @return the priority
-     */
-    public String getPriority() {
-        return priority;
-    }
-
-    /**
-     * Sets the priority.
-     *
-     * @param priority the new priority
-     */
-    public void setPriority(String priority) {
-        this.priority = priority;
     }
 }

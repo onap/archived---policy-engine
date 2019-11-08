@@ -250,12 +250,12 @@ public class HandleIncomingNotifications {
         } else if (localGroup == null) {
             // creating a new group
             try {
-                PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().newGroup(groupRecord.getgroupName(),
+                PolicyDbDao.getPolicyDbDaoInstance().getPapEngine().newGroup(groupRecord.getGroupName(),
                         groupRecord.getDescription());
             } catch (NullPointerException | PAPException e) {
                 PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, PolicyDbDao.POLICYDBDAO_VAR,
                         "Caught PAPException trying to create pdp group with "
-                                + "papEngine.newGroup(groupRecord.getgroupName(), groupRecord.getDescription());");
+                                + "papEngine.newGroup(groupRecord.getGroupName(), groupRecord.getDescription());");
                 throw new PAPException("Could not create group " + groupRecord);
             }
             try {
@@ -311,11 +311,11 @@ public class HandleIncomingNotifications {
                 needToUpdate = true;
             }
             if (!PolicyDbDao.stringEquals(localGroupClone.getId(), groupRecord.getGroupId())
-                    || !PolicyDbDao.stringEquals(localGroupClone.getName(), groupRecord.getgroupName())) {
+                    || !PolicyDbDao.stringEquals(localGroupClone.getName(), groupRecord.getGroupName())) {
                 // changing ids
                 // we do not want to change the id, the papEngine will do this
                 // for us, it needs to know the old id
-                localGroupClone.setName(groupRecord.getgroupName());
+                localGroupClone.setName(groupRecord.getGroupName());
                 needToUpdate = true;
             }
             if (!PolicyDbDao.stringEquals(localGroupClone.getDescription(), groupRecord.getDescription())) {

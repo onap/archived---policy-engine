@@ -21,8 +21,6 @@
 
 package org.onap.policy.rest.jpa;
 
-/*
- */
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -34,9 +32,14 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(name = "DcaeUsers")
 @NamedQuery(name = "DcaeUsers.findAll", query = "SELECT e FROM DcaeUsers e ")
+@Getter
+@Setter
 public class DcaeUsers implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -52,23 +55,6 @@ public class DcaeUsers implements Serializable {
     @Column(name = "description ")
     private String description;
 
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-
-    }
-
     public String getDescriptionValue() {
         return this.description;
     }
@@ -76,5 +62,4 @@ public class DcaeUsers implements Serializable {
     public void setDescriptionValue(String description) {
         this.description = description;
     }
-
 }
