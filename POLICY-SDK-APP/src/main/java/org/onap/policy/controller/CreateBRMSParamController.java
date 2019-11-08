@@ -62,7 +62,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
-import org.onap.policy.rest.jpa.BRMSParamTemplate;
+import org.onap.policy.rest.jpa.BrmsParamTemplate;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
@@ -131,9 +131,9 @@ public class CreateBRMSParamController extends RestrictedBaseController {
     }
 
     private String findRule(String ruleTemplate) {
-        List<Object> datas = commonClassDao.getDataById(BRMSParamTemplate.class, "ruleName", ruleTemplate);
+        List<Object> datas = commonClassDao.getDataById(BrmsParamTemplate.class, "ruleName", ruleTemplate);
         if (CollectionUtils.isNotEmpty(datas)) {
-            return ((BRMSParamTemplate) datas.get(0)).getRule();
+            return ((BrmsParamTemplate) datas.get(0)).getRule();
         }
         return null;
     }
