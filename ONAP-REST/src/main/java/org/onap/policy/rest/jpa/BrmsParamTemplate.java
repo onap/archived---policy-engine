@@ -39,15 +39,18 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/*
+import lombok.Getter;
+import lombok.Setter;
+
+/**
  * JPA for the BRMS Param Template.
- *
- * @version: 0.1
  */
 
 @Entity
 @Table(name = "BrmsParamTemplate")
 @NamedQuery(name = "BrmsParamTemplate.findAll", query = "SELECT b FROM BrmsParamTemplate b ")
+@Getter
+@Setter
 public class BrmsParamTemplate implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -75,57 +78,9 @@ public class BrmsParamTemplate implements Serializable {
     @JoinColumn(name = "created_by")
     private UserInfo userCreatedBy;
 
-    public UserInfo getUserCreatedBy() {
-        return userCreatedBy;
-    }
-
-    public void setUserCreatedBy(UserInfo userCreatedBy) {
-        this.userCreatedBy = userCreatedBy;
-    }
-
     @PrePersist
     public void prePersist() {
         Date date = new Date();
         this.createdDate = date;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Date getCreatedDate() {
-        return this.createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getRule() {
-        return this.rule;
-    }
-
-    public void setRule(String rule) {
-        this.rule = rule;
-    }
-
-    public String getRuleName() {
-        return this.ruleName;
-    }
-
-    public void setRuleName(String ruleName) {
-        this.ruleName = ruleName;
     }
 }

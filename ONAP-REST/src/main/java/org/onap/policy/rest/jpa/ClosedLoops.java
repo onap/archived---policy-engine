@@ -33,11 +33,23 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+// @formatter:off
 @Entity
 @Table(name = "ClosedLoops")
 @NamedQueries(
-    { @NamedQuery(name = "ClosedLoops.findAll", query = "SELECT e FROM ClosedLoops e"),
-                    @NamedQuery(name = "ClosedLoops.deleteAll", query = "DELETE FROM ClosedLoops WHERE 1=1") })
+    {
+        @NamedQuery(name = "ClosedLoops.findAll", query = "SELECT e FROM ClosedLoops e"),
+        @NamedQuery(name = "ClosedLoops.deleteAll", query = "DELETE FROM ClosedLoops WHERE 1=1")
+    }
+)
+@Getter
+@Setter
+@NoArgsConstructor
+//@formatter:on
 public class ClosedLoops implements Serializable {
     private static final long serialVersionUID = -7796845092457926842L;
 
@@ -55,41 +67,4 @@ public class ClosedLoops implements Serializable {
 
     @Column(name = "yaml", nullable = true, length = 1028)
     private String yaml;
-
-    public ClosedLoops() {
-        // An empty constructor
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getClosedLoopControlName() {
-        return closedLoopControlName;
-    }
-
-    public void setClosedLoopControlName(String closedLoopControlName) {
-        this.closedLoopControlName = closedLoopControlName;
-    }
-
-    public String getAlarmConditions() {
-        return alarmConditions;
-    }
-
-    public void setAlarmConditions(String alarmConditions) {
-        this.alarmConditions = alarmConditions;
-    }
-
-    public String getYaml() {
-        return yaml;
-    }
-
-    public void setYaml(String yaml) {
-        this.yaml = yaml;
-    }
-
 }

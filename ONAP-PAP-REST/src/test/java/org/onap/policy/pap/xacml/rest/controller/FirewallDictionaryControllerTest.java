@@ -47,8 +47,8 @@ import org.onap.policy.rest.adapter.Term;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionList;
 import org.onap.policy.rest.jpa.AddressGroup;
-import org.onap.policy.rest.jpa.FWTag;
-import org.onap.policy.rest.jpa.FWTagPicker;
+import org.onap.policy.rest.jpa.FwTag;
+import org.onap.policy.rest.jpa.FwTagPicker;
 import org.onap.policy.rest.jpa.FirewallDictionaryList;
 import org.onap.policy.rest.jpa.GroupServiceList;
 import org.onap.policy.rest.jpa.PortList;
@@ -228,25 +228,25 @@ public class FirewallDictionaryControllerTest {
 
     @Test
     public void testGetTagPickerNameEntityDataByName() {
-        test_WithGetDataByColumn(FWTagPicker.class, "fwTagPickerDictionaryDatas", "tagPickerName",
+        test_WithGetDataByColumn(FwTagPicker.class, "fwTagPickerDictionaryDatas", "tagPickerName",
                 () -> controller.getTagPickerNameEntityDataByName(response));
     }
 
     @Test
     public void testGetTagPickerDictionaryEntityData() {
-        test_WithGetData(FWTagPicker.class, "fwTagPickerDictionaryDatas",
+        test_WithGetData(FwTagPicker.class, "fwTagPickerDictionaryDatas",
                 () -> controller.getTagPickerDictionaryEntityData(response));
     }
 
     @Test
     public void testGetTagNameEntityDataByName() {
-        test_WithGetDataByColumn(FWTag.class, "fwTagDictionaryDatas", "fwTagName",
+        test_WithGetDataByColumn(FwTag.class, "fwTagDictionaryDatas", "fwTagName",
                 () -> controller.getTagNameEntityDataByName(response));
     }
 
     @Test
     public void testGetTagDictionaryEntityData() {
-        test_WithGetData(FWTag.class, "fwTagDictionaryDatas", () -> controller.getTagDictionaryEntityData(response));
+        test_WithGetData(FwTag.class, "fwTagDictionaryDatas", () -> controller.getTagDictionaryEntityData(response));
     }
 
     @Test
@@ -563,7 +563,7 @@ public class FirewallDictionaryControllerTest {
                 "{\"fwTagPickerDictionaryData\":{\"description\":\"test\",\"networkRole\":\"test\",\"tagPickerName\":"
                 + "\"Test\",\"tags\":[{\"$$hashKey\":\"object:1855\",\"id\":\"choice1\",\"number\":\"test\",\"option\":"
                 + "\"Test\"}]},\"userid\":\"demo\"}";
-        testSave(FWTagPicker.class, "fwTagPickerDictionaryDatas", "tagPickerName",
+        testSave(FwTagPicker.class, "fwTagPickerDictionaryDatas", "tagPickerName",
                 () -> controller.saveFirewallTagPickerDictionary(request, response));
     }
 
@@ -573,14 +573,14 @@ public class FirewallDictionaryControllerTest {
                 "{\"fwTagPickerDictionaryData\":{\"id\":1,\"description\":\"test\",\"networkRole\":"
                 + "\"test\",\"tagPickerName\":\"Test\",\"tags\":[{\"$$hashKey\":\"object:1855\",\"id\":"
                 + "\"choice1\",\"number\":\"test\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
-        testUpdate(FWTagPicker.class, "fwTagPickerDictionaryDatas", "tagPickerName",
+        testUpdate(FwTagPicker.class, "fwTagPickerDictionaryDatas", "tagPickerName",
                 () -> controller.saveFirewallTagPickerDictionary(request, response));
     }
 
     @Test
     public void testRemoveFirewallTagPickerDictionary() {
         jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"tagPickerName\":\"Test\"}}";
-        testRemove(FWTagPicker.class, "fwTagPickerDictionaryDatas",
+        testRemove(FwTagPicker.class, "fwTagPickerDictionaryDatas",
                 () -> controller.removeFirewallTagPickerDictionary(request, response));
     }
 
@@ -589,7 +589,7 @@ public class FirewallDictionaryControllerTest {
         jsonString =
                 "{\"fwTagDictionaryData\":{\"description\":\"test\",\"fwTagName\":\"Test\",\"tags\":[{\"$$hashKey\":"
                 + "\"object:1690\",\"id\":\"choice1\",\"tags\":\"test\"}]},\"userid\":\"demo\"}";
-        testSave(FWTag.class, "fwTagDictionaryDatas", "fwTagName",
+        testSave(FwTag.class, "fwTagDictionaryDatas", "fwTagName",
                 () -> controller.saveFirewallTagDictionary(request, response));
     }
 
@@ -598,14 +598,14 @@ public class FirewallDictionaryControllerTest {
         jsonString =
                 "{\"fwTagDictionaryData\":{\"id\":1,\"description\":\"test\",\"fwTagName\":\"Test\",\"tags\":"
                 + "[{\"$$hashKey\":\"object:1690\",\"id\":\"choice1\",\"tags\":\"test\"}]},\"userid\":\"demo\"}";
-        testUpdate(FWTag.class, "fwTagDictionaryDatas", "fwTagName",
+        testUpdate(FwTag.class, "fwTagDictionaryDatas", "fwTagName",
                 () -> controller.saveFirewallTagDictionary(request, response));
     }
 
     @Test
     public void testRemoveFirewallTagDictionary() {
         jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"fwTagName\":\"Test\"}}";
-        testRemove(FWTag.class, "fwTagDictionaryDatas",
+        testRemove(FwTag.class, "fwTagDictionaryDatas",
                 () -> controller.removeFirewallTagDictionary(request, response));
     }
 

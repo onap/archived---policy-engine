@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +18,18 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.rest.jpa;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 /*
  */
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,216 +49,125 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-/*
- * The Entity class to persist a policy object and its configuration data
- */
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- *
+ * The Entity class to persist a policy object and its configuration data.
  */
+// @formatter:off
 @Entity
-//Add a non-unique index and a constraint that says the combo of policyName and scopeId must be unique
-@Table(name="GroupEntity")
+// Add a non-unique index and a constraint that says the combo of policyName and scopeId must be unique
+@Table(name = "GroupEntity")
 
-@NamedQueries({
-    @NamedQuery(name="GroupEntity.findAll", query="SELECT e FROM GroupEntity e "),
-    @NamedQuery(name="GroupEntity.deleteAll", query="DELETE FROM GroupEntity WHERE 1=1")
-})
+@NamedQueries(
+    {
+        @NamedQuery(name = "GroupEntity.findAll", query = "SELECT e FROM GroupEntity e "),
+        @NamedQuery(name = "GroupEntity.deleteAll", query = "DELETE FROM GroupEntity WHERE 1=1")
+    }
+)
+
+@Getter
+@Setter
+//@formatter:on
 
 public class GroupEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column (name="groupKey", nullable=false)
+    @Column(name = "groupKey", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long groupKey;
 
-    @Column (name="groupId", nullable=false)
+    @Column(name = "groupId", nullable = false)
     private String groupId;
 
-    @Column(name="groupName", nullable=false, unique=false, length=255)
+    @Column(name = "groupName", nullable = false, unique = false, length = 255)
     private String groupName;
 
     @Version
-    @Column(name="version")
+    @Column(name = "version")
     private int version;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name="PolicyGroupEntity",joinColumns={@JoinColumn(name="groupKey")}, inverseJoinColumns={@JoinColumn(name="policyId")})
+    @JoinTable(name = "PolicyGroupEntity", joinColumns =
+        { @JoinColumn(name = "groupKey") }, inverseJoinColumns =
+        { @JoinColumn(name = "policyId") })
     @JsonManagedReference
     private List<PolicyEntity> policies;
 
-    @Column(name="created_by", nullable=false, length=255)
+    @Column(name = "created_by", nullable = false, length = 255)
     private String createdBy = "guest";
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="created_date", updatable=false)
+    @Column(name = "created_date", updatable = false)
     private Date createdDate;
 
-    @Column(name="description", nullable=false, length=2048)
+    @Column(name = "description", nullable = false, length = 2048)
     private String description = "NoDescription";
 
-    @Column(name="modified_by", nullable=false, length=255)
+    @Column(name = "modified_by", nullable = false, length = 255)
     private String modifiedBy = "guest";
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="modified_date", nullable=false)
+    @Column(name = "modified_date", nullable = false)
     private Date modifiedDate;
 
-    @Column(name="defaultGroup", nullable=false)
+    @Column(name = "defaultGroup", nullable = false)
     private boolean defaultGroup = false;
-    @Column(name="deleted", nullable=false)
+    @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
+    /**
+     * Instantiates a new group entity.
+     */
     public GroupEntity() {
         super();
     }
 
+    /**
+     * Called before an instance is persisted.
+     */
     @PrePersist
-    public void	prePersist() {
+    public void prePersist() {
         Date date = new Date();
         this.createdDate = date;
         this.modifiedDate = date;
     }
 
+    /**
+     * Called before an instance is updated.
+     */
     @PreUpdate
     public void preUpdate() {
         this.modifiedDate = new Date();
     }
 
     /**
-     * @return the policyId
-     */
-    public String getGroupId() {
-        return groupId;
-    }
-    public long getGroupKey(){
-        return groupKey;
-    }
-
-    public void setGroupId(String groupId){
-        this.groupId = groupId;
-    }
-
-    /**
-     * @param policyId cannot be set
-     */
-
-    public String getgroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    public boolean isDefaultGroup(){
-        return defaultGroup;
-    }
-
-    public void setDefaultGroup(boolean isDefaultGroup){
-        this.defaultGroup = isDefaultGroup;
-    }
-
-
-
-    /**
-     * @return the configurationDataEntity
-     */
-    public List<PolicyEntity> getPolicies() {
-        return policies;
-    }
-
-    /**
-     * @param configurationDataEntity the configurationDataEntity to set
+     * Adds the policy to group.
+     *
+     * @param policy the policy
      */
     public void addPolicyToGroup(PolicyEntity policy) {
-        if(!this.policies.contains(policy)){
+        if (policies == null) {
+            policies = new ArrayList<>();
+        }
+
+        if (!this.policies.contains(policy)) {
             this.policies.add(policy);
         }
     }
-    public void removePolicyFromGroup(PolicyEntity policy){
+
+    /**
+     * Removes the policy from group.
+     *
+     * @param policy the policy
+     */
+    public void removePolicyFromGroup(PolicyEntity policy) {
         this.policies.remove(policy);
+
+        if (policies.isEmpty()) {
+            policies = null;
+        }
     }
-
-
-
-    /**
-     * @return the createdBy
-     */
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    /**
-     * @param createdBy the createdBy to set
-     */
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    /**
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * @param description the description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * @return the modifiedBy
-     */
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
-
-    /**
-     * @param modifiedBy the modifiedBy to set
-     */
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
-    /**
-     * @return the version
-     */
-    public int getVersion() {
-        return version;
-    }
-
-    /**
-     * @return the createdDate
-     */
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    /**
-     * @return the modifiedDate
-     */
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
-    /**
-     * @return the deleted
-     */
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    /**
-     * @param deleted the deleted to set
-     */
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-
 }

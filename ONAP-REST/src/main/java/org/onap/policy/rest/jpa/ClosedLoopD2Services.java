@@ -21,9 +21,6 @@
 
 package org.onap.policy.rest.jpa;
 
-/*
- *
- */
 import java.io.Serializable;
 import java.util.Date;
 
@@ -42,12 +39,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * The Class ClosedLoopD2Services.
  */
 @Entity
 @Table(name = "ClosedLoopD2Services")
 @NamedQuery(name = "ClosedLoopD2Services.findAll", query = "SELECT c FROM ClosedLoopD2Services c ")
+@Getter
+@Setter
 public class ClosedLoopD2Services implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -87,42 +89,6 @@ public class ClosedLoopD2Services implements Serializable {
     }
 
     /**
-     * Gets the user created by.
-     *
-     * @return the user created by
-     */
-    public UserInfo getUserCreatedBy() {
-        return userCreatedBy;
-    }
-
-    /**
-     * Sets the user created by.
-     *
-     * @param userCreatedBy the new user created by
-     */
-    public void setUserCreatedBy(UserInfo userCreatedBy) {
-        this.userCreatedBy = userCreatedBy;
-    }
-
-    /**
-     * Gets the user modified by.
-     *
-     * @return the user modified by
-     */
-    public UserInfo getUserModifiedBy() {
-        return userModifiedBy;
-    }
-
-    /**
-     * Sets the user modified by.
-     *
-     * @param userModifiedBy the new user modified by
-     */
-    public void setUserModifiedBy(UserInfo userModifiedBy) {
-        this.userModifiedBy = userModifiedBy;
-    }
-
-    /**
      * Pre persist.
      */
     @PrePersist
@@ -139,95 +105,4 @@ public class ClosedLoopD2Services implements Serializable {
     public void preUpdate() {
         this.modifiedDate = new Date();
     }
-
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param id the new id
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Gets the service name.
-     *
-     * @return the service name
-     */
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    /**
-     * Sets the service name.
-     *
-     * @param serviceName the new service name
-     */
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
-
-    /**
-     * Gets the description.
-     *
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets the description.
-     *
-     * @param description the new description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Gets the created date.
-     *
-     * @return the created date
-     */
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    /**
-     * Sets the created date.
-     *
-     * @param createdDate the new created date
-     */
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    /**
-     * Gets the modified date.
-     *
-     * @return the modified date
-     */
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
-    /**
-     * Sets the modified date.
-     *
-     * @param modifiedDate the new modified date
-     */
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
 }

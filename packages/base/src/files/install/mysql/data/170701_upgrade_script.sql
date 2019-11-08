@@ -26,8 +26,8 @@ alter table `onap_sdk`.`microservicemodels`
 add column `enumValues` longtext null default null after `version`, 
 add column `annotation` longtext null after `enumValues`;
 
-drop table if exists FWTag; 
-CREATE TABLE FWTag(
+drop table if exists FwTag; 
+CREATE TABLE FwTag(
 Id int NOT NULL AUTO_INCREMENT,
 tagName VARCHAR(45) NOT NULL,
 description VARCHAR(1024),
@@ -39,8 +39,8 @@ MODIFIED_BY VARCHAR(45) NOT NULL,
 PRIMARY KEY(ID)
 );
 
-drop table if exists FWTagPicker; 
-CREATE TABLE FWTagPicker(
+drop table if exists FwTagPicker; 
+CREATE TABLE FwTagPicker(
 ID INT NOT NULL AUTO_INCREMENT,
 tagPickerName VARCHAR(45) NOT NULL,
 DESCRIPTION VARCHAR(1024),
