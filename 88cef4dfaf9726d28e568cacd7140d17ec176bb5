@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d61b359b_fabd995f",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/ActionBodyEntity.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-08T17:11:29Z",
+      "side": 1,
+      "message": "I assume this doesn\u0027t need equals or hashCode.  why not @Data?\n\nsame question in other files",
+      "revId": "88cef4dfaf9726d28e568cacd7140d17ec176bb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1a2145a_7a848fa6",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/ActionDictionaryJpaTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-08T17:11:29Z",
+      "side": 1,
+      "message": "oops",
+      "revId": "88cef4dfaf9726d28e568cacd7140d17ec176bb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
