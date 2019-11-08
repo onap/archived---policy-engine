@@ -32,7 +32,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * The Class AddressGroup is a JPA class for address groups.
@@ -41,10 +43,9 @@ import lombok.Data;
 @Table(name = "AddressGroup")
 @NamedQuery(name = "AddressGroup.findAll", query = "SELECT e FROM AddressGroup e ")
 
-/**
- * Instantiates a new address group.
- */
-@Data
+@Getter
+@Setter
+@ToString
 public class AddressGroup implements Serializable {
     private static final long serialVersionUID = 1L;
 

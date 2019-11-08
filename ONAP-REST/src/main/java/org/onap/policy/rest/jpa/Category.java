@@ -41,6 +41,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * The persistent class for the Categories database table.
  *
@@ -48,6 +52,9 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "Category")
 @NamedQuery(name = "Category.findAll", query = "SELECT c FROM Category c")
+@Getter
+@Setter
+@ToString
 public class Category implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -90,6 +97,11 @@ public class Category implements Serializable {
      * Instantiates a new category.
      *
      * @param cat the cat
+     *
+     *        public String getRuleName() { return this.ruleName; }
+     *
+     *        public void setRuleName(String ruleName) { this.ruleName = ruleName; }
+     *
      * @param grouping the grouping
      * @param isStandard the is standard
      */
@@ -132,114 +144,6 @@ public class Category implements Serializable {
      */
     public Category(Identifier cat) {
         this(cat, Category.STANDARD);
-    }
-
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getId() {
-        return this.id;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param id the new id
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Gets the grouping.
-     *
-     * @return the grouping
-     */
-    public String getGrouping() {
-        return this.grouping;
-    }
-
-    /**
-     * Sets the grouping.
-     *
-     * @param grouping the new grouping
-     */
-    public void setGrouping(String grouping) {
-        this.grouping = grouping;
-    }
-
-    /**
-     * Gets the checks if is standard.
-     *
-     * @return the checks if is standard
-     */
-    public char getIsStandard() {
-        return this.isStandard;
-    }
-
-    /**
-     * Sets the checks if is standard.
-     *
-     * @param isStandard the new checks if is standard
-     */
-    public void setIsStandard(char isStandard) {
-        this.isStandard = isStandard;
-    }
-
-    /**
-     * Gets the xacml id.
-     *
-     * @return the xacml id
-     */
-    public String getXacmlId() {
-        return this.xacmlId;
-    }
-
-    /**
-     * Sets the xacml id.
-     *
-     * @param xacmlId the new xacml id
-     */
-    public void setXacmlId(String xacmlId) {
-        this.xacmlId = xacmlId;
-    }
-
-    /**
-     * Gets the short name.
-     *
-     * @return the short name
-     */
-    public String getShortName() {
-        return this.shortName;
-    }
-
-    /**
-     * Sets the short name.
-     *
-     * @param shortName the new short name
-     */
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    /**
-     * Gets the attributes.
-     *
-     * @return the attributes
-     */
-    public Set<Attribute> getAttributes() {
-        return this.attributes;
-    }
-
-    /**
-     * Sets the attributes.
-     *
-     * @param attributes the new attributes
-     */
-    public void setAttributes(Set<Attribute> attributes) {
-        this.attributes = attributes;
     }
 
     /**
@@ -322,17 +226,4 @@ public class Category implements Serializable {
     public Identifier getIdentifer() {
         return new IdentifierImpl(this.xacmlId);
     }
-
-    /**
-     * To string.
-     *
-     * @return the string
-     */
-    @Transient
-    @Override
-    public String toString() {
-        return "Category [id=" + id + ", grouping=" + grouping + ", isStandard=" + isStandard + ", xacmlId=" + xacmlId
-                        + ", attributes=" + attributes + "]";
-    }
-
 }

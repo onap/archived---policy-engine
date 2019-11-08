@@ -28,24 +28,18 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "DatabaseLockEntity")
+@Getter
+@Setter
+@NoArgsConstructor
 public class DatabaseLockEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "lock_key")
-    private int lockKey = 1;
-
-    public DatabaseLockEntity() {
-        // An empty constructor
-    }
-
-    public int getKey() {
-        return lockKey;
-    }
-
-    public void setKey(int key) {
-        this.lockKey = key;
-    }
-
+    private int key = 1;
 }

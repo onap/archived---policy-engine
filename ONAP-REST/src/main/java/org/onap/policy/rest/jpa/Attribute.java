@@ -8,9 +8,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,29 +47,20 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
  * The persistent class for the Attribute database table.
- * 
+ *
  */
 @Entity
 @Table(name = "Attribute")
 @NamedQuery(name = "Attribute.findAll", query = "SELECT a FROM Attribute a order by  a.priority asc, a.xacmlId asc")
 
-/**
- * Gets the user modified by.
- *
- * @return the user modified by
- */
 @Getter
-
-/**
- * Sets the user modified by.
- *
- * @param userModifiedBy the new user modified by
- */
 @Setter
+@NoArgsConstructor
 public class Attribute implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -145,15 +136,8 @@ public class Attribute implements Serializable {
     private UserInfo userModifiedBy;
 
     /**
-     * Default constructor.
-     */
-    public Attribute() {
-        // An empty constructor
-    }
-
-    /**
      * Constructor with domain.
-     * 
+     *
      * @param domain the domain to use to construct the object
      */
     public Attribute(String domain) {
@@ -162,7 +146,7 @@ public class Attribute implements Serializable {
 
     /**
      * Copy constructor.
-     * 
+     *
      * @param copy the copy to copy from
      */
     public Attribute(Attribute copy) {

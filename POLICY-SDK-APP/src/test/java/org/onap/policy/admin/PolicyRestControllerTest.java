@@ -46,7 +46,7 @@ import org.onap.policy.controller.PolicyController;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionList;
 import org.onap.policy.rest.jpa.AddressGroup;
-import org.onap.policy.rest.jpa.FWTagPicker;
+import org.onap.policy.rest.jpa.FwTagPicker;
 import org.onap.policy.rest.jpa.GroupServiceList;
 import org.onap.policy.rest.jpa.PrefixList;
 import org.onap.policy.rest.jpa.SecurityZone;
@@ -198,11 +198,11 @@ public class PolicyRestControllerTest {
         when(commonClassDao.getData(GroupServiceList.class)).thenReturn(serviceGroupData);
 
         tagListData = new ArrayList<>();
-        FWTagPicker fwPicker = new FWTagPicker();
+        FwTagPicker fwPicker = new FwTagPicker();
         fwPicker.setTagPickerName("Test");
         fwPicker.setTagValues("Test:8080");
         tagListData.add(fwPicker);
-        when(commonClassDao.getData(FWTagPicker.class)).thenReturn(tagListData);
+        when(commonClassDao.getData(FwTagPicker.class)).thenReturn(tagListData);
 
         termListData = new ArrayList<>();
         TermList termList = new TermList();
