@@ -44,9 +44,9 @@ import org.onap.policy.rest.jpa.ActionList;
 import org.onap.policy.rest.jpa.ActionPolicyDict;
 import org.onap.policy.rest.jpa.AddressGroup;
 import org.onap.policy.rest.jpa.Attribute;
-import org.onap.policy.rest.jpa.BrmsController;
-import org.onap.policy.rest.jpa.BrmsDependency;
-import org.onap.policy.rest.jpa.BrmsParamTemplate;
+import org.onap.policy.rest.jpa.BRMSController;
+import org.onap.policy.rest.jpa.BRMSDependency;
+import org.onap.policy.rest.jpa.BRMSParamTemplate;
 import org.onap.policy.rest.jpa.Category;
 import org.onap.policy.rest.jpa.ClosedLoopD2Services;
 import org.onap.policy.rest.jpa.ClosedLoopSite;
@@ -439,7 +439,7 @@ public class DictionaryImportController {
             }
             if (dictionaryName.startsWith("BRMSParamDictionary")) {
                 for (int i = 1; i < dictSheet.size(); i++) {
-                    BrmsParamTemplate attribute = new BrmsParamTemplate();
+                    BRMSParamTemplate attribute = new BRMSParamTemplate();
                     UserInfo userinfo = new UserInfo();
                     userinfo.setUserLoginId(userId);
                     attribute.setUserCreatedBy(userinfo);
@@ -461,7 +461,7 @@ public class DictionaryImportController {
             }
             if (dictionaryName.startsWith("BRMSControllerDictionary")) {
                 for (int i = 1; i < dictSheet.size(); i++) {
-                    BrmsController attribute = new BrmsController();
+                    BRMSController attribute = new BRMSController();
                     UserInfo userinfo = new UserInfo();
                     userinfo.setUserLoginId(userId);
                     attribute.setUserCreatedBy(userinfo);
@@ -483,7 +483,7 @@ public class DictionaryImportController {
             }
             if (dictionaryName.startsWith("BRMSDependencyDictionary")) {
                 for (int i = 1; i < dictSheet.size(); i++) {
-                    BrmsDependency attribute = new BrmsDependency();
+                    BRMSDependency attribute = new BRMSDependency();
                     UserInfo userinfo = new UserInfo();
                     userinfo.setUserLoginId(userId);
                     attribute.setUserCreatedBy(userinfo);

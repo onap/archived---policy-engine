@@ -27,7 +27,7 @@ import java.util.Map;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.dao.CommonClassDao;
-import org.onap.policy.rest.jpa.BrmsParamTemplate;
+import org.onap.policy.rest.jpa.BRMSParamTemplate;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.utils.PolicyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,13 +50,13 @@ public class CreateBRMSRuleTemplate {
         Map<String, String> responseMap = new HashMap<>();
         if (rule != null && !PolicyUtils.brmsRawValidate(rule).contains("[ERR")) {
             List<Object> duplicateData =
-                    commonClassDao.checkDuplicateEntry(ruleName, "ruleName", BrmsParamTemplate.class);
+                    commonClassDao.checkDuplicateEntry(ruleName, "ruleName", BRMSParamTemplate.class);
             if (duplicateData != null && !duplicateData.isEmpty()) {
                 LOGGER.error("Import new service failed.  Service already exists");
                 responseMap.put("DBError", "EXISTS");
                 return responseMap;
             } else {
-                BrmsParamTemplate brmsParamTemplate = new BrmsParamTemplate();
+                BRMSParamTemplate brmsParamTemplate = new BRMSParamTemplate();
                 brmsParamTemplate.setDescription(description);
                 brmsParamTemplate.setRuleName(ruleName);
                 brmsParamTemplate.setRule(rule);

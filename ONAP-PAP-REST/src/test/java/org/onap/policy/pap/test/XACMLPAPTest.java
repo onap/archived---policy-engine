@@ -71,7 +71,7 @@ import org.onap.policy.pap.xacml.rest.policycontroller.PolicyCreation;
 import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionPolicyDict;
-import org.onap.policy.rest.jpa.BrmsParamTemplate;
+import org.onap.policy.rest.jpa.BRMSParamTemplate;
 import org.onap.policy.rest.jpa.Category;
 import org.onap.policy.rest.jpa.FunctionDefinition;
 import org.onap.policy.rest.jpa.PolicyEditorScopes;
@@ -459,7 +459,7 @@ public class XACMLPAPTest {
         editorScope.setUserModifiedBy(userInfo);
         Mockito.when(commonClassDao.getEntityItem(PolicyEditorScopes.class, "scopeName", "test"))
                 .thenReturn(editorScope);
-        BrmsParamTemplate template = new BrmsParamTemplate();
+        BRMSParamTemplate template = new BRMSParamTemplate();
         template.setRuleName("testPolicy");
         template.setUserCreatedBy(userInfo);
         String rule = "package com.sample;\n" + "import com.sample.DroolsTest.Message;\n" + "declare Params\n"
@@ -471,7 +471,7 @@ public class XACMLPAPTest {
                 + "Params($param.samPoll > 50)\n" + "then\n" + "System.out.println(\"Firing rule 1\");\n"
                 + "System.out.println($param);\n" + "end\n";
         template.setRule(rule);
-        Mockito.when(commonClassDao.getEntityItem(BrmsParamTemplate.class, "ruleName", "testPolicy"))
+        Mockito.when(commonClassDao.getEntityItem(BRMSParamTemplate.class, "ruleName", "testPolicy"))
                 .thenReturn(template);
     }
 

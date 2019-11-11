@@ -45,7 +45,7 @@ import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.pap.xacml.rest.util.JsonMessage;
 import org.onap.policy.rest.dao.CommonClassDao;
-import org.onap.policy.rest.jpa.DcaeUuid;
+import org.onap.policy.rest.jpa.DCAEuuid;
 import org.onap.policy.rest.jpa.DictionaryData;
 import org.onap.policy.rest.jpa.MicroServiceAttribute;
 import org.onap.policy.rest.jpa.MicroServiceConfigName;
@@ -119,7 +119,7 @@ public class MicroServiceDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getDCAEUUIDDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getDataByEntity(response, dcaeUUIDDatas, "name", DcaeUuid.class);
+        utils.getDataByEntity(response, dcaeUUIDDatas, "name", DCAEuuid.class);
     }
 
     @RequestMapping(
@@ -128,7 +128,7 @@ public class MicroServiceDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getDCAEUUIDDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getData(response, dcaeUUIDDatas, DcaeUuid.class);
+        utils.getData(response, dcaeUUIDDatas, DCAEuuid.class);
     }
 
     @RequestMapping(value = {"/ms_dictionary/save_dcaeUUID"}, method = {RequestMethod.POST})
@@ -140,17 +140,17 @@ public class MicroServiceDictionaryController {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
-            DcaeUuid dCAEuuid;
+            DCAEuuid dCAEuuid;
             if (fromAPI) {
-                dCAEuuid = mapper.readValue(root.get(dictionaryFields).toString(), DcaeUuid.class);
+                dCAEuuid = mapper.readValue(root.get(dictionaryFields).toString(), DCAEuuid.class);
             } else {
-                dCAEuuid = mapper.readValue(root.get("dcaeUUIDDictionaryData").toString(), DcaeUuid.class);
+                dCAEuuid = mapper.readValue(root.get("dcaeUUIDDictionaryData").toString(), DCAEuuid.class);
             }
 
-            List<Object> duplicateData = commonClassDao.checkDuplicateEntry(dCAEuuid.getName(), "name", DcaeUuid.class);
+            List<Object> duplicateData = commonClassDao.checkDuplicateEntry(dCAEuuid.getName(), "name", DCAEuuid.class);
             boolean duplicateflag = false;
             if (duplicateData != null && !duplicateData.isEmpty()) {
-                DcaeUuid data = (DcaeUuid) duplicateData.get(0);
+                DCAEuuid data = (DCAEuuid) duplicateData.get(0);
                 if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     dCAEuuid.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
@@ -166,7 +166,7 @@ public class MicroServiceDictionaryController {
                 } else {
                     commonClassDao.update(dCAEuuid);
                 }
-                responseString = mapper.writeValueAsString(commonClassDao.getData(DcaeUuid.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(DCAEuuid.class));
             } else {
                 responseString = duplicateResponseString;
             }
@@ -184,7 +184,7 @@ public class MicroServiceDictionaryController {
     @RequestMapping(value = {"/ms_dictionary/remove_dcaeuuid"}, method = {RequestMethod.POST})
     public void removeDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.removeData(request, response, dcaeUUIDDatas, DcaeUuid.class);
+        utils.removeData(request, response, dcaeUUIDDatas, DCAEuuid.class);
     }
 
     @RequestMapping(

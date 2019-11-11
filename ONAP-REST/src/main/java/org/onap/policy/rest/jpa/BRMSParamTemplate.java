@@ -3,14 +3,13 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,40 +38,44 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.onap.policy.rest.jpa.UserInfo;
+
 /*
- * JPA for the BRMS Param Template.
- *
+ * JPA for the BRMS Param Template. 
+ * 
  * @version: 0.1
  */
 
+
 @Entity
-@Table(name = "BrmsParamTemplate")
-@NamedQuery(name = "BrmsParamTemplate.findAll", query = "SELECT b FROM BrmsParamTemplate b ")
-public class BrmsParamTemplate implements Serializable {
+@Table(name="BRMSParamTemplate")
+@NamedQuery(name="BRMSParamTemplate.findAll", query="SELECT b FROM BRMSParamTemplate b ")
+public class BRMSParamTemplate implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name="id")
     private int id;
 
-    @Column(name = "param_template_name", nullable = false, unique = true)
+    @Column(name="param_template_name", nullable=false, unique=true)
     @OrderBy("asc")
     private String ruleName;
 
     @Lob
-    @Column(name = "rule", nullable = false)
+    @Column(name="rule",nullable=false)
     private String rule;
 
-    @Column(name = "description", nullable = true, length = 2048)
+    @Column(name="description", nullable=true, length=2048)
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_date", updatable = false)
+    @Column(name="created_date", updatable=false)
     private Date createdDate;
 
+
     @ManyToOne(optional = false)
-    @JoinColumn(name = "created_by")
+    @JoinColumn(name="created_by")
     private UserInfo userCreatedBy;
 
     public UserInfo getUserCreatedBy() {
@@ -84,7 +87,7 @@ public class BrmsParamTemplate implements Serializable {
     }
 
     @PrePersist
-    public void prePersist() {
+    public void	prePersist() {
         Date date = new Date();
         this.createdDate = date;
     }
@@ -96,6 +99,7 @@ public class BrmsParamTemplate implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
+
 
     public Date getCreatedDate() {
         return this.createdDate;
@@ -113,19 +117,19 @@ public class BrmsParamTemplate implements Serializable {
         this.description = description;
     }
 
-    public String getRule() {
+    public String getRule(){
         return this.rule;
     }
 
-    public void setRule(String rule) {
+    public void setRule(String rule){
         this.rule = rule;
     }
 
-    public String getRuleName() {
+    public String getRuleName(){
         return this.ruleName;
     }
 
-    public void setRuleName(String ruleName) {
+    public void setRuleName(String ruleName){
         this.ruleName = ruleName;
     }
 }

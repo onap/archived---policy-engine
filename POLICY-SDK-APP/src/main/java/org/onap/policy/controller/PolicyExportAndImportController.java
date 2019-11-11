@@ -55,7 +55,7 @@ import org.onap.policy.rest.adapter.PolicyExportAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
-import org.onap.policy.rest.jpa.DcaeUuid;
+import org.onap.policy.rest.jpa.DCAEuuid;
 import org.onap.policy.rest.jpa.GroupPolicyScopeList;
 import org.onap.policy.rest.jpa.MicroServiceConfigName;
 import org.onap.policy.rest.jpa.MicroServiceLocation;
@@ -432,7 +432,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
     private String validUuid(String uuid) {
         String message = null;
         if (uuid != null) {
-            List<String> uuids = commonClassDao.getDataByColumn(DcaeUuid.class, "name");
+            List<String> uuids = commonClassDao.getDataByColumn(DCAEuuid.class, "name");
             if (uuids != null && !(uuids.stream().filter(o -> o.equals(uuid)).findFirst().isPresent())) {
                 message = POLICY + policyName + " uuid: " + uuid + NOTVALID;
             }

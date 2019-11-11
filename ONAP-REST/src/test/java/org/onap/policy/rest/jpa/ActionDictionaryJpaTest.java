@@ -8,9 +8,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,12 +21,7 @@
 
 package org.onap.policy.rest.jpa;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-import com.att.research.xacml.api.Identifier;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,7 +39,7 @@ public class ActionDictionaryJpaTest {
 
     /**
      * Set up the test.
-     *
+     * 
      * @throws Exception on test errors
      */
     @Before
@@ -146,6 +141,7 @@ public class ActionDictionaryJpaTest {
         data.removeAttribute(new Attribute());
         data.isStandard();
         data.isCustom();
+        Category.extractGrouping("urn:oasis:names:tc:xacml:1.0:subject-category:intermediary-subject");
         data.getIdentifer();
         data.toString();
         assertTrue(data.getAttributes() != null);
@@ -157,33 +153,6 @@ public class ActionDictionaryJpaTest {
         assertTrue("Test".equals(data.getShortName()));
         data.setXacmlId("Test");
         assertTrue("Test".equals(data.getXacmlId()));
-
-        data.setIsStandard(Category.STANDARD);
-        assertEquals(Category.STANDARD, data.getIsStandard());
-        assertTrue(data.isStandard());
-        assertFalse(data.isCustom());
-
-        data.setIsStandard(Category.CUSTOM);
-        assertEquals(Category.CUSTOM, data.getIsStandard());
-        assertFalse(data.isStandard());
-        assertTrue(data.isCustom());
-
-        Identifier categoryIdentifier = new DummyIdentifier();
-        Category data2 = new Category(categoryIdentifier,
-                        "urn:oasis:names:tc:xacml:1.0:subject-category:intermediary-subject", Category.STANDARD);
-        assertEquals(DummyIdentifier.class.getName(), data2.getIdentifer().stringValue());
-
-        Category data3 = new Category(categoryIdentifier,
-                        "urn:oasis:names:tc:xacml:1.0:subject-category:intermediary-subject");
-        assertEquals(DummyIdentifier.class.getName(), data3.getIdentifer().stringValue());
-
-        assertEquals("subject",
-                        Category.extractGrouping("urn:oasis:names:tc:xacml:1.0:subject-category:intermediary-subject"));
-        assertNull(Category.extractGrouping(null));
-        assertNull(Category.extractGrouping("some random string"));
-        assertNull(Category.extractGrouping(""));
-        assertEquals("intermediary-attribute", Category
-                        .extractGrouping("urn:oasis:names:tc:xacml:1.0:attribute-category:intermediary-attribute"));
     }
 
     @Test
@@ -314,19 +283,6 @@ public class ActionDictionaryJpaTest {
         assertTrue(data.isStandard());
         data.setIsStandard(Datatype.CUSTOM);
         assertTrue(data.isCustom());
-
-        data.setIsStandard(Category.STANDARD);
-        assertEquals(Category.STANDARD, data.getIsStandard());
-        assertTrue(data.isStandard());
-        assertFalse(data.isCustom());
-
-        data.setIsStandard(Category.CUSTOM);
-        assertEquals(Category.CUSTOM, data.getIsStandard());
-        assertFalse(data.isStandard());
-        assertTrue(data.isCustom());
-
-        Datatype data2 = new Datatype(new DummyIdentifier(), Datatype.STANDARD);
-        assertEquals(DummyIdentifier.class.getName(), data2.getIdentifer().stringValue());
     }
 
     @Test

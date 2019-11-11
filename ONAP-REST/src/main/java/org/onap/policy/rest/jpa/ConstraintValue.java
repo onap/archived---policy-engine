@@ -3,14 +3,13 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,34 +32,35 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+
 /**
  * The persistent class for the ConstraintValues database table.
- *
+ * 
  */
 @Entity
-@Table(name = "ConstraintValues")
-@NamedQuery(name = "ConstraintValue.findAll", query = "SELECT c FROM ConstraintValue c")
+@Table(name="ConstraintValues")
+@NamedQuery(name="ConstraintValue.findAll", query="SELECT c FROM ConstraintValue c")
 public class ConstraintValue implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name="id")
     private int id;
 
-    @Column(name = "property")
+    @Column(name="property")
     private String property;
 
-    @Column(name = "value")
+    @Column(name="value")
     private String value;
 
-    // bi-directional many-to-one association to Attribute
+    //bi-directional many-to-one association to Attribute
     @ManyToOne
-    @JoinColumn(name = "attribute_id")
+    @JoinColumn(name="attribute_id")
     private Attribute attribute;
 
     public ConstraintValue() {
-        // An empty constructor
+        //An empty constructor
     }
 
     public ConstraintValue(String property, String value) {

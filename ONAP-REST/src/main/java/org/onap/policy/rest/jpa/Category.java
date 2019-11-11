@@ -4,14 +4,13 @@
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
- * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,11 +20,6 @@
  */
 
 package org.onap.policy.rest.jpa;
-
-import com.att.research.xacml.api.Identifier;
-import com.att.research.xacml.api.XACML3;
-import com.att.research.xacml.std.IdentifierImpl;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -41,13 +35,19 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.att.research.xacml.api.Identifier;
+import com.att.research.xacml.api.XACML3;
+import com.att.research.xacml.std.IdentifierImpl;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+
 /**
  * The persistent class for the Categories database table.
- *
+ * 
  */
 @Entity
-@Table(name = "Category")
-@NamedQuery(name = "Category.findAll", query = "SELECT c FROM Category c")
+@Table(name="Category")
+@NamedQuery(name="Category.findAll", query="SELECT c FROM Category c")
 public class Category implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -56,29 +56,26 @@ public class Category implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name="id")
     private int id;
 
-    @Column(name = "grouping", nullable = false, length = 64)
+    @Column(name="grouping", nullable=false, length=64)
     private String grouping;
 
-    @Column(name = "is_standard", nullable = false)
+    @Column(name="is_standard", nullable=false)
     private char isStandard;
 
-    @Column(name = "xacml_id", nullable = false, unique = true, length = 255)
+    @Column(name="xacml_id", nullable=false, unique=true, length=255)
     private String xacmlId;
 
-    @Column(name = "short_name", nullable = false, length = 64)
+    @Column(name="short_name", nullable=false, length=64)
     private String shortName;
 
-    // bi-directional many-to-one association to Attribute
-    @OneToMany(mappedBy = "categoryBean")
+    //bi-directional many-to-one association to Attribute
+    @OneToMany(mappedBy="categoryBean")
     @JsonBackReference
     private Set<Attribute> attributes = new HashSet<>();
 
-    /**
-     * Instantiates a new category.
-     */
     public Category() {
         this.xacmlId = XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT.stringValue();
         this.grouping = "subject";
@@ -86,13 +83,6 @@ public class Category implements Serializable {
         this.shortName = "subject";
     }
 
-    /**
-     * Instantiates a new category.
-     *
-     * @param cat the cat
-     * @param grouping the grouping
-     * @param isStandard the is standard
-     */
     public Category(Identifier cat, String grouping, char isStandard) {
         if (cat != null) {
             this.xacmlId = cat.stringValue();
@@ -105,149 +95,66 @@ public class Category implements Serializable {
         }
     }
 
-    /**
-     * Instantiates a new category.
-     *
-     * @param cat the cat
-     * @param grouping the grouping
-     */
     public Category(Identifier cat, String grouping) {
         this(cat, grouping, Category.STANDARD);
     }
 
-    /**
-     * Instantiates a new category.
-     *
-     * @param cat the cat
-     * @param standard the standard
-     */
     public Category(Identifier cat, char standard) {
         this(cat, null, standard);
     }
 
-    /**
-     * Instantiates a new category.
-     *
-     * @param cat the cat
-     */
     public Category(Identifier cat) {
         this(cat, Category.STANDARD);
     }
 
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
     public int getId() {
         return this.id;
     }
 
-    /**
-     * Sets the id.
-     *
-     * @param id the new id
-     */
     public void setId(int id) {
         this.id = id;
     }
 
-    /**
-     * Gets the grouping.
-     *
-     * @return the grouping
-     */
     public String getGrouping() {
         return this.grouping;
     }
 
-    /**
-     * Sets the grouping.
-     *
-     * @param grouping the new grouping
-     */
     public void setGrouping(String grouping) {
         this.grouping = grouping;
     }
 
-    /**
-     * Gets the checks if is standard.
-     *
-     * @return the checks if is standard
-     */
     public char getIsStandard() {
         return this.isStandard;
     }
 
-    /**
-     * Sets the checks if is standard.
-     *
-     * @param isStandard the new checks if is standard
-     */
     public void setIsStandard(char isStandard) {
         this.isStandard = isStandard;
     }
 
-    /**
-     * Gets the xacml id.
-     *
-     * @return the xacml id
-     */
     public String getXacmlId() {
         return this.xacmlId;
     }
 
-    /**
-     * Sets the xacml id.
-     *
-     * @param xacmlId the new xacml id
-     */
     public void setXacmlId(String xacmlId) {
         this.xacmlId = xacmlId;
     }
 
-    /**
-     * Gets the short name.
-     *
-     * @return the short name
-     */
     public String getShortName() {
         return this.shortName;
     }
 
-    /**
-     * Sets the short name.
-     *
-     * @param shortName the new short name
-     */
     public void setShortName(String shortName) {
         this.shortName = shortName;
     }
 
-    /**
-     * Gets the attributes.
-     *
-     * @return the attributes
-     */
     public Set<Attribute> getAttributes() {
         return this.attributes;
     }
 
-    /**
-     * Sets the attributes.
-     *
-     * @param attributes the new attributes
-     */
     public void setAttributes(Set<Attribute> attributes) {
         this.attributes = attributes;
     }
 
-    /**
-     * Adds the attribute.
-     *
-     * @param attribute the attribute
-     * @return the attribute
-     */
     public Attribute addAttribute(Attribute attribute) {
         getAttributes().add(attribute);
         attribute.setCategoryBean(this);
@@ -255,12 +162,6 @@ public class Category implements Serializable {
         return attribute;
     }
 
-    /**
-     * Removes the attribute.
-     *
-     * @param attribute the attribute
-     * @return the attribute
-     */
     public Attribute removeAttribute(Attribute attribute) {
         getAttributes().remove(attribute);
         attribute.setCategoryBean(null);
@@ -268,41 +169,30 @@ public class Category implements Serializable {
         return attribute;
     }
 
-    /**
-     * Checks if is standard.
-     *
-     * @return true, if is standard
-     */
     @Transient
     public boolean isStandard() {
         return this.isStandard == Category.STANDARD;
     }
 
-    /**
-     * Checks if is custom.
-     *
-     * @return true, if is custom
-     */
     @Transient
     public boolean isCustom() {
         return this.isStandard == Category.CUSTOM;
     }
 
-    /**
-     * Extract grouping.
-     *
-     * @param xacmlId the xacml id
-     * @return the string
-     */
     @Transient
-    public static String extractGrouping(String xacmlId) {
+    public static String	extractGrouping(String xacmlId) {
         if (xacmlId == null) {
             return null;
         }
         String[] parts = xacmlId.split("[:]");
-        if (xacmlId.matches(".*:attribute\\-category:.*")) {
-            return parts[parts.length - 1];
-        } else if (xacmlId.matches(".*:[a-zA-Z]+[\\-]category:.*")) {
+        if (xacmlId.matches(".*:attribute\\-category:.*")) {            
+            if (parts.length > 0) {
+                return parts[parts.length - 1];
+            }
+        } else if (xacmlId.matches(".*:[a-zA-Z]+[\\-]category:.*")) {            
+            if (parts.length <= 0) {
+                return null;
+            }
             for (String part : parts) {
                 int index = part.indexOf("-category");
                 if (index > 0) {
@@ -313,26 +203,17 @@ public class Category implements Serializable {
         return null;
     }
 
-    /**
-     * Gets the identifer.
-     *
-     * @return the identifer
-     */
     @Transient
     public Identifier getIdentifer() {
         return new IdentifierImpl(this.xacmlId);
     }
 
-    /**
-     * To string.
-     *
-     * @return the string
-     */
     @Transient
     @Override
     public String toString() {
-        return "Category [id=" + id + ", grouping=" + grouping + ", isStandard=" + isStandard + ", xacmlId=" + xacmlId
-                        + ", attributes=" + attributes + "]";
+        return "Category [id=" + id + ", grouping=" + grouping
+                + ", isStandard=" + isStandard + ", xacmlId=" + xacmlId
+                + ", attributes=" + attributes + "]";
     }
 
 }

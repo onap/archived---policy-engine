@@ -48,10 +48,10 @@ import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionPolicyDict;
 import org.onap.policy.rest.jpa.Attribute;
-import org.onap.policy.rest.jpa.BrmsParamTemplate;
+import org.onap.policy.rest.jpa.BRMSParamTemplate;
 import org.onap.policy.rest.jpa.ClosedLoopD2Services;
 import org.onap.policy.rest.jpa.ClosedLoopSite;
-import org.onap.policy.rest.jpa.DcaeUuid;
+import org.onap.policy.rest.jpa.DCAEuuid;
 import org.onap.policy.rest.jpa.DecisionSettings;
 import org.onap.policy.rest.jpa.DescriptiveScope;
 import org.onap.policy.rest.jpa.GroupPolicyScopeList;
@@ -350,8 +350,8 @@ public class PolicyElasticSearchController {
                     policyList = searchElkDatabase(action, "actionAttributeValue", value);
                     break;
                 case brmsParam:
-                    BrmsParamTemplate bRMSParamTemplate =
-                            mapper.readValue(root.get("data").toString(), BrmsParamTemplate.class);
+                    BRMSParamTemplate bRMSParamTemplate =
+                            mapper.readValue(root.get("data").toString(), BRMSParamTemplate.class);
                     value = bRMSParamTemplate.getRuleName();
                     policyList = searchElkDatabase(config, "ruleName", value);
                     break;
@@ -399,7 +399,7 @@ public class PolicyElasticSearchController {
                     policyList = searchElkDatabase(config, pholder, value);
                     break;
                 case msDCAEUUID:
-                    DcaeUuid dcaeUUID = mapper.readValue(root.get("data").toString(), DcaeUuid.class);
+                    DCAEuuid dcaeUUID = mapper.readValue(root.get("data").toString(), DCAEuuid.class);
                     value = dcaeUUID.getName();
                     policyList = searchElkDatabase(config, "uuid", value);
                     break;

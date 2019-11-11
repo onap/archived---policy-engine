@@ -56,7 +56,7 @@ import org.onap.policy.pap.xacml.rest.util.AbstractPolicyCreation;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionPolicyDict;
-import org.onap.policy.rest.jpa.BrmsParamTemplate;
+import org.onap.policy.rest.jpa.BRMSParamTemplate;
 import org.onap.policy.rest.jpa.PolicyEditorScopes;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
@@ -314,8 +314,8 @@ public class PolicyCreation extends AbstractPolicyCreation {
                         String modelName = drlRuleAndUiParams.get("templateName");
                         PolicyLogger.info("Template name from API is: " + modelName);
 
-                        BrmsParamTemplate template = (BrmsParamTemplate) commonClassDao
-                                .getEntityItem(BrmsParamTemplate.class, "ruleName", modelName);
+                        BRMSParamTemplate template = (BRMSParamTemplate) commonClassDao
+                                .getEntityItem(BRMSParamTemplate.class, "ruleName", modelName);
                         if (template == null) {
                             String message =
                                     XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Template.  The template name, "

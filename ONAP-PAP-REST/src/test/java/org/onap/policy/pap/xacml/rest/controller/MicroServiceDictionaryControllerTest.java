@@ -43,7 +43,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
-import org.onap.policy.rest.jpa.DcaeUuid;
+import org.onap.policy.rest.jpa.DCAEuuid;
 import org.onap.policy.rest.jpa.MicroServiceLocation;
 import org.onap.policy.rest.jpa.MicroServiceModels;
 import org.onap.policy.rest.jpa.UserInfo;
@@ -77,7 +77,7 @@ public class MicroServiceDictionaryControllerTest {
 
         List<String> listIds = new ArrayList<String>();
         listIds.add("Jack");
-        when(commonClassDao.getDataByColumn(DcaeUuid.class, "name")).thenReturn(listIds);
+        when(commonClassDao.getDataByColumn(DCAEuuid.class, "name")).thenReturn(listIds);
 
         List<String> microList = new ArrayList<String>();
         microList.add("MC-Model");
@@ -85,7 +85,7 @@ public class MicroServiceDictionaryControllerTest {
 
         List<Object> listId = new ArrayList<Object>();
         listId.add("smith");
-        when(commonClassDao.getData(DcaeUuid.class)).thenReturn(listId);
+        when(commonClassDao.getData(DCAEuuid.class)).thenReturn(listId);
         MicroServiceModels microServiceModels = new MicroServiceModels();
 
         doNothing().when(commonClassDao).delete(microServiceModels);
