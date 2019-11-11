@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "931e35cb_b8b76689",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/ImportBRMSTemplate.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-11T12:48:42Z",
+      "side": 1,
+      "message": "The JUnits in this repo are more like examples on how to call the API. We probably don\u0027t need to delete them. I did start some work to try to incorporate them into JUnits to see if that helps with code coverage, but had to put that down in order to work on other stuff.",
+      "revId": "79488392b88eec04701c051caa1306e55e209d57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
