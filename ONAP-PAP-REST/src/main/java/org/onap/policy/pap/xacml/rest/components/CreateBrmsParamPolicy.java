@@ -184,7 +184,7 @@ public class CreateBrmsParamPolicy extends Policy {
     private String getValueFromDictionary(String templateName) {
         String ruleTemplate = null;
         CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
-        String queryString = "from BRMSParamTemplate where param_template_name= :templateName";
+        String queryString = "from BrmsParamTemplate where param_template_name= :templateName";
         SimpleBindings params = new SimpleBindings();
         params.put("templateName", templateName);
         List<Object> result = dbConnection.getDataByQuery(queryString, params);
