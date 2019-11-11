@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d777531_c6077d16",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsParamPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T20:00:22Z",
+      "side": 1,
+      "message": "is this correct, or should it be reverted?",
+      "revId": "d955c3a58326c1fa0fb0b14acddd3dcc7302965b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbaf59dd_f988822f",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DictionaryHandlerImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T20:00:22Z",
+      "side": 1,
+      "message": "is this correct, or should it be reverted?",
+      "revId": "d955c3a58326c1fa0fb0b14acddd3dcc7302965b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5917225_7a431e68",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DictionaryHandlerImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T20:00:22Z",
+      "side": 1,
+      "message": "is this correct, or should it be reverted?",
+      "revId": "d955c3a58326c1fa0fb0b14acddd3dcc7302965b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1eb9944_49eede5c",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/test/XACMLPAPTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 888,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T20:00:22Z",
+      "side": 1,
+      "message": "is this correct, or should it be reverted?",
+      "revId": "d955c3a58326c1fa0fb0b14acddd3dcc7302965b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "467157d8_3e0fc5e2",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/GetDictionaryService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T20:00:22Z",
+      "side": 1,
+      "message": "is this correct, or should it be reverted?",
+      "revId": "d955c3a58326c1fa0fb0b14acddd3dcc7302965b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "268d3f94_90fe7abc",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/test/GetDictionaryServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T20:00:22Z",
+      "side": 1,
+      "message": "is this correct, or should it be reverted?",
+      "revId": "d955c3a58326c1fa0fb0b14acddd3dcc7302965b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8432e36e_e9cbfc40",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateBRMSParamController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T20:00:22Z",
+      "side": 1,
+      "message": "is this correct, or should it be reverted?",
+      "revId": "d955c3a58326c1fa0fb0b14acddd3dcc7302965b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
