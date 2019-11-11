@@ -149,7 +149,7 @@ public class GetDictionaryService {
             case "Action":
                 jsonString = jsonString.replace("actionPolicyDictionaryDatas", "DictionaryDatas");
                 break;
-            case "BRMSParamTemplate":
+            case "BrmsParamTemplate":
                 jsonString = jsonString.replace("brmsParamDictionaryDatas", "DictionaryDatas");
                 break;
             case "VSCLAction":

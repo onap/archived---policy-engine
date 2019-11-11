@@ -101,7 +101,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 
     private HashMap<String, String> dynamicLayoutMap;
 
-    private static String brmsTemplateVlaue = "<$%BRMSParamTemplate=";
+    private static String brmsTemplateVlaue = "<$%" + BrmsParamTemplate.class.getSimpleName() + "=";
     private static String string = "String";
 
     /**

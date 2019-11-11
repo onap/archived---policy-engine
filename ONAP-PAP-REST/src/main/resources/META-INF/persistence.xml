@@ -40,7 +40,7 @@
 		<class>org.onap.policy.rest.jpa.ActionPolicyDict</class>
 		<class>org.onap.policy.rest.jpa.DecisionSettings</class>
 		<class>org.onap.policy.rest.jpa.MicroServiceModels</class>
-		<class>org.onap.policy.rest.jpa.BRMSParamTemplate</class>
+		<class>org.onap.policy.rest.jpa.BrmsParamTemplate</class>
 		<class>org.onap.policy.rest.jpa.PolicyEditorScopes</class>
 		<!-- unique to PolicyEngineUtils - will be audited from PAP -->
 		<class>org.onap.policy.jpa.BackUpMonitorEntity</class>
@@ -131,11 +131,11 @@
 		<class>org.onap.policy.rest.jpa.ActionList</class>
 		<class>org.onap.policy.rest.jpa.AddressGroup</class>
 		<class>org.onap.policy.rest.jpa.AttributeAssignment</class>
-		<class>org.onap.policy.rest.jpa.BRMSParamTemplate</class>
+		<class>org.onap.policy.rest.jpa.BrmsParamTemplate</class>
 		<class>org.onap.policy.rest.jpa.ClosedLoopD2Services</class>
 		<class>org.onap.policy.rest.jpa.ClosedLoopSite</class>
-		<class>org.onap.policy.rest.jpa.DCAEUsers</class>
-		<class>org.onap.policy.rest.jpa.DCAEuuid</class>
+		<class>org.onap.policy.rest.jpa.DcaeUsers</class>
+		<class>org.onap.policy.rest.jpa.Dcaeuuid</class>
 		<class>org.onap.policy.rest.jpa.DescriptiveScope</class>
 		<class>org.onap.policy.rest.jpa.OnapName</class>
 		<class>org.onap.policy.rest.jpa.EnforcingType</class>

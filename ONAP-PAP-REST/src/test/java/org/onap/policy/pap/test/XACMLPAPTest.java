@@ -885,7 +885,7 @@ public class XACMLPAPTest {
 
     @Test
     public void getDictionary() throws ServletException, IOException {
-        String[] dictionarys = new String[] {"Attribute", "OnapName", "Action", "BRMSParamTemplate", "VSCLAction",
+        String[] dictionarys = new String[] {"Attribute", "OnapName", "Action", "BrmsParamTemplate", "VSCLAction",
                 "VNFType", "PEPOptions", "Varbind", "Service", "Site", "Settings", "RainyDayTreatments",
                 "DescriptiveScope", "ActionList", "ProtocolList", "Zone", "SecurityZone", "PrefixList", "AddressGroup",
                 "ServiceGroup", "ServiceList", "TermList", "MicroServiceLocation", "MicroServiceConfigName", "DCAEUUID",

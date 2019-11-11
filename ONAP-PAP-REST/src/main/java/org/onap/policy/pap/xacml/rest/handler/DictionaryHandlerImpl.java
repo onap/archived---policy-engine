@@ -47,7 +47,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
                 case "Action":
                     dictionary.getActionPolicyDictionary(response);
                     break;
-                case "BRMSParamTemplate":
+                case "BrmsParamTemplate":
                     dictionary.getBRMSParamDictionary(response);
                     break;
                 case "VSCLAction":
@@ -197,7 +197,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
                 case "Action":
                     result = dictionary.saveActionPolicyDictionary(request, response);
                     break;
-                case "BRMSParamTemplate":
+                case "BrmsParamTemplate":
                     result = dictionary.saveBRMSParamDictionary(request, response);
                     break;
                 case "VSCLAction":
