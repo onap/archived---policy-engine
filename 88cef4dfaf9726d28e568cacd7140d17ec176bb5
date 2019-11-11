@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5ec44668_e9cca939",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/ActionBodyEntity.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-11T09:00:26Z",
+      "side": 1,
+      "message": "Because if I put in @Data the code coverage drops right down. For POJO classes especially, the generated equals class would have to be unit tested and the openpojo doesn\u0027t work on them. I looked at EqualsTester from Guava and while it helps, you still have to put in every possible case of inequeality between objects of the class being tested in the POJO test cases to get 100% code coverage.\n\nhttps://static.javadoc.io/com.google.guava/guava-testlib/21.0/com/google/common/testing/EqualsTester.html",
+      "parentUuid": "d61b359b_fabd995f",
+      "revId": "88cef4dfaf9726d28e568cacd7140d17ec176bb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1a2145a_7a848fa6",
         "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/ActionDictionaryJpaTest.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-08T17:11:29Z",
       "side": 1,
       "message": "oops",
+      "revId": "88cef4dfaf9726d28e568cacd7140d17ec176bb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8c4eac14_16057eac",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/ActionDictionaryJpaTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-11T09:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1a2145a_7a848fa6",
       "revId": "88cef4dfaf9726d28e568cacd7140d17ec176bb5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
