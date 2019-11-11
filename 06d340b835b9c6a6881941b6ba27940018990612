@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "88d4ee35_1b344dd9",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsParamPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-11T18:39:42Z",
+      "side": 0,
+      "message": "Or removing that - are there goblins in my machine?",
+      "range": {
+        "startLine": 388,
+        "startChar": 35,
+        "endLine": 388,
+        "endChar": 48
+      },
+      "revId": "06d340b835b9c6a6881941b6ba27940018990612",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
