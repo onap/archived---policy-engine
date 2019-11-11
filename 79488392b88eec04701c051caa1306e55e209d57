@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c4bde24e_3b508826",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/ImportBRMSTemplate.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-11T14:21:24Z",
+      "side": 1,
+      "message": "There is a function in the Engine GUI to import a drl (over a form).   I wonder if this is related to testing that functionality on the backend side. \n  \nPraveen, should this file be deleted?",
+      "parentUuid": "931e35cb_b8b76689",
+      "revId": "79488392b88eec04701c051caa1306e55e209d57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2cf9bf28_c7792577",
         "filename": "PolicyEngineClient/testResources/test.drl",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-11T12:49:19Z",
       "side": 1,
       "message": "Wonder if this is just way out of date - also located in poor place. Should be in src/test/resources.",
+      "revId": "79488392b88eec04701c051caa1306e55e209d57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a278210_adbdc33d",
+        "filename": "PolicyEngineClient/testResources/test.drl",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-11T14:21:24Z",
+      "side": 1,
+      "message": "I guess it seems is not used in any way for junits, seems outdated, seems ok to delete",
+      "parentUuid": "2cf9bf28_c7792577",
       "revId": "79488392b88eec04701c051caa1306e55e209d57",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
