@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "3620bc38_40493f51",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/ImportBRMSTemplate.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2019-11-11T21:46:18Z",
+      "side": 1,
+      "message": "I think it is good to have sample client code in the client jar. Isn\u0027t it excluded from coverage since under src/test?",
+      "parentUuid": "c4bde24e_3b508826",
+      "revId": "79488392b88eec04701c051caa1306e55e209d57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2cf9bf28_c7792577",
         "filename": "PolicyEngineClient/testResources/test.drl",
         "patchSetId": 3
