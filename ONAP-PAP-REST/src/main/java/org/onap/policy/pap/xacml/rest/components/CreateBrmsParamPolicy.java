@@ -148,6 +148,7 @@ public class CreateBrmsParamPolicy extends Policy {
     }
 
     // Validations for Config form
+    @Override
     public boolean validateConfigForm() {
 
         // Validating mandatory Fields.
@@ -184,7 +185,7 @@ public class CreateBrmsParamPolicy extends Policy {
     private String getValueFromDictionary(String templateName) {
         String ruleTemplate = null;
         CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
-        String queryString = "from BRMSParamTemplate where param_template_name= :templateName";
+        String queryString = "from BrmsParamTemplate where param_template_name= :templateName";
         SimpleBindings params = new SimpleBindings();
         params.put("templateName", templateName);
         List<Object> result = dbConnection.getDataByQuery(queryString, params);
@@ -385,7 +386,7 @@ public class CreateBrmsParamPolicy extends Policy {
             target.getAnyOf().add(anyOf);
 
             // Adding the target to the policy element
-            configPolicy.setTarget((TargetType) target);
+            configPolicy.setTarget(target);
 
             RuleType rule = new RuleType();
             rule.setRuleId(policyAdapter.getRuleID());
