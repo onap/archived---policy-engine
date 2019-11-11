@@ -16,6 +16,23 @@
       "revId": "79488392b88eec04701c051caa1306e55e209d57",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2cf9bf28_c7792577",
+        "filename": "PolicyEngineClient/testResources/test.drl",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-11T12:49:19Z",
+      "side": 1,
+      "message": "Wonder if this is just way out of date - also located in poor place. Should be in src/test/resources.",
+      "revId": "79488392b88eec04701c051caa1306e55e209d57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
