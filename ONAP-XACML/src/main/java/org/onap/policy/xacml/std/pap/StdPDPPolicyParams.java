@@ -3,6 +3,7 @@
  * ONAP-XACML
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * Modifications Copyright (C) 2019 AT&T Intellectual Property.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,12 +39,13 @@ public class StdPDPPolicyParams {
     /**
      * Private constructor
      */
-    private StdPDPPolicyParams(){
+    private StdPDPPolicyParams() {
         super();
     }
 
     /**
      * Get an instance of builder class
+     *
      * @return StdPDPPolicyParamsBuilder
      */
     public static StdPDPPolicyParamsBuilder builder() {
@@ -52,6 +54,7 @@ public class StdPDPPolicyParams {
 
     /**
      * Return id
+     *
      * @return id
      */
     public String getId() {
@@ -60,6 +63,7 @@ public class StdPDPPolicyParams {
 
     /**
      * Boolean to indicate root
+     *
      * @return isRoot
      */
     public boolean isRoot() {
@@ -68,6 +72,7 @@ public class StdPDPPolicyParams {
 
     /**
      * Get name of policy
+     *
      * @return name
      */
     public String getName() {
@@ -76,6 +81,7 @@ public class StdPDPPolicyParams {
 
     /**
      * Retrieve the uri
+     *
      * @return location
      */
     public URI getLocation() {
@@ -84,6 +90,7 @@ public class StdPDPPolicyParams {
 
     /**
      * Check policy valid
+     *
      * @return isValid
      */
     public boolean isValid() {
@@ -92,6 +99,7 @@ public class StdPDPPolicyParams {
 
     /**
      * Retrieve policy id
+     *
      * @return policy id
      */
     public String getPolicyId() {
@@ -100,6 +108,7 @@ public class StdPDPPolicyParams {
 
     /**
      * Description of policy
+     *
      * @return description
      */
     public String getDescription() {
@@ -108,6 +117,7 @@ public class StdPDPPolicyParams {
 
     /**
      * Retrieve version of policy
+     *
      * @return version
      */
     public String getVersion() {
@@ -122,6 +132,7 @@ public class StdPDPPolicyParams {
 
         /**
          * Build the policy params
+         *
          * @return stdPdpPolicyParams object
          */
         public StdPDPPolicyParams build() {
@@ -130,6 +141,7 @@ public class StdPDPPolicyParams {
 
         /**
          * Set id
+         *
          * @param id - provide id
          * @return builder
          */
@@ -140,6 +152,7 @@ public class StdPDPPolicyParams {
 
         /**
          * Set whether isRoot
+         *
          * @param isRoot - true/false
          * @return builder
          */
@@ -150,6 +163,7 @@ public class StdPDPPolicyParams {
 
         /**
          * Set name
+         *
          * @param name - name of policy
          * @return builder
          */
@@ -160,6 +174,7 @@ public class StdPDPPolicyParams {
 
         /**
          * Set location uri
+         *
          * @param uri - for location
          * @return builder
          */
@@ -170,6 +185,7 @@ public class StdPDPPolicyParams {
 
         /**
          * Set valid flag
+         *
          * @param isValid - whether the policy is valid
          * @return builder
          */
@@ -180,6 +196,7 @@ public class StdPDPPolicyParams {
 
         /**
          * Set policy id
+         *
          * @param policyId - policy id
          * @return builder
          */
@@ -190,6 +207,7 @@ public class StdPDPPolicyParams {
 
         /**
          * Set description of policy
+         *
          * @param description - of policy
          * @return builder
          */
@@ -200,6 +218,7 @@ public class StdPDPPolicyParams {
 
         /**
          * Set version of policy
+         *
          * @param version - of policy
          * @return builder
          */

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -19,20 +19,24 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.test.util;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import com.att.research.xacml.util.XACMLPolicyScanner.Callback;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
-import com.att.research.xacml.util.XACMLPolicyScanner.Callback;
 
 public class XACMLPolicyScannerTest {
 
@@ -45,11 +49,9 @@ public class XACMLPolicyScannerTest {
         File templateFile;
         ClassLoader classLoader = getClass().getClassLoader();
         try {
-            templateFile =
-                    new File(classLoader.getResource("Config_SampleTest1206.1.xml").getFile());
+            templateFile = new File(classLoader.getResource("Config_SampleTest1206.1.xml").getFile());
             configPolicyPathValue = templateFile.toPath();
-            templateFile =
-                    new File(classLoader.getResource("Action_TestActionPolicy.1.xml").getFile());
+            templateFile = new File(classLoader.getResource("Action_TestActionPolicy.1.xml").getFile());
             actionPolicyPathValue = templateFile.toPath();
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
@@ -60,8 +62,7 @@ public class XACMLPolicyScannerTest {
     public void xacmlPolicyScannerTest() throws IOException {
         Callback callback = null;
         try {
-            XACMLPolicyScanner actionScanner =
-                    new XACMLPolicyScanner(actionPolicyPathValue, callback);
+            XACMLPolicyScanner actionScanner = new XACMLPolicyScanner(actionPolicyPathValue, callback);
             assertTrue(actionScanner.getPolicyObject() != null);
             Object actionObject = actionScanner.scan();
             assertTrue(actionObject != null);
@@ -76,8 +77,7 @@ public class XACMLPolicyScannerTest {
             assertTrue(version.equals("1"));
             String versionFromPath = XACMLPolicyScanner.getVersion(configPolicyPathValue);
             assertTrue(versionFromPath.equals("1"));
-            List<String> returnValue =
-                    XACMLPolicyScanner.getCreatedByModifiedBy(configPolicyPathValue);
+            List<String> returnValue = XACMLPolicyScanner.getCreatedByModifiedBy(configPolicyPathValue);
             assertTrue(returnValue.get(0).equals("test"));
             String createdBy = XACMLPolicyScanner.getCreatedBy(configPolicyPathValue);
             assertTrue(createdBy.equals("test"));

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -23,15 +23,18 @@
 package org.onap.policy.xacml.test.std.pip.engines;
 
 import static org.junit.Assert.assertEquals;
-import java.util.Collection;
-import org.junit.Test;
-import org.onap.policy.xacml.std.pip.engines.OperationHistoryEngine;
+
 import com.att.research.xacml.api.Attribute;
 import com.att.research.xacml.api.pip.PIPException;
 import com.att.research.xacml.api.pip.PIPRequest;
 import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.StdMutableAttribute;
 import com.att.research.xacml.std.pip.StdPIPRequest;
+
+import java.util.Collection;
+
+import org.junit.Test;
+import org.onap.policy.xacml.std.pip.engines.OperationHistoryEngine;
 
 public class OperationHistoryEngineTest {
     @Test

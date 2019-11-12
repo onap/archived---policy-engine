@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -19,12 +19,17 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.test.std.pap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.api.pap.PDPPolicy;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -35,6 +40,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -46,8 +52,6 @@ import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdEngine;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.api.pap.PDPPolicy;
 
 public class StdEngineTest {
 
@@ -63,8 +67,7 @@ public class StdEngineTest {
         new File("target/test/resources/pdps").mkdirs();
         new File("target/test/resources/emptyPapGroupsDefault").mkdirs();
         Files.copy(Paths.get("src/test/resources/pdps/xacml.properties"),
-                Paths.get("target/test/resources/pdps/xacml.properties"),
-                StandardCopyOption.REPLACE_EXISTING);
+                Paths.get("target/test/resources/pdps/xacml.properties"), StandardCopyOption.REPLACE_EXISTING);
         Files.copy(Paths.get("src/test/resources/emptyPapGroupsDefault/xacml.properties"),
                 Paths.get("target/test/resources/emptyPapGroupsDefault/xacml.properties"),
                 StandardCopyOption.REPLACE_EXISTING);
@@ -114,10 +117,8 @@ public class StdEngineTest {
         repository = Paths.get("target/test/resources/nonExisting");
         new StdEngine(repository);
 
-        assertTrue(Files.exists(
-                Paths.get("target/test/resources/nonExisting/default/xacml.pip.properties")));
-        assertTrue(Files.exists(
-                Paths.get("target/test/resources/nonExisting/default/xacml.policy.properties")));
+        assertTrue(Files.exists(Paths.get("target/test/resources/nonExisting/default/xacml.pip.properties")));
+        assertTrue(Files.exists(Paths.get("target/test/resources/nonExisting/default/xacml.policy.properties")));
         assertTrue(Files.exists(Paths.get("target/test/resources/nonExisting/xacml.properties")));
         FileUtils.deleteDirectory(repository.toFile());
     }
@@ -128,17 +129,14 @@ public class StdEngineTest {
         repository = Paths.get("target/test/resources/emptyPapGroupsDefault");
         new StdEngine(repository);
 
-        assertTrue(Files.exists(Paths
-                .get("target/test/resources/emptyPapGroupsDefault/default/xacml.pip.properties")));
-        assertTrue(Files.exists(Paths.get(
-                "target/test/resources/emptyPapGroupsDefault/default/xacml.policy.properties")));
-        assertTrue(Files
-                .exists(Paths.get("target/test/resources/emptyPapGroupsDefault/xacml.properties")));
+        assertTrue(Files.exists(Paths.get("target/test/resources/emptyPapGroupsDefault/default/xacml.pip.properties")));
+        assertTrue(
+                Files.exists(Paths.get("target/test/resources/emptyPapGroupsDefault/default/xacml.policy.properties")));
+        assertTrue(Files.exists(Paths.get("target/test/resources/emptyPapGroupsDefault/xacml.properties")));
     }
 
     @Test
-    public void testNewGroupAndRemoveGroup()
-            throws NullPointerException, PAPException, IOException {
+    public void testNewGroupAndRemoveGroup() throws NullPointerException, PAPException, IOException {
         OnapPDPGroup newGroup = createGroup("newGroup", "Description of new group");
         assertNotNull(newGroup);
 
@@ -270,8 +268,7 @@ public class StdEngineTest {
         assertEquals(0, group2.getPdps().size());
 
         expectedException.expect(NullPointerException.class);
-        expectedException.expectMessage(
-                "Group targeted for deletion has PDPs, you must provide a new group for them.");
+        expectedException.expectMessage("Group targeted for deletion has PDPs, you must provide a new group for them.");
         stdEngine.removeGroup(group1, null);
     }
 
@@ -285,17 +282,15 @@ public class StdEngineTest {
         assertNull(stdEngine.getGroup("newGroup"));
         assertNotNull(stdEngine.getGroup("AnUpdatedName"));
         assertEquals("AnUpdatedName", stdEngine.getGroup("AnUpdatedName").getName());
-        assertEquals("Description of new group",
-                stdEngine.getGroup("AnUpdatedName").getDescription());
+        assertEquals("Description of new group", stdEngine.getGroup("AnUpdatedName").getDescription());
     }
 
     @Test
-    public void testUpdateGroupDescription()
-            throws NullPointerException, PAPException, IOException {
+    public void testUpdateGroupDescription() throws NullPointerException, PAPException, IOException {
         OnapPDPGroup newGroup = createGroup("newGroup", "Description of new group");
 
-        OnapPDPGroup updatedGroup = new StdPDPGroup(newGroup.getId(), newGroup.getName(),
-                "An updated description", Paths.get("target/test/resources/pdps/newGroup"));
+        OnapPDPGroup updatedGroup = new StdPDPGroup(newGroup.getId(), newGroup.getName(), "An updated description",
+                Paths.get("target/test/resources/pdps/newGroup"));
         updatedGroup.setDescription("An updated description");
         stdEngine.updateGroup(updatedGroup);
         assertEquals("newGroup", stdEngine.getGroup("newGroup").getName());
@@ -326,8 +321,7 @@ public class StdEngineTest {
     }
 
     @Test
-    public void testUpdateGroupNameEmptyString()
-            throws NullPointerException, PAPException, IOException {
+    public void testUpdateGroupNameEmptyString() throws NullPointerException, PAPException, IOException {
         StdPDPGroup group = new StdPDPGroup("groupId", "", "description", null);
         expectedException.expect(PAPException.class);
         expectedException.expectMessage("New name for group cannot be null or blank");
@@ -343,8 +337,7 @@ public class StdEngineTest {
     }
 
     @Test
-    public void testPublishAndRemovePolicy()
-            throws NullPointerException, PAPException, FileNotFoundException {
+    public void testPublishAndRemovePolicy() throws NullPointerException, PAPException, FileNotFoundException {
         OnapPDPGroup newGroup = createGroup("newGroup", "Description of new group");
         InputStream inputStream = new FileInputStream(
                 "src/test/resources/pdps/default/com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml");
@@ -358,15 +351,13 @@ public class StdEngineTest {
     }
 
     @Test
-    public void testPublishPolicyNull()
-            throws NullPointerException, PAPException, FileNotFoundException {
+    public void testPublishPolicyNull() throws NullPointerException, PAPException, FileNotFoundException {
         expectedException.expect(NullPointerException.class);
         stdEngine.publishPolicy(null, null, true, null, null);
     }
 
     @Test
-    public void testPublishPolicyUnknownGroup()
-            throws NullPointerException, PAPException, FileNotFoundException {
+    public void testPublishPolicyUnknownGroup() throws NullPointerException, PAPException, FileNotFoundException {
         OnapPDPGroup unknownGroup = new StdPDPGroup("unknownId", null);
 
         expectedException.expect(PAPException.class);
@@ -375,15 +366,13 @@ public class StdEngineTest {
     }
 
     @Test
-    public void testRemovePolicyNull()
-            throws NullPointerException, PAPException, FileNotFoundException {
+    public void testRemovePolicyNull() throws NullPointerException, PAPException, FileNotFoundException {
         expectedException.expect(NullPointerException.class);
         stdEngine.removePolicy(null, null);
     }
 
     @Test
-    public void testRemovePolicyUnknownGroup()
-            throws NullPointerException, PAPException, FileNotFoundException {
+    public void testRemovePolicyUnknownGroup() throws NullPointerException, PAPException, FileNotFoundException {
         OnapPDPGroup unknownGroup = new StdPDPGroup("unknownId", null);
 
         expectedException.expect(PAPException.class);
