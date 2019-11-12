@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -19,22 +19,26 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.test.util;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
+
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 public class XACMLPolicyWriterTest {
     private static final Log logger = LogFactory.getLog(XACMLPolicyWriterTest.class);
@@ -46,11 +50,9 @@ public class XACMLPolicyWriterTest {
         File templateFile;
         ClassLoader classLoader = getClass().getClassLoader();
         try {
-            templateFile =
-                    new File(classLoader.getResource("Config_SampleTest1206.1.xml").getFile());
+            templateFile = new File(classLoader.getResource("Config_SampleTest1206.1.xml").getFile());
             configPolicyPathValue = templateFile.toPath();
-            templateFile =
-                    new File(classLoader.getResource("Action_TestActionPolicy.1.xml").getFile());
+            templateFile = new File(classLoader.getResource("Action_TestActionPolicy.1.xml").getFile());
             actionPolicyPathValue = templateFile.toPath();
         } catch (Exception e1) {
             logger.error("Exception Occured" + e1);
@@ -61,11 +63,9 @@ public class XACMLPolicyWriterTest {
     @Test
     public void xacmlPolicyWriterTest() throws IOException {
         XACMLPolicyWriter writer = new XACMLPolicyWriter();
-        String configResponseValue =
-                writer.changeFileNameInXmlWhenRenamePolicy(configPolicyPathValue);
+        String configResponseValue = writer.changeFileNameInXmlWhenRenamePolicy(configPolicyPathValue);
         assertTrue(configResponseValue.equals("txt"));
-        String actionResponseValue =
-                writer.changeFileNameInXmlWhenRenamePolicy(actionPolicyPathValue);
+        String actionResponseValue = writer.changeFileNameInXmlWhenRenamePolicy(actionPolicyPathValue);
         assertTrue(actionResponseValue.equals("json"));
     }
 

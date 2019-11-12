@@ -3,6 +3,7 @@
  * ONAP-XACML
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * Modifications Copyright (C) 2019 AT&T Intellectual Property.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +24,7 @@ package org.onap.policy.xacml.std.pap;
 import java.net.URI;
 
 /**
- * Parameters class for StdPDPPolicy
+ * Parameters class for StdPDPPolicy.
  */
 public class StdPDPPolicyParams {
     private String id;
@@ -36,14 +37,15 @@ public class StdPDPPolicyParams {
     private String version;
 
     /**
-     * Private constructor
+     * Private constructor.
      */
-    private StdPDPPolicyParams(){
+    private StdPDPPolicyParams() {
         super();
     }
 
     /**
-     * Get an instance of builder class
+     * Get an instance of builder class.
+     *
      * @return StdPDPPolicyParamsBuilder
      */
     public static StdPDPPolicyParamsBuilder builder() {
@@ -51,15 +53,17 @@ public class StdPDPPolicyParams {
     }
 
     /**
-     * Return id
-     * @return id
+     * Return id.
+     *
+     * @return id String
      */
     public String getId() {
         return id;
     }
 
     /**
-     * Boolean to indicate root
+     * Boolean to indicate root.
+     *
      * @return isRoot
      */
     public boolean isRoot() {
@@ -67,7 +71,8 @@ public class StdPDPPolicyParams {
     }
 
     /**
-     * Get name of policy
+     * Get name of policy.
+     *
      * @return name
      */
     public String getName() {
@@ -75,7 +80,8 @@ public class StdPDPPolicyParams {
     }
 
     /**
-     * Retrieve the uri
+     * Retrieve the uri.
+     *
      * @return location
      */
     public URI getLocation() {
@@ -83,7 +89,8 @@ public class StdPDPPolicyParams {
     }
 
     /**
-     * Check policy valid
+     * Check policy valid.
+     *
      * @return isValid
      */
     public boolean isValid() {
@@ -91,7 +98,8 @@ public class StdPDPPolicyParams {
     }
 
     /**
-     * Retrieve policy id
+     * Retrieve policy id.
+     *
      * @return policy id
      */
     public String getPolicyId() {
@@ -99,7 +107,8 @@ public class StdPDPPolicyParams {
     }
 
     /**
-     * Description of policy
+     * Description of policy.
+     *
      * @return description
      */
     public String getDescription() {
@@ -107,7 +116,8 @@ public class StdPDPPolicyParams {
     }
 
     /**
-     * Retrieve version of policy
+     * Retrieve version of policy.
+     *
      * @return version
      */
     public String getVersion() {
@@ -115,96 +125,105 @@ public class StdPDPPolicyParams {
     }
 
     /**
-     * Builder class for std pdp policy params class
+     * Builder class for std pdp policy params class.
      */
     public static class StdPDPPolicyParamsBuilder {
-        StdPDPPolicyParams m = new StdPDPPolicyParams();
+        StdPDPPolicyParams params = new StdPDPPolicyParams();
 
         /**
-         * Build the policy params
+         * Build the policy params.
+         *
          * @return stdPdpPolicyParams object
          */
         public StdPDPPolicyParams build() {
-            return m;
+            return params;
         }
 
         /**
-         * Set id
+         * Set id.
+         *
          * @param id - provide id
          * @return builder
          */
         public StdPDPPolicyParamsBuilder id(String id) {
-            m.id = id;
+            params.id = id;
             return this;
         }
 
         /**
-         * Set whether isRoot
+         * Set whether isRoot.
+         *
          * @param isRoot - true/false
          * @return builder
          */
         public StdPDPPolicyParamsBuilder isRoot(boolean isRoot) {
-            m.isRoot = isRoot;
+            params.isRoot = isRoot;
             return this;
         }
 
         /**
-         * Set name
+         * Set name.
+         *
          * @param name - name of policy
          * @return builder
          */
         public StdPDPPolicyParamsBuilder name(String name) {
-            m.name = name;
+            params.name = name;
             return this;
         }
 
         /**
-         * Set location uri
+         * Set location uri.
+         *
          * @param uri - for location
          * @return builder
          */
         public StdPDPPolicyParamsBuilder location(URI uri) {
-            m.location = uri;
+            params.location = uri;
             return this;
         }
 
         /**
-         * Set valid flag
+         * Set valid flag.
+         *
          * @param isValid - whether the policy is valid
          * @return builder
          */
         public StdPDPPolicyParamsBuilder isValid(boolean isValid) {
-            m.isValid = isValid;
+            params.isValid = isValid;
             return this;
         }
 
         /**
-         * Set policy id
+         * Set policy id.
+         *
          * @param policyId - policy id
          * @return builder
          */
         public StdPDPPolicyParamsBuilder policyId(String policyId) {
-            m.policyId = policyId;
+            params.policyId = policyId;
             return this;
         }
 
         /**
-         * Set description of policy
+         * Set description of policy.
+         *
          * @param description - of policy
          * @return builder
          */
         public StdPDPPolicyParamsBuilder description(String description) {
-            m.description = description;
+            params.description = description;
             return this;
         }
 
         /**
-         * Set version of policy
+         * Set version of policy.
+         *
          * @param version - of policy
          * @return builder
          */
         public StdPDPPolicyParamsBuilder version(String version) {
-            m.version = version;
+            params.version = version;
             return this;
         }
     }

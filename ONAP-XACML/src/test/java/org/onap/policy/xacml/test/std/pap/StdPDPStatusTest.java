@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2018 Ericsson. All rights reserved.
- * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
+ * Modifications Copyright (C) 2019 AT&T Intellectual Property.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,24 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.test.std.pap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import com.att.research.xacml.api.pap.PDPPIPConfig;
+import com.att.research.xacml.api.pap.PDPPolicy;
+import com.att.research.xacml.api.pap.PDPStatus.Status;
+
 import java.util.HashSet;
 import java.util.Set;
+
 import org.junit.Test;
 import org.onap.policy.xacml.std.pap.StdPDPPIPConfig;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
-import com.att.research.xacml.api.pap.PDPPIPConfig;
-import com.att.research.xacml.api.pap.PDPPolicy;
-import com.att.research.xacml.api.pap.PDPStatus.Status;
 
 public class StdPDPStatusTest {
 
@@ -179,13 +185,13 @@ public class StdPDPStatusTest {
 
     @Test
     public void testSet() {
-        Status status = Status.UP_TO_DATE;
-        Set<PDPPIPConfig> failedPIPConfigs = new HashSet<>();
-        failedPIPConfigs.add(new StdPDPPIPConfig());
+        final Status status = Status.UP_TO_DATE;
+        Set<PDPPIPConfig> failedPipConfigs = new HashSet<>();
+        failedPipConfigs.add(new StdPDPPIPConfig());
         Set<PDPPolicy> failedPolicies = new HashSet<>();
         failedPolicies.add(new StdPDPPolicy());
-        Set<PDPPIPConfig> loadedPIPConfigs = new HashSet<>();
-        loadedPIPConfigs.add(new StdPDPPIPConfig());
+        Set<PDPPIPConfig> loadedPipConfigs = new HashSet<>();
+        loadedPipConfigs.add(new StdPDPPIPConfig());
         Set<PDPPolicy> loadedPolicies = new HashSet<>();
         loadedPolicies.add(new StdPDPPolicy());
         Set<PDPPolicy> loadedRootPolicies = new HashSet<>();
@@ -196,48 +202,38 @@ public class StdPDPStatusTest {
         loadWarnings.add("An error");
 
         stdPDPStatus.setStatus(status);
-        stdPDPStatus.setFailedPipConfigs(failedPIPConfigs);
+        stdPDPStatus.setFailedPipConfigs(failedPipConfigs);
         stdPDPStatus.setFailedPolicies(failedPolicies);
-        stdPDPStatus.setLoadedPipConfigs(loadedPIPConfigs);
+        stdPDPStatus.setLoadedPipConfigs(loadedPipConfigs);
         stdPDPStatus.setLoadedPolicies(loadedPolicies);
         stdPDPStatus.setLoadedRootPolicies(loadedRootPolicies);
         stdPDPStatus.setLoadErrors(loadErrors);
         stdPDPStatus.setLoadWarnings(loadWarnings);
 
-        StdPDPStatus stdPDPStatus1 = new StdPDPStatus();
-        stdPDPStatus1.set(stdPDPStatus);
+        StdPDPStatus stdPdpStatus1 = new StdPDPStatus();
+        stdPdpStatus1.set(stdPDPStatus);
 
-        assertEquals(status, stdPDPStatus1.getStatus());
-        assertEquals(loadErrors, stdPDPStatus1.getLoadErrors());
-        assertEquals(loadWarnings, stdPDPStatus1.getLoadWarnings());
-        assertEquals(loadedPolicies, stdPDPStatus1.getLoadedPolicies());
-        assertEquals(loadedRootPolicies, stdPDPStatus1.getLoadedRootPolicies());
-        assertEquals(failedPolicies, stdPDPStatus1.getFailedPolicies());
-        assertEquals(loadedPIPConfigs, stdPDPStatus1.getLoadedPipConfigs());
-        assertEquals(failedPIPConfigs, stdPDPStatus1.getFailedPipConfigs());
+        assertEquals(status, stdPdpStatus1.getStatus());
+        assertEquals(loadErrors, stdPdpStatus1.getLoadErrors());
+        assertEquals(loadWarnings, stdPdpStatus1.getLoadWarnings());
+        assertEquals(loadedPolicies, stdPdpStatus1.getLoadedPolicies());
+        assertEquals(loadedRootPolicies, stdPdpStatus1.getLoadedRootPolicies());
+        assertEquals(failedPolicies, stdPdpStatus1.getFailedPolicies());
+        assertEquals(loadedPipConfigs, stdPdpStatus1.getLoadedPipConfigs());
+        assertEquals(failedPipConfigs, stdPdpStatus1.getFailedPipConfigs());
 
-        assertEquals(
-                "StdPDPStatus [status=UP_TO_DATE, loadErrors=[An error], loadWarnings=[An error],"
-                        + " loadedPolicies=[StdPDPPolicy [id=null, name=null, policyId=null, description=null,"
-                        + " version=, isRoot=false, isValid=false, location=null]],"
-                        + " loadedRootPolicies=[StdPDPPolicy [id=null, name=null, policyId=null, description=null,"
-                        + " version=, isRoot=false, isValid=false, location=null]],"
-                        + " failedPolicies=[StdPDPPolicy [id=null, name=null, policyId=null, description=null,"
-                        + " version=, isRoot=false, isValid=false, location=null]], loadedPIPConfigs=[StdPDPPIPConfig"
-                        + " [id=null, name=null, description=null, classname=null, config={}]], failedPIPConfigs="
-                        + "[StdPDPPIPConfig [id=null, name=null, description=null, classname=null, config={}]]]",
-                stdPDPStatus1.toString());
+        assertTrue(stdPdpStatus1.toString().startsWith("StdPDPStatus"));
     }
 
     @Test
     public void testEqualsAndHashCode() {
-        Status status = Status.UP_TO_DATE;
-        Set<PDPPIPConfig> failedPIPConfigs = new HashSet<>();
-        failedPIPConfigs.add(new StdPDPPIPConfig());
+        final Status status = Status.UP_TO_DATE;
+        Set<PDPPIPConfig> failedPipConfigs = new HashSet<>();
+        failedPipConfigs.add(new StdPDPPIPConfig());
         Set<PDPPolicy> failedPolicies = new HashSet<>();
         failedPolicies.add(new StdPDPPolicy());
-        Set<PDPPIPConfig> loadedPIPConfigs = new HashSet<>();
-        loadedPIPConfigs.add(new StdPDPPIPConfig());
+        Set<PDPPIPConfig> loadedPipConfigs = new HashSet<>();
+        loadedPipConfigs.add(new StdPDPPIPConfig());
         Set<PDPPolicy> loadedPolicies = new HashSet<>();
         loadedPolicies.add(new StdPDPPolicy());
         Set<PDPPolicy> loadedRootPolicies = new HashSet<>();
@@ -247,57 +243,57 @@ public class StdPDPStatusTest {
         Set<String> loadWarnings = new HashSet<>();
         loadWarnings.add("An error");
 
-        StdPDPStatus stdPDPStatus1 = new StdPDPStatus();
+        StdPDPStatus stdPdpStatus1 = new StdPDPStatus();
 
-        assertTrue(stdPDPStatus.equals(stdPDPStatus1));
+        assertTrue(stdPDPStatus.equals(stdPdpStatus1));
 
         stdPDPStatus.setStatus(status);
-        assertFalse(stdPDPStatus.equals(stdPDPStatus1));
-        stdPDPStatus1.setStatus(status);
-        assertTrue(stdPDPStatus.equals(stdPDPStatus1));
-        assertEquals(stdPDPStatus.hashCode(), stdPDPStatus1.hashCode());
+        assertFalse(stdPDPStatus.equals(stdPdpStatus1));
+        stdPdpStatus1.setStatus(status);
+        assertTrue(stdPDPStatus.equals(stdPdpStatus1));
+        assertEquals(stdPDPStatus.hashCode(), stdPdpStatus1.hashCode());
 
-        stdPDPStatus.setFailedPipConfigs(failedPIPConfigs);
-        assertFalse(stdPDPStatus.equals(stdPDPStatus1));
-        stdPDPStatus1.setFailedPipConfigs(failedPIPConfigs);
-        assertTrue(stdPDPStatus.equals(stdPDPStatus1));
-        assertEquals(stdPDPStatus.hashCode(), stdPDPStatus1.hashCode());
+        stdPDPStatus.setFailedPipConfigs(failedPipConfigs);
+        assertFalse(stdPDPStatus.equals(stdPdpStatus1));
+        stdPdpStatus1.setFailedPipConfigs(failedPipConfigs);
+        assertTrue(stdPDPStatus.equals(stdPdpStatus1));
+        assertEquals(stdPDPStatus.hashCode(), stdPdpStatus1.hashCode());
 
         stdPDPStatus.setFailedPolicies(failedPolicies);
-        assertFalse(stdPDPStatus.equals(stdPDPStatus1));
-        stdPDPStatus1.setFailedPolicies(failedPolicies);
-        assertTrue(stdPDPStatus.equals(stdPDPStatus1));
-        assertEquals(stdPDPStatus.hashCode(), stdPDPStatus1.hashCode());
+        assertFalse(stdPDPStatus.equals(stdPdpStatus1));
+        stdPdpStatus1.setFailedPolicies(failedPolicies);
+        assertTrue(stdPDPStatus.equals(stdPdpStatus1));
+        assertEquals(stdPDPStatus.hashCode(), stdPdpStatus1.hashCode());
 
-        stdPDPStatus.setLoadedPipConfigs(loadedPIPConfigs);
-        assertFalse(stdPDPStatus.equals(stdPDPStatus1));
-        stdPDPStatus1.setLoadedPipConfigs(loadedPIPConfigs);
-        assertTrue(stdPDPStatus.equals(stdPDPStatus1));
-        assertEquals(stdPDPStatus.hashCode(), stdPDPStatus1.hashCode());
+        stdPDPStatus.setLoadedPipConfigs(loadedPipConfigs);
+        assertFalse(stdPDPStatus.equals(stdPdpStatus1));
+        stdPdpStatus1.setLoadedPipConfigs(loadedPipConfigs);
+        assertTrue(stdPDPStatus.equals(stdPdpStatus1));
+        assertEquals(stdPDPStatus.hashCode(), stdPdpStatus1.hashCode());
 
         stdPDPStatus.setLoadedPolicies(loadedPolicies);
-        assertFalse(stdPDPStatus.equals(stdPDPStatus1));
-        stdPDPStatus1.setLoadedPolicies(loadedPolicies);
-        assertTrue(stdPDPStatus.equals(stdPDPStatus1));
-        assertEquals(stdPDPStatus.hashCode(), stdPDPStatus1.hashCode());
+        assertFalse(stdPDPStatus.equals(stdPdpStatus1));
+        stdPdpStatus1.setLoadedPolicies(loadedPolicies);
+        assertTrue(stdPDPStatus.equals(stdPdpStatus1));
+        assertEquals(stdPDPStatus.hashCode(), stdPdpStatus1.hashCode());
 
         stdPDPStatus.setLoadedRootPolicies(loadedRootPolicies);
-        assertFalse(stdPDPStatus.equals(stdPDPStatus1));
-        stdPDPStatus1.setLoadedRootPolicies(loadedRootPolicies);
-        assertTrue(stdPDPStatus.equals(stdPDPStatus1));
-        assertEquals(stdPDPStatus.hashCode(), stdPDPStatus1.hashCode());
+        assertFalse(stdPDPStatus.equals(stdPdpStatus1));
+        stdPdpStatus1.setLoadedRootPolicies(loadedRootPolicies);
+        assertTrue(stdPDPStatus.equals(stdPdpStatus1));
+        assertEquals(stdPDPStatus.hashCode(), stdPdpStatus1.hashCode());
 
         stdPDPStatus.setLoadErrors(loadErrors);
-        assertFalse(stdPDPStatus.equals(stdPDPStatus1));
-        stdPDPStatus1.setLoadErrors(loadErrors);
-        assertTrue(stdPDPStatus.equals(stdPDPStatus1));
-        assertEquals(stdPDPStatus.hashCode(), stdPDPStatus1.hashCode());
+        assertFalse(stdPDPStatus.equals(stdPdpStatus1));
+        stdPdpStatus1.setLoadErrors(loadErrors);
+        assertTrue(stdPDPStatus.equals(stdPdpStatus1));
+        assertEquals(stdPDPStatus.hashCode(), stdPdpStatus1.hashCode());
 
         stdPDPStatus.setLoadWarnings(loadWarnings);
-        assertFalse(stdPDPStatus.equals(stdPDPStatus1));
-        stdPDPStatus1.setLoadWarnings(loadWarnings);
-        assertTrue(stdPDPStatus.equals(stdPDPStatus1));
-        assertEquals(stdPDPStatus.hashCode(), stdPDPStatus1.hashCode());
+        assertFalse(stdPDPStatus.equals(stdPdpStatus1));
+        stdPdpStatus1.setLoadWarnings(loadWarnings);
+        assertTrue(stdPDPStatus.equals(stdPdpStatus1));
+        assertEquals(stdPDPStatus.hashCode(), stdPdpStatus1.hashCode());
     }
 
     @Test

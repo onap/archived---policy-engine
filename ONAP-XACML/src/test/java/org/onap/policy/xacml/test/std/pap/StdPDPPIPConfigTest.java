@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -22,14 +22,17 @@
 
 package org.onap.policy.xacml.test.std.pap;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import org.junit.Test;
 import org.onap.policy.xacml.std.pap.StdPDPPIPConfig;
 
@@ -41,6 +44,8 @@ public class StdPDPPIPConfigTest {
         String value = "testVal";
         Properties props = new Properties();
         props.setProperty(id + ".classname", value);
+        props.setProperty(id + ".dontcare", "blah");
+        props.setProperty("foo", "bar");
         Map<String, String> map = new HashMap<String, String>();
         map.put(id, value);
 
@@ -105,5 +110,14 @@ public class StdPDPPIPConfigTest {
 
         // Test toString
         assertThat(config.toString().length(), is(not(0)));
+    }
+
+    @Test
+    public void testBadProperties() {
+        Properties props = new Properties();
+        props.setProperty("foo", "bar");
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
+            new StdPDPPIPConfig("myid", props);
+        });
     }
 }
