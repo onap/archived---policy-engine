@@ -22,6 +22,30 @@
       "revId": "0c20d1c294fe146e1018f14b07a8d861c29fe527",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d3f8ae6_ff48788b",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/HandleIncomingNotifications.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-12T15:16:55Z",
+      "side": 1,
+      "message": "probably.  Unless the object is encoded/decoded using jackson instead of gson, in which case, the method name is used instead of the field name, so this would break things, if that were the case",
+      "parentUuid": "c5e50d40_997bfdfc",
+      "range": {
+        "startLine": 253,
+        "startChar": 89,
+        "endLine": 253,
+        "endChar": 101
+      },
+      "revId": "0c20d1c294fe146e1018f14b07a8d861c29fe527",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
