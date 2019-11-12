@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5e50d40_997bfdfc",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/HandleIncomingNotifications.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-12T09:27:42Z",
+      "side": 1,
+      "message": "Changing a method name should be safe, as the field name has not changed.",
+      "range": {
+        "startLine": 253,
+        "startChar": 89,
+        "endLine": 253,
+        "endChar": 101
+      },
+      "revId": "0c20d1c294fe146e1018f14b07a8d861c29fe527",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
