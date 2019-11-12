@@ -17,70 +17,71 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.util;
 
 public class MetricsUtil {
-	
-	private MetricsUtil() {
-		//
-		// private constructor to hide the implicit public one for utility class
-		// 
-	}
-	
-	public static class AvgLatency {
-		private long cumLatency = 0;
-		private long count = 0;
-		
-		public void compute(long latency) {
-			cumLatency += latency;
-			count++;
-		}
-		
-		public long avg() {
-			if (count == 0)
-				return 0;
-			
-			return cumLatency / count;
-		}
-		
-		public void reset() {
-			cumLatency = 0;
-			count = 0;
-		}
-	}
 
-	public static class MinLatency {
-		private long min = Long.MAX_VALUE;
-		
-		public synchronized void compute(long ts) {
-			if (ts < min)
-				min = ts;
-		}
-		
-		public long min() {
-			return min;
-		}
-		
-		public void reset() {
-			min = Long.MAX_VALUE;
-		}
-	}
+    private MetricsUtil() {
+        //
+        // private constructor to hide the implicit public one for utility class
+        //
+    }
 
-	public static class MaxLatency {
-		private long max = Long.MIN_VALUE;
-		
-		public synchronized void compute(long ts) {
-			if (ts > max)
-				max = ts;
-		}
-		
-		public long max() {
-			return max;
-		}
-		
-		public void reset() {
-			max = Long.MIN_VALUE;
-		}
-	}
+    public static class AvgLatency {
+        private long cumLatency = 0;
+        private long count = 0;
+
+        public void compute(long latency) {
+            cumLatency += latency;
+            count++;
+        }
+
+        public long avg() {
+            if (count == 0)
+                return 0;
+
+            return cumLatency / count;
+        }
+
+        public void reset() {
+            cumLatency = 0;
+            count = 0;
+        }
+    }
+
+    public static class MinLatency {
+        private long min = Long.MAX_VALUE;
+
+        public synchronized void compute(long ts) {
+            if (ts < min)
+                min = ts;
+        }
+
+        public long min() {
+            return min;
+        }
+
+        public void reset() {
+            min = Long.MAX_VALUE;
+        }
+    }
+
+    public static class MaxLatency {
+        private long max = Long.MIN_VALUE;
+
+        public synchronized void compute(long ts) {
+            if (ts > max)
+                max = ts;
+        }
+
+        public long max() {
+            return max;
+        }
+
+        public void reset() {
+            max = Long.MIN_VALUE;
+        }
+    }
 
 }

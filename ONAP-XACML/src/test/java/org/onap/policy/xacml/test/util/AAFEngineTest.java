@@ -19,21 +19,25 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.test.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import java.util.Properties;
-import org.junit.Test;
-import org.onap.policy.xacml.std.pip.engines.aaf.AAFEngine;
+
+import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.api.pip.PIPFinder;
 import com.att.research.xacml.api.pip.PIPRequest;
 import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.pip.StdPIPFinderFactory;
 import com.att.research.xacml.std.pip.StdPIPRequest;
 import com.att.research.xacml.util.XACMLProperties;
-import com.att.research.xacml.api.XACML3;
+
+import java.util.Properties;
+
+import org.junit.Test;
+import org.onap.policy.xacml.std.pip.engines.aaf.AAFEngine;
 
 public class AAFEngineTest {
     @Test
@@ -54,8 +58,8 @@ public class AAFEngineTest {
             assertEquals(aafEngine.attributesProvided().size(), 2);
             assertEquals(aafEngine.attributesRequired().size(), 5);
 
-            PIPRequest pipRequest = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
-                    AAFEngine.AAF_RESPONSE_ID, XACML3.ID_DATATYPE_STRING);
+            PIPRequest pipRequest = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, AAFEngine.AAF_RESPONSE_ID,
+                    XACML3.ID_DATATYPE_STRING);
             StdPIPFinderFactory pipFactory = new StdPIPFinderFactory();
             PIPFinder pipFinder = pipFactory.getFinder();
             assertEquals(pipFinder.getPIPEngines().size(), 0);

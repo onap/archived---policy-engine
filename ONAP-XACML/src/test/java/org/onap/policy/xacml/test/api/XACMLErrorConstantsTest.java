@@ -23,18 +23,19 @@
 package org.onap.policy.xacml.test.api;
 
 import static org.junit.Assert.assertTrue;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+
 import org.junit.Test;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 public class XACMLErrorConstantsTest {
     @Test
-    public void testConstructorIsPrivate1() throws NoSuchMethodException, IllegalAccessException,
-            InvocationTargetException, InstantiationException {
-        Constructor<XACMLErrorConstants> constructor =
-                XACMLErrorConstants.class.getDeclaredConstructor();
+    public void testConstructorIsPrivate1()
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Constructor<XACMLErrorConstants> constructor = XACMLErrorConstants.class.getDeclaredConstructor();
         assertTrue(Modifier.isPrivate(constructor.getModifiers()));
         constructor.setAccessible(true);
         constructor.newInstance();

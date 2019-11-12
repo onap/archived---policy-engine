@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.std.pap;
 
 import java.util.Collection;
@@ -26,56 +27,56 @@ import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 
 public class StdPDPItemSetChangeNotifier {
-	
-	private Collection<StdItemSetChangeListener> listeners = null;
-	
-	public interface StdItemSetChangeListener {
-		
-		public void changed();
-		
-		public void groupChanged(OnapPDPGroup group);
-		
-		public void pdpChanged(OnapPDP pdp);
 
-	}
-	
-	public void addItemSetChangeListener(StdItemSetChangeListener listener) {
-		if (this.listeners == null) {
-			this.listeners = new LinkedList<>();
-		}
-		this.listeners.add(listener);
-	}
-	
-	public void removeItemSetChangeListener(StdItemSetChangeListener listener) {
-		if (this.listeners != null) {
-			this.listeners.remove(listener);
-		}
-	}
+    private Collection<StdItemSetChangeListener> listeners = null;
 
-	public void fireChanged() {
-		if (this.listeners == null) {
-			return;
-		}
-		for (StdItemSetChangeListener l : this.listeners) {
-			l.changed();
-		}		
-	}
+    public interface StdItemSetChangeListener {
 
-	public void firePDPGroupChanged(OnapPDPGroup group) {
-		if (this.listeners == null) {
-			return;
-		}
-		for (StdItemSetChangeListener l : this.listeners) {
-			l.groupChanged(group);
-		}
-	}
+        public void changed();
 
-	public void firePDPChanged(OnapPDP pdp) {
-		if (this.listeners == null) {
-			return;
-		}
-		for (StdItemSetChangeListener l : this.listeners) {
-			l.pdpChanged(pdp);
-		}
-	}
+        public void groupChanged(OnapPDPGroup group);
+
+        public void pdpChanged(OnapPDP pdp);
+
+    }
+
+    public void addItemSetChangeListener(StdItemSetChangeListener listener) {
+        if (this.listeners == null) {
+            this.listeners = new LinkedList<>();
+        }
+        this.listeners.add(listener);
+    }
+
+    public void removeItemSetChangeListener(StdItemSetChangeListener listener) {
+        if (this.listeners != null) {
+            this.listeners.remove(listener);
+        }
+    }
+
+    public void fireChanged() {
+        if (this.listeners == null) {
+            return;
+        }
+        for (StdItemSetChangeListener l : this.listeners) {
+            l.changed();
+        }
+    }
+
+    public void firePDPGroupChanged(OnapPDPGroup group) {
+        if (this.listeners == null) {
+            return;
+        }
+        for (StdItemSetChangeListener l : this.listeners) {
+            l.groupChanged(group);
+        }
+    }
+
+    public void firePDPChanged(OnapPDP pdp) {
+        if (this.listeners == null) {
+            return;
+        }
+        for (StdItemSetChangeListener l : this.listeners) {
+            l.pdpChanged(pdp);
+        }
+    }
 }

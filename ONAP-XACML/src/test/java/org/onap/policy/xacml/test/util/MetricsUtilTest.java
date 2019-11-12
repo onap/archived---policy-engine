@@ -19,9 +19,11 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.test.util;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.onap.policy.xacml.util.MetricsUtil;
 

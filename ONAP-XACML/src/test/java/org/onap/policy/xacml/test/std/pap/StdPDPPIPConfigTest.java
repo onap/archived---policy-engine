@@ -27,9 +27,11 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import org.junit.Test;
 import org.onap.policy.xacml.std.pap.StdPDPPIPConfig;
 

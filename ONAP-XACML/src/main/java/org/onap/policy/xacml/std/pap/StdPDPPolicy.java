@@ -18,9 +18,14 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.std.pap;
 
-import org.onap.policy.common.logging.eelf.PolicyLogger;
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.api.pap.PDPPolicy;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,14 +41,8 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
-
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.api.pap.PDPPolicy;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-
 
 public class StdPDPPolicy implements PDPPolicy, Serializable {
     private static final long serialVersionUID = 1L;
@@ -57,7 +56,7 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 
     private String description = null;
 
-    private int[]	version = null;
+    private int[] version = null;
 
     private boolean isRoot = false;
 
@@ -81,7 +80,6 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
         this.name = name;
     }
 
-
     public StdPDPPolicy(String id, boolean isRoot, String name, URI location) throws IOException {
         this(id, isRoot);
         this.name = name;
@@ -97,8 +95,8 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
             this.id = theID;
         }
 
-        logger.debug("The final outcome of the constructor returned the following:  id = " + id +
-                        ", location = " + location + ", name = " + name);
+        logger.debug("The final outcome of the constructor returned the following:  id = " + id + ", location = "
+                + location + ", name = " + name);
 
     }
 
@@ -111,9 +109,10 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
         this.version = versionStringToArray(stdPDPPolicyParams.getVersion());
         this.isValid = stdPDPPolicyParams.isValid();
 
-        logger.debug("The final outcome of the constructor returned the following:  id = " + stdPDPPolicyParams.getId() +
-                        ", location = " + stdPDPPolicyParams.getLocation() + ", name = " + stdPDPPolicyParams.getName() + ", policyId = " + stdPDPPolicyParams.getPolicyId() +
-                            ", description = " + stdPDPPolicyParams.getDescription() + ", Version = " + stdPDPPolicyParams.getVersion());
+        logger.debug("The final outcome of the constructor returned the following:  id = " + stdPDPPolicyParams.getId()
+                + ", location = " + stdPDPPolicyParams.getLocation() + ", name = " + stdPDPPolicyParams.getName()
+                + ", policyId = " + stdPDPPolicyParams.getPolicyId() + ", description = "
+                + stdPDPPolicyParams.getDescription() + ", Version = " + stdPDPPolicyParams.getVersion());
 
     }
 
@@ -123,8 +122,8 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
         this.location = location;
         this.isValid = isFromAPI;
 
-        logger.debug("The final outcome of the constructor returned the following:  id = " + id +
-                        ", location = " + location + ", name = " + name);
+        logger.debug("The final outcome of the constructor returned the following:  id = " + id + ", location = "
+                + location + ", name = " + name);
 
     }
 
@@ -146,31 +145,26 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
         }
     }
 
-
     private String readPolicyData() throws IOException {
         //
         // Extract XACML policy information
         //
         URL url = this.location.toURL();
         Object rootElement = XACMLPolicyScanner.readPolicy(url.openStream());
-        if (rootElement == null ||
-            (
-                ! (rootElement instanceof PolicySetType) &&
-                ! (rootElement instanceof PolicyType)
-            )	) {
+        if (rootElement == null || (!(rootElement instanceof PolicySetType) && !(rootElement instanceof PolicyType))) {
             logger.warn("No root policy element in URI: " + this.location.toString() + " : " + rootElement);
             this.isValid = false;
         } else {
             this.version = versionStringToArray(XACMLPolicyScanner.getVersion(rootElement));
             if (rootElement instanceof PolicySetType) {
-                this.policyId = ((PolicySetType)rootElement).getPolicySetId();
-                this.description = ((PolicySetType)rootElement).getDescription();
+                this.policyId = ((PolicySetType) rootElement).getPolicySetId();
+                this.description = ((PolicySetType) rootElement).getDescription();
                 this.isValid = true;
-                this.version = versionStringToArray(((PolicySetType)rootElement).getVersion());
+                this.version = versionStringToArray(((PolicySetType) rootElement).getVersion());
             } else if (rootElement instanceof PolicyType) {
-                this.policyId = ((PolicyType)rootElement).getPolicyId();
-                this.description = ((PolicyType)rootElement).getDescription();
-                this.version = versionStringToArray(((PolicyType)rootElement).getVersion());
+                this.policyId = ((PolicyType) rootElement).getPolicyId();
+                this.description = ((PolicyType) rootElement).getDescription();
+                this.version = versionStringToArray(((PolicyType) rootElement).getVersion());
                 this.isValid = true;
             } else {
                 PolicyLogger.error("Unknown root element: " + rootElement.getClass().getCanonicalName());
@@ -230,8 +224,7 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
     }
 
     @Override
-    public boolean isValid()
-    {
+    public boolean isValid() {
         return this.isValid;
     }
 
@@ -259,8 +252,7 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result
-                + ((policyId == null) ? 0 : policyId.hashCode());
+        result = prime * result + ((policyId == null) ? 0 : policyId.hashCode());
         result = prime * result;
         if (version != null) {
             for (int i = 0; i < version.length; i++) {
@@ -296,12 +288,10 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 
     @Override
     public String toString() {
-        return "StdPDPPolicy [id=" + id + ", name=" + name + ", policyId="
-                + policyId + ", description=" + description + ", version="
-                + this.getVersion() + ", isRoot=" + isRoot + ", isValid=" + isValid
-                + ", location=" + location + "]";
+        return "StdPDPPolicy [id=" + id + ", name=" + name + ", policyId=" + policyId + ", description=" + description
+                + ", version=" + this.getVersion() + ", isRoot=" + isRoot + ", isValid=" + isValid + ", location="
+                + location + "]";
     }
-
 
     /**
      * Given a version string consisting of integers with dots between them, convert it into an array of ints.
@@ -345,18 +335,23 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
     public void setPolicyId(String policyId) {
         this.policyId = policyId;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
+
     public void setVersion(String version) {
         this.version = versionStringToArray(version);
     }
+
     public void setRoot(boolean isRoot) {
         this.isRoot = isRoot;
     }
+
     public void setValid(boolean isValid) {
         this.isValid = isValid;
     }
+
     public void setLocation(URI location) {
         this.location = location;
     }

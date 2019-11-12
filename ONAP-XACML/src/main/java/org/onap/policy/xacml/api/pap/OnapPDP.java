@@ -17,28 +17,25 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.policy.xacml.api.pap;
 
-import org.onap.policy.xacml.std.pap.StdPDP;
+package org.onap.policy.xacml.api.pap;
 
 import com.att.research.xacml.api.pap.PDP;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import org.onap.policy.xacml.std.pap.StdPDP;
+
 /*
  * The following allows us to use Jackson to convert sub-types of this type into JSON and back to objects.
  */
-@JsonTypeInfo(  
-	    use = JsonTypeInfo.Id.NAME,  
-	    include = JsonTypeInfo.As.PROPERTY,  
-	    property = "PDPType")  
-@JsonSubTypes({  
-	    @Type(value = StdPDP.class, name = "StdPDP") })  
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "PDPType")
+@JsonSubTypes({@Type(value = StdPDP.class, name = "StdPDP")})
 public interface OnapPDP extends PDP {
 
-	public Integer 						getJmxPort();
-	
-	public void 						setJmxPort(Integer jmxport);
-	
+    public Integer getJmxPort();
+
+    public void setJmxPort(Integer jmxport);
+
 }

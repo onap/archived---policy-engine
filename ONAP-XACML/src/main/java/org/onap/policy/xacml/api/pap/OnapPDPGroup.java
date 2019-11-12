@@ -20,16 +20,16 @@
 
 package org.onap.policy.xacml.api.pap;
 
-import java.util.Set;
-
 import com.att.research.xacml.api.pap.PDPGroup;
 import com.att.research.xacml.api.pap.PDPPolicy;
 
+import java.util.Set;
+
 public interface OnapPDPGroup extends PDPGroup {
 
-	public Set<OnapPDP> getOnapPdps();
-	
-	public Set<PDPPolicy> 				getSelectedPolicies();
-	
-	public String						getOperation();
+    public Set<OnapPDP> getOnapPdps();
+
+    public Set<PDPPolicy> getSelectedPolicies();
+
+    public String getOperation();
 }
