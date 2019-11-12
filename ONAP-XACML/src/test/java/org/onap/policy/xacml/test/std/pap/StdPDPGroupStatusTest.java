@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -19,13 +19,21 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.test.std.pap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import com.att.research.xacml.api.pap.PDP;
+import com.att.research.xacml.api.pap.PDPGroupStatus.Status;
+import com.att.research.xacml.api.pap.PDPPIPConfig;
+import com.att.research.xacml.api.pap.PDPPolicy;
+
 import java.util.HashSet;
 import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -34,10 +42,6 @@ import org.onap.policy.xacml.std.pap.StdPDP;
 import org.onap.policy.xacml.std.pap.StdPDPGroupStatus;
 import org.onap.policy.xacml.std.pap.StdPDPPIPConfig;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
-import com.att.research.xacml.api.pap.PDP;
-import com.att.research.xacml.api.pap.PDPGroupStatus.Status;
-import com.att.research.xacml.api.pap.PDPPIPConfig;
-import com.att.research.xacml.api.pap.PDPPolicy;
 
 public class StdPDPGroupStatusTest {
 
@@ -321,7 +325,6 @@ public class StdPDPGroupStatusTest {
         unknownPDPs.add(new StdPDP());
         Set<PDP> updatingPDPs = new HashSet<>();
         updatingPDPs.add(new StdPDP());
-
 
         stdPDPGroupStatus.setStatus(status);
         stdPDPGroupStatus.setFailedPDPs(failedPDPs);

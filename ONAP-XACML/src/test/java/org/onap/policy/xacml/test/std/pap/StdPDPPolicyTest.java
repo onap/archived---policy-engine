@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -27,14 +27,17 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+
+import com.att.research.xacml.api.pap.PAPException;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
+
 import org.junit.Test;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
-import com.att.research.xacml.api.pap.PAPException;
 import org.onap.policy.xacml.std.pap.StdPDPPolicyParams;
 
 public class StdPDPPolicyTest {
@@ -53,9 +56,8 @@ public class StdPDPPolicyTest {
         StdPDPPolicy policy4 = new StdPDPPolicy();
         assertNotNull(policy4);
 
-        StdPDPPolicy policy5 = new StdPDPPolicy(
-                StdPDPPolicyParams.builder().id(value).isRoot(true).name(value).location(uri)
-                        .isValid(false).policyId(value).description(value).version("1").build());
+        StdPDPPolicy policy5 = new StdPDPPolicy(StdPDPPolicyParams.builder().id(value).isRoot(true).name(value)
+                .location(uri).isValid(false).policyId(value).description(value).version("1").build());
         assertNotNull(policy5);
         StdPDPPolicy policy6 = new StdPDPPolicy(value, true, value, uri, false);
         assertNotNull(policy6);
@@ -117,9 +119,8 @@ public class StdPDPPolicyTest {
         // Set up test data
         String value = "testVal";
         URI uri = new URI("http://localhost:54287");
-        StdPDPPolicy policy = new StdPDPPolicy(
-                StdPDPPolicyParams.builder().id(value).isRoot(true).name(value).location(uri)
-                        .isValid(false).policyId(value).description(value).version("1").build());
+        StdPDPPolicy policy = new StdPDPPolicy(StdPDPPolicyParams.builder().id(value).isRoot(true).name(value)
+                .location(uri).isValid(false).policyId(value).description(value).version("1").build());
 
         // Negative test stream
         policy.getStream();

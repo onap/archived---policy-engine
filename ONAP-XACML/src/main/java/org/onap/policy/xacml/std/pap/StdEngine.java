@@ -30,6 +30,7 @@ import com.att.research.xacml.util.XACMLProperties;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Sets;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +49,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.onap.policy.common.logging.eelf.MessageCodes;
@@ -81,6 +83,12 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
     protected final Path repository;
     protected Set<StdPDPGroup> groups;
 
+    /**
+     * StdEngine constructor.
+     *
+     * @throws PAPException PAPException
+     * @throws IOException IOException
+     */
     public StdEngine() throws PAPException, IOException {
         //
         // Get the location in the file system of our repository
@@ -92,6 +100,13 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         this.intialize();
     }
 
+    /**
+     * StdEngine constructor.
+     *
+     * @param properties Properties
+     * @throws PAPException PAPException
+     * @throws IOException IOException
+     */
     public StdEngine(Properties properties) throws PAPException, IOException {
         //
         // Get the location in the file system of our repository
@@ -103,6 +118,13 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         this.intialize();
     }
 
+    /**
+     * StdEngine constructor.
+     *
+     * @param repository Path
+     * @throws PAPException PAPException
+     * @throws IOException IOException
+     */
     public StdEngine(Path repository) throws PAPException, IOException {
         //
         // Save our location
@@ -211,7 +233,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
                 }
                 {
                     Properties props = new Properties();
-                    props = setPIPProperties(props);
+                    props = setPipProperties(props);
                     Path pipPath = Paths.get(defaultPath.toAbsolutePath().toString(), "xacml.pip.properties");
                     Files.createFile(pipPath);
                     try (OutputStream os = Files.newOutputStream(pipPath)) {
@@ -282,7 +304,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
     }
 
     @Override
-    public void newGroup(String name, String description) throws PAPException, NullPointerException {
+    public void newGroup(String name, String description) throws PAPException {
         //
         // Null check
         //
@@ -298,12 +320,10 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
             }
         }
 
-
         // create an Id that can be used as a file name and a properties file key.
         // Ids must not contain \/:*?"<>|=,;
         // The ID must also be unique within the current set of PDPGroups.
-        String id = createNewPDPGroupId(name);
-
+        String id = createNewPdpGroupId(name);
 
         //
         // Construct the directory path
@@ -355,7 +375,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
             logger.warn(addGroup + id + " file exists.");
         } else {
             try {
-                props = setPIPProperties(props);
+                props = setPipProperties(props);
                 Files.createFile(pipProperties);
                 try (OutputStream os = Files.newOutputStream(pipProperties)) {
                     props.store(os, "");
@@ -389,17 +409,15 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 
     }
 
-
-
     /**
      * Helper to create a new Group ID. Use the Name field to create the Id. The Name is expected to not be null; if it
      * is then this method throws an exception. The name is supposed to be unique within the current set of groups, so
      * creating the ID based on the name will create a unique string.
      *
-     * @param name
-     * @return
+     * @param name String
+     * @return String
      */
-    private String createNewPDPGroupId(String name) {
+    private String createNewPdpGroupId(String name) {
         String id = name;
         // replace "bad" characters with sequences that will be ok for file names and properties keys.
         id = id.replace(" ", "_sp_");
@@ -420,7 +438,6 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         return id;
     }
 
-
     @Override
     public OnapPDP getPDP(String pdpId) throws PAPException {
         for (OnapPDPGroup group : this.groups) {
@@ -432,7 +449,6 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         }
         return null;
     }
-
 
     @Override
     public void movePDP(OnapPDP pdp, OnapPDPGroup newGroup) throws PAPException {
@@ -471,21 +487,20 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         }
     }
 
-
     @Override
     public void updatePDP(OnapPDP pdp) throws PAPException {
-        PDP currentPDP = this.getPDP(pdp.getId());
-        if (currentPDP == null) {
+        PDP currentPdp = this.getPDP(pdp.getId());
+        if (currentPdp == null) {
             String message = "Unknown PDP id '" + pdp.getId() + "'";
             logger.warn(message);
             throw new PAPException(message);
         }
 
         // the only things that the user can change are name and description
-        currentPDP.setDescription(pdp.getDescription());
-        currentPDP.setName(pdp.getName());
-        if (currentPDP instanceof OnapPDP) {
-            ((OnapPDP) currentPDP).setJmxPort(pdp.getJmxPort());
+        currentPdp.setDescription(pdp.getDescription());
+        currentPdp.setName(pdp.getName());
+        if (currentPdp instanceof OnapPDP) {
+            ((OnapPDP) currentPdp).setJmxPort(pdp.getJmxPort());
         }
         this.doSave();
     }
@@ -507,7 +522,6 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         logger.warn(message);
         throw new PAPException(message);
     }
-
 
     @Override
     /**
@@ -531,14 +545,12 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         throw new PAPException("Unknown PDP Group: " + group.getId());
     }
 
-
     @Override
     public void copyPolicy(PDPPolicy policy, OnapPDPGroup group) throws PAPException {
         //
         // Currently not used on the PAP side. This is done by ((StdPDPGroup) group).copyPolicyToFile
         //
     }
-
 
     @Override
     public void removePolicy(PDPPolicy policy, OnapPDPGroup group) throws PAPException {
@@ -552,7 +564,6 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         logger.warn("unknown PDP Group: " + group);
         throw new PAPException("Unknown PDP Group: " + group.getId());
     }
-
 
     //
     // HELPER methods
@@ -578,14 +589,14 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
             //
             // Add our Group Object
             //
-            StdPDPGroup g = new StdPDPGroup(id.trim(),
+            StdPDPGroup newGroup = new StdPDPGroup(id.trim(),
                     id.equals(properties.getProperty(PROP_PAP_GROUPS_DEFAULT, PROP_PAP_GROUPS_DEFAULT_NAME)),
                     properties, Paths.get(repository.toString(), id));
 
             //
             // Add it in
             //
-            pdpGroups.add(g);
+            pdpGroups.add(newGroup);
         }
         //
         // Dump what we got
@@ -674,6 +685,12 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         }
     }
 
+    /**
+     * removeGroupProperties.
+     *
+     * @param id String
+     * @param properties Properties
+     */
     public static void removeGroupProperties(String id, Properties properties) {
         for (Object key : properties.keySet()) {
             if (key.toString().startsWith(id + ".")) {
@@ -682,6 +699,12 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         }
     }
 
+    /**
+     * setGroupProperties.
+     *
+     * @param group PDPGroup
+     * @param properties Properties
+     */
     public static void setGroupProperties(PDPGroup group, Properties properties) {
         //
         // make sure its in the list of groups
@@ -733,7 +756,9 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         }
     }
 
-
+    /**
+     * changed.
+     */
     public void changed() {
         if (logger.isDebugEnabled()) {
             logger.debug("changed");
@@ -742,6 +767,11 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         this.fireChanged();
     }
 
+    /**
+     * groupChanged.
+     *
+     * @param group OnapPDPGroup
+     */
     public void groupChanged(OnapPDPGroup group) {
         if (logger.isDebugEnabled()) {
             logger.debug("groupChanged: " + group);
@@ -750,7 +780,11 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         this.firePDPGroupChanged(group);
     }
 
-
+    /**
+     * pdpChanged.
+     *
+     * @param pdp OnapPDP
+     */
     public void pdpChanged(OnapPDP pdp) {
         if (logger.isDebugEnabled()) {
             logger.debug("pdpChanged: " + pdp);
@@ -770,7 +804,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         }
     }
 
-    private Properties setPIPProperties(Properties props) {
+    private Properties setPipProperties(Properties props) {
         props.setProperty(XACMLProperties.PROP_PIP_ENGINES, "AAF");
         props.setProperty("AAF.name", "AAFEngine");
         props.setProperty("AAF.description", "AAFEngine to communicate with AAF to take decisions");
@@ -791,7 +825,6 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         }
         return props;
     }
-
 
     @Override
     public Set<OnapPDPGroup> getOnapPDPGroups() throws PAPException {
@@ -815,26 +848,26 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
     @Override
     public void setDefaultGroup(OnapPDPGroup group) throws PAPException {
         boolean changesMade = false;
-        for (OnapPDPGroup aGroup : groups) {
-            if (aGroup.getId().equals(group.getId())) {
-                if (!aGroup.isDefaultGroup()) {
-                    if (aGroup instanceof StdPDPGroup) {
-                        ((StdPDPGroup) aGroup).setDefault(true);
+        for (OnapPDPGroup theGroup : groups) {
+            if (theGroup.getId().equals(group.getId())) {
+                if (!theGroup.isDefaultGroup()) {
+                    if (theGroup instanceof StdPDPGroup) {
+                        ((StdPDPGroup) theGroup).setDefault(true);
                         changesMade = true;
                     } else {
                         throw new IllegalArgumentException(
-                                "Group in groups of unknown type '" + aGroup.getClass().getName() + "'");
+                                "Group in groups of unknown type '" + theGroup.getClass().getName() + "'");
                     }
                 }
             } else {
                 // not the new default group
-                if (aGroup.isDefaultGroup()) {
-                    if (aGroup instanceof StdPDPGroup) {
-                        ((StdPDPGroup) aGroup).setDefault(false);
+                if (theGroup.isDefaultGroup()) {
+                    if (theGroup instanceof StdPDPGroup) {
+                        ((StdPDPGroup) theGroup).setDefault(false);
                         changesMade = true;
                     } else {
                         throw new IllegalArgumentException(
-                                "Group in groups of unknown type '" + aGroup.getClass().getName() + "'");
+                                "Group in groups of unknown type '" + theGroup.getClass().getName() + "'");
                     }
                 }
             }
@@ -842,14 +875,11 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         if (changesMade) {
             this.doSave();
         }
-
-        return;
-
     }
 
     @Override
     public void newPDP(String id, OnapPDPGroup group, String name, String description, int jmxport)
-            throws PAPException, NullPointerException {
+            throws PAPException {
         if (group == null) {
             throw new PAPException("You must specify which group the PDP will belong to.");
         }
@@ -868,10 +898,13 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
                 // Save the properties and notify any listeners
                 //
                 pdpChanged(pdp);
-                return;
             }
         }
-        return;
+    }
+
+    @Override
+    public void updateGroup(OnapPDPGroup group, String userName) throws PAPException {
+        // To pass the userId for PDP Audit log maintenance.
 
     }
 
@@ -887,7 +920,6 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         if (existingGroup == null) {
             throw new PAPException("Update found no existing group with id '" + group.getId() + "'");
         }
-
 
         // We do dramatically different things when the Name changes
         // because the Name is essentially the identity of the group (as the User knows it) so when the Identity changes
@@ -908,7 +940,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         } else {
             // the name/identity of the group has changed
             // generate the new id
-            String newId = createNewPDPGroupId(group.getName());
+            String newId = createNewPdpGroupId(group.getName());
 
             // make sure no other group uses the new id
             for (OnapPDPGroup g : groups) {
@@ -950,11 +982,10 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         // perhaps only the group changed, but if the name/id changed it may look to a listener like more than one group
         changed();
 
-
     }
 
     @Override
-    public void removeGroup(OnapPDPGroup group, OnapPDPGroup newGroup) throws PAPException, NullPointerException {
+    public void removeGroup(OnapPDPGroup group, OnapPDPGroup newGroup) throws PAPException {
         if (group == null) {
             throw new NullPointerException();
         }
@@ -1036,14 +1067,6 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         //
         changed();
         this.doSave();
-        return;
-
-    }
-
-    @Override
-    public void updateGroup(OnapPDPGroup group, String userName) throws PAPException {
-        // To pass the userId for PDP Audit log maintenance.
-
     }
 
 }
