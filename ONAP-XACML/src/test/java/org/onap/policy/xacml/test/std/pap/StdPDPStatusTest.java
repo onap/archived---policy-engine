@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2018 Ericsson. All rights reserved.
- * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
+ * Modifications Copyright (C) 2019 AT&T Intellectual Property.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,22 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.test.std.pap;
 
 import static org.junit.Assert.*;
+
+import com.att.research.xacml.api.pap.PDPPIPConfig;
+import com.att.research.xacml.api.pap.PDPPolicy;
+import com.att.research.xacml.api.pap.PDPStatus.Status;
+
 import java.util.HashSet;
 import java.util.Set;
+
 import org.junit.Test;
 import org.onap.policy.xacml.std.pap.StdPDPPIPConfig;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
-import com.att.research.xacml.api.pap.PDPPIPConfig;
-import com.att.research.xacml.api.pap.PDPPolicy;
-import com.att.research.xacml.api.pap.PDPStatus.Status;
 
 public class StdPDPStatusTest {
 

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -19,13 +19,16 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.test.std.pap;
 
 import static org.junit.Assert.assertTrue;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -34,7 +37,6 @@ import org.onap.policy.xacml.std.pap.StdPDP;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 
 public class StdPDPGroupTest {
-
 
     private static Logger logger = FlexLogger.getLogger(StdPDPGroupTest.class);
 
