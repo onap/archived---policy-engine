@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -28,17 +28,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
+import com.att.research.xacml.api.pap.PDPPIPConfig;
+import com.att.research.xacml.api.pap.PDPPolicy;
+
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.xacml.std.pap.StdPDP;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
-import com.att.research.xacml.api.pap.PDPPIPConfig;
-import com.att.research.xacml.api.pap.PDPPolicy;
 
 public class StdPDPTest {
 
@@ -116,7 +119,7 @@ public class StdPDPTest {
     }
 
     @Test
-    public void testPDP() {
+    public void testPdp() {
         // Set up test data
         String id = "testID";
         String value = "testVal";
@@ -124,8 +127,8 @@ public class StdPDPTest {
         props.setProperty(id + ".name", value);
         props.setProperty(id + ".description", value);
         props.setProperty(id + ".jmxport", "0");
-        Set<PDPPIPConfig> pipConfigs = new HashSet<PDPPIPConfig>();
-        Set<PDPPolicy> policies = new HashSet<PDPPolicy>();
+        props.setProperty(id + ".foo", "0");
+        props.setProperty("foo" + ".jmxport", "0");
 
         // Test constructors
         StdPDP pdp = new StdPDP(id, 0);
@@ -138,8 +141,12 @@ public class StdPDPTest {
         assertNotNull(pdp4);
         StdPDP pdp5 = new StdPDP(id, props);
         assertNotNull(pdp5);
+        StdPDP pdp6 = new StdPDP(id, value, value, null);
+        assertNotNull(pdp6);
 
         // Test set and get
+        Set<PDPPIPConfig> pipConfigs = new HashSet<PDPPIPConfig>();
+        Set<PDPPolicy> policies = new HashSet<PDPPolicy>();
         pdp.setPipConfigs(pipConfigs);
         assertEquals(pipConfigs, pdp.getPipConfigs());
         pdp.setPolicies(policies);

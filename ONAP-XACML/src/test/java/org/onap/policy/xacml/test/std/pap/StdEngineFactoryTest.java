@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -19,17 +19,21 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.test.std.pap;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import java.io.IOException;
-import java.util.Properties;
-import org.junit.Test;
-import org.onap.policy.xacml.std.pap.StdEngineFactory;
+
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.pap.StdEngine;
 import com.att.research.xacml.util.FactoryException;
+
+import java.io.IOException;
+import java.util.Properties;
+
+import org.junit.Test;
+import org.onap.policy.xacml.std.pap.StdEngineFactory;
 
 public class StdEngineFactoryTest {
     @Test
