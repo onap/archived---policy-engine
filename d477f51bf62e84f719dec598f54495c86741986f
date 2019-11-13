@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "14c14030_82a38690",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/ConstraintType.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-13T22:05:50Z",
+      "side": 1,
+      "message": "oh, bummer.",
+      "parentUuid": "bbfca4fc_32c3eddd",
+      "revId": "d477f51bf62e84f719dec598f54495c86741986f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a819a42_37c26a7e",
         "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/ActionDictionaryJpaTest.java",
         "patchSetId": 1
