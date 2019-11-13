@@ -37,7 +37,7 @@ public class ImportServiceTest {
         HttpServletRequest request = new MockHttpServletRequest();
         HttpServletResponse response = new MockHttpServletResponse();
         service.doImportMicroServicePut(request, response);
-        assertEquals(response.getHeader("error"), "missing");
+        assertEquals("missing", response.getHeader("error"));
     }
 
     @Test
