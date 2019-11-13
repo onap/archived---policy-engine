@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +23,7 @@ package org.onap.policy.rest.jpa;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,99 +39,67 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * The Class PolicyEditorScopes.
+ */
 @Entity
-@Table(name="PolicyEditorScopes")
-@NamedQuery(name="PolicyEditorScopes.findAll", query="SELECT p FROM PolicyEditorScopes p ")
-public class PolicyEditorScopes implements Serializable{
+@Table(name = "PolicyEditorScopes")
+@NamedQuery(name = "PolicyEditorScopes.findAll", query = "SELECT p FROM PolicyEditorScopes p ")
+@Getter
+@Setter
+public class PolicyEditorScopes implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="scopeName", nullable=false, unique=true)
+    @Column(name = "scopeName", nullable = false, unique = true)
     @OrderBy("asc")
     private String scopeName;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="created_date", updatable=false)
+    @Column(name = "created_date", updatable = false)
     private Date createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="modified_date", nullable=false)
+    @Column(name = "modified_date", nullable = false)
     private Date modifiedDate;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="created_by")
+    @JoinColumn(name = "created_by")
     private UserInfo userCreatedBy;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="modified_by")
+    @JoinColumn(name = "modified_by")
     private UserInfo userModifiedBy;
 
+    /**
+     * Instantiates a new policy editor scopes.
+     */
     public PolicyEditorScopes() {
         this.modifiedDate = new Date();
     }
 
+    /**
+     * Pre persist.
+     */
     @PrePersist
-    public void	prePersist() {
+    public void prePersist() {
         Date date = new Date();
         this.createdDate = date;
         this.modifiedDate = date;
     }
 
+    /**
+     * Pre update.
+     */
     @PreUpdate
     public void preUpdate() {
         this.modifiedDate = new Date();
     }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getScopeName() {
-        return scopeName;
-    }
-
-    public void setScopeName(String scopeName) {
-        this.scopeName = scopeName;
-    }
-
-    public Date getCreatedDate() {
-        return this.createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Date getModifiedDate() {
-        return this.modifiedDate;
-    }
-
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public UserInfo getUserCreatedBy() {
-        return userCreatedBy;
-    }
-
-    public void setUserCreatedBy(UserInfo userCreatedBy) {
-        this.userCreatedBy = userCreatedBy;
-    }
-
-    public UserInfo getUserModifiedBy() {
-        return userModifiedBy;
-    }
-
-    public void setUserModifiedBy(UserInfo userModifiedBy) {
-        this.userModifiedBy = userModifiedBy;
-    }
-
 }

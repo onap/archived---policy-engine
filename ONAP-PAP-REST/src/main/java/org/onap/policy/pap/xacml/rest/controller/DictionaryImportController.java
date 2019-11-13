@@ -56,7 +56,7 @@ import org.onap.policy.rest.jpa.DescriptiveScope;
 import org.onap.policy.rest.jpa.GroupServiceList;
 import org.onap.policy.rest.jpa.MicroServiceModels;
 import org.onap.policy.rest.jpa.OnapName;
-import org.onap.policy.rest.jpa.PEPOptions;
+import org.onap.policy.rest.jpa.PepOptions;
 import org.onap.policy.rest.jpa.PrefixList;
 import org.onap.policy.rest.jpa.ProtocolList;
 import org.onap.policy.rest.jpa.SecurityZone;
@@ -213,7 +213,7 @@ public class DictionaryImportController {
                     for (int j = 0; j < rows.length; j++) {
                         if ("onap_name".equalsIgnoreCase(dictSheet.get(0)[j])
                                 || "Onap Name".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setOnapName(rows[j]);
+                            attribute.setName(rows[j]);
                         }
                         if (DESCRIPTION.equalsIgnoreCase(dictSheet.get(0)[j])) {
                             attribute.setDescription(rows[j]);
@@ -252,10 +252,10 @@ public class DictionaryImportController {
                             attribute.setEnumValues(rows[j]);
                         }
                         if ("Ref Attributes".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setRef_attributes(rows[j]);
+                            attribute.setRefAttributes(rows[j]);
                         }
                         if ("Sub Attributes".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setSub_attributes(rows[j]);
+                            attribute.setSubAttributes(rows[j]);
                         }
                         if ("annotations".equalsIgnoreCase(dictSheet.get(0)[j])) {
                             attribute.setAnnotation(rows[j]);
@@ -295,10 +295,10 @@ public class DictionaryImportController {
                             attribute.setEnumValues(rows[j]);
                         }
                         if ("Ref Attributes".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setRef_attributes(rows[j]);
+                            attribute.setRefAttributes(rows[j]);
                         }
                         if ("Sub Attributes".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setSub_attributes(rows[j]);
+                            attribute.setSubAttributes(rows[j]);
                         }
                         if ("annotations".equalsIgnoreCase(dictSheet.get(0)[j])) {
                             attribute.setAnnotation(rows[j]);
@@ -389,9 +389,9 @@ public class DictionaryImportController {
                     commonClassDao.save(attribute);
                 }
             }
-            if (dictionaryName.startsWith("PEPOptions")) {
+            if (dictionaryName.startsWith("PepOptions")) {
                 for (int i = 1; i < dictSheet.size(); i++) {
-                    PEPOptions attribute = new PEPOptions();
+                    PepOptions attribute = new PepOptions();
                     UserInfo userinfo = new UserInfo();
                     userinfo.setUserLoginId(userId);
                     attribute.setUserCreatedBy(userinfo);
@@ -801,7 +801,7 @@ public class DictionaryImportController {
                 case VSCLAction:
                 case ClosedLoopService:
                 case ClosedLoopSite:
-                case PEPOptions:
+                case PepOptions:
                 case VarbindDictionary:
                 case BRMSParamDictionary:
                 case BRMSControllerDictionary:

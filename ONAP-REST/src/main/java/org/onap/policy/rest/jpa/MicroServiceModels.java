@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +22,7 @@
 package org.onap.policy.rest.jpa;
 
 import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,12 +40,23 @@ import javax.persistence.Table;
  * @version: 0.1
  */
 
+import lombok.Getter;
+import lombok.Setter;
 
+// @formatter:off
 @Entity
 @Table(name = "MicroServiceModels")
-@NamedQueries({@NamedQuery(name = "MicroServiceModels.findAll", query = "SELECT b FROM MicroServiceModels b "),
-        @NamedQuery(name = "MicroServiceModels.findAllDecision",
-                query = "SELECT b FROM MicroServiceModels b WHERE b.decisionModel=1")})
+@NamedQueries(
+    {
+        @NamedQuery(name = "MicroServiceModels.findAll", query = "SELECT b FROM MicroServiceModels b "),
+        @NamedQuery(
+                        name = "MicroServiceModels.findAllDecision",
+                        query = "SELECT b FROM MicroServiceModels b WHERE b.decisionModel=1")
+    }
+)
+@Getter
+@Setter
+// @formatter:on
 public class MicroServiceModels implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -66,10 +79,10 @@ public class MicroServiceModels implements Serializable {
     private String attributes;
 
     @Column(name = "ref_attributes", nullable = false, length = 255)
-    private String ref_attributes;
+    private String refAttributes;
 
     @Column(name = "sub_attributes", nullable = false, length = 2000)
-    private String sub_attributes;
+    private String subAttributes;
 
     @Column(name = "dataOrderInfo", nullable = true, length = 2000)
     private String dataOrderInfo;
@@ -89,120 +102,11 @@ public class MicroServiceModels implements Serializable {
     @Column(name = "ruleFormation", nullable = true)
     private String ruleFormation;
 
-    public String getRuleFormation() {
-        return ruleFormation;
-    }
-
-    public void setRuleFormation(String ruleFormation) {
-        this.ruleFormation = ruleFormation;
-    }
-
-    public String getSub_attributes() {
-        return sub_attributes;
-    }
-
-    public void setSub_attributes(String sub_attributes) {
-        this.sub_attributes = sub_attributes;
-    }
-
-    public String getDataOrderInfo() {
-        return dataOrderInfo;
-    }
-
-    public void setDataOrderInfo(String dataOrderInfo) {
-        this.dataOrderInfo = dataOrderInfo;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
     @ManyToOne
     @JoinColumn(name = "imported_by")
     private UserInfo userCreatedBy;
 
-    public UserInfo getUserCreatedBy() {
-        return userCreatedBy;
-    }
-
-    public void setUserCreatedBy(UserInfo userCreatedBy) {
-        this.userCreatedBy = userCreatedBy;
-    }
-
-    public String getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(String attributes) {
-        this.attributes = attributes;
-    }
-
-    public String getRef_attributes() {
-        return ref_attributes;
-    }
-
-    public void setRef_attributes(String ref_attributes) {
-        this.ref_attributes = ref_attributes;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDependency() {
-        return dependency;
-    }
-
-    public void setDependency(String dependency) {
-        this.dependency = dependency;
-    }
-
-    public String getModelName() {
-        return this.modelName;
-    }
-
-    public void setModelName(String modelName) {
-        this.modelName = modelName;
-    }
-
-    public String getEnumValues() {
-        return enumValues;
-    }
-
-    public void setEnumValues(String enumValues) {
-        this.enumValues = enumValues;
-    }
-
-    public String getAnnotation() {
-        return annotation;
-    }
-
-    public void setAnnotation(String annotation) {
-        this.annotation = annotation;
-    }
-
-    public Boolean isDecisionModel() {
+    public boolean isDecisionModel() {
         return decisionModel;
     }
-
-    public void setDecisionModel(boolean decisionModel) {
-        this.decisionModel = decisionModel;
-    }
 }
-

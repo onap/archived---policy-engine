@@ -3,13 +3,14 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +20,10 @@
  */
 
 package org.onap.policy.rest.jpa;
+
+import com.att.research.xacml.api.pip.PIPException;
+import com.att.research.xacml.std.pip.engines.StdConfigurableEngine;
+import com.google.common.base.Splitter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -47,202 +52,135 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import com.att.research.xacml.api.pip.PIPException;
-import com.att.research.xacml.std.pip.engines.StdConfigurableEngine;
-import com.google.common.base.Splitter;
-
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * The persistent class for the PIPResolver database table.
- * 
+ * The persistent class for the PipResolver database table.
+ *
  */
 @Entity
-@Table(name="PIPResolver")
-@NamedQuery(name="PIPResolver.findAll", query="SELECT p FROM PIPResolver p")
-public class PIPResolver implements Serializable {
+@Table(name = "PipResolver")
+@NamedQuery(name = "PipResolver.findAll", query = "SELECT p FROM PipResolver p")
+@Getter
+@Setter
+@NoArgsConstructor
+public class PipResolver implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private int id;
 
-    @Column(name="DESCRIPTION", nullable=true, length=2048)
+    @Column(name = "DESCRIPTION", nullable = true, length = 2048)
     private String description;
 
-    @Column(name="NAME", nullable=false, length=255)
+    @Column(name = "NAME", nullable = false, length = 255)
     private String name;
 
-    @Column(name="ISSUER", nullable=true, length=1024)
+    @Column(name = "ISSUER", nullable = true, length = 1024)
     private String issuer;
 
-    @Column(name="CLASSNAME", nullable=false, length=2048)
+    @Column(name = "CLASSNAME", nullable = false, length = 2048)
     private String classname;
 
-    @Column(name="READ_ONLY", nullable=false)
+    @Column(name = "READ_ONLY", nullable = false)
     private char readOnly = '0';
 
-    @Column(name="CREATED_BY", nullable=false, length=255)
+    @Column(name = "CREATED_BY", nullable = false, length = 255)
     private String createdBy = "guest";
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="CREATED_DATE", nullable=false, updatable=false)
+    @Column(name = "CREATED_DATE", nullable = false, updatable = false)
     private Date createdDate;
 
-    @Column(name="MODIFIED_BY", nullable=false, length=255)
+    @Column(name = "MODIFIED_BY", nullable = false, length = 255)
     private String modifiedBy = "guest";
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="MODIFIED_DATE", nullable=false)
+    @Column(name = "MODIFIED_DATE", nullable = false)
     private Date modifiedDate;
 
-    //bi-directional many-to-one association to PIPConfiguration
+    // bi-directional many-to-one association to PipConfiguration
     @ManyToOne
-    @JoinColumn(name="PIP_ID")
-    private PIPConfiguration pipconfiguration;
+    @JoinColumn(name = "PIP_ID")
+    private PipConfiguration pipconfiguration;
 
-    //bi-directional many-to-one association to PIPResolverParam
-    @OneToMany(mappedBy="pipresolver", orphanRemoval=true, cascade=CascadeType.REMOVE)
-    private Set<PIPResolverParam> pipresolverParams = new HashSet<>();
+    // bi-directional many-to-one association to PipResolverParam
+    @OneToMany(mappedBy = "pipresolver", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private Set<PipResolverParam> pipresolverParams = new HashSet<>();
 
-    public PIPResolver() {
-        //An empty constructor
-    }
-
-    public PIPResolver(String prefix, Properties properties, String user) throws PIPException {
+    /**
+     * Instantiates a new PIP resolver.
+     *
+     * @param prefix the prefix
+     * @param properties the properties
+     * @param user the user
+     * @throws PIPException the PIP exception
+     */
+    public PipResolver(String prefix, Properties properties, String user) throws PIPException {
         this.createdBy = user;
         this.modifiedBy = user;
         this.readOnly = '0';
         this.readProperties(prefix, properties);
     }
 
-    public PIPResolver(PIPResolver resolver) {
+    /**
+     * Instantiates a new PIP resolver.
+     *
+     * @param resolver the resolver
+     */
+    public PipResolver(PipResolver resolver) {
         this.name = resolver.name;
         this.description = resolver.description;
         this.issuer = resolver.issuer;
         this.classname = resolver.classname;
         this.readOnly = resolver.readOnly;
-        for (PIPResolverParam param : this.pipresolverParams) {
-            this.addPipresolverParam(new PIPResolverParam(param));
+        for (PipResolverParam param : resolver.pipresolverParams) {
+            this.addPipresolverParam(new PipResolverParam(param));
         }
     }
 
+    /**
+     * Pre persist.
+     */
     @PrePersist
-    public void	prePersist() {
+    public void prePersist() {
         Date date = new Date();
         this.createdDate = date;
         this.modifiedDate = date;
     }
 
+    /**
+     * Pre update.
+     */
     @PreUpdate
     public void preUpdate() {
         this.modifiedDate = new Date();
     }
 
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getIssuer() {
-        return issuer;
-    }
-
-    public void setIssuer(String issuer) {
-        this.issuer = issuer;
-    }
-
-    public String getClassname() {
-        return classname;
-    }
-
-    public void setClassname(String classname) {
-        this.classname = classname;
-    }
-
-    public char getReadOnly() {
-        return readOnly;
-    }
-
-    public void setReadOnly(char readOnly) {
-        this.readOnly = readOnly;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public PIPConfiguration getPipconfiguration() {
-        return this.pipconfiguration;
-    }
-
-    public void setPipconfiguration(PIPConfiguration pipconfiguration) {
-        this.pipconfiguration = pipconfiguration;
-    }
-
-    public Set<PIPResolverParam> getPipresolverParams() {
-        return this.pipresolverParams;
-    }
-
-    public void setPipresolverParams(Set<PIPResolverParam> pipresolverParams) {
-        this.pipresolverParams = pipresolverParams;
-    }
-
-    public PIPResolverParam addPipresolverParam(PIPResolverParam pipresolverParam) {
+    /**
+     * Adds the pipresolver param.
+     *
+     * @param pipresolverParam the pipresolver param
+     * @return the PIP resolver param
+     */
+    public PipResolverParam addPipresolverParam(PipResolverParam pipresolverParam) {
         getPipresolverParams().add(pipresolverParam);
         pipresolverParam.setPipresolver(this);
 
         return pipresolverParam;
     }
 
-    public PIPResolverParam removePipresolverParam(PIPResolverParam pipresolverParam) {
+    /**
+     * Removes the pipresolver param.
+     *
+     * @param pipresolverParam the pipresolver param
+     * @return the PIP resolver param
+     */
+    public PipResolverParam removePipresolverParam(PipResolverParam pipresolverParam) {
         if (pipresolverParam == null) {
             return pipresolverParam;
         }
@@ -252,6 +190,9 @@ public class PIPResolver implements Serializable {
         return pipresolverParam;
     }
 
+    /**
+     * Clear params.
+     */
     @Transient
     public void clearParams() {
         while (!this.pipresolverParams.isEmpty()) {
@@ -259,11 +200,21 @@ public class PIPResolver implements Serializable {
         }
     }
 
+    /**
+     * Checks if is read only.
+     *
+     * @return true, if is read only
+     */
     @Transient
     public boolean isReadOnly() {
         return this.readOnly == '1';
     }
 
+    /**
+     * Sets the read only.
+     *
+     * @param readOnly the new read only
+     */
     @Transient
     public void setReadOnly(boolean readOnly) {
         if (readOnly) {
@@ -273,15 +224,33 @@ public class PIPResolver implements Serializable {
         }
     }
 
+    /**
+     * Import resolvers.
+     *
+     * @param prefix the prefix
+     * @param list the list
+     * @param properties the properties
+     * @param user the user
+     * @return the collection
+     * @throws PIPException the PIP exception
+     */
     @Transient
-    public static Collection<PIPResolver>	importResolvers(String prefix, String list, Properties properties, String user) throws PIPException {
-        Collection<PIPResolver> resolvers = new ArrayList<>();
+    public static Collection<PipResolver> importResolvers(String prefix, String list, Properties properties,
+                    String user) throws PIPException {
+        Collection<PipResolver> resolvers = new ArrayList<>();
         for (String id : Splitter.on(',').trimResults().omitEmptyStrings().split(list)) {
-            resolvers.add(new PIPResolver(prefix + "." + id, properties, user));
+            resolvers.add(new PipResolver(prefix + "." + id, properties, user));
         }
         return resolvers;
     }
 
+    /**
+     * Read properties.
+     *
+     * @param prefix the prefix
+     * @param properties the properties
+     * @throws PIPException the PIP exception
+     */
     @Transient
     protected void readProperties(String prefix, Properties properties) throws PIPException {
         //
@@ -309,12 +278,18 @@ public class PIPResolver implements Serializable {
             } else if (nme.equals(prefix + "." + StdConfigurableEngine.PROP_ISSUER)) {
                 this.issuer = properties.getProperty(nme.toString());
             } else {
-                this.addPipresolverParam(new PIPResolverParam(nme.toString().substring(prefix.length() + 1),
-                                                            properties.getProperty(nme.toString())));
+                this.addPipresolverParam(new PipResolverParam(nme.toString().substring(prefix.length() + 1),
+                                properties.getProperty(nme.toString())));
             }
         }
     }
 
+    /**
+     * Gets the configuration.
+     *
+     * @param prefix the prefix
+     * @return the configuration
+     */
     @Transient
     public Map<String, String> getConfiguration(String prefix) {
         String pref = prefix;
@@ -330,14 +305,20 @@ public class PIPResolver implements Serializable {
         if (this.issuer != null && this.issuer.isEmpty()) {
             map.put(pref + "issuer", this.issuer);
         }
-        for (PIPResolverParam param : this.pipresolverParams) {
+        for (PipResolverParam param : this.pipresolverParams) {
             map.put(pref + param.getParamName(), param.getParamValue());
         }
         return map;
     }
 
+    /**
+     * Generate properties.
+     *
+     * @param props the props
+     * @param prefix the prefix
+     */
     @Transient
-    public void	generateProperties(Properties props, String prefix) {
+    public void generateProperties(Properties props, String prefix) {
         String pref = prefix;
         if (!prefix.endsWith(".")) {
             pref = prefix + ".";
@@ -350,19 +331,22 @@ public class PIPResolver implements Serializable {
         if (this.issuer != null && this.issuer.isEmpty()) {
             props.setProperty(pref + "issuer", this.issuer);
         }
-        for (PIPResolverParam param : this.pipresolverParams) {
+        for (PipResolverParam param : this.pipresolverParams) {
             props.setProperty(pref + param.getParamName(), param.getParamValue());
         }
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Transient
     @Override
     public String toString() {
-        return "PIPResolver [id=" + id + ", classname=" + classname + ", name="
-                + name + ", description=" + description + ", issuer=" + issuer
-                + ", readOnly=" + readOnly + ", createdBy=" + createdBy
-                + ", createdDate=" + createdDate + ", modifiedBy=" + modifiedBy
-                + ", modifiedDate=" + modifiedDate + ", pipresolverParams="
-                + pipresolverParams + "]";
+        return "PipResolver [id=" + id + ", classname=" + classname + ", name=" + name + ", description=" + description
+                        + ", issuer=" + issuer + ", readOnly=" + readOnly + ", createdBy=" + createdBy
+                        + ", createdDate=" + createdDate + ", modifiedBy=" + modifiedBy + ", modifiedDate="
+                        + modifiedDate + ", pipresolverParams=" + pipresolverParams + "]";
     }
 }

@@ -42,7 +42,7 @@ import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ClosedLoopD2Services;
 import org.onap.policy.rest.jpa.ClosedLoopSite;
-import org.onap.policy.rest.jpa.PEPOptions;
+import org.onap.policy.rest.jpa.PepOptions;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.rest.jpa.VNFType;
 import org.onap.policy.rest.jpa.VSCLAction;
@@ -140,7 +140,7 @@ public class ClosedLoopDictionaryControllerTest {
 
     @Test
     public void testGetPEPOptionsDictionaryByNameEntityData() {
-        when(commonClassDao.getDataByColumn(PEPOptions.class, "pepName")).thenReturn(data);
+        when(commonClassDao.getDataByColumn(PepOptions.class, "pepName")).thenReturn(data);
         controller.getPEPOptionsDictionaryByNameEntityData(response);
         try {
             assertTrue(response.getContentAsString() != null
@@ -153,7 +153,7 @@ public class ClosedLoopDictionaryControllerTest {
 
     @Test
     public void testGetPEPOptionsDictionaryEntityData() {
-        when(commonClassDao.getData(PEPOptions.class)).thenReturn(new ArrayList<>());
+        when(commonClassDao.getData(PepOptions.class)).thenReturn(new ArrayList<>());
         controller.getPEPOptionsDictionaryEntityData(response);
         try {
             assertTrue(response.getContentAsString() != null

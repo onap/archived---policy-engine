@@ -211,7 +211,7 @@ public class DictionaryController {
             UserInfo userInfo = utils.getUserInfo(userId);
 
             List<Object> duplicateData =
-                    commonClassDao.checkDuplicateEntry(onapData.getOnapName(), onapName, OnapName.class);
+                    commonClassDao.checkDuplicateEntry(onapData.getName(), onapName, OnapName.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
                 OnapName data = (OnapName) duplicateData.get(0);

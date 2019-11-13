@@ -58,7 +58,7 @@ import org.onap.policy.rest.jpa.GroupPolicyScopeList;
 import org.onap.policy.rest.jpa.MicroServiceLocation;
 import org.onap.policy.rest.jpa.MicroServiceModels;
 import org.onap.policy.rest.jpa.OnapName;
-import org.onap.policy.rest.jpa.PEPOptions;
+import org.onap.policy.rest.jpa.PepOptions;
 import org.onap.policy.rest.jpa.RiskType;
 import org.onap.policy.rest.jpa.SafePolicyWarning;
 import org.onap.policy.rest.jpa.TermList;
@@ -340,7 +340,7 @@ public class PolicyElasticSearchController {
                     break;
                 case onapName:
                     OnapName onapName = mapper.readValue(root.get("data").toString(), OnapName.class);
-                    value = onapName.getOnapName();
+                    value = onapName.getName();
                     policyList = searchElkDatabase(all, "onapName", value);
                     break;
                 case actionPolicy:
@@ -356,7 +356,7 @@ public class PolicyElasticSearchController {
                     policyList = searchElkDatabase(config, "ruleName", value);
                     break;
                 case pepOptions:
-                    PEPOptions pEPOptions = mapper.readValue(root.get("data").toString(), PEPOptions.class);
+                    PepOptions pEPOptions = mapper.readValue(root.get("data").toString(), PepOptions.class);
                     value = pEPOptions.getPepName();
                     policyList = searchElkDatabase(closedloop, "jsonBodyData.pepName", value);
                     break;

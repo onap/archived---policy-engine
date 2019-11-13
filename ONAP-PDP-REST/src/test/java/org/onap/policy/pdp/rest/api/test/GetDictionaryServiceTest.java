@@ -76,7 +76,7 @@ public class GetDictionaryServiceTest {
         result = (String) formatDictionary.invoke(gds, input);
         assertNotNull(result);
         //
-        dp.setDictionary("PEPOptions");
+        dp.setDictionary("PepOptions");
         gds = new GetDictionaryService(dp, null);
         result = (String) formatDictionary.invoke(gds, input);
         assertNotNull(result);

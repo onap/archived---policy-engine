@@ -35,13 +35,13 @@ import java.util.UUID;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XacmlRestProperties;
-import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
+import org.onap.policy.rest.jpa.PolicyDbDaoEntity;
 import org.onap.policy.utils.PeCryptoUtils;
 
 public class NotifyOtherPaps {
 
     private static final Logger LOGGER = FlexLogger.getLogger(NotifyOtherPaps.class);
-    private List<PolicyDBDaoEntity> failedPaps = null;
+    private List<PolicyDbDaoEntity> failedPaps = null;
 
     public void notifyOthers(long entityId, String entityType) {
         notifyOthers(entityId, entityType, null);
@@ -104,8 +104,8 @@ public class NotifyOtherPaps {
         @Override
         public void run() {
             PolicyDbDao dao = new PolicyDbDao();
-            PolicyDBDaoEntity dbdEntity = (PolicyDBDaoEntity) obj;
-            String otherPap = dbdEntity.getPolicyDBDaoUrl();
+            PolicyDbDaoEntity dbdEntity = (PolicyDbDaoEntity) obj;
+            String otherPap = dbdEntity.getPolicyDbDaoUrl();
             String txt;
             try {
                 txt = PeCryptoUtils.decrypt(dbdEntity.getPassword());

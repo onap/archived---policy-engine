@@ -158,7 +158,7 @@ public class GetDictionaryService {
             case "VNFType":
                 jsonString = jsonString.replace("vnfTypeDictionaryDatas", "DictionaryDatas");
                 break;
-            case "PEPOptions":
+            case "PepOptions":
                 jsonString = jsonString.replace("pepOptionsDictionaryDatas", "DictionaryDatas");
                 break;
             case "Varbind":

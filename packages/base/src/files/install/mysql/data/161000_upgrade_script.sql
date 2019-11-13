@@ -6320,7 +6320,7 @@ INSERT INTO FunctionArguments (id, is_bag, function_id, arg_index, datatype_id) 
 INSERT INTO FunctionArguments (id, is_bag, function_id, arg_index, datatype_id) VALUES (452,0,254,2,28);
 INSERT INTO FunctionArguments (id, is_bag, function_id, arg_index, datatype_id) VALUES (453,0,92,3,16);
 
-INSERT INTO PIPType VALUES (500,'SQL'), (501,'LDAP'), (502,'CSV'), (503,'Hyper-CSV'), (504,'Custom');
+INSERT INTO PipType VALUES (500,'SQL'), (501,'LDAP'), (502,'CSV'), (503,'Hyper-CSV'), (504,'Custom');
 
 INSERT INTO GlobalRoleSettings (role, lockdown) values ('super-admin', '0');
 

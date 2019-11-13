@@ -275,7 +275,7 @@ public class CreateNewMicroServiceModel {
             newModel.setDependency("[]");
             if (mainClass.getSubClass() != null) {
                 String value = new Gson().toJson(mainClass.getSubClass());
-                newModel.setSub_attributes(value);
+                newModel.setSubAttributes(value);
             }
 
             if (mainClass.getAttribute() != null) {
@@ -289,7 +289,7 @@ public class CreateNewMicroServiceModel {
                 String refAttributes = mainClass.getRefAttribute().toString().replace("{", "").replace("}", "");
                 int equalsIndex = refAttributes.indexOf("=");
                 String refAttributesAfterFirstEquals = refAttributes.substring(equalsIndex + 1);
-                this.newModel.setRef_attributes(refAttributesAfterFirstEquals);
+                this.newModel.setRefAttributes(refAttributesAfterFirstEquals);
             }
 
             if (mainClass.getEnumType() != null) {
@@ -328,14 +328,14 @@ public class CreateNewMicroServiceModel {
             }
             subAttribute = utils.createSubAttributes(dependency, classMap, this.newModel.getModelName());
 
-            this.newModel.setSub_attributes(subAttribute);
+            this.newModel.setSubAttributes(subAttribute);
             if (mainClass.getAttribute() != null && !mainClass.getAttribute().isEmpty()) {
                 this.newModel.setAttributes(mainClass.getAttribute().toString().replace("{", "").replace("}", ""));
             }
 
             if (mainClass.getRefAttribute() != null && !mainClass.getRefAttribute().isEmpty()) {
                 this.newModel
-                        .setRef_attributes(mainClass.getRefAttribute().toString().replace("{", "").replace("}", ""));
+                        .setRefAttributes(mainClass.getRefAttribute().toString().replace("{", "").replace("}", ""));
             }
 
             if (mainClass.getEnumType() != null && !mainClass.getEnumType().isEmpty()) {
@@ -368,8 +368,8 @@ public class CreateNewMicroServiceModel {
             model.setDependency(this.newModel.getDependency());
             model.setDescription(this.newModel.getDescription());
             model.setEnumValues(this.newModel.getEnumValues());
-            model.setRef_attributes(this.newModel.getRef_attributes());
-            model.setSub_attributes(this.newModel.getSub_attributes());
+            model.setRefAttributes(this.newModel.getRefAttributes());
+            model.setSubAttributes(this.newModel.getSubAttributes());
             model.setDataOrderInfo(this.newModel.getDataOrderInfo());
             model.setDecisionModel(this.newModel.isDecisionModel());
             model.setRuleFormation(this.newModel.getRuleFormation());

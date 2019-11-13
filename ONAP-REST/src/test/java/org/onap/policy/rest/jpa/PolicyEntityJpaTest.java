@@ -22,6 +22,7 @@
 package org.onap.policy.rest.jpa;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -71,11 +72,11 @@ public class PolicyEntityJpaTest {
      */
     @Test
     public void testPolicyDbDaoEntity() {
-        PolicyDBDaoEntity data = new PolicyDBDaoEntity();
+        PolicyDbDaoEntity data = new PolicyDbDaoEntity();
         data.prePersist();
         data.preUpdate();
-        data.setPolicyDBDaoUrl("Test");
-        assertTrue("Test".equals(data.getPolicyDBDaoUrl()));
+        data.setPolicyDbDaoUrl("Test");
+        assertTrue("Test".equals(data.getPolicyDbDaoUrl()));
         data.setDescription("Test");
         assertTrue("Test".equals(data.getDescription()));
         assertTrue(data.getCreatedDate() != null);
@@ -126,6 +127,259 @@ public class PolicyEntityJpaTest {
         assertTrue(data.isDeleted());
         data.equals(new PolicyEntity());
         data.hashCode();
+
+        PolicyEntity entity0 = new PolicyEntity();
+        PolicyEntity entity1 = new PolicyEntity();
+        assertTrue(entity0.equals(entity0));
+        assertTrue(entity0.equals(entity1));
+        assertFalse(entity0.equals(null));
+        String helloString = "Hello";
+        Object helloObject = helloString;
+        assertFalse(entity0.equals(helloObject));
+
+        entity0.setPolicyId(1);
+        assertFalse(entity0.equals(entity1));
+        entity1.setPolicyId(1);
+        assertTrue(entity0.equals(entity1));
+        entity0.setPolicyId(2);
+        assertFalse(entity0.equals(entity1));
+        entity1.setPolicyId(2);
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setPolicyName("GoToOz");
+        assertFalse(entity0.equals(entity1));
+        entity1.setPolicyName("GoToOz");
+        assertTrue(entity0.equals(entity1));
+        entity1.setPolicyName(null);
+        assertFalse(entity0.equals(entity1));
+        entity0.setPolicyName(null);
+        assertTrue(entity0.equals(entity1));
+        entity1.setPolicyName("GoToOz");
+        assertFalse(entity0.equals(entity1));
+        entity0.setPolicyName("GoToOz");
+        assertTrue(entity0.equals(entity1));
+        entity1.setPolicyName("GoToOzNow");
+        assertFalse(entity0.equals(entity1));
+        entity0.setPolicyName("GoToOzNow");
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setScope("All");
+        assertFalse(entity0.equals(entity1));
+        entity1.setScope("All");
+        assertTrue(entity0.equals(entity1));
+        entity1.setScope(null);
+        assertFalse(entity0.equals(entity1));
+        entity0.setScope(null);
+        assertTrue(entity0.equals(entity1));
+        entity1.setScope("All");
+        assertFalse(entity0.equals(entity1));
+        entity0.setScope("All");
+        assertTrue(entity0.equals(entity1));
+        entity1.setScope("AllIn");
+        assertFalse(entity0.equals(entity1));
+        entity0.setScope("AllIn");
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setVersion(1);
+        assertFalse(entity0.equals(entity1));
+        entity1.setVersion(1);
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setPolicyVersion(1);
+        assertFalse(entity0.equals(entity1));
+        entity1.setPolicyVersion(1);
+        assertTrue(entity0.equals(entity1));
+        entity0.setPolicyVersion(2);
+        assertFalse(entity0.equals(entity1));
+        entity1.setPolicyVersion(2);
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setPolicyData("SomeData");
+        assertFalse(entity0.equals(entity1));
+        entity1.setPolicyData("SomeData");
+        assertTrue(entity0.equals(entity1));
+        entity1.setPolicyData(null);
+        assertFalse(entity0.equals(entity1));
+        entity0.setPolicyData(null);
+        assertTrue(entity0.equals(entity1));
+        entity1.setPolicyData("SomeData");
+        assertFalse(entity0.equals(entity1));
+        entity0.setPolicyData("SomeData");
+        assertTrue(entity0.equals(entity1));
+        entity1.setPolicyData("SomeMoreData");
+        assertFalse(entity0.equals(entity1));
+        entity0.setPolicyData("SomeMoreData");
+        assertTrue(entity0.equals(entity1));
+
+        ConfigurationDataEntity cde0 = new ConfigurationDataEntity();
+        entity0.setConfigurationDataEntity(cde0);
+        assertFalse(entity0.equals(entity1));
+        entity1.setConfigurationDataEntity(cde0);
+        assertTrue(entity0.equals(entity1));
+        entity1.setConfigurationDataEntity(null);
+        assertFalse(entity0.equals(entity1));
+        entity0.setConfigurationDataEntity(null);
+        assertTrue(entity0.equals(entity1));
+        ConfigurationDataEntity cde1 = new ConfigurationDataEntity();
+        entity1.setConfigurationDataEntity(cde1);
+        assertFalse(entity0.equals(entity1));
+        entity0.setConfigurationDataEntity(cde1);
+        assertTrue(entity0.equals(entity1));
+
+        ActionBodyEntity abe0 = new ActionBodyEntity();
+        entity0.setActionBodyEntity(abe0);
+        assertFalse(entity0.equals(entity1));
+        entity1.setActionBodyEntity(abe0);
+        assertTrue(entity0.equals(entity1));
+        entity1.setActionBodyEntity(null);
+        assertFalse(entity0.equals(entity1));
+        entity0.setActionBodyEntity(null);
+        assertTrue(entity0.equals(entity1));
+        entity1.setActionBodyEntity(abe0);
+        assertFalse(entity0.equals(entity1));
+        entity0.setActionBodyEntity(abe0);
+        assertTrue(entity0.equals(entity1));
+        ActionBodyEntity abe1 = new ActionBodyEntity();
+        entity1.setActionBodyEntity(abe1);
+        assertFalse(entity0.equals(entity1));
+        entity0.setActionBodyEntity(abe1);
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setDescription("Description");
+        assertFalse(entity0.equals(entity1));
+        entity1.setDescription("Description");
+        assertTrue(entity0.equals(entity1));
+        entity1.setDescription(null);
+        assertFalse(entity0.equals(entity1));
+        entity0.setDescription(null);
+        assertTrue(entity0.equals(entity1));
+        entity1.setDescription("Description");
+        assertFalse(entity0.equals(entity1));
+        entity0.setDescription("Description");
+        assertTrue(entity0.equals(entity1));
+        assertTrue(entity0.equals(entity1));
+        entity1.setDescription("Description Extra");
+        assertFalse(entity0.equals(entity1));
+        entity0.setDescription("Description Extra");
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setDeleted(true);
+        assertFalse(entity0.equals(entity1));
+        entity1.setDeleted(true);
+        assertTrue(entity0.equals(entity1));
+        entity0.setDeleted(false);
+        assertFalse(entity0.equals(entity1));
+        entity1.setDeleted(false);
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setDeleteReasonCode("NoReason");
+        assertFalse(entity0.equals(entity1));
+        entity1.setDeleteReasonCode("NoReason");
+        assertTrue(entity0.equals(entity1));
+        entity1.setDeleteReasonCode(null);
+        assertFalse(entity0.equals(entity1));
+        entity0.setDeleteReasonCode(null);
+        assertTrue(entity0.equals(entity1));
+        entity1.setDeleteReasonCode("NoReason");
+        assertFalse(entity0.equals(entity1));
+        entity0.setDeleteReasonCode("NoReason");
+        assertTrue(entity0.equals(entity1));
+        assertTrue(entity0.equals(entity1));
+        entity1.setDeleteReasonCode("NoOtherReason");
+        assertFalse(entity0.equals(entity1));
+        entity0.setDeleteReasonCode("NoOtherReason");
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setCreatedBy("Dorothy");
+        assertFalse(entity0.equals(entity1));
+        entity1.setCreatedBy("Dorothy");
+        assertTrue(entity0.equals(entity1));
+        entity1.setCreatedBy(null);
+        assertFalse(entity0.equals(entity1));
+        entity0.setCreatedBy(null);
+        assertTrue(entity0.equals(entity1));
+        entity1.setCreatedBy("Dorothy");
+        assertFalse(entity0.equals(entity1));
+        entity0.setCreatedBy("Dorothy");
+        assertTrue(entity0.equals(entity1));
+        entity1.setCreatedBy("Toto");
+        assertFalse(entity0.equals(entity1));
+        entity0.setCreatedBy("Toto");
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setCreatedDate(new Date(12345L));
+        assertFalse(entity0.equals(entity1));
+        entity1.setCreatedDate(new Date(12345L));
+        assertTrue(entity0.equals(entity1));
+        entity1.setCreatedDate(null);
+        assertFalse(entity0.equals(entity1));
+        entity0.setCreatedDate(null);
+        assertTrue(entity0.equals(entity1));
+        entity1.setCreatedDate(new Date(12345L));
+        assertFalse(entity0.equals(entity1));
+        entity0.setCreatedDate(new Date(12345L));
+        assertTrue(entity0.equals(entity1));
+        assertTrue(entity0.equals(entity1));
+        entity1.setCreatedDate(new Date(123456L));
+        assertFalse(entity0.equals(entity1));
+        entity0.setCreatedDate(new Date(123456L));
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setModifiedBy("Dorothy");
+        assertFalse(entity0.equals(entity1));
+        entity1.setModifiedBy("Dorothy");
+        assertTrue(entity0.equals(entity1));
+        entity1.setModifiedBy(null);
+        assertFalse(entity0.equals(entity1));
+        entity0.setModifiedBy(null);
+        assertTrue(entity0.equals(entity1));
+        entity1.setModifiedBy("Dorothy");
+        assertFalse(entity0.equals(entity1));
+        entity0.setModifiedBy("Dorothy");
+        assertTrue(entity0.equals(entity1));
+        entity1.setModifiedBy("Toto");
+        assertFalse(entity0.equals(entity1));
+        entity0.setModifiedBy("Toto");
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setModifiedDate(new Date(12345L));
+        assertFalse(entity0.equals(entity1));
+        entity1.setModifiedDate(new Date(12345L));
+        assertTrue(entity0.equals(entity1));
+        entity1.setModifiedDate(null);
+        assertFalse(entity0.equals(entity1));
+        entity0.setModifiedDate(null);
+        assertTrue(entity0.equals(entity1));
+        entity1.setModifiedDate(new Date(12345L));
+        assertFalse(entity0.equals(entity1));
+        entity0.setModifiedDate(new Date(12345L));
+        assertTrue(entity0.equals(entity1));
+        assertTrue(entity0.equals(entity1));
+        entity1.setModifiedDate(new Date(123456L));
+        assertFalse(entity0.equals(entity1));
+        entity0.setModifiedDate(new Date(123456L));
+        assertTrue(entity0.equals(entity1));
+
+        entity0.setDeletedBy("Dorothy");
+        assertFalse(entity0.equals(entity1));
+        entity1.setDeletedBy("Dorothy");
+        assertTrue(entity0.equals(entity1));
+        entity1.setDeletedBy(null);
+        assertFalse(entity0.equals(entity1));
+        entity0.setDeletedBy(null);
+        assertTrue(entity0.equals(entity1));
+        entity1.setDeletedBy("Dorothy");
+        assertFalse(entity0.equals(entity1));
+        entity0.setDeletedBy("Dorothy");
+        assertTrue(entity0.equals(entity1));
+        assertTrue(entity0.equals(entity1));
+        entity1.setDeletedBy("Toto");
+        assertFalse(entity0.equals(entity1));
+        entity0.setDeletedBy("Toto");
+        assertTrue(entity0.equals(entity1));
+
+        assertNotNull(entity0.hashCode());
+        assertNotNull(entity1.hashCode());
     }
 
     /**
