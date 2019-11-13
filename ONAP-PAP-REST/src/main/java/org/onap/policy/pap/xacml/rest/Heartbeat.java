@@ -23,7 +23,7 @@ package org.onap.policy.pap.xacml.rest;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPStatus;
 import com.att.research.xacml.util.XACMLProperties;
-
+import com.google.common.annotations.VisibleForTesting;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -33,7 +33,6 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -88,9 +87,9 @@ public class Heartbeat implements Runnable {
     public Heartbeat(PAPPolicyEngine papEngine2) {
         papEngine = papEngine2;
         this.heartbeatInterval =
-                Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_HEARTBEAT_INTERVAL, "10000"));
+            Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_HEARTBEAT_INTERVAL, "10000"));
         this.heartbeatTimeout =
-                Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_HEARTBEAT_TIMEOUT, "10000"));
+            Integer.parseInt(XACMLProperties.getProperty(XacmlRestProperties.PROP_PAP_HEARTBEAT_TIMEOUT, "10000"));
     }
 
     @Override
@@ -127,7 +126,8 @@ public class Heartbeat implements Runnable {
         }
     }
 
-    private void getPdpsFromGroup() {
+    @VisibleForTesting
+    protected void getPdpsFromGroup() {
         try {
             for (OnapPDPGroup g : papEngine.getOnapPDPGroups()) {
                 for (OnapPDP p : g.getOnapPdps()) {
@@ -136,11 +136,12 @@ public class Heartbeat implements Runnable {
             }
         } catch (PAPException e) {
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, XACMLPAPSERVLET,
-                    "Heartbeat unable to read PDPs from PAPEngine");
+                "Heartbeat unable to read PDPs from PAPEngine");
         }
     }
 
-    private void notifyEachPdp() {
+    @VisibleForTesting
+    protected void notifyEachPdp() {
         HashMap<String, URL> idToUrlMap = new HashMap<>();
         for (OnapPDP pdp : pdps) {
             // Check for shutdown
@@ -163,14 +164,15 @@ public class Heartbeat implements Runnable {
                     }
                 } catch (MalformedURLException e) {
                     PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, XACMLPAPSERVLET,
-                            " PDP id '" + fullUrlString + "' is not a valid URL");
+                        " PDP id '" + fullUrlString + "' is not a valid URL");
                 }
             }
             updatePdpStatus(pdp, openPdpConnection(pdpUrl, pdp));
         }
     }
 
-    private String openPdpConnection(URL pdpUrl, OnapPDP pdp) {
+    @VisibleForTesting
+    protected String openPdpConnection(URL pdpUrl, OnapPDP pdp) {
         // Do a GET with type HeartBeat
         String newStatus = "";
         HttpURLConnection connection = null;
@@ -197,25 +199,25 @@ public class Heartbeat implements Runnable {
                     // anything else is an unexpected result
                     newStatus = PDPStatus.Status.UNKNOWN.toString();
                     PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " Heartbeat connect response code "
-                            + connection.getResponseCode() + ": " + pdp.getId());
+                        + connection.getResponseCode() + ": " + pdp.getId());
                 }
             }
         } catch (UnknownHostException e) {
             newStatus = PDPStatus.Status.NO_SUCH_HOST.toString();
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, XACMLPAPSERVLET,
-                    HEARTBEATSTRING + pdp.getId() + "' NO_SUCH_HOST");
+                HEARTBEATSTRING + pdp.getId() + "' NO_SUCH_HOST");
         } catch (SocketTimeoutException e) {
             newStatus = PDPStatus.Status.CANNOT_CONNECT.toString();
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, XACMLPAPSERVLET,
-                    HEARTBEATSTRING + pdp.getId() + "' connection timeout");
+                HEARTBEATSTRING + pdp.getId() + "' connection timeout");
         } catch (ConnectException e) {
             newStatus = PDPStatus.Status.CANNOT_CONNECT.toString();
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, XACMLPAPSERVLET,
-                    HEARTBEATSTRING + pdp.getId() + "' cannot connect");
+                HEARTBEATSTRING + pdp.getId() + "' cannot connect");
         } catch (Exception e) {
             newStatus = PDPStatus.Status.UNKNOWN.toString();
             PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, XACMLPAPSERVLET,
-                    HEARTBEATSTRING + pdp.getId() + "' connect exception");
+                HEARTBEATSTRING + pdp.getId() + "' connect exception");
         } finally {
             // cleanup the connection
             if (connection != null)
@@ -224,7 +226,8 @@ public class Heartbeat implements Runnable {
         return newStatus;
     }
 
-    private void updatePdpStatus(OnapPDP pdp, String newStatus) {
+    @VisibleForTesting
+    protected void updatePdpStatus(OnapPDP pdp, String newStatus) {
         if (!pdp.getStatus().getStatus().toString().equals(newStatus)) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("previous status='" + pdp.getStatus().getStatus() + "'  new Status='" + newStatus + "'");
@@ -233,7 +236,7 @@ public class Heartbeat implements Runnable {
                 getPAPInstance().setPDPSummaryStatus(pdp, newStatus);
             } catch (PAPException e) {
                 PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, XACMLPAPSERVLET,
-                        "Unable to set state for PDP '" + pdp.getId());
+                    "Unable to set state for PDP '" + pdp.getId());
             }
         }
     }
