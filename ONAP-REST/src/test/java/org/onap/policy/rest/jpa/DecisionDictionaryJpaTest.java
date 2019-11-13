@@ -3,13 +3,14 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.rest.jpa;
 
 import static org.junit.Assert.assertTrue;
@@ -28,11 +30,19 @@ import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
-public class DecisionDictionaryJPATest {
+/**
+ * The Class DecisionDictionaryJpaTest.
+ */
+public class DecisionDictionaryJpaTest {
 
-    private static Logger logger = FlexLogger.getLogger(DecisionDictionaryJPATest.class);
+    private static Logger logger = FlexLogger.getLogger(DecisionDictionaryJpaTest.class);
     private UserInfo userInfo;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
         logger.info("setUp: Entering");
@@ -42,8 +52,11 @@ public class DecisionDictionaryJPATest {
         logger.info("setUp: exit");
     }
 
+    /**
+     * Test decision settings.
+     */
     @Test
-    public void testDecisionSettings(){
+    public void testDecisionSettings() {
         DecisionSettings data = new DecisionSettings();
         data.setId(1);
         assertTrue(1 == data.getId());
@@ -54,7 +67,7 @@ public class DecisionDictionaryJPATest {
         data.setXacmlId("Test");
         assertTrue("Test".equals(data.getXacmlId()));
         data.setDatatypeBean(new Datatype());
-        assertTrue(data.getDatatypeBean()!=null);
+        assertTrue(data.getDatatypeBean() != null);
         data.setIssuer("Test");
         assertTrue("Test".equals(data.getIssuer()));
         data.setMustBePresent(true);
@@ -62,17 +75,20 @@ public class DecisionDictionaryJPATest {
         data.setPriority("Test");
         assertTrue("Test".equals(data.getPriority()));
         data.setCreatedDate(new Date());
-        assertTrue(data.getCreatedDate()!=null);
+        assertTrue(data.getCreatedDate() != null);
         data.setModifiedDate(new Date());
-        assertTrue(data.getModifiedDate()!=null);
+        assertTrue(data.getModifiedDate() != null);
         data.setUserCreatedBy(userInfo);
-        assertTrue(data.getUserCreatedBy()!=null);
+        assertTrue(data.getUserCreatedBy() != null);
         data.setUserModifiedBy(userInfo);
-        assertTrue(data.getUserModifiedBy()!=null);
+        assertTrue(data.getUserModifiedBy() != null);
     }
 
+    /**
+     * Test rainy day treatments.
+     */
     @Test
-    public void testRainyDayTreatments(){
+    public void testRainyDayTreatments() {
         RainyDayTreatments data = new RainyDayTreatments();
         data.setId(1);
         assertTrue(1 == data.getId());

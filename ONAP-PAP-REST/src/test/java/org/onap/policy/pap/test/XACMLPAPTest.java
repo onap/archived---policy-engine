@@ -499,14 +499,14 @@ public class XACMLPAPTest {
         // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
-        // Check PEPOptions
+        // Check PepOptions
         //
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
         json = "{\"dictionaryFields\":{\"pepName\":\"testRestAPI\",\"description\":\"testing create\","
                 + "\"attributes\":[{\"option\":\"test1\",\"number\":\"test\"},{\"option\":\"test2\","
                 + "\"number\":\"test\"}]}}";
-        dictionaryTestSetup(false, "PEPOptions", json);
+        dictionaryTestSetup(false, "PepOptions", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
         // Verify
@@ -886,7 +886,7 @@ public class XACMLPAPTest {
     @Test
     public void getDictionary() throws ServletException, IOException {
         String[] dictionarys = new String[] {"Attribute", "OnapName", "Action", "BRMSParamTemplate", "VSCLAction",
-                "VNFType", "PEPOptions", "Varbind", "Service", "Site", "Settings", "RainyDayTreatments",
+                "VNFType", "PepOptions", "Varbind", "Service", "Site", "Settings", "RainyDayTreatments",
                 "DescriptiveScope", "ActionList", "ProtocolList", "Zone", "SecurityZone", "PrefixList", "AddressGroup",
                 "ServiceGroup", "ServiceList", "TermList", "MicroServiceLocation", "MicroServiceConfigName", "DCAEUUID",
                 "MicroServiceModels", "PolicyScopeService", "PolicyScopeResource", "PolicyScopeType",

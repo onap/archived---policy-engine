@@ -21,6 +21,7 @@
 
 package org.onap.policy.rest.jpa;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -88,8 +89,8 @@ public class MicroServiceDictionaryJpaTest {
         assertTrue(1 == data.getId());
         data.setName("Test");
         assertTrue("Test".equals(data.getName()));
-        data.setDescriptionValue("Test");
-        assertTrue("Test".equals(data.getDescriptionValue()));
+        data.setDescription("Test");
+        assertTrue("Test".equals(data.getDescription()));
     }
 
     /**
@@ -102,8 +103,8 @@ public class MicroServiceDictionaryJpaTest {
         assertTrue(1 == data.getId());
         data.setName("Test");
         assertTrue("Test".equals(data.getName()));
-        data.setDescriptionValue("Test");
-        assertTrue("Test".equals(data.getDescriptionValue()));
+        data.setDescription("Test");
+        assertTrue("Test".equals(data.getDescription()));
     }
 
     /**
@@ -126,14 +127,15 @@ public class MicroServiceDictionaryJpaTest {
         assertTrue("Test".equals(data.getAnnotation()));
         data.setAttributes("Test");
         assertTrue("Test".equals(data.getAttributes()));
-        data.setRef_attributes("Test");
-        assertTrue("Test".equals(data.getRef_attributes()));
+        data.setRefAttributes("Test");
+        assertTrue("Test".equals(data.getRefAttributes()));
         data.setUserCreatedBy(userInfo);
         assertTrue(data.getUserCreatedBy() != null);
-        data.setSub_attributes("Test");
-        assertTrue("Test".equals(data.getSub_attributes()));
+        data.setSubAttributes("Test");
+        assertTrue("Test".equals(data.getSubAttributes()));
         data.setVersion("Test");
         assertTrue("Test".equals(data.getVersion()));
+        assertFalse(data.isDecisionModel());
     }
 
     /**
@@ -162,8 +164,8 @@ public class MicroServiceDictionaryJpaTest {
         assertTrue(1 == data.getId());
         data.setName("Test");
         assertTrue("Test".equals(data.getName()));
-        data.setDescriptionValue("Test");
-        assertTrue("Test".equals(data.getDescriptionValue()));
+        data.setDescription("Test");
+        assertTrue("Test".equals(data.getDescription()));
     }
 
     /**
@@ -176,8 +178,8 @@ public class MicroServiceDictionaryJpaTest {
         assertTrue(1 == data.getId());
         data.setName("Test");
         assertTrue("Test".equals(data.getName()));
-        data.setDescriptionValue("Test");
-        assertTrue("Test".equals(data.getDescriptionValue()));
+        data.setDescription("Test");
+        assertTrue("Test".equals(data.getDescription()));
     }
 
     /**
@@ -190,8 +192,8 @@ public class MicroServiceDictionaryJpaTest {
         assertTrue(1 == data.getId());
         data.setName("Test");
         assertTrue("Test".equals(data.getName()));
-        data.setDescriptionValue("Test");
-        assertTrue("Test".equals(data.getDescriptionValue()));
+        data.setDescription("Test");
+        assertTrue("Test".equals(data.getDescription()));
     }
 
     /**
@@ -204,11 +206,11 @@ public class MicroServiceDictionaryJpaTest {
         assertTrue(1 == data.getId());
         data.setName("Test");
         assertTrue("Test".equals(data.getName()));
-        data.setDescriptionValue("Test");
-        assertTrue("Test".equals(data.getDescriptionValue()));
+        data.setDescription("Test");
+        assertTrue("Test".equals(data.getDescription()));
     }
 
-    /**
+    /**EP
      * Test policy scope group policy scope list.
      */
     @Test

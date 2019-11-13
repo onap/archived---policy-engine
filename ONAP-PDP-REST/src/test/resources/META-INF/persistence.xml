@@ -22,7 +22,7 @@
 	<persistence-unit name="XACML-PAP-REST">
 		<class>org.onap.policy.rest.jpa.PolicyEntity</class>
 		<class>org.onap.policy.rest.jpa.ConfigurationDataEntity</class>		
-		<class>org.onap.policy.rest.jpa.PolicyDBDaoEntity</class>
+		<class>org.onap.policy.rest.jpa.PolicyDbDaoEntity</class>
 		<class>org.onap.policy.rest.jpa.GroupEntity</class>
 		<class>org.onap.policy.rest.jpa.PdpEntity</class>
 		<class>org.onap.policy.rest.jpa.ActionBodyEntity</class>
@@ -109,7 +109,7 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<class>org.onap.policy.rest.jpa.PolicyEntity</class>
 		<class>org.onap.policy.rest.jpa.ConfigurationDataEntity</class>		
-		<class>org.onap.policy.rest.jpa.PolicyDBDaoEntity</class>
+		<class>org.onap.policy.rest.jpa.PolicyDbDaoEntity</class>
 		<class>org.onap.policy.rest.jpa.GroupEntity</class>
 		<class>org.onap.policy.rest.jpa.PdpEntity</class>
 		<class>org.onap.policy.rest.jpa.ActionBodyEntity</class>
@@ -146,12 +146,12 @@
 		<class>org.onap.policy.rest.jpa.MicroServiceLocation</class>
 		<class>org.onap.policy.rest.jpa.Obadvice</class>
 		<class>org.onap.policy.rest.jpa.ObadviceExpression</class>
-		<class>org.onap.policy.rest.jpa.PEPOptions</class>
-		<class>org.onap.policy.rest.jpa.PIPConfigParam</class>
-		<class>org.onap.policy.rest.jpa.PIPConfiguration</class>
-		<class>org.onap.policy.rest.jpa.PIPResolver</class>
-		<class>org.onap.policy.rest.jpa.PIPResolverParam</class>
-		<class>org.onap.policy.rest.jpa.PIPType</class>	
+		<class>org.onap.policy.rest.jpa.PepOptions</class>
+		<class>org.onap.policy.rest.jpa.PipConfigParam</class>
+		<class>org.onap.policy.rest.jpa.PipConfiguration</class>
+		<class>org.onap.policy.rest.jpa.PipResolver</class>
+		<class>org.onap.policy.rest.jpa.PipResolverParam</class>
+		<class>org.onap.policy.rest.jpa.PipType</class>	
 		<class>org.onap.policy.rest.jpa.PolicyAlgorithms</class>
 		<class>org.onap.policy.rest.jpa.PolicyManagement</class>
 		<class>org.onap.policy.rest.jpa.PolicyScopeService</class>

@@ -3,13 +3,14 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +20,8 @@
  */
 
 package org.onap.policy.rest.jpa;
+
+import com.att.research.xacml.api.Identifier;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -40,15 +43,17 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import com.att.research.xacml.api.Identifier;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * The persistent class for the Obadvice database table.
- * 
  */
 @Entity
-@Table(name="Obadvice")
-@NamedQuery(name="Obadvice.findAll", query="SELECT o FROM Obadvice o")
+@Table(name = "Obadvice")
+@NamedQuery(name = "Obadvice.findAll", query = "SELECT o FROM Obadvice o")
+@Getter
+@Setter
 public class Obadvice implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -58,44 +63,53 @@ public class Obadvice implements Serializable {
     public static final String EFFECT_DENY = "Deny";
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="type", nullable=false)
+    @Column(name = "type", nullable = false)
     private String type;
 
-    @Column(name="xacml_id", nullable=false, length=255)
+    @Column(name = "xacml_id", nullable = false, length = 255)
     private String xacmlId;
 
-    @Column(name="fulfill_on", nullable=true, length=32)
+    @Column(name = "fulfill_on", nullable = true, length = 32)
     private String fulfillOn;
 
-    @Column(name="description", nullable=true, length=2048)
+    @Column(name = "description", nullable = true, length = 2048)
     private String description;
 
-    //bi-directional one-to-many association to Attribute Assignment
-    @OneToMany(mappedBy="obadvice", orphanRemoval=true, cascade=CascadeType.REMOVE)
+    // bi-directional one-to-many association to Attribute Assignment
+    @OneToMany(mappedBy = "obadvice", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private Set<ObadviceExpression> obadviceExpressions = new HashSet<>(2);
 
-    @Column(name="created_by", nullable=false, length=255)
+    @Column(name = "created_by", nullable = false, length = 255)
     private String createdBy;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="created_date", nullable=false, updatable=false)
+    @Column(name = "created_date", nullable = false, updatable = false)
     private Date createdDate;
 
-    @Column(name="modified_by", nullable=false, length=255)
+    @Column(name = "modified_by", nullable = false, length = 255)
     private String modifiedBy;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="modified_date", nullable=false)
+    @Column(name = "modified_date", nullable = false)
     private Date modifiedDate;
 
+    /**
+     * Instantiates a new obadvice.
+     */
     public Obadvice() {
         this.type = Obadvice.OBLIGATION;
         this.fulfillOn = Obadvice.EFFECT_PERMIT;
     }
 
+    /**
+     * Instantiates a new obadvice.
+     *
+     * @param domain the domain
+     * @param userid the userid
+     */
     public Obadvice(String domain, String userid) {
         this.xacmlId = domain;
         this.type = Obadvice.OBLIGATION;
@@ -104,86 +118,40 @@ public class Obadvice implements Serializable {
         this.modifiedBy = userid;
     }
 
+    /**
+     * Instantiates a new obadvice.
+     *
+     * @param id the id
+     * @param userid the userid
+     */
     public Obadvice(Identifier id, String userid) {
         this(id.stringValue(), userid);
     }
 
+    /**
+     * Pre persist.
+     */
     @PrePersist
-    public void	prePersist() {
+    public void prePersist() {
         Date date = new Date();
         this.createdDate = date;
         this.modifiedDate = date;
     }
 
+    /**
+     * Pre update.
+     */
     @PreUpdate
     public void preUpdate() {
         this.modifiedDate = new Date();
     }
 
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCreatedBy() {
-        return this.createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getFulfillOn() {
-        return this.fulfillOn;
-    }
-
-    public void setFulfillOn(String fulfillOn) {
-        this.fulfillOn = fulfillOn;
-    }
-
-    public String getModifiedBy() {
-        return this.modifiedBy;
-    }
-
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
-    public String getType() {
-        return this.type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getXacmlId() {
-        return this.xacmlId;
-    }
-
-    public void setXacmlId(String xacmlId) {
-        this.xacmlId = xacmlId;
-    }
-
-    public Set<ObadviceExpression> getObadviceExpressions() {
-        return this.obadviceExpressions;
-    }
-
-    public void setObadviceExpressions(Set<ObadviceExpression> obadviceExpressions) {
-        this.obadviceExpressions = obadviceExpressions;
-    }
-
+    /**
+     * Adds the obadvice expression.
+     *
+     * @param obadviceExpression the obadvice expression
+     * @return the obadvice expression
+     */
     public ObadviceExpression addObadviceExpression(ObadviceExpression obadviceExpression) {
         this.obadviceExpressions.add(obadviceExpression);
         obadviceExpression.setObadvice(this);
@@ -191,6 +159,12 @@ public class Obadvice implements Serializable {
         return obadviceExpression;
     }
 
+    /**
+     * Removes the obadvice expression.
+     *
+     * @param obadviceExpression the obadvice expression
+     * @return the obadvice expression
+     */
     public ObadviceExpression removeObadviceExpression(ObadviceExpression obadviceExpression) {
         this.obadviceExpressions.remove(obadviceExpression);
         obadviceExpression.setObadvice(null);
@@ -198,6 +172,9 @@ public class Obadvice implements Serializable {
         return obadviceExpression;
     }
 
+    /**
+     * Removes the all expressions.
+     */
     public void removeAllExpressions() {
         if (this.obadviceExpressions == null) {
             return;
@@ -208,6 +185,11 @@ public class Obadvice implements Serializable {
         this.obadviceExpressions.clear();
     }
 
+    /**
+     * Clone.
+     *
+     * @return the obadvice
+     */
     @Transient
     @Override
     public Obadvice clone() {
@@ -219,7 +201,7 @@ public class Obadvice implements Serializable {
         obadvice.description = this.description;
         obadvice.createdBy = this.createdBy;
         obadvice.modifiedBy = this.modifiedBy;
-        for (ObadviceExpression exp: this.obadviceExpressions) {
+        for (ObadviceExpression exp : this.obadviceExpressions) {
             obadvice.addObadviceExpression(exp.clone());
         }
 

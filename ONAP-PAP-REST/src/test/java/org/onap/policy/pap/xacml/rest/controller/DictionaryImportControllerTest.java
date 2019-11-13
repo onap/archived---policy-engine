@@ -96,7 +96,7 @@ public class DictionaryImportControllerTest extends Mockito {
         fileNames.add("SearchCriteria.csv");
         fileNames.add("VNFType.csv");
         fileNames.add("VSCLAction.csv");
-        fileNames.add("PEPOptions.csv");
+        fileNames.add("PepOptions.csv");
         fileNames.add("Settings.csv");
         fileNames.add("Zone.csv");
         fileNames.add("ActionList.csv");

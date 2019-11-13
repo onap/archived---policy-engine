@@ -23,6 +23,7 @@ package org.onap.policy.rest.jpa;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -229,11 +230,18 @@ public class ActionDictionaryJpaTest {
     @Test
     public void testObadvice() {
         Obadvice data = new Obadvice();
-        new Obadvice();
-        new Obadvice("Test", "Test");
+        assertNotNull(data);
+        assertNotNull(new Obadvice());
+        assertNotNull(new Obadvice("Test", "Test"));
+        assertNotNull(new Obadvice(new DummyIdentifier(), "Test"));
         data.clone();
         data.addObadviceExpression(new ObadviceExpression());
+        assertNotNull(data.clone());
         data.removeObadviceExpression(new ObadviceExpression());
+        data.removeAllExpressions();
+        assertEquals(0, data.getObadviceExpressions().size());
+        data.setObadviceExpressions(null);
+        assertNull(data.getObadviceExpressions());
         data.removeAllExpressions();
         data.prePersist();
         data.preUpdate();
@@ -253,6 +261,7 @@ public class ActionDictionaryJpaTest {
         assertTrue("Test".equals(data.getType()));
         data.setXacmlId("Test");
         assertTrue("Test".equals(data.getXacmlId()));
+
     }
 
     @Test
@@ -349,5 +358,13 @@ public class ActionDictionaryJpaTest {
         assertTrue("Test".equals(data.getXacmlId()));
         data.setIsStandard(PolicyAlgorithms.STANDARD);
         assertTrue(data.isStandard());
+        assertFalse(data.isCustom());
+        data.setIsStandard(PolicyAlgorithms.CUSTOM);
+        assertFalse(data.isStandard());
+        assertTrue(data.isCustom());
+
+        DummyIdentifier identifier = new DummyIdentifier();
+        assertNotNull(new PolicyAlgorithms(identifier));
+        assertNotNull(new PolicyAlgorithms(identifier, 'C'));
     }
 }

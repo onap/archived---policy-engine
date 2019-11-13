@@ -3,13 +3,14 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,25 +18,33 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.rest.jpa;
 
-import static org.junit.Assert.*;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Properties;
-
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import com.att.research.xacml.api.pip.PIPException;
 
-public class PIPJPATest {
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Properties;
+import java.util.Set;
+
+import org.junit.Test;
+
+public class PipJpaTest {
 
     @Test
-    public void testPIPConfigParam(){
-        PIPConfigParam data = new PIPConfigParam();
-        new PIPConfigParam("test");
-        new PIPConfigParam(new PIPConfigParam());
+    public void testPipConfigParam() {
+        PipConfigParam data = new PipConfigParam();
+        new PipConfigParam("test");
+        new PipConfigParam(new PipConfigParam());
         data.setId(1);
         assertTrue(1 == data.getId());
         data.setParamName("Test");
@@ -44,18 +53,20 @@ public class PIPJPATest {
         assertTrue("Test".equals(data.getParamValue()));
         data.setParamDefault("Test");
         assertTrue("Test".equals(data.getParamDefault()));
-        data.setPipconfiguration(new PIPConfiguration());
-        assertTrue(data.getPipconfiguration()!=null);
-        data.setRequired(true);
+        data.setPipconfiguration(new PipConfiguration());
+        assertTrue(data.getPipconfiguration() != null);
+        data.setRequiredFlag(true);
         assertTrue(data.isRequired());
+        data.setRequiredFlag(false);
+        assertFalse(data.isRequired());
         data.toString();
     }
 
     @Test
-    public void testPIPResolverParam(){
-        PIPResolverParam data = new PIPResolverParam();
-        new PIPResolverParam("test");
-        new PIPResolverParam(new PIPResolverParam());
+    public void testPipResolverParam() {
+        PipResolverParam data = new PipResolverParam();
+        new PipResolverParam("test");
+        new PipResolverParam(new PipResolverParam());
         data.setId(1);
         assertTrue(1 == data.getId());
         data.setParamName("Test");
@@ -64,40 +75,42 @@ public class PIPJPATest {
         assertTrue("Test".equals(data.getParamValue()));
         data.setParamDefault("Test");
         assertTrue("Test".equals(data.getParamDefault()));
-        data.setPipresolver(new PIPResolver());
-        assertTrue(data.getPipresolver()!=null);
+        data.setPipresolver(new PipResolver());
+        assertTrue(data.getPipresolver() != null);
         data.setRequired(true);
         assertTrue(data.isRequired());
+        data.setRequired(false);
+        assertFalse(data.isRequired());
         data.toString();
     }
 
     @Test
-    public void testPIPType(){
-        PIPType data = new PIPType();
+    public void testPipType() {
+        PipType data = new PipType();
         data.setId(1);
         assertTrue(1 == data.getId());
         data.setType("Test");
         assertTrue("Test".equals(data.getType()));
         data.setPipconfigurations(new HashSet<>());
-        assertTrue(data.getPipconfigurations()!=null);
-        data.addPipconfiguration(new PIPConfiguration());
-        data.removePipconfiguration(new PIPConfiguration());
+        assertTrue(data.getPipconfigurations() != null);
+        data.addPipconfiguration(new PipConfiguration());
+        data.removePipconfiguration(new PipConfiguration());
         data.setType("SQL");
-        assertTrue(data.isSQL());
+        assertTrue(data.isSql());
         data.setType("LDAP");
-        assertTrue(data.isLDAP());
+        assertTrue(data.isLdap());
         data.setType("CSV");
-        assertTrue(data.isCSV());
+        assertTrue(data.isCsv());
         data.setType("Hyper-CSV");
-        assertTrue(data.isHyperCSV());
+        assertTrue(data.isHyperCsv());
         data.setType("Custom");
         assertTrue(data.isCustom());
     }
 
     @Test
-    public void testPIPResolver(){
-        PIPResolver data = new PIPResolver();
-        new PIPResolver(new PIPResolver());
+    public void testPipResolver() {
+        PipResolver data = new PipResolver();
+        new PipResolver(new PipResolver());
         data.prePersist();
         data.preUpdate();
         data.setId(1);
@@ -115,32 +128,50 @@ public class PIPJPATest {
         data.setModifiedBy("Test");
         assertTrue("Test".equals(data.getModifiedBy()));
         data.setCreatedDate(new Date());
-        assertTrue(data.getCreatedDate()!=null);
+        assertTrue(data.getCreatedDate() != null);
         data.setModifiedDate(new Date());
-        assertTrue(data.getModifiedDate()!=null);
-        data.setPipconfiguration(new PIPConfiguration());
-        assertTrue(data.getPipconfiguration()!=null);
+        assertTrue(data.getModifiedDate() != null);
+        data.setPipconfiguration(new PipConfiguration());
+        assertTrue(data.getPipconfiguration() != null);
         data.setPipresolverParams(new HashSet<>());
-        assertTrue(data.getPipresolverParams()!=null);
-        data.addPipresolverParam(new PIPResolverParam());
-        data.removePipresolverParam(new PIPResolverParam());
+        assertTrue(data.getPipresolverParams() != null);
+        data.addPipresolverParam(new PipResolverParam());
+        data.removePipresolverParam(new PipResolverParam());
+        assertNull(data.removePipresolverParam(null));
         data.clearParams();
         data.getConfiguration("test");
+        assertNotNull(data.getConfiguration("test."));
         data.setReadOnly(true);
         assertTrue(data.isReadOnly());
+        data.setReadOnly(false);
+        assertFalse(data.isReadOnly());
         data.toString();
         Properties properties = new Properties();
-        data.generateProperties(properties,"test");
+        data.generateProperties(properties, "test");
         try {
             data.readProperties("test", properties);
         } catch (PIPException e) {
             fail();
         }
+        data.setIssuer("");
+        assertEquals(4, data.getConfiguration("test").size());
+        data.generateProperties(properties, "test.");
+        assertEquals(4, data.getConfiguration("test").size());
+
+        Set<PipResolverParam> pipresolverParams = new LinkedHashSet<>();
+        PipResolverParam prp = new PipResolverParam();
+        prp.setParamName("Dorothy");
+        prp.setParamValue("Gale");
+        pipresolverParams.add(prp);
+        data.setPipresolverParams(pipresolverParams);
+        data.generateProperties(properties, "test");
+        assertEquals(5, data.getConfiguration("test").size());
+        assertEquals(5, new PipResolver(data).getConfiguration("test").size());
     }
 
     @Test
-    public void testPIPConfiguration(){
-        PIPConfiguration data = new PIPConfiguration();
+    public void testPipConfiguration() {
+        PipConfiguration data = new PipConfiguration();
         data.prePersist();
         data.preUpdate();
         data.setId(1);
@@ -158,24 +189,24 @@ public class PIPJPATest {
         data.setModifiedBy("Test");
         assertTrue("Test".equals(data.getModifiedBy()));
         data.setCreatedDate(new Date());
-        assertTrue(data.getCreatedDate()!=null);
+        assertTrue(data.getCreatedDate() != null);
         data.setModifiedDate(new Date());
-        assertTrue(data.getModifiedDate()!=null);
+        assertTrue(data.getModifiedDate() != null);
         try {
             data.readProperties("test", data.generateProperties("test"));
         } catch (PIPException e) {
             fail();
         }
-        data.setPiptype(new PIPType());
-        assertTrue(data.getPiptype()!=null);
+        data.setPiptype(new PipType());
+        assertTrue(data.getPiptype() != null);
         data.setPipresolvers(new HashSet<>());
-        assertTrue(data.getPipresolvers()!=null);
-        data.addPipresolver(new PIPResolver());
-        data.removePipresolver(new PIPResolver());
+        assertTrue(data.getPipresolvers() != null);
+        data.addPipresolver(new PipResolver());
+        data.removePipresolver(new PipResolver());
         data.getConfiguration("test");
-        data.setReadOnly(true);
+        data.setReadOnlyFlag(true);
         assertTrue(data.isReadOnly());
-        data.setRequiresResolvers(true);
+        data.setRequiresResolversFlag(true);
         assertTrue(data.requiresResolvers());
         data.toString();
     }

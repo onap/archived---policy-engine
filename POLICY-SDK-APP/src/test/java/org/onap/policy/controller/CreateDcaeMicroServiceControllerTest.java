@@ -108,11 +108,11 @@ public class CreateDcaeMicroServiceControllerTest {
                         + "CorrelationWindow=String:defaultValue-null:required-true:MANY-false:description-null,"
                         + "EmailNotification=String:defaultValue-null:required-true:MANY-false:description-null,"
                         + "CorrelationPriority=string:defaultValue-null:required-true:MANY-false:description-null,");
-        testData.setRef_attributes("SymptomTriggerSignature=resource-model-symptomEntity:MANY-true:description-null,"
+        testData.setRefAttributes("SymptomTriggerSignature=resource-model-symptomEntity:MANY-true:description-null,"
                 + "triggerSignature=resource-model-entity:MANY-true:description-null,"
                 + "SelectServerScope=SELECTSERVERSCOPE:MANY-false,logicalConnector=LOGICALCONNECTOR:MANY-false,"
                 + "ParentCorrelationTraversal=PARENTCORRELATIONTRAVERSAL:MANY-false,");
-        testData.setSub_attributes(
+        testData.setSubAttributes(
                 "{\"symptomAlarms\":{\"symptomContains\":\"SYMPTOMCONTAINS:defaultValue-null:required-true:MANY-false:"
                         + "description-null\",\"symptomFilterValue\":\"string:defaultValue-null:"
                         + "required-true:MANY-false:"

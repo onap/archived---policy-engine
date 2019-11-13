@@ -73,7 +73,7 @@ public class ConstraintType implements Serializable {
     private int id;
 
     @Column(name = "constraint_type", nullable = false, length = 64)
-    private String constraintType;
+    private String theConstraintType;
 
     @Column(name = "description", nullable = false, length = 255)
     private String description;
@@ -84,7 +84,7 @@ public class ConstraintType implements Serializable {
 
     public ConstraintType(String constraintType) {
         this();
-        this.constraintType = constraintType;
+        this.theConstraintType = constraintType;
     }
 
     public ConstraintType(String constraintType, String description) {
@@ -96,4 +96,11 @@ public class ConstraintType implements Serializable {
         return RANGE_TYPES;
     }
 
+    public String getConstraintType() {
+        return theConstraintType;
+    }
+
+    public void setConstraintType(final String theConstraintType) {
+        this.theConstraintType = theConstraintType;
+    }
 }
