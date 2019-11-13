@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "279daadf_b4025723",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/PipConfiguration.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-13T22:05:57Z",
+      "side": 1,
+      "message": "It\u0027s hard to see it here with the class name change but in the original this was \"name\" rather than \"prefix\", which I assume is a bug.",
+      "range": {
+        "startLine": 503,
+        "startChar": 47,
+        "endLine": 503,
+        "endChar": 53
+      },
+      "revId": "0793619bba9666bb1cef6266a0c496dac8e2ab89",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c35df974_f44f1b21",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/PipResolver.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-13T22:05:57Z",
+      "side": 1,
+      "message": "this was \"this\" in the original, I changed it to \"resolver\", as this seems to be a bug. Again hard to see as the class is renamed.",
+      "range": {
+        "startLine": 141,
+        "startChar": 38,
+        "endLine": 141,
+        "endChar": 46
+      },
+      "revId": "0793619bba9666bb1cef6266a0c496dac8e2ab89",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
