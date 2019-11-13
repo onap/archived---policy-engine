@@ -25,11 +25,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.hibernate.Session;
@@ -45,6 +47,7 @@ import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.pap.xacml.rest.elk.client.PolicyElasticSearchController;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyEntity;
+import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
 import org.onap.policy.xacml.std.pap.StdEngine;
 import org.powermock.api.mockito.PowerMockito;
@@ -120,12 +123,74 @@ public class DeleteHandlerTest {
         CommonClassDao dao = Mockito.mock(CommonClassDao.class);
         DeleteHandler handler = new DeleteHandler(dao);
 
-        // Mock request
+        // Request #1
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setBodyContent(
             "{\n\"PAPPolicyType\": \"StdPAPPolicy\", \"policyName\": \"foo.Config_name.1.xml\", \"deleteCondition\": \"All Versions\"\n}\n");
         MockHttpServletResponse response = new MockHttpServletResponse();
+        handler.doApiDeleteFromPap(request, response);
+        assertTrue(response.containsHeader("error"));
 
+        // Request #2
+        request.setBodyContent(
+            "{\n\"PAPPolicyType\": \"StdPAPPolicy\", \"policyName\": \"foo.Action_name.1.xml\", \"deleteCondition\": \"All Versions\"\n}\n");
+        handler.doApiDeleteFromPap(request, response);
+        assertTrue(response.containsHeader("error"));
+
+        // Request #3
+        request.setBodyContent(
+            "{\n\"PAPPolicyType\": \"StdPAPPolicy\", \"policyName\": \"foo.Decision_name.1.xml\", \"deleteCondition\": \"All Versions\"\n}\n");
+        handler.doApiDeleteFromPap(request, response);
+        assertTrue(response.containsHeader("error"));
+
+        // Request #4
+        request.setBodyContent(
+            "{\n\"PAPPolicyType\": \"StdPAPPolicy\", \"policyName\": \"foo.Bar_name.1.xml\", \"deleteCondition\": \"All Versions\"\n}\n");
+        handler.doApiDeleteFromPap(request, response);
+        assertTrue(response.containsHeader("error"));
+
+        // Request #5
+        request.setBodyContent(
+            "{\n\"PAPPolicyType\": \"StdPAPPolicy\", \"policyName\": \"foo.Config_name.1.xml\", \"deleteCondition\": \"Current Version\"\n}\n");
+        handler.doApiDeleteFromPap(request, response);
+        assertTrue(response.containsHeader("error"));
+
+        // Request #6
+        request.setBodyContent(
+            "{\n\"PAPPolicyType\": \"StdPAPPolicy\", \"policyName\": \"foo.Action_name.1.xml\", \"deleteCondition\": \"Current Version\"\n}\n");
+        handler.doApiDeleteFromPap(request, response);
+        assertTrue(response.containsHeader("error"));
+
+        // Request #7
+        request.setBodyContent(
+            "{\n\"PAPPolicyType\": \"StdPAPPolicy\", \"policyName\": \"foo.Decision_name.1.xml\", \"deleteCondition\": \"Current Version\"\n}\n");
+        handler.doApiDeleteFromPap(request, response);
+        assertTrue(response.containsHeader("error"));
+
+        // Mock dao
+        List<PolicyVersion> pePVs = new ArrayList<PolicyVersion>();
+        PolicyVersion pv = new PolicyVersion();
+        pePVs.add(pv);
+        List<Object> peObjs = new ArrayList<Object>(pePVs);
+        List<PolicyEntity> peEnts = new ArrayList<PolicyEntity>();
+        PolicyEntity peEnt = new PolicyEntity();
+        peEnts.add(peEnt);
+        List<Object> peEntObjs = new ArrayList<Object>(peEnts);
+        Mockito.when(dao.getDataByQuery(eq("Select p from PolicyVersion p where p.policyName=:pname"), any()))
+            .thenReturn(peObjs);
+        Mockito.when(
+            dao.getDataByQuery(eq("SELECT p FROM PolicyEntity p WHERE p.policyName=:pName and p.scope=:pScope"), any()))
+            .thenReturn(peEntObjs);
+
+        // Request #8
+        request.setBodyContent(
+            "{\n\"PAPPolicyType\": \"StdPAPPolicy\", \"policyName\": \"foo.Decision_name.1.xml\", \"deleteCondition\": \"Current Version\"\n}\n");
+        handler.doApiDeleteFromPap(request, response);
+        assertTrue(response.containsHeader("error"));
+
+        // Request #9
+        request.setBodyContent(
+            "{\n\"PAPPolicyType\": \"StdPAPPolicy\", \"policyName\": \"foo.Decision_name.1.xml\", \"deleteCondition\": \"Current Version\"\n, \"deleteCondition\": \"All Versions\"}\n");
         handler.doApiDeleteFromPap(request, response);
         assertTrue(response.containsHeader("error"));
     }
