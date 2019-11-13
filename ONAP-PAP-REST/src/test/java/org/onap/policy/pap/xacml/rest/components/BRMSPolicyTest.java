@@ -22,15 +22,22 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import com.att.research.xacml.api.pap.PAPException;
 import java.io.IOException;
-
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 
 public class BRMSPolicyTest {
@@ -67,5 +74,39 @@ public class BRMSPolicyTest {
         String description = "testDesc";
         String userID = "testID";
         assertEquals(1, template.addRule(rule, ruleName, description, userID).size());
+    }
+
+    @Test
+    public void testCreateBrmsParamPolicyAdapter() throws PAPException {
+        Map<String, String> brmsParamBody = new HashMap<String, String>();
+        brmsParamBody.put("key", "value");
+
+        PolicyRestAdapter adapter = new PolicyRestAdapter();
+        adapter.setHighestVersion(1);
+        adapter.setPolicyType("Config");
+        adapter.setBrmsParamBody(brmsParamBody);
+        adapter.setNewFileName("policyName.1.xml");
+        Map<String, String> dynamicFieldConfigAttributes = new HashMap<String, String>();
+        dynamicFieldConfigAttributes.put("key", "value");
+        adapter.setDynamicFieldConfigAttributes(dynamicFieldConfigAttributes);
+
+        CreateBrmsParamPolicy policy = new CreateBrmsParamPolicy(adapter);
+        String ruleContents = "contents";
+
+        assertThatCode(() -> policy.saveConfigurations("name.xml", "rules")).doesNotThrowAnyException();
+        assertThatThrownBy(() -> policy.prepareToSave()).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> policy.savePolicies()).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> policy.expandConfigBody(ruleContents, brmsParamBody))
+            .isInstanceOf(NullPointerException.class);
+        assertTrue(policy.validateConfigForm());
+        policy.getAdviceExpressions(1, "name.1.xml");
+        assertNotNull(policy.getCorrectPolicyDataObject());
+    }
+
+    @Test
+    public void testRead() {
+        Charset encoding = Charset.defaultCharset();
+        assertThatCode(() -> CreateBrmsParamPolicy.readFile("xacml.pap.properties", encoding))
+            .doesNotThrowAnyException();
     }
 }

@@ -22,16 +22,20 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.mockrunner.mock.web.MockHttpServletRequest;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import javax.servlet.http.HttpServletRequest;
-
+import javax.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -72,16 +76,16 @@ public class OptimizationDictionaryControllerTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
         jsonString = "{\"optimizationModelsDictionaryData\": {\"modelName\": \"test\",\"inprocess\": false,\"model\":"
-                + " {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],\"type\": \"dir\","
-                + "\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", \"version\": \"\","
-                + "\"createdBy\": \"someone\",\"modifiedBy\": \"someone\",\"content\": \"\"," + "\"recursive\": false},"
-                + "\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
-                + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
-                + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
-                + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
-                + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
-                + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
-                + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
+            + " {\"name\": \"testingdata\",\"subScopename\": \"\",\"path\": [],\"type\": \"dir\","
+            + "\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", \"version\": \"\","
+            + "\"createdBy\": \"someone\",\"modifiedBy\": \"someone\",\"content\": \"\"," + "\"recursive\": false},"
+            + "\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
+            + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
+            + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
+            + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
+            + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
+            + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
+            + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
 
         br = new BufferedReader(new StringReader(jsonString));
         // --- mock the getReader() call
@@ -108,7 +112,7 @@ public class OptimizationDictionaryControllerTest {
             controller.getOptimizationModelsDictionaryEntityData(response);
             logger.info("response.getContentAsString(): " + response.getContentAsString());
             assertTrue(response.getContentAsString() != null
-                    && response.getContentAsString().contains("optimizationModelsDictionaryDatas"));
+                && response.getContentAsString().contains("optimizationModelsDictionaryDatas"));
 
         } catch (Exception e) {
             fail("Exception: " + e);
@@ -130,7 +134,7 @@ public class OptimizationDictionaryControllerTest {
             controller.saveOptimizationModelsDictionary(request, response);
             logger.info("response.getContentAsString(): " + response.getContentAsString());
             assertTrue(response.getContentAsString() != null
-                    && response.getContentAsString().contains("optimizationModelsDictionaryDatas"));
+                && response.getContentAsString().contains("optimizationModelsDictionaryDatas"));
 
         } catch (Exception e) {
             fail("Exception: " + e);
@@ -149,28 +153,59 @@ public class OptimizationDictionaryControllerTest {
         try {
             // mock the getReader() call
             jsonString =
-                    "{\"data\": {\"modelName\": \"test\",\"inprocess\": false,\"model\": {\"name\": \"testingdata\","
-                            + "\"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,"
-                            + "\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\",\"createdBy\": \"someone\","
-                            + "\"modifiedBy\": \"someone\",\"content\": \"\",\"recursive\": false},"
-                            + "\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
-                            + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
-                            + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
-                            + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
-                            + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
-                            + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
-                            + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
+                "{\"data\": {\"modelName\": \"test\",\"inprocess\": false,\"model\": {\"name\": \"testingdata\","
+                    + "\"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,"
+                    + "\"date\": \"2017-04-12T21:26:57.000Z\",\"version\": \"\",\"createdBy\": \"someone\","
+                    + "\"modifiedBy\": \"someone\",\"content\": \"\",\"recursive\": false},"
+                    + "\"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"},"
+                    + "\"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\","
+                    + "\"policyName\": \"may1501\",\"policyDescription\": \"testing input\","
+                    + "\"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\","
+                    + "\"riskLevel\": \"2\",\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\","
+                    + "\"version\": \"1707.41.02\",\"ruleGridData\": [[\"fileId\"]],\"ttlDate\": null}},"
+                    + "\"policyJSON\": {\"pmTableName\": \"test\",\"dmdTopic\": \"1\",\"fileId\": \"56\"}}";
 
             BufferedReader br = new BufferedReader(new StringReader(jsonString));
             when(request.getReader()).thenReturn(br);
             controller.removeOptimizationModelsDictionary(request, response);
             logger.info("response.getContentAsString(): " + response.getContentAsString());
             assertTrue(response.getContentAsString() != null
-                    && response.getContentAsString().contains("optimizationModelsDictionaryDatas"));
+                && response.getContentAsString().contains("optimizationModelsDictionaryDatas"));
 
         } catch (Exception e) {
             fail("Exception: " + e);
         }
         logger.info("testRemoveOptimizationModelsDictionary: exit");
     }
+
+    @Test
+    public void testGet() {
+        OptimizationDictionaryController controller = new OptimizationDictionaryController(commonClassDao);
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        controller.getOptimizationModelsDictionaryByNameEntityData(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void testSave() {
+        OptimizationDictionaryController controller = new OptimizationDictionaryController(commonClassDao);
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        req.setBodyContent("{\n\"modelType\": \"type.yml\", \"dataOrderInfo\": \"info\", \"userid\": \"id\", "
+            + "\"optimizationModelsDictionaryData\": {\"description\": \"desc\", \"modelName\": \"name\", \"version\": \"1.0\"}, "
+            + "\"classMap\": \"{\\\"dep\\\":\\\"{\\\"dependency\\\":\\\"depval\\\"}\\\"}\" }\n");
+        // + "\"classMap\": \"{\\\"dep\\\":\\\"dependency\\\"}\" }\n");
+        assertThatThrownBy(() -> controller.saveOptimizationModelsDictionary(req, response))
+            .isInstanceOf(NullPointerException.class);
+
+        req.setBodyContent("{\n\"modelType\": \"type.xml\", \"dataOrderInfo\": \"info\", \"userid\": \"id\", "
+            + "\"optimizationModelsDictionaryData\": {\"description\": \"desc\", \"modelName\": \"name\", \"version\": \"1.0\"}, "
+            + "\"classMap\": \"{\\\"dep\\\": {\\\"dependency\\\":\\\"depval\\\"} }\" }\n");
+        assertThatCode(() -> controller.saveOptimizationModelsDictionary(req, response)).doesNotThrowAnyException();
+
+        req.setupAddParameter("apiflag", "api");
+        assertThatThrownBy(() -> controller.saveOptimizationModelsDictionary(req, response))
+            .isInstanceOf(NullPointerException.class);
+    }
+
 }
