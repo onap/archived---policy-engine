@@ -59,7 +59,7 @@ import org.onap.policy.rest.jpa.ConfigurationDataEntity;
 import org.onap.policy.rest.jpa.DatabaseLockEntity;
 import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
-import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
+import org.onap.policy.rest.jpa.PolicyDbDaoEntity;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
@@ -212,14 +212,14 @@ public class PolicyDbDao {
     /**
      * Gets the list of other registered PolicyDBDaos from the database.
      *
-     * @return List (type PolicyDBDaoEntity) of other PolicyDBDaos
+     * @return List (type PolicyDbDaoEntity) of other PolicyDBDaos
      */
     private List<?> getRemotePolicyDbDaoList() {
         logger.debug("getRemotePolicyDBDaoList() as getRemotePolicyDBDaoList() called");
         List<?> policyDbDaoEntityList = new LinkedList<>();
         Session session = sessionfactory.openSession();
         try {
-            Criteria cr = session.createCriteria(PolicyDBDaoEntity.class);
+            Criteria cr = session.createCriteria(PolicyDbDaoEntity.class);
             policyDbDaoEntityList = cr.list();
         } catch (Exception e) {
             PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, POLICYDBDAO_VAR,
@@ -328,7 +328,7 @@ public class PolicyDbDao {
     }
 
     /**
-     * Register the PolicyDBDao instance in the PolicyDBDaoEntity table.
+     * Register the PolicyDBDao instance in the PolicyDbDaoEntity table.
      *
      * @return Boolean, were we able to register?
      */
@@ -370,19 +370,19 @@ public class PolicyDbDao {
             }
         }
         logger.debug("\nPolicyDBDao.register. Database locking and concurrency control is initialized\n");
-        PolicyDBDaoEntity foundPolicyDbDaoEntity = null;
-        Criteria cr = session.createCriteria(PolicyDBDaoEntity.class);
-        cr.add(Restrictions.eq("policyDBDaoUrl", url[0]));
+        PolicyDbDaoEntity foundPolicyDbDaoEntity = null;
+        Criteria cr = session.createCriteria(PolicyDbDaoEntity.class);
+        cr.add(Restrictions.eq("policyDbDaoUrl", url[0]));
         List<?> data = cr.list();
         if (!data.isEmpty()) {
-            foundPolicyDbDaoEntity = (PolicyDBDaoEntity) data.get(0);
+            foundPolicyDbDaoEntity = (PolicyDbDaoEntity) data.get(0);
         }
 
         // encrypt the password
         String txt = PeCryptoUtils.encrypt(url[2]);
         if (foundPolicyDbDaoEntity == null) {
-            PolicyDBDaoEntity newPolicyDbDaoEntity = new PolicyDBDaoEntity();
-            newPolicyDbDaoEntity.setPolicyDBDaoUrl(url[0]);
+            PolicyDbDaoEntity newPolicyDbDaoEntity = new PolicyDbDaoEntity();
+            newPolicyDbDaoEntity.setPolicyDbDaoUrl(url[0]);
             newPolicyDbDaoEntity.setDescription("PAP server at " + url[0]);
             newPolicyDbDaoEntity.setUsername(url[1]);
             newPolicyDbDaoEntity.setPassword(txt);

@@ -36,7 +36,7 @@ public enum DictionaryNames {
     VSCLAction,
     ClosedLoopService,
     ClosedLoopSite,
-    PEPOptions,
+    PepOptions,
     VarbindDictionary,
     BRMSParamDictionary,
     BRMSControllerDictionary,

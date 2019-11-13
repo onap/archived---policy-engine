@@ -70,6 +70,7 @@ public class PolicyValidationDaoImplTest {
 
     /**
      * Set up all unit tests.
+     * 
      * @throws SQLException on SQL exceptions
      */
     @BeforeClass
@@ -136,12 +137,11 @@ public class PolicyValidationDaoImplTest {
         userinfo.setUserName("Test");
         commonClassDao.save(userinfo);
         OnapName onapName = new OnapName();
-        onapName.setOnapName("Test");
+        onapName.setName("Test");
         onapName.setUserCreatedBy(userinfo);
         onapName.setUserModifiedBy(userinfo);
         onapName.setModifiedDate(new Date());
         commonClassDao.save(onapName);
-
 
         List<Object> list = commonClassDao.getData(OnapName.class);
         assertTrue(list.size() == 1);
@@ -159,7 +159,6 @@ public class PolicyValidationDaoImplTest {
         userinfo.setUserLoginId(loginIdUserName);
         userinfo.setUserName(loginIdUserName);
         commonClassDao.save(userinfo);
-
 
         List<Object> dataCur = commonClassDao.getDataByQuery("from UserInfo", new SimpleBindings());
 
@@ -224,7 +223,6 @@ public class PolicyValidationDaoImplTest {
         params.put("scope", scope);
         List<Object> dataCur = commonClassDao.getDataByQuery(query, params);
 
-
         assertTrue(1 == dataCur.size());
         assertEquals(pv, dataCur.get(0));
     }
@@ -244,7 +242,6 @@ public class PolicyValidationDaoImplTest {
         userinfo.setUserName(loginIdUserName);
         commonClassDao.save(userinfo);
 
-
         List<Object> dataCur = commonClassDao.getDataByQuery("from UserInfo", new SimpleBindings());
 
         assertEquals(1, dataCur.size());
@@ -253,7 +250,6 @@ public class PolicyValidationDaoImplTest {
         assertEquals(loginIdUserName, cur.getUserName());
 
         assertFalse(dataCur.isEmpty());
-
 
         watch.setPolicyName("bananaWatch");
         commonClassDao.save(watch);
@@ -280,7 +276,6 @@ public class PolicyValidationDaoImplTest {
         assertTrue(dataCur.get(0) instanceof WatchPolicyNotificationTable);
         assertEquals(watch, dataCur.get(0));
     }
-
 
     @Test
     @Transactional
@@ -326,7 +321,6 @@ public class PolicyValidationDaoImplTest {
         watch.setPolicyName(finalName);
         commonClassDao.save(watch);
 
-
         // Current Implementation
         String query = "from WatchPolicyNotificationTable where POLICYNAME = :finalName and LOGINIDS = :userId";
         SimpleBindings params = new SimpleBindings();
@@ -363,7 +357,6 @@ public class PolicyValidationDaoImplTest {
         // SQL Injection attempt
         String finalName = "banana' OR '1'='1";
 
-
         // Current Implementation
         String query = "from WatchPolicyNotificationTable where POLICYNAME = :finalName and LOGINIDS = :userId";
         SimpleBindings params = new SimpleBindings();
@@ -394,8 +387,8 @@ public class PolicyValidationDaoImplTest {
         commonClassDao.update(userInfoUpdate);
         List<String> data1 = commonClassDao.getDataByColumn(UserInfo.class, "userLoginId");
         assertTrue(data1.size() == 1);
-        UserInfo data2 =
-                (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId:userName", "TestID:Test1");
+        UserInfo data2 = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId:userName",
+                        "TestID:Test1");
         assertTrue("TestID".equals(data2.getUserLoginId()));
         List<Object> data3 = commonClassDao.checkDuplicateEntry("TestID:Test1", "userLoginId:userName", UserInfo.class);
         assertTrue(data3.size() == 1);
@@ -408,8 +401,8 @@ public class PolicyValidationDaoImplTest {
         assertTrue(roles1.size() == 1);
         List<String> multipleData = new ArrayList<>();
         multipleData.add("TestID:Test1");
-        List<Object> data4 =
-                commonClassDao.getMultipleDataOnAddingConjunction(UserInfo.class, "userLoginId:userName", multipleData);
+        List<Object> data4 = commonClassDao.getMultipleDataOnAddingConjunction(UserInfo.class, "userLoginId:userName",
+                        multipleData);
         assertTrue(data4.size() == 1);
         commonClassDao.delete(data2);
     }
@@ -433,7 +426,7 @@ public class PolicyValidationDaoImplTest {
         data = commonClassDao.getDataById(UserInfo.class, "userLoginIduserName", "TestIDTest");
         assertNull(data);
         data = commonClassDao.getDataById(UserInfo.class, "userLoginId   data2.getUserLoginId()" + ":userName",
-                "TestIDTest");
+                        "TestIDTest");
         assertNull(data);
         commonClassDao.delete(data);
     }
@@ -463,8 +456,8 @@ public class PolicyValidationDaoImplTest {
         commonClassDao.save(userInfo);
         List<String> multipleData = new ArrayList<>();
         multipleData.add("TestID:Test1");
-        List<Object> data =
-                commonClassDao.getMultipleDataOnAddingConjunction(UserInfo.class, "userLoginId:userName", multipleData);
+        List<Object> data = commonClassDao.getMultipleDataOnAddingConjunction(UserInfo.class, "userLoginId:userName",
+                        multipleData);
         assertTrue(data.size() == 0);
         data = commonClassDao.getMultipleDataOnAddingConjunction(null, null, null);
         assertNull(data);
@@ -506,7 +499,6 @@ public class PolicyValidationDaoImplTest {
         commonClassDao.delete(data);
     }
 
-
     @Test
     public void testGetEntityItemParameters() {
         UserInfo userInfo = new UserInfo();
@@ -520,8 +512,8 @@ public class PolicyValidationDaoImplTest {
         commonClassDao.update(userInfoUpdate);
         List<String> data1 = commonClassDao.getDataByColumn(UserInfo.class, "userLoginId");
         assertTrue(data1.size() == 1);
-        UserInfo data2 =
-                (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId:userName", "TestID:Test1");
+        UserInfo data2 = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId:userName",
+                        "TestID:Test1");
         assertTrue("TestID".equals(data2.getUserLoginId()));
         data2 = (UserInfo) commonClassDao.getEntityItem(null, null, null);
         assertNull(data2);
@@ -586,7 +578,6 @@ public class PolicyValidationDaoImplTest {
         assertTrue(data.size() == 1);
         commonClassDao.delete(data);
     }
-
 
     @Test
     public void testGetDataByQueryParameters() {

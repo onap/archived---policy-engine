@@ -3,13 +3,14 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,8 +20,7 @@
  */
 
 package org.onap.policy.rest.jpa;
-/*
- */
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -39,106 +39,63 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Getter;
+import lombok.Setter;
 
+/**
+ * The Class OnapName.
+ */
 @Entity
-@Table(name="OnapName")
-@NamedQuery(name="OnapName.findAll", query="SELECT e FROM OnapName e ")
+@Table(name = "OnapName")
+@NamedQuery(name = "OnapName.findAll", query = "SELECT e FROM OnapName e ")
+@Getter
+@Setter
 public class OnapName implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="onap_Name", nullable=false, unique=true)
+    @Column(name = "onap_Name", nullable = false, unique = true)
     @OrderBy("asc")
-    private String onapName;
+    private String name;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="created_date", updatable=false)
+    @Column(name = "created_date", updatable = false)
     private Date createdDate;
 
-    @Column(name="description", nullable=true, length=2048)
+    @Column(name = "description", nullable = true, length = 2048)
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="modified_date", nullable=false)
+    @Column(name = "modified_date", nullable = false)
     private Date modifiedDate;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="created_by")
+    @JoinColumn(name = "created_by")
     private UserInfo userCreatedBy;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="modified_by")
+    @JoinColumn(name = "modified_by")
     private UserInfo userModifiedBy;
 
-    public UserInfo getUserCreatedBy() {
-        return userCreatedBy;
-    }
-
-    public void setUserCreatedBy(UserInfo userCreatedBy) {
-        this.userCreatedBy = userCreatedBy;
-    }
-
-    public UserInfo getUserModifiedBy() {
-        return userModifiedBy;
-    }
-
-    public void setUserModifiedBy(UserInfo userModifiedBy) {
-        this.userModifiedBy = userModifiedBy;
-    }
-
+    /**
+     * Pre persist.
+     */
     @PrePersist
-    public void	prePersist() {
+    public void prePersist() {
         Date date = new Date();
         this.createdDate = date;
         this.modifiedDate = date;
     }
 
+    /**
+     * Pre update.
+     */
     @PreUpdate
     public void preUpdate() {
         this.modifiedDate = new Date();
     }
-    public String getOnapName() {
-        return this.onapName;
-    }
-
-    public void setOnapName(String onapName) {
-        this.onapName = onapName;
-
-    }
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Date getCreatedDate() {
-        return this.createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getModifiedDate() {
-        return this.modifiedDate;
-    }
-
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
 }

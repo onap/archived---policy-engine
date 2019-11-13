@@ -28,7 +28,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
+import org.onap.policy.rest.jpa.PolicyDbDaoEntity;
 
 public class NotifyOtherPapsTest {
     private static final String systemKey = XACMLProperties.XACML_PROPERTIES_NAME;
@@ -43,9 +43,9 @@ public class NotifyOtherPapsTest {
     @Test
     public void negTestNotify() {
         NotifyOtherPaps notify = new NotifyOtherPaps();
-        List<PolicyDBDaoEntity> otherServers = new ArrayList<PolicyDBDaoEntity>();
-        PolicyDBDaoEntity dbdaoEntity = new PolicyDBDaoEntity();
-        dbdaoEntity.setPolicyDBDaoUrl("http://test");
+        List<PolicyDbDaoEntity> otherServers = new ArrayList<PolicyDbDaoEntity>();
+        PolicyDbDaoEntity dbdaoEntity = new PolicyDbDaoEntity();
+        dbdaoEntity.setPolicyDbDaoUrl("http://test");
         otherServers.add(dbdaoEntity);
         long entityId = 0;
         String entityType = "entityType";

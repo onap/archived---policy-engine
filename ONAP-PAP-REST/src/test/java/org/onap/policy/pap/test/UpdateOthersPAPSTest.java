@@ -43,7 +43,7 @@ import org.onap.policy.pap.xacml.rest.UpdateOthersPAPS;
 import org.onap.policy.pap.xacml.rest.adapters.UpdateObjectData;
 import org.onap.policy.pap.xacml.rest.components.Policy;
 import org.onap.policy.rest.dao.CommonClassDao;
-import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
+import org.onap.policy.rest.jpa.PolicyDbDaoEntity;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -65,20 +65,20 @@ public class UpdateOthersPAPSTest {
         request = mock(HttpServletRequest.class);
         response = new MockHttpServletResponse();
         List<Object> data = new ArrayList<>();
-        PolicyDBDaoEntity entity = new PolicyDBDaoEntity();
-        entity.setPolicyDBDaoUrl("http://localhost:8070/pap");
+        PolicyDbDaoEntity entity = new PolicyDbDaoEntity();
+        entity.setPolicyDbDaoUrl("http://localhost:8070/pap");
         entity.setUsername("test");
         entity.setPassword("test");
 
-        PolicyDBDaoEntity entity1 = new PolicyDBDaoEntity();
-        entity1.setPolicyDBDaoUrl("http://localhost:8071/pap");
+        PolicyDbDaoEntity entity1 = new PolicyDbDaoEntity();
+        entity1.setPolicyDbDaoUrl("http://localhost:8071/pap");
         entity1.setUsername("test");
         entity1.setPassword("test");
 
         data.add(entity);
         data.add(entity1);
         System.setProperty("xacml.rest.pap.url", "http://localhost:8070/pap");
-        when(commonClassDao.getData(PolicyDBDaoEntity.class)).thenReturn(data);
+        when(commonClassDao.getData(PolicyDbDaoEntity.class)).thenReturn(data);
     }
 
     @Test

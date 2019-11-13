@@ -903,8 +903,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
         // Get all keys with "MANY-true" defined in their value from subAttribute
         Set<String> allkeys = null;
-        if (returnModel.getSub_attributes() != null && !returnModel.getSub_attributes().isEmpty()) {
-            JSONObject json = new JSONObject(returnModel.getSub_attributes());
+        if (returnModel.getSubAttributes() != null && !returnModel.getSubAttributes().isEmpty()) {
+            JSONObject json = new JSONObject(returnModel.getSubAttributes());
             getAllKeys(json);
             allkeys = allManyTrueKeys;
             allManyTrueKeys = new TreeSet<>();
@@ -942,8 +942,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             jsonModel = finalJsonObject.toString();
         }
 
-        // get all properties with "MANY-true" defined in Ref_attributes
-        Set<String> manyTrueProperties = getManyTrueProperties(returnModel.getRef_attributes());
+        // get all properties with "MANY-true" defined in RefAttributes
+        Set<String> manyTrueProperties = getManyTrueProperties(returnModel.getRefAttributes());
         if (manyTrueProperties != null) {
             JSONObject jsonObj = new JSONObject(jsonModel);
             for (String s : manyTrueProperties) {
@@ -988,7 +988,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         if (attribute != null) {
             attribute = attribute.trim();
         }
-        String refAttribute = returnModel.getRef_attributes();
+        String refAttribute = returnModel.getRefAttributes();
         if (refAttribute != null) {
             refAttribute = refAttribute.trim();
         }
@@ -1005,7 +1005,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
         Gson gson = new Gson();
 
-        String subAttributes = returnModel.getSub_attributes();
+        String subAttributes = returnModel.getSubAttributes();
         if (subAttributes != null) {
             subAttributes = subAttributes.trim();
         } else {

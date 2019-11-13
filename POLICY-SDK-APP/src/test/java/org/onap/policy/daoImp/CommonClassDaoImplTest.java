@@ -130,7 +130,7 @@ public class CommonClassDaoImplTest {
             userinfo.setUserName("Test");
             commonClassDao.save(userinfo);
             OnapName onapName = new OnapName();
-            onapName.setOnapName("Test");
+            onapName.setName("Test");
             onapName.setUserCreatedBy(userinfo);
             onapName.setUserModifiedBy(userinfo);
             onapName.setModifiedDate(new Date());
