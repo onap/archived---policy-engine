@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bbfca4fc_32c3eddd",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/ConstraintType.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-13T21:59:36Z",
+      "side": 1,
+      "message": "Checkstyle complained that the variable name was the same as the class name and I couldn\u0027t think of a better name for the field.",
+      "parentUuid": "845162c2_19a3435e",
+      "revId": "d477f51bf62e84f719dec598f54495c86741986f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a819a42_37c26a7e",
         "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/ActionDictionaryJpaTest.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-13T19:55:01Z",
       "side": 1,
       "message": "the added \"assert\" wrappers are superfluous, but I assume they were added to satisfy some sonar complaint",
+      "revId": "d477f51bf62e84f719dec598f54495c86741986f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6e016d6_19689cc3",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/ActionDictionaryJpaTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-13T21:59:36Z",
+      "side": 1,
+      "message": "They are superfluous, I\u0027ll remove them.",
+      "parentUuid": "8a819a42_37c26a7e",
       "revId": "d477f51bf62e84f719dec598f54495c86741986f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "2a9111e8_ed3eea53",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/DictionaryDataTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-13T21:59:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5ca9094_230b3c25",
+      "revId": "d477f51bf62e84f719dec598f54495c86741986f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcc0fcdc_a84d1cbf",
         "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/MicroServiceDictionaryJpaTest.java",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2019-11-13T19:55:01Z",
       "side": 1,
       "message": "oops",
+      "revId": "d477f51bf62e84f719dec598f54495c86741986f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e729c54e_47783911",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/MicroServiceDictionaryJpaTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-13T21:59:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fcc0fcdc_a84d1cbf",
       "revId": "d477f51bf62e84f719dec598f54495c86741986f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
