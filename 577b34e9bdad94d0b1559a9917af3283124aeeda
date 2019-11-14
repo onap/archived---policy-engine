@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6e30482_694ea561",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsParamPolicy.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-14T13:02:38Z",
+      "side": 1,
+      "message": "How is this helping with the testing? Not sure I see anything in the actual test files.",
+      "range": {
+        "startLine": 25,
+        "startChar": 7,
+        "endLine": 25,
+        "endChar": 55
+      },
+      "revId": "577b34e9bdad94d0b1559a9917af3283124aeeda",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4e23481_523c200d",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsParamPolicy.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-14T13:02:38Z",
+      "side": 1,
+      "message": "I assume this is we prefer private but making protected helps with the testing.",
+      "range": {
+        "startLine": 462,
+        "startChar": 4,
+        "endLine": 463,
+        "endChar": 13
+      },
+      "revId": "577b34e9bdad94d0b1559a9917af3283124aeeda",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28e78c7f_ddd2060e",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsParamPolicy.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-14T13:02:38Z",
+      "side": 1,
+      "message": "I see a lot of code like this, my strategy in POLICY-SDK-APP was to pull it into a utility class. This reduces lines of code and allows that utility class to be code covered.",
+      "range": {
+        "startLine": 465,
+        "startChar": 1,
+        "endLine": 480,
+        "endChar": 0
+      },
+      "revId": "577b34e9bdad94d0b1559a9917af3283124aeeda",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "082dca91_dca823b1",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/BRMSPolicyTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-14T13:02:38Z",
+      "side": 1,
+      "message": "Sonar doesn\u0027t like these",
+      "range": {
+        "startLine": 81,
+        "startChar": 56,
+        "endLine": 81,
+        "endChar": 70
+      },
+      "revId": "577b34e9bdad94d0b1559a9917af3283124aeeda",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95adf421_3adb022c",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/BRMSPolicyTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-14T13:02:38Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 89,
+        "startChar": 71,
+        "endLine": 89,
+        "endChar": 85
+      },
+      "revId": "577b34e9bdad94d0b1559a9917af3283124aeeda",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
