@@ -194,7 +194,6 @@ public class OptimizationDictionaryControllerTest {
         req.setBodyContent("{\n\"modelType\": \"type.yml\", \"dataOrderInfo\": \"info\", \"userid\": \"id\", "
             + "\"optimizationModelsDictionaryData\": {\"description\": \"desc\", \"modelName\": \"name\", \"version\": \"1.0\"}, "
             + "\"classMap\": \"{\\\"dep\\\":\\\"{\\\"dependency\\\":\\\"depval\\\"}\\\"}\" }\n");
-        // + "\"classMap\": \"{\\\"dep\\\":\\\"dependency\\\"}\" }\n");
         assertThatThrownBy(() -> controller.saveOptimizationModelsDictionary(req, response))
             .isInstanceOf(NullPointerException.class);
 

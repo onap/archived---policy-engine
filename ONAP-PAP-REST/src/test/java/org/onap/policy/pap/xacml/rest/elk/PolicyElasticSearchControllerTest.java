@@ -20,37 +20,45 @@
 
 package org.onap.policy.pap.xacml.rest.elk;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.when;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.onap.policy.pap.xacml.rest.elk.client.ElkConnector.PolicyIndexType;
 import org.onap.policy.pap.xacml.rest.elk.client.PolicyElasticSearchController;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.dao.CommonClassDao;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 public class PolicyElasticSearchControllerTest {
 
-    private PolicyElasticSearchController conroller;
+    private PolicyElasticSearchController controller;
     private HttpServletRequest request = null;
     private HttpServletResponse response = null;
 
     @Before
     public void setup() {
-        conroller = new PolicyElasticSearchController();
+        controller = new PolicyElasticSearchController();
         request = Mockito.mock(HttpServletRequest.class);
-        response = Mockito.mock(HttpServletResponse.class);
+        response = new MockHttpServletResponse();
     }
 
     @Test
-    public void testSearchDictionary() {
+    public void testSearchDictionary() throws IOException {
         List<String> jsonString = new ArrayList<>();
         jsonString.add("{\"type\":\"attribute\",\"data\":{\"xacmlId\":\"Test\"}}");
         jsonString.add("{\"type\":\"onapName\",\"data\":{\"onapName\":\"Test\"}}");
@@ -71,12 +79,35 @@ public class PolicyElasticSearchControllerTest {
         jsonString.add("{\"type\":\"safeRisk\",\"data\":{\"name\":\"Test\"}}");
         jsonString.add("{\"type\":\"safePolicyWarning\",\"data\":{\"name\":\"Test\"}}");
         for (int i = 0; i < jsonString.size(); i++) {
-            try (BufferedReader br = new BufferedReader(new StringReader(jsonString.get(i)))) {
-                when(request.getReader()).thenReturn(br);
-                conroller.searchDictionary(request, response);
-            } catch (Exception e) {
-                assertEquals(NullPointerException.class, e.getClass());
-            }
+            BufferedReader br = new BufferedReader(new StringReader(jsonString.get(i)));
+            when(request.getReader()).thenReturn(br);
+            assertThatCode(() -> controller.searchDictionary(request, response)).doesNotThrowAnyException();
         }
+    }
+
+    @Test
+    public void testController() throws IOException {
+        CommonClassDao dao = Mockito.mock(CommonClassDao.class);
+        PolicyElasticSearchController controller = new PolicyElasticSearchController(dao);
+        assertEquals(PolicyIndexType.all, controller.toPolicyIndexType(null));
+        assertEquals(PolicyIndexType.config, controller.toPolicyIndexType("config"));
+
+        Map<String, String> searchKeys = new HashMap<String, String>();
+        searchKeys.put("key", "value");
+        assertThatThrownBy(() -> controller.search(PolicyIndexType.config, "text", searchKeys))
+            .isInstanceOf(Exception.class);
+
+        when(request.getParameter("policyName")).thenReturn("policyName");
+        when(request.getParameter("action")).thenReturn("search");
+        when(request.getReader())
+            .thenReturn(new BufferedReader(new StringReader("{\"searchdata\": { \"query\": \"value space\", "
+                + "\"policyType\": \"all\", " + "\"closedLooppolicyType\": \"type\", " + "\"onapName\": \"pef\", "
+                + "\"vnfType\": \"vnf\", " + "\"policyStatus\": \"active\", " + "\"vproAction\": \"reboot\", "
+                + "\"serviceType\": \"type\", " + "\"bindTextSearch\": \"pef\", " + "\"d2Service\": \"vDNS\"} }")));
+        controller.searchPolicy(request, response);
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+
+        PolicyRestAdapter policyData = new PolicyRestAdapter();
+        assertFalse(controller.deleteElk(policyData));
     }
 }

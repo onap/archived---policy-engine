@@ -18,8 +18,9 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pap.xacml.rest.elk;
+package org.onap.policy.pap.xacml.rest.elk.client;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -27,15 +28,14 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import io.searchbox.client.JestResult;
-
 import java.io.IOException;
 import java.lang.reflect.Method;
-
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.onap.policy.pap.xacml.rest.elk.client.ElkConnector.PolicyIndexType;
-import org.onap.policy.pap.xacml.rest.elk.client.ElkConnectorImpl;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 
 public class ElkConnectorImplTest {
@@ -142,5 +142,32 @@ public class ElkConnectorImplTest {
         ElkConnectorImpl impl = new ElkConnectorImpl();
         impl.search(PolicyIndexType.config, "search", null);
         fail("Expected exception to be thrown");
+    }
+
+    @Test
+    public void testImplNegCases() throws IOException {
+        ElkConnectorImpl impl = new ElkConnectorImpl();
+        Map<String, String> filter = new HashMap<String, String>();
+        assertThatThrownBy(() -> impl.isType(PolicyIndexType.config)).isInstanceOf(IOException.class);
+        assertThatThrownBy(() -> impl.isIndex()).isInstanceOf(IOException.class);
+        assertThatThrownBy(() -> impl.search(null, null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> impl.search(null, "")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> impl.search(null, ";;;")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> impl.search(null, "foo")).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> impl.search(PolicyIndexType.all, "foo")).isInstanceOf(IllegalStateException.class);
+
+        assertThatThrownBy(() -> impl.search(null, null, null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> impl.search(null, null, filter)).isInstanceOf(IllegalArgumentException.class);
+        filter.put("key", "value");
+        assertThatThrownBy(() -> impl.search(null, ";;;", filter)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> impl.search(null, "foo", filter)).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> impl.search(PolicyIndexType.config, "foo", filter))
+            .isInstanceOf(IllegalStateException.class);
+
+        PolicyRestAdapter adapter = new PolicyRestAdapter();
+        adapter.setNewFileName("scope.Decision_newFile");
+        adapter.setConfigPolicyType("Config");
+        assertThatThrownBy(() -> impl.put(adapter)).isInstanceOf(IOException.class);
+        assertThatThrownBy(() -> impl.delete(adapter)).isInstanceOf(IllegalStateException.class);
     }
 }

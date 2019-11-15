@@ -21,13 +21,11 @@
 package org.onap.policy.pap.xacml.rest.service;
 
 import com.att.research.xacml.api.pap.PDPPolicy;
-
+import com.google.common.annotations.VisibleForTesting;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.JSONObject;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
@@ -51,8 +49,9 @@ public class MetricService {
 
     }
 
+    @VisibleForTesting
     @Autowired
-    private MetricService(CommonClassDao commonClassDao) {
+    protected MetricService(CommonClassDao commonClassDao) {
         MetricService.commonClassDao = commonClassDao;
     }
 
@@ -79,7 +78,7 @@ public class MetricService {
             json.put("totalCount", totalCount);
             if (pdpCount > 0 && papCount > 0 && totalCount > 0) {
                 PolicyLogger.info(
-                        "Metrics have been found on the Policy Engine for the number of policies on the PAP and PDP.");
+                    "Metrics have been found on the Policy Engine for the number of policies on the PAP and PDP.");
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.addHeader("successMapKey", "success");
                 response.addHeader("operation", "getMetrics");
@@ -87,7 +86,7 @@ public class MetricService {
                 return;
             } else {
                 String message =
-                        "The policy count on the PAP and PDP is 0.  Please check the database and file system to correct this error.";
+                    "The policy count on the PAP and PDP is 0.  Please check the database and file system to correct this error.";
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.addHeader(errorMsg, message);
                 return;

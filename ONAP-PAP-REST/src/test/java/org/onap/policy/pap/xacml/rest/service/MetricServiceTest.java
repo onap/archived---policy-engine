@@ -21,15 +21,19 @@
 package org.onap.policy.pap.xacml.rest.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 import com.mockrunner.mock.web.MockHttpServletResponse;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
+import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.PolicyVersion;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -42,6 +46,19 @@ public class MetricServiceTest {
         // Mock pap servlet
         PowerMockito.mockStatic(XACMLPapServlet.class);
         when(XACMLPapServlet.getPAPEngine()).thenReturn(null);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        MetricService.doGetPolicyMetrics(response);
+        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void testService() {
+        CommonClassDao dao = Mockito.mock(CommonClassDao.class);
+        List<Object> value = new ArrayList<Object>();
+        when(dao.getData(PolicyVersion.class)).thenReturn(value);
+        MetricService service = new MetricService(dao);
+        assertNotNull(service);
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         MetricService.doGetPolicyMetrics(response);
