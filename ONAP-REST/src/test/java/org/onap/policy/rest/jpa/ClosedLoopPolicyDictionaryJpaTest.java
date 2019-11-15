@@ -57,13 +57,13 @@ public class ClosedLoopPolicyDictionaryJpaTest {
      */
     @Test
     public void testVsclAction() {
-        VSCLAction data = new VSCLAction();
+        VsclAction data = new VsclAction();
         data.preUpdate();
         data.prePersist();
         data.setId(1);
         assertTrue(1 == data.getId());
-        data.setVsclaction("Test");
-        assertTrue("Test".equals(data.getVsclaction()));
+        data.setAction("Test");
+        assertTrue("Test".equals(data.getAction()));
         data.setDescription("Test");
         assertTrue("Test".equals(data.getDescription()));
         data.setCreatedDate(new Date());
@@ -81,13 +81,13 @@ public class ClosedLoopPolicyDictionaryJpaTest {
      */
     @Test
     public void testVnfType() {
-        VNFType data = new VNFType();
+        VnfType data = new VnfType();
         data.preUpdate();
         data.prePersist();
         data.setId(1);
         assertTrue(1 == data.getId());
-        data.setVnftype("Test");
-        assertTrue("Test".equals(data.getVnftype()));
+        data.setType("Test");
+        assertTrue("Test".equals(data.getType()));
         data.setDescription("Test");
         assertTrue("Test".equals(data.getDescription()));
         data.setCreatedDate(new Date());
@@ -138,8 +138,8 @@ public class ClosedLoopPolicyDictionaryJpaTest {
         assertTrue("Test".equals(data.getVarbindName()));
         data.setVarbindDescription("Test");
         assertTrue("Test".equals(data.getVarbindDescription()));
-        data.setVarbindOID("Test");
-        assertTrue("Test".equals(data.getVarbindOID()));
+        data.setVarbindOid("Test");
+        assertTrue("Test".equals(data.getVarbindOid()));
         data.setCreatedDate(new Date());
         assertTrue(data.getCreatedDate() != null);
         data.setModifiedDate(new Date());

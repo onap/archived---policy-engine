@@ -207,10 +207,10 @@ public class PolicyRestControllerTest {
         termListData = new ArrayList<>();
         TermList termList = new TermList();
         termList.setTermName("Test");
-        termList.setFromZones("Test");
-        termList.setToZones("Test");
-        termList.setSrcIPList("Test");
-        termList.setDestIPList("Test");
+        termList.setFromZone("Test");
+        termList.setToZone("Test");
+        termList.setSrcIpList("Test");
+        termList.setDestIpList("Test");
         termList.setSrcPortList("Test");
         termList.setDestPortList("Test");
         termList.setAction("Test");

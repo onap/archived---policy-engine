@@ -871,10 +871,10 @@ public class FirewallDictionaryController {
                 userId = root.get(userid).textValue();
             }
 
-            termList.setFromZones(utils.appendKey(termListDatas.getFromZoneDatas(), option, ","));
-            termList.setToZones(utils.appendKey(termListDatas.getToZoneDatas(), option, ","));
-            termList.setSrcIPList(utils.appendKey(termListDatas.getSourceListDatas(), option, ","));
-            termList.setDestIPList(utils.appendKey(termListDatas.getDestinationListDatas(), option, ","));
+            termList.setFromZone(utils.appendKey(termListDatas.getFromZoneDatas(), option, ","));
+            termList.setToZone(utils.appendKey(termListDatas.getToZoneDatas(), option, ","));
+            termList.setSrcIpList(utils.appendKey(termListDatas.getSourceListDatas(), option, ","));
+            termList.setDestIpList(utils.appendKey(termListDatas.getDestinationListDatas(), option, ","));
             termList.setSrcPortList(utils.appendKey(termListDatas.getSourceServiceDatas(), option, ","));
             termList.setDestPortList(utils.appendKey(termListDatas.getDestinationServiceDatas(), option, ","));
             termList.setAction(utils.appendKey(termListDatas.getActionListDatas(), option, ","));

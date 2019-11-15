@@ -204,9 +204,9 @@ public class PolicyUtilsJpaTest {
      * Test system log DB.
      */
     @Test
-    public void testSystemLogDB() {
-        SystemLogDB data = new SystemLogDB();
-        new SystemLogDB(1, "", "", "", "", "");
+    public void testSystemLogDb() {
+        SystemLogDb data = new SystemLogDb();
+        new SystemLogDb(1, "", "", "", "", "");
         data.setId(1);
         assertTrue(1 == data.getId());
         data.setDescription("Test");

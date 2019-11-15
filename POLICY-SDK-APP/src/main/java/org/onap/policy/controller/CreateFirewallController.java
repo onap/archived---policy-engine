@@ -321,9 +321,9 @@ public class CreateFirewallController extends RestrictedBaseController {
                 List<Object> tmList = commonClassDao.getDataById(TermList.class, "termName", id);
                 jpaTermList = (TermList) tmList.get(0);
                 if (jpaTermList != null) {
-                    ruleSrcList = jpaTermList.getSrcIPList();
+                    ruleSrcList = jpaTermList.getSrcIpList();
                     if ((ruleSrcList != null) && (!ruleSrcList.isEmpty()) && !"null".equals(ruleSrcList)) {
-                        displayString.append("Source IP List: " + jpaTermList.getSrcIPList());
+                        displayString.append("Source IP List: " + jpaTermList.getSrcIpList());
                         displayString.append(" ; \t\n");
                         for (String srcList : ruleSrcList.split(",")) {
                             if (srcList.startsWith(GROUP)) {
@@ -354,9 +354,9 @@ public class CreateFirewallController extends RestrictedBaseController {
                         }
                         displayString.append("\n");
                     }
-                    ruleDestList = jpaTermList.getDestIPList();
+                    ruleDestList = jpaTermList.getDestIpList();
                     if (ruleDestList != null && (!ruleDestList.isEmpty()) && !"null".equals(ruleDestList)) {
-                        displayString.append("Destination IP List: " + jpaTermList.getDestIPList());
+                        displayString.append("Destination IP List: " + jpaTermList.getDestIpList());
                         displayString.append(" ; \t\n");
                         for (String destList : ruleDestList.split(",")) {
                             if (destList.startsWith(GROUP)) {
@@ -529,7 +529,7 @@ public class CreateFirewallController extends RestrictedBaseController {
                 for (int j = 0; j < termListData.size(); j++) {
                     jpaTermList = (TermList) termListData.get(j);
                     if (jpaTermList.getTermName().equals(termCollectorList.get(tl))) {
-                        ruleDesc = jpaTermList.getTermDescription();
+                        ruleDesc = jpaTermList.getDescription();
                         if ((ruleDesc != null) && (!ruleDesc.isEmpty())) {
                             targetTerm.setDescription(ruleDesc);
                         }
@@ -545,14 +545,14 @@ public class CreateFirewallController extends RestrictedBaseController {
                             mapToZone = new HashMap<>();
                             mapToZone.put(tl, ruleToZone);
                         }
-                        ruleSrcPrefixList = jpaTermList.getSrcIPList();
+                        ruleSrcPrefixList = jpaTermList.getSrcIpList();
 
                         if ((ruleSrcPrefixList != null) && (!ruleSrcPrefixList.isEmpty())) {
                             mapSrcIp = new HashMap<>();
                             mapSrcIp.put(tl, ruleSrcPrefixList);
                         }
 
-                        ruleDestPrefixList = jpaTermList.getDestIPList();
+                        ruleDestPrefixList = jpaTermList.getDestIpList();
                         if ((ruleDestPrefixList != null) && (!ruleDestPrefixList.isEmpty())) {
                             mapDestIP = new HashMap<>();
                             mapDestIP.put(tl, ruleDestPrefixList);
