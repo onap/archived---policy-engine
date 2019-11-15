@@ -56,7 +56,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
                 case "VNFType":
                     dictionary.getVnfType(response);
                     break;
-                case "PEPOptions":
+                case "PepOptions":
                     dictionary.getPEPOptions(response);
                     break;
                 case "Varbind":
@@ -206,7 +206,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler {
                 case "VNFType":
                     result = dictionary.saveVnfType(request, response);
                     break;
-                case "PEPOptions":
+                case "PepOptions":
                     result = dictionary.savePEPOptions(request, response);
                     break;
                 case "Varbind":

@@ -48,7 +48,7 @@ import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
-import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
+import org.onap.policy.rest.jpa.PolicyDbDaoEntity;
 import org.onap.policy.utils.PeCryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,11 +103,11 @@ public class UpdateOthersPAPS {
         body.setOldPolicyName(request.getParameter("oldPolicyName"));
 
         String currentPap = XacmlRestProperties.getProperty("xacml.rest.pap.url");
-        List<Object> getPAPUrls = commonClassDao.getData(PolicyDBDaoEntity.class);
+        List<Object> getPAPUrls = commonClassDao.getData(PolicyDbDaoEntity.class);
         if (getPAPUrls != null && !getPAPUrls.isEmpty()) {
             for (int i = 0; i < getPAPUrls.size(); i++) {
-                PolicyDBDaoEntity papId = (PolicyDBDaoEntity) getPAPUrls.get(i);
-                String papUrl = papId.getPolicyDBDaoUrl();
+                PolicyDbDaoEntity papId = (PolicyDbDaoEntity) getPAPUrls.get(i);
+                String papUrl = papId.getPolicyDbDaoUrl();
                 if (!papUrl.equals(currentPap)) {
                     String userName = papId.getUsername();
                     String password = papId.getPassword();

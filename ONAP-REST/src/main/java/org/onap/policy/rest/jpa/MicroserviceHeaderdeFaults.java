@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,89 +34,55 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
-@Table(name="MicroserviceHeaderdeFaults")
-@NamedQuery(name="MicroserviceHeaderdeFaults.findAll", query="SELECT e FROM MicroserviceHeaderdeFaults e ")
+@Table(name = "MicroserviceHeaderdeFaults")
+@NamedQuery(name = "MicroserviceHeaderdeFaults.findAll", query = "SELECT e FROM MicroserviceHeaderdeFaults e ")
+@Getter
+@Setter
 public class MicroserviceHeaderdeFaults implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="onapName")
+    @Column(name = "onapName")
     private String onapName;
 
-    @Column(name="guard")
-    private String guard ;
+    @Column(name = "guard")
+    private String guard;
 
-    @Column(name="priority")
+    @Column(name = "priority")
     private String priority;
 
-    @Column(name="riskType")
-    private String riskType ;
+    @Column(name = "riskType")
+    private String riskType;
 
-    @Column(name="riskLevel")
+    @Column(name = "riskLevel")
 
     private String riskLevel;
 
-    @Column(name="modelName", nullable=false)
+    @Column(name = "modelName", nullable = false)
     @OrderBy("asc")
     private String modelName;
 
+    /**
+     * Called before persisting the object.
+     */
     @PrePersist
-    public void	prePersist() {
-
+    public void prePersist() {
+        // Required for testing
     }
+
+    /**
+     * Called before updating the object.
+     */
     @PreUpdate
     public void preUpdate() {
+        // Required for testing
     }
-
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getModelName() {
-        return modelName;
-    }
-    public void setModelName(String modelName) {
-        this.modelName = modelName;
-    }
-    public String getOnapName() {
-        return onapName;
-    }
-    public void setOnapName(String onapName) {
-        this.onapName = onapName;
-    }
-    public String getGuard() {
-        return guard;
-    }
-    public void setGuard(String guard) {
-        this.guard = guard;
-    }
-    public String getPriority() {
-        return priority;
-    }
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
-    public String getRiskType() {
-        return riskType;
-    }
-    public void setRiskType(String riskType) {
-        this.riskType = riskType;
-    }
-    public String getRiskLevel() {
-        return riskLevel;
-    }
-    public void setRiskLevel(String riskLevel) {
-        this.riskLevel = riskLevel;
-    }
-
 }

@@ -21,8 +21,6 @@
 
 package org.onap.policy.rest.jpa;
 
-/*
- */
 import java.io.Serializable;
 
 import javax.persistence.Column;

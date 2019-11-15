@@ -23,7 +23,9 @@ package org.onap.policy.rest.adapter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.EntityManagerFactory;
+
 import org.onap.policy.rest.jpa.OnapName;
 
 public class PolicyRestAdapter {
@@ -1160,7 +1162,7 @@ public class PolicyRestAdapter {
             case "ONAPName":
                 this.setOnapName(value);
                 OnapName tempOnapName = new OnapName();
-                tempOnapName.setOnapName(value);
+                tempOnapName.setName(value);
                 this.setOnapNameField(tempOnapName);
                 return true;
             case "RiskType":

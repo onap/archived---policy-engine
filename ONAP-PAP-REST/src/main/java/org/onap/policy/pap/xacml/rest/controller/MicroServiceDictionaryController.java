@@ -658,7 +658,7 @@ public class MicroServiceDictionaryController {
                     MSAttributeObject mainClass = classMap.get(this.newModel.getModelName());
                     this.newModel.setDependency("[]");
                     String value = new Gson().toJson(mainClass.getSubClass());
-                    this.newModel.setSub_attributes(value);
+                    this.newModel.setSubAttributes(value);
                     String attributes = mainClass.getAttribute().toString().replace("{", "").replace("}", "");
                     int equalsIndexForAttributes = attributes.indexOf('=');
                     String atttributesAfterFirstEquals = attributes.substring(equalsIndexForAttributes + 1);
@@ -666,7 +666,7 @@ public class MicroServiceDictionaryController {
                     String refAttributes = mainClass.getRefAttribute().toString().replace("{", "").replace("}", "");
                     int equalsIndex = refAttributes.indexOf("=");
                     String refAttributesAfterFirstEquals = refAttributes.substring(equalsIndex + 1);
-                    this.newModel.setRef_attributes(refAttributesAfterFirstEquals);
+                    this.newModel.setRefAttributes(refAttributesAfterFirstEquals);
                     this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
                     this.newModel
                             .setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
@@ -713,10 +713,10 @@ public class MicroServiceDictionaryController {
                 }
             }
             microServiceModels.setAttributes(this.newModel.getAttributes());
-            microServiceModels.setRef_attributes(this.newModel.getRef_attributes());
+            microServiceModels.setRefAttributes(this.newModel.getRefAttributes());
             microServiceModels.setDependency(this.newModel.getDependency());
             microServiceModels.setModelName(this.newModel.getModelName());
-            microServiceModels.setSub_attributes(this.newModel.getSub_attributes());
+            microServiceModels.setSubAttributes(this.newModel.getSubAttributes());
             microServiceModels.setVersion(this.newModel.getVersion());
             microServiceModels.setEnumValues(this.newModel.getEnumValues());
             microServiceModels.setAnnotation(this.newModel.getAnnotation());
@@ -798,9 +798,9 @@ public class MicroServiceDictionaryController {
         }
         if (mainClass != null) {
             this.newModel.setDependency(mainClass.getDependency());
-            this.newModel.setSub_attributes(subAttribute);
+            this.newModel.setSubAttributes(subAttribute);
             this.newModel.setAttributes(mainClass.getAttribute().toString().replace("{", "").replace("}", ""));
-            this.newModel.setRef_attributes(mainClass.getRefAttribute().toString().replace("{", "").replace("}", ""));
+            this.newModel.setRefAttributes(mainClass.getRefAttribute().toString().replace("{", "").replace("}", ""));
             this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
             this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
         }

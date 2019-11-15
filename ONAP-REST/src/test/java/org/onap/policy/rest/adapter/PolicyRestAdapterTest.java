@@ -33,14 +33,14 @@ import org.onap.policy.rest.jpa.OnapName;
 public class PolicyRestAdapterTest {
 
     @Test
-    public void testPolicyExportAdapter(){
+    public void testPolicyExportAdapter() {
         PolicyExportAdapter adapter = new PolicyExportAdapter();
         adapter.setPolicyDatas(new ArrayList<>());
         assertTrue(adapter.getPolicyDatas() != null);
     }
 
     @Test
-    public void testPolicyRestAdapter(){
+    public void testPolicyRestAdapter() {
         PolicyRestAdapter adapter = new PolicyRestAdapter();
         adapter.setData(new Object());
         assertTrue(adapter.getData() != null);
@@ -117,27 +117,27 @@ public class PolicyRestAdapterTest {
         adapter.setExistingCLName("Test");
         assertTrue("Test".equals(adapter.getExistingCLName()));
         adapter.setOnapNameField(new OnapName());
-        assertTrue(adapter.getOnapNameField()!=null);
+        assertTrue(adapter.getOnapNameField() != null);
         adapter.setJsonBodyData(new Object());
-        assertTrue(adapter.getJsonBodyData()!=null);
+        assertTrue(adapter.getJsonBodyData() != null);
         adapter.setDirPath("Test");
         assertTrue("Test".equals(adapter.getDirPath()));
         adapter.setConfigBodyPath("Test");
         assertTrue("Test".equals(adapter.getConfigBodyPath()));
         adapter.setAttributes(new ArrayList<>());
-        assertTrue(adapter.getAttributes()!=null);
+        assertTrue(adapter.getAttributes() != null);
         adapter.setSettings(new ArrayList<>());
-        assertTrue(adapter.getSettings()!=null);
+        assertTrue(adapter.getSettings() != null);
         adapter.setRuleAlgorithmschoices(new ArrayList<>());
-        assertTrue(adapter.getRuleAlgorithmschoices()!=null);
+        assertTrue(adapter.getRuleAlgorithmschoices() != null);
         adapter.setServiceTypePolicyName(new HashMap<>());
-        assertTrue(adapter.getServiceTypePolicyName()!=null);
+        assertTrue(adapter.getServiceTypePolicyName() != null);
         adapter.setVerticaMetrics(new HashMap<>());
-        assertTrue(adapter.getVerticaMetrics()!=null);
+        assertTrue(adapter.getVerticaMetrics() != null);
         adapter.setDescription(new LinkedHashMap<>());
-        assertTrue(adapter.getVerticaMetrics()!=null);
+        assertTrue(adapter.getVerticaMetrics() != null);
         adapter.setAttributeFields(new LinkedHashMap<>());
-        assertTrue(adapter.getAttributeFields()!=null);
+        assertTrue(adapter.getAttributeFields() != null);
         adapter.setClearTimeOut("Test");
         assertTrue("Test".equals(adapter.getClearTimeOut()));
         adapter.setTrapMaxAge("Test");
@@ -145,15 +145,15 @@ public class PolicyRestAdapterTest {
         adapter.setVerificationclearTimeOut("Test");
         assertTrue("Test".equals(adapter.getVerificationclearTimeOut()));
         adapter.setDynamicLayoutMap(new HashMap<>());
-        assertTrue(adapter.getDynamicLayoutMap()!=null);
+        assertTrue(adapter.getDynamicLayoutMap() != null);
         adapter.setTrapDatas(new ClosedLoopFaultTrapDatas());
-        assertTrue(adapter.getTrapDatas()!=null);
+        assertTrue(adapter.getTrapDatas() != null);
         adapter.setFaultDatas(new ClosedLoopFaultTrapDatas());
-        assertTrue(adapter.getFaultDatas()!=null);
+        assertTrue(adapter.getFaultDatas() != null);
         adapter.setFwPolicyType("Test");
         assertTrue("Test".equals(adapter.getFwPolicyType()));
         adapter.setFwattributes(new ArrayList<>());
-        assertTrue(adapter.getFwattributes()!=null);
+        assertTrue(adapter.getFwattributes() != null);
         adapter.setParentForChild("Test");
         assertTrue("Test".equals(adapter.getParentForChild()));
         adapter.setSecurityZone("Test");
@@ -161,27 +161,27 @@ public class PolicyRestAdapterTest {
         adapter.setRuleCombiningAlgId("Test");
         assertTrue("Test".equals(adapter.getRuleCombiningAlgId()));
         adapter.setDynamicFieldConfigAttributes(new HashMap<>());
-        assertTrue(adapter.getDynamicFieldConfigAttributes()!=null);
+        assertTrue(adapter.getDynamicFieldConfigAttributes() != null);
         adapter.setDynamicSettingsMap(new HashMap<>());
-        assertTrue(adapter.getDynamicSettingsMap()!=null);
+        assertTrue(adapter.getDynamicSettingsMap() != null);
         adapter.setDropDownMap(new HashMap<>());
-        assertTrue(adapter.getDropDownMap()!=null);
+        assertTrue(adapter.getDropDownMap() != null);
         adapter.setActionPerformer("Test");
         assertTrue("Test".equals(adapter.getActionPerformer()));
         adapter.setActionAttribute("Test");
         assertTrue("Test".equals(adapter.getActionAttribute()));
         adapter.setDynamicRuleAlgorithmLabels(new ArrayList<>());
-        assertTrue(adapter.getDynamicRuleAlgorithmLabels()!=null);
+        assertTrue(adapter.getDynamicRuleAlgorithmLabels() != null);
         adapter.setDynamicRuleAlgorithmCombo(new ArrayList<>());
-        assertTrue(adapter.getDynamicRuleAlgorithmCombo()!=null);
+        assertTrue(adapter.getDynamicRuleAlgorithmCombo() != null);
         adapter.setDynamicRuleAlgorithmField1(new ArrayList<>());
-        assertTrue(adapter.getDynamicRuleAlgorithmField1()!=null);
+        assertTrue(adapter.getDynamicRuleAlgorithmField1() != null);
         adapter.setDynamicRuleAlgorithmField2(new ArrayList<>());
-        assertTrue(adapter.getDynamicRuleAlgorithmField2()!=null);
+        assertTrue(adapter.getDynamicRuleAlgorithmField2() != null);
         adapter.setDynamicVariableList(new ArrayList<>());
-        assertTrue(adapter.getDynamicVariableList()!=null);
+        assertTrue(adapter.getDynamicVariableList() != null);
         adapter.setDataTypeList(new ArrayList<>());
-        assertTrue(adapter.getDataTypeList()!=null);
+        assertTrue(adapter.getDataTypeList() != null);
         adapter.setActionAttributeValue("Test");
         assertTrue("Test".equals(adapter.getActionAttributeValue()));
         adapter.setRuleProvider("Test");
@@ -197,15 +197,15 @@ public class PolicyRestAdapterTest {
         adapter.setActionDictMethod("Test");
         assertTrue("Test".equals(adapter.getActionDictMethod()));
         adapter.setYamlparams(new YAMLParams());
-        assertTrue(adapter.getYamlparams()!=null);
+        assertTrue(adapter.getYamlparams() != null);
         adapter.setRainyday(new RainyDayParams());
-        assertTrue(adapter.getRainyday()!=null);
+        assertTrue(adapter.getRainyday() != null);
         adapter.setRainydayMap(new HashMap<>());
-        assertTrue(adapter.getRainydayMap()!=null);
+        assertTrue(adapter.getRainydayMap() != null);
         adapter.setErrorCodeList(new ArrayList<>());
-        assertTrue(adapter.getErrorCodeList()!=null);
+        assertTrue(adapter.getErrorCodeList() != null);
         adapter.setTreatmentList(new ArrayList<>());
-        assertTrue(adapter.getTreatmentList()!=null);
+        assertTrue(adapter.getTreatmentList() != null);
         adapter.setServiceType("Test");
         assertTrue("Test".equals(adapter.getServiceType()));
         adapter.setUuid("Test");
@@ -221,17 +221,17 @@ public class PolicyRestAdapterTest {
         adapter.setRuleName("Test");
         assertTrue("Test".equals(adapter.getRuleName()));
         adapter.setBrmsParamBody(new HashMap<>());
-        assertTrue(adapter.getBrmsParamBody()!=null);
+        assertTrue(adapter.getBrmsParamBody() != null);
         adapter.setBrmsController("Test");
         assertTrue("Test".equals(adapter.getBrmsController()));
         adapter.setBrmsDependency(new ArrayList<>());
-        assertTrue(adapter.getBrmsDependency()!=null);
+        assertTrue(adapter.getBrmsDependency() != null);
         adapter.setRuleData(new LinkedHashMap<>());
-        assertTrue(adapter.getRuleData()!=null);
+        assertTrue(adapter.getRuleData() != null);
         adapter.setRuleListData(new LinkedHashMap<>());
-        assertTrue(adapter.getRuleListData()!=null);
+        assertTrue(adapter.getRuleListData() != null);
         adapter.setDrlRuleAndUIParams(new LinkedHashMap<>());
-        assertTrue(adapter.getDrlRuleAndUIParams()!=null);
+        assertTrue(adapter.getDrlRuleAndUIParams() != null);
         adapter.setPolicyScope("Test");
         assertTrue("Test".equals(adapter.getPolicyScope()));
         adapter.setProviderComboBox("Test");
@@ -245,11 +245,11 @@ public class PolicyRestAdapterTest {
         adapter.setTtlDate("Test");
         assertTrue("Test".equals(adapter.getTtlDate()));
         adapter.setMatching(new LinkedHashMap<>());
-        assertTrue(adapter.getMatching()!=null);
+        assertTrue(adapter.getMatching() != null);
         adapter.setTriggerSignatures(new ArrayList<>());
-        assertTrue(adapter.getTriggerSignatures()!=null);
+        assertTrue(adapter.getTriggerSignatures() != null);
         adapter.setSymptomSignatures(new ArrayList<>());
-        assertTrue(adapter.getSymptomSignatures()!=null);
+        assertTrue(adapter.getSymptomSignatures() != null);
         adapter.setLogicalConnector("Test");
         assertTrue("Test".equals(adapter.getLogicalConnector()));
         adapter.setPolicyStatus("Test");
@@ -274,7 +274,7 @@ public class PolicyRestAdapterTest {
         assertEquals("risklevel", adapter.getRiskLevel());
         assertEquals("guardvalue", adapter.getGuard());
         assertEquals("onapvalue", adapter.getOnapName());
-        assertEquals("onapvalue", adapter.getOnapNameField().getOnapName());
+        assertEquals("onapvalue", adapter.getOnapNameField().getName());
         assertEquals("uuidvalue", adapter.getUuid());
         assertEquals("locationvalue", adapter.getLocation());
         assertEquals("configvalue", adapter.getConfigName());

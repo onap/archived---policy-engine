@@ -38,7 +38,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XacmlRestProperties;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
-import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
+import org.onap.policy.rest.jpa.PolicyDbDaoEntity;
 import org.onap.policy.rest.jpa.PolicyEntity;
 
 public class PolicyEntityTest {
@@ -59,7 +59,7 @@ public class PolicyEntityTest {
 
         et.begin();
         // Make sure the DB is clean
-        em.createQuery("DELETE FROM PolicyDBDaoEntity").executeUpdate();
+        em.createQuery("DELETE FROM PolicyDbDaoEntity").executeUpdate();
         em.createQuery("DELETE FROM PolicyEntity").executeUpdate();
         em.createQuery("DELETE FROM ConfigurationDataEntity").executeUpdate();
         em.createQuery("DELETE FROM ActionBodyEntity").executeUpdate();
@@ -605,7 +605,7 @@ public class PolicyEntityTest {
                     + "\n   with exception: " + e);
         }
 
-        // ****************Test the PolicyDBDaoEntity************************
+        // ****************Test the PolicyDbDaoEntity************************
 
         // Create a transaction
         EntityTransaction et3 = em.getTransaction();
@@ -613,29 +613,29 @@ public class PolicyEntityTest {
         et3.begin();
 
         // create one
-        PolicyDBDaoEntity pe1 = new PolicyDBDaoEntity();
+        PolicyDbDaoEntity pe1 = new PolicyDbDaoEntity();
         em.persist(pe1);
 
         pe1.setDescription("This is pe1");
 
-        pe1.setPolicyDBDaoUrl("http://123.45.2.456:2345");
+        pe1.setPolicyDbDaoUrl("http://123.45.2.456:2345");
 
         // push it to the DB
         em.flush();
 
         // create another
-        PolicyDBDaoEntity pe2 = new PolicyDBDaoEntity();
+        PolicyDbDaoEntity pe2 = new PolicyDbDaoEntity();
         em.persist(pe2);
 
         pe2.setDescription("This is pe2");
 
-        pe2.setPolicyDBDaoUrl("http://789.01.2.345:2345");
+        pe2.setPolicyDbDaoUrl("http://789.01.2.345:2345");
 
         // Print them to the log before flushing
-        logger.debug("\n\n***********PolicyEntityTest: PolicyDBDaoEntity objects before flush********"
-                + "\n   policyDBDaoUrl-1 = " + pe1.getPolicyDBDaoUrl() + "\n   description-1 = " + pe1.getDescription()
+        logger.debug("\n\n***********PolicyEntityTest: PolicyDbDaoEntity objects before flush********"
+                + "\n   policyDbDaoUrl-1 = " + pe1.getPolicyDbDaoUrl() + "\n   description-1 = " + pe1.getDescription()
                 + "\n   createdDate-1 = " + pe1.getCreatedDate() + "\n   modifiedDate-1 " + pe1.getModifiedDate()
-                + "\n*****************************************" + "\n   policyDBDaoUrl-2 = " + pe2.getPolicyDBDaoUrl()
+                + "\n*****************************************" + "\n   policyDbDaoUrl-2 = " + pe2.getPolicyDbDaoUrl()
                 + "\n   description-2 = " + pe2.getDescription() + "\n   createdDate-2 = " + pe2.getCreatedDate()
                 + "\n   modifiedDate-2 " + pe2.getModifiedDate());
 
@@ -644,36 +644,36 @@ public class PolicyEntityTest {
 
         // Now let's retrieve them from the DB using the named query
 
-        resultList = em.createNamedQuery("PolicyDBDaoEntity.findAll").getResultList();
+        resultList = em.createNamedQuery("PolicyDbDaoEntity.findAll").getResultList();
 
-        PolicyDBDaoEntity pex = null;
-        PolicyDBDaoEntity pey = null;
+        PolicyDbDaoEntity pex = null;
+        PolicyDbDaoEntity pey = null;
 
         if (!resultList.isEmpty()) {
             if (resultList.size() != 2) {
-                fail("\nPolicyEntityTest: Number of PolicyDBDaoEntity entries = " + resultList.size()
+                fail("\nPolicyEntityTest: Number of PolicyDbDaoEntity entries = " + resultList.size()
                         + " instead of 2");
             }
             for (Object policyDBDaoEntity : resultList) {
-                PolicyDBDaoEntity pdbdao = (PolicyDBDaoEntity) policyDBDaoEntity;
-                if (pdbdao.getPolicyDBDaoUrl().equals("http://123.45.2.456:2345")) {
+                PolicyDbDaoEntity pdbdao = (PolicyDbDaoEntity) policyDBDaoEntity;
+                if (pdbdao.getPolicyDbDaoUrl().equals("http://123.45.2.456:2345")) {
                     pex = pdbdao;
-                } else if (pdbdao.getPolicyDBDaoUrl().equals("http://789.01.2.345:2345")) {
+                } else if (pdbdao.getPolicyDbDaoUrl().equals("http://789.01.2.345:2345")) {
                     pey = pdbdao;
                 }
             }
 
             // Print them to the log before flushing
-            logger.debug("\n\n***********PolicyEntityTest: PolicyDBDaoEntity objects retrieved from DB********"
-                    + "\n   policyDBDaoUrl-x = " + pex.getPolicyDBDaoUrl() + "\n   description-x = "
+            logger.debug("\n\n***********PolicyEntityTest: PolicyDbDaoEntity objects retrieved from DB********"
+                    + "\n   policyDbDaoUrl-x = " + pex.getPolicyDbDaoUrl() + "\n   description-x = "
                     + pex.getDescription() + "\n   createdDate-x = " + pex.getCreatedDate() + "\n   modifiedDate-x "
                     + pex.getModifiedDate() + "\n*****************************************"
-                    + "\n   policyDBDaoUrl-y = "
-                    + pey.getPolicyDBDaoUrl() + "\n   description-y = " + pey.getDescription()
+                    + "\n   policyDbDaoUrl-y = "
+                    + pey.getPolicyDbDaoUrl() + "\n   description-y = " + pey.getDescription()
                     + "\n   createdDate-y = "
                     + pey.getCreatedDate() + "\n   modifiedDate-y " + pey.getModifiedDate());
             // Verify the retrieved objects are the same as the ones we stored in the DB
-            if (pex.getPolicyDBDaoUrl().equals("http://123.45.2.456:2345")) {
+            if (pex.getPolicyDbDaoUrl().equals("http://123.45.2.456:2345")) {
                 assertSame(pe1, pex);
                 assertSame(pe2, pey);
             } else {
@@ -682,46 +682,46 @@ public class PolicyEntityTest {
             }
 
         } else {
-            fail("\nPolicyEntityTest: No PolicyDBDaoEntity DB entry found");
+            fail("\nPolicyEntityTest: No PolicyDbDaoEntity DB entry found");
         }
 
-        // Now let's see if we can do an update on the PolicyDBDaoEntity which we retrieved.
+        // Now let's see if we can do an update on the PolicyDbDaoEntity which we retrieved.
         // em.persist(pex);
         pex.setDescription("This is pex");
         em.flush();
 
         // retrieve it
-        Query createPolicyQuery = em.createQuery("SELECT p FROM PolicyDBDaoEntity p WHERE p.description=:desc");
+        Query createPolicyQuery = em.createQuery("SELECT p FROM PolicyDbDaoEntity p WHERE p.description=:desc");
         resultList = createPolicyQuery.setParameter("desc", "This is pex").getResultList();
 
-        PolicyDBDaoEntity pez = null;
+        PolicyDbDaoEntity pez = null;
 
         if (!resultList.isEmpty()) {
             if (resultList.size() != 1) {
-                fail("\nPolicyEntityTest: Update Test - Number of PolicyDBDaoEntity entries = " + resultList.size()
+                fail("\nPolicyEntityTest: Update Test - Number of PolicyDbDaoEntity entries = " + resultList.size()
                         + " instead of 1");
             }
-            pez = (PolicyDBDaoEntity) resultList.get(0);
+            pez = (PolicyDbDaoEntity) resultList.get(0);
 
             // Print them to the log before flushing
             logger.debug(
-                    "\n\n***********PolicyEntityTest: Update Test - PolicyDBDaoEntity objects retrieved from "
+                    "\n\n***********PolicyEntityTest: Update Test - PolicyDbDaoEntity objects retrieved from "
                     + "DB********"
-                            + "\n   policyDBDaoUrl-x = " + pex.getPolicyDBDaoUrl() + "\n   description-x = "
+                            + "\n   policyDbDaoUrl-x = " + pex.getPolicyDbDaoUrl() + "\n   description-x = "
                             + pex.getDescription() + "\n   createdDate-x = " + pex.getCreatedDate()
                             + "\n   modifiedDate-x " + pex.getModifiedDate()
-                            + "\n*****************************************" + "\n   policyDBDaoUrl-z = "
-                            + pez.getPolicyDBDaoUrl() + "\n   description-z = " + pez.getDescription()
+                            + "\n*****************************************" + "\n   policyDbDaoUrl-z = "
+                            + pez.getPolicyDbDaoUrl() + "\n   description-z = " + pez.getDescription()
                             + "\n   createdDate-z = " + pez.getCreatedDate() + "\n   modifiedDate-z "
                             + pez.getModifiedDate());
             // Verify the retrieved objects are the same as the ones we stored in the DB
             assertSame(pex, pez);
         } else {
-            fail("\nPolicyEntityTest: Update Test - No PolicyDBDaoEntity DB updated entry found");
+            fail("\nPolicyEntityTest: Update Test - No PolicyDbDaoEntity DB updated entry found");
         }
 
         // Clean up the DB
-        em.createQuery("DELETE FROM PolicyDBDaoEntity").executeUpdate();
+        em.createQuery("DELETE FROM PolicyDbDaoEntity").executeUpdate();
         em.createQuery("DELETE FROM PolicyEntity").executeUpdate();
         em.createQuery("DELETE FROM ConfigurationDataEntity").executeUpdate();
         em.createQuery("DELETE FROM ActionBodyEntity").executeUpdate();

@@ -1089,8 +1089,8 @@ public class PolicyValidation {
                 if (returnModel != null) {
 
                     String annotation = returnModel.getAnnotation();
-                    String refAttributes = returnModel.getRef_attributes();
-                    String subAttributes = returnModel.getSub_attributes();
+                    String refAttributes = returnModel.getRefAttributes();
+                    String subAttributes = returnModel.getSubAttributes();
                     String modelAttributes = returnModel.getAttributes();
 
                     if (!Strings.isNullOrEmpty(annotation)) {

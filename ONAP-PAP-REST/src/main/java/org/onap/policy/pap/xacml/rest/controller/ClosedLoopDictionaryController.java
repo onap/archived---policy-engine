@@ -38,7 +38,7 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ClosedLoopD2Services;
 import org.onap.policy.rest.jpa.ClosedLoopSite;
 import org.onap.policy.rest.jpa.OnapName;
-import org.onap.policy.rest.jpa.PEPOptions;
+import org.onap.policy.rest.jpa.PepOptions;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.rest.jpa.VNFType;
 import org.onap.policy.rest.jpa.VSCLAction;
@@ -134,7 +134,7 @@ public class ClosedLoopDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPEPOptionsDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getDataByEntity(response, pepOptionDatas, pepName, PEPOptions.class);
+        utils.getDataByEntity(response, pepOptionDatas, pepName, PepOptions.class);
     }
 
     @RequestMapping(
@@ -143,7 +143,7 @@ public class ClosedLoopDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPEPOptionsDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getData(response, pepOptionDatas, PEPOptions.class);
+        utils.getData(response, pepOptionDatas, PepOptions.class);
     }
 
     @RequestMapping(
@@ -336,15 +336,15 @@ public class ClosedLoopDictionaryController {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
-            PEPOptions pEPOptions;
+            PepOptions pEPOptions;
             GridData gridData;
             String userId = null;
             if (fromAPI) {
-                pEPOptions = mapper.readValue(root.get(dictionaryFields).toString(), PEPOptions.class);
+                pEPOptions = mapper.readValue(root.get(dictionaryFields).toString(), PepOptions.class);
                 gridData = mapper.readValue(root.get(dictionaryFields).toString(), GridData.class);
                 userId = "API";
             } else {
-                pEPOptions = mapper.readValue(root.get("pepOptionsDictionaryData").toString(), PEPOptions.class);
+                pEPOptions = mapper.readValue(root.get("pepOptionsDictionaryData").toString(), PepOptions.class);
                 gridData = mapper.readValue(root.get("pepOptionsDictionaryData").toString(), GridData.class);
                 userId = root.get(userid).textValue();
             }
@@ -355,10 +355,10 @@ public class ClosedLoopDictionaryController {
             }
 
             List<Object> duplicateData =
-                    commonClassDao.checkDuplicateEntry(pEPOptions.getPepName(), pepName, PEPOptions.class);
+                    commonClassDao.checkDuplicateEntry(pEPOptions.getPepName(), pepName, PepOptions.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
-                PEPOptions data = (PEPOptions) duplicateData.get(0);
+                PepOptions data = (PepOptions) duplicateData.get(0);
                 if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     pEPOptions.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
@@ -377,7 +377,7 @@ public class ClosedLoopDictionaryController {
                     pEPOptions.setModifiedDate(new Date());
                     commonClassDao.update(pEPOptions);
                 }
-                responseString = mapper.writeValueAsString(commonClassDao.getData(PEPOptions.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(PepOptions.class));
             } else {
                 responseString = duplicateResponseString;
             }
