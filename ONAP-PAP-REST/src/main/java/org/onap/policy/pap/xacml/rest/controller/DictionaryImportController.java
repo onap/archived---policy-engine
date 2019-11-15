@@ -63,8 +63,8 @@ import org.onap.policy.rest.jpa.SecurityZone;
 import org.onap.policy.rest.jpa.ServiceList;
 import org.onap.policy.rest.jpa.TermList;
 import org.onap.policy.rest.jpa.UserInfo;
-import org.onap.policy.rest.jpa.VNFType;
-import org.onap.policy.rest.jpa.VSCLAction;
+import org.onap.policy.rest.jpa.VnfType;
+import org.onap.policy.rest.jpa.VsclAction;
 import org.onap.policy.rest.jpa.VarbindDictionary;
 import org.onap.policy.rest.jpa.Zone;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -311,7 +311,7 @@ public class DictionaryImportController {
 
             if (dictionaryName.startsWith("VNFType")) {
                 for (int i = 1; i < dictSheet.size(); i++) {
-                    VNFType attribute = new VNFType();
+                    VnfType attribute = new VnfType();
                     UserInfo userinfo = new UserInfo();
                     userinfo.setUserLoginId(userId);
                     attribute.setUserCreatedBy(userinfo);
@@ -320,7 +320,7 @@ public class DictionaryImportController {
                     for (int j = 0; j < rows.length; j++) {
                         if ("vnf_type".equalsIgnoreCase(dictSheet.get(0)[j])
                                 || "VNF Type".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setVnftype(rows[j]);
+                            attribute.setType(rows[j]);
                         }
                         if (DESCRIPTION.equalsIgnoreCase(dictSheet.get(0)[j])) {
                             attribute.setDescription(rows[j]);
@@ -331,7 +331,7 @@ public class DictionaryImportController {
             }
             if (dictionaryName.startsWith("VSCLAction")) {
                 for (int i = 1; i < dictSheet.size(); i++) {
-                    VSCLAction attribute = new VSCLAction();
+                    VsclAction attribute = new VsclAction();
                     UserInfo userinfo = new UserInfo();
                     userinfo.setUserLoginId(userId);
                     attribute.setUserCreatedBy(userinfo);
@@ -340,7 +340,7 @@ public class DictionaryImportController {
                     for (int j = 0; j < rows.length; j++) {
                         if ("vscl_action".equalsIgnoreCase(dictSheet.get(0)[j])
                                 || "VSCL Action".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setVsclaction(rows[j]);
+                            attribute.setAction(rows[j]);
                         }
                         if (DESCRIPTION.equalsIgnoreCase(dictSheet.get(0)[j])) {
                             attribute.setDescription(rows[j]);
@@ -431,7 +431,7 @@ public class DictionaryImportController {
                         }
                         if ("varbind_oid".equalsIgnoreCase(dictSheet.get(0)[j])
                                 || "Varbind OID".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setVarbindOID(rows[j]);
+                            attribute.setVarbindOid(rows[j]);
                         }
                     }
                     commonClassDao.save(attribute);
@@ -615,7 +615,7 @@ public class DictionaryImportController {
                         }
                         if ("serviceTrasProtocol".equalsIgnoreCase(dictSheet.get(0)[j])
                                 || "Transport Protocol".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setServiceTransProtocol(rows[j]);
+                            attribute.setServiceTransportProtocol(rows[j]);
                         }
                         if ("serviceAppProtocol".equalsIgnoreCase(dictSheet.get(0)[j])
                                 || "APP Protocol".equalsIgnoreCase(dictSheet.get(0)[j])) {
@@ -717,19 +717,19 @@ public class DictionaryImportController {
                         }
                         if ("fromZone".equalsIgnoreCase(dictSheet.get(0)[j])
                                 || "From Zone".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setFromZones(rows[j]);
+                            attribute.setFromZone(rows[j]);
                         }
                         if ("toZone".equalsIgnoreCase(dictSheet.get(0)[j])
                                 || "To Zone".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setToZones(rows[j]);
+                            attribute.setToZone(rows[j]);
                         }
                         if ("srcIPList".equalsIgnoreCase(dictSheet.get(0)[j])
                                 || "Source-IP-List".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setSrcIPList(rows[j]);
+                            attribute.setSrcIpList(rows[j]);
                         }
                         if ("destIPList".equalsIgnoreCase(dictSheet.get(0)[j])
                                 || "Destination-IP-List".equalsIgnoreCase(dictSheet.get(0)[j])) {
-                            attribute.setDestIPList(rows[j]);
+                            attribute.setDestIpList(rows[j]);
                         }
                         if ("srcPortList".equalsIgnoreCase(dictSheet.get(0)[j])
                                 || "Source-Port-List".equalsIgnoreCase(dictSheet.get(0)[j])) {

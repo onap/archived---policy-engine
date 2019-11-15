@@ -321,9 +321,9 @@ public class CreateFirewallController extends RestrictedBaseController {
                 List<Object> tmList = commonClassDao.getDataById(TermList.class, "termName", id);
                 jpaTermList = (TermList) tmList.get(0);
                 if (jpaTermList != null) {
-                    ruleSrcList = jpaTermList.getSrcIPList();
+                    ruleSrcList = jpaTermList.getSrcIpList();
                     if ((ruleSrcList != null) && (!ruleSrcList.isEmpty()) && !"null".equals(ruleSrcList)) {
-                        displayString.append("Source IP List: " + jpaTermList.getSrcIPList());
+                        displayString.append("Source IP List: " + jpaTermList.getSrcIpList());
                         displayString.append(" ; \t\n");
                         for (String srcList : ruleSrcList.split(",")) {
                             if (srcList.startsWith(GROUP)) {
@@ -354,9 +354,9 @@ public class CreateFirewallController extends RestrictedBaseController {
                         }
                         displayString.append("\n");
                     }
-                    ruleDestList = jpaTermList.getDestIPList();
+                    ruleDestList = jpaTermList.getDestIpList();
                     if (ruleDestList != null && (!ruleDestList.isEmpty()) && !"null".equals(ruleDestList)) {
-                        displayString.append("Destination IP List: " + jpaTermList.getDestIPList());
+                        displayString.append("Destination IP List: " + jpaTermList.getDestIpList());
                         displayString.append(" ; \t\n");
                         for (String destList : ruleDestList.split(",")) {
                             if (destList.startsWith(GROUP)) {
@@ -409,7 +409,7 @@ public class CreateFirewallController extends RestrictedBaseController {
                                         displayString.append("\n\t" + "Name:  " + sl.getServiceName());
                                         displayString.append("\n\t" + "Description:  " + sl.getServiceDescription());
                                         displayString.append(
-                                                "\n\t" + "Transport-Protocol:  " + sl.getServiceTransProtocol());
+                                                "\n\t" + "Transport-Protocol:  " + sl.getServiceTransportProtocol());
                                         displayString.append("\n\t" + "Ports:  " + sl.getServicePorts());
                                         displayString.append("\n");
                                     }
@@ -421,7 +421,7 @@ public class CreateFirewallController extends RestrictedBaseController {
                                     displayString.append("\n\t" + "Name:  " + sl.getServiceName());
                                     displayString.append("\n\t" + "Description:  " + sl.getServiceDescription());
                                     displayString
-                                            .append("\n\t" + "Transport-Protocol:  " + sl.getServiceTransProtocol());
+                                            .append("\n\t" + "Transport-Protocol:  " + sl.getServiceTransportProtocol());
                                     displayString.append("\n\t" + "Ports:  " + sl.getServicePorts());
                                     displayString.append("\n");
                                 }
@@ -529,7 +529,7 @@ public class CreateFirewallController extends RestrictedBaseController {
                 for (int j = 0; j < termListData.size(); j++) {
                     jpaTermList = (TermList) termListData.get(j);
                     if (jpaTermList.getTermName().equals(termCollectorList.get(tl))) {
-                        ruleDesc = jpaTermList.getTermDescription();
+                        ruleDesc = jpaTermList.getDescription();
                         if ((ruleDesc != null) && (!ruleDesc.isEmpty())) {
                             targetTerm.setDescription(ruleDesc);
                         }
@@ -545,14 +545,14 @@ public class CreateFirewallController extends RestrictedBaseController {
                             mapToZone = new HashMap<>();
                             mapToZone.put(tl, ruleToZone);
                         }
-                        ruleSrcPrefixList = jpaTermList.getSrcIPList();
+                        ruleSrcPrefixList = jpaTermList.getSrcIpList();
 
                         if ((ruleSrcPrefixList != null) && (!ruleSrcPrefixList.isEmpty())) {
                             mapSrcIp = new HashMap<>();
                             mapSrcIp.put(tl, ruleSrcPrefixList);
                         }
 
-                        ruleDestPrefixList = jpaTermList.getDestIPList();
+                        ruleDestPrefixList = jpaTermList.getDestIpList();
                         if ((ruleDestPrefixList != null) && (!ruleDestPrefixList.isEmpty())) {
                             mapDestIP = new HashMap<>();
                             mapDestIP.put(tl, ruleDestPrefixList);
@@ -741,7 +741,7 @@ public class CreateFirewallController extends RestrictedBaseController {
                             sl = mappingServiceList(t);
                             targetSl.setName(sl.getServiceName());
                             targetSl.setDescription(sl.getServiceDescription());
-                            targetSl.setTransportProtocol(sl.getServiceTransProtocol());
+                            targetSl.setTransportProtocol(sl.getServiceTransportProtocol());
                             targetSl.setType(sl.getServiceType());
                             targetSl.setPorts(sl.getServicePorts());
                             servListArray.add(targetSl);
@@ -794,7 +794,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 
                             targetSl.setName(expandGroupSl.getServiceName());
                             targetSl.setDescription(expandGroupSl.getServiceDescription());
-                            targetSl.setTransportProtocol(expandGroupSl.getServiceTransProtocol());
+                            targetSl.setTransportProtocol(expandGroupSl.getServiceTransportProtocol());
                             targetSl.setType(expandGroupSl.getServiceType());
                             targetSl.setPorts(expandGroupSl.getServicePorts());
                             servListArray.add(targetSl);

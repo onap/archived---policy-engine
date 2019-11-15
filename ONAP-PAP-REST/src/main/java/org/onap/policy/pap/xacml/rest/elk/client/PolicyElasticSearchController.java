@@ -62,8 +62,8 @@ import org.onap.policy.rest.jpa.PepOptions;
 import org.onap.policy.rest.jpa.RiskType;
 import org.onap.policy.rest.jpa.SafePolicyWarning;
 import org.onap.policy.rest.jpa.TermList;
-import org.onap.policy.rest.jpa.VNFType;
-import org.onap.policy.rest.jpa.VSCLAction;
+import org.onap.policy.rest.jpa.VnfType;
+import org.onap.policy.rest.jpa.VsclAction;
 import org.onap.policy.rest.jpa.VarbindDictionary;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
@@ -378,13 +378,13 @@ public class PolicyElasticSearchController {
                     policyList = searchElkDatabase(closedloop, jsonBodyData, "*" + value + "*");
                     break;
                 case clVnf:
-                    VNFType vNFType = mapper.readValue(root.get("data").toString(), VNFType.class);
-                    value = vNFType.getVnftype();
+                    VnfType vNFType = mapper.readValue(root.get("data").toString(), VnfType.class);
+                    value = vNFType.getType();
                     policyList = searchElkDatabase(closedloop, jsonBodyData, "*" + value + "*");
                     break;
                 case clVSCL:
-                    VSCLAction vsclAction = mapper.readValue(root.get("data").toString(), VSCLAction.class);
-                    value = vsclAction.getVsclaction();
+                    VsclAction vsclAction = mapper.readValue(root.get("data").toString(), VsclAction.class);
+                    value = vsclAction.getAction();
                     policyList = searchElkDatabase(closedloop, jsonBodyData, "*" + value + "*");
                     break;
                 case decision:

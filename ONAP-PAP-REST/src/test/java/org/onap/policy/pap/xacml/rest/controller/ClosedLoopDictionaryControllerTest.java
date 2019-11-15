@@ -44,8 +44,8 @@ import org.onap.policy.rest.jpa.ClosedLoopD2Services;
 import org.onap.policy.rest.jpa.ClosedLoopSite;
 import org.onap.policy.rest.jpa.PepOptions;
 import org.onap.policy.rest.jpa.UserInfo;
-import org.onap.policy.rest.jpa.VNFType;
-import org.onap.policy.rest.jpa.VSCLAction;
+import org.onap.policy.rest.jpa.VnfType;
+import org.onap.policy.rest.jpa.VsclAction;
 import org.onap.policy.rest.jpa.VarbindDictionary;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -72,8 +72,8 @@ public class ClosedLoopDictionaryControllerTest {
         userInfo.setUserLoginId("Test");
         userInfo.setUserName("Test");
 
-        doNothing().when(commonClassDao).delete(new VSCLAction());
-        doNothing().when(commonClassDao).save(new VSCLAction());
+        doNothing().when(commonClassDao).delete(new VsclAction());
+        doNothing().when(commonClassDao).save(new VsclAction());
 
         controller = new ClosedLoopDictionaryController();
         controller.setCommonClassDao(commonClassDao);
@@ -88,7 +88,7 @@ public class ClosedLoopDictionaryControllerTest {
 
     @Test
     public void testGetVSCLActionDictionaryByNameEntityData() {
-        when(commonClassDao.getDataByColumn(VSCLAction.class, "vsclaction")).thenReturn(data);
+        when(commonClassDao.getDataByColumn(VsclAction.class, "vsclaction")).thenReturn(data);
         controller.getVSCLActionDictionaryByNameEntityData(response);
         try {
             assertTrue(response.getContentAsString() != null
@@ -101,7 +101,7 @@ public class ClosedLoopDictionaryControllerTest {
 
     @Test
     public void testGetVSCLActionDictionaryEntityData() {
-        when(commonClassDao.getData(VSCLAction.class)).thenReturn(new ArrayList<>());
+        when(commonClassDao.getData(VsclAction.class)).thenReturn(new ArrayList<>());
         controller.getVSCLActionDictionaryEntityData(response);
         try {
             assertTrue(response.getContentAsString() != null
@@ -114,7 +114,7 @@ public class ClosedLoopDictionaryControllerTest {
 
     @Test
     public void testGetVNFTypeDictionaryByNameEntityData() {
-        when(commonClassDao.getDataByColumn(VNFType.class, "vnftype")).thenReturn(data);
+        when(commonClassDao.getDataByColumn(VnfType.class, "vnftype")).thenReturn(data);
         controller.getVNFTypeDictionaryByNameEntityData(response);
         try {
             assertTrue(response.getContentAsString() != null
@@ -127,7 +127,7 @@ public class ClosedLoopDictionaryControllerTest {
 
     @Test
     public void testGetVNFTypeDictionaryEntityData() {
-        when(commonClassDao.getData(VNFType.class)).thenReturn(new ArrayList<>());
+        when(commonClassDao.getData(VnfType.class)).thenReturn(new ArrayList<>());
         controller.getVNFTypeDictionaryEntityData(response);
         try {
             assertTrue(response.getContentAsString() != null

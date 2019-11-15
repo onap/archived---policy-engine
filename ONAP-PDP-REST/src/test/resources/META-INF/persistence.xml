@@ -166,12 +166,12 @@
 		<class>org.onap.policy.rest.jpa.RuleAlgorithms</class>
 		<class>org.onap.policy.rest.jpa.SecurityZone</class>
 		<class>org.onap.policy.rest.jpa.ServiceList</class>
-		<class>org.onap.policy.rest.jpa.SystemLogDB</class>
+		<class>org.onap.policy.rest.jpa.SystemLogDb</class>
 		<class>org.onap.policy.rest.jpa.TermList</class>
 		<class>org.onap.policy.rest.jpa.VarbindDictionary</class>
-		<class>org.onap.policy.rest.jpa.VMType</class>
-		<class>org.onap.policy.rest.jpa.VNFType</class>
-		<class>org.onap.policy.rest.jpa.VSCLAction</class>
+		<class>org.onap.policy.rest.jpa.VmType</class>
+		<class>org.onap.policy.rest.jpa.VnfType</class>
+		<class>org.onap.policy.rest.jpa.VsclAction</class>
 		<class>org.onap.policy.rest.jpa.Zone</class>
 		<!-- unique to PolicyEngineUtils -->
 		<class>org.onap.policy.jpa.BackUpMonitorEntity</class>

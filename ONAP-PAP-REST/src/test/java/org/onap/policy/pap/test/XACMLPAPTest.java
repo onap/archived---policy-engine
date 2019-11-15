@@ -488,7 +488,7 @@ public class XACMLPAPTest {
         // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
-        // Check VNFType
+        // Check VnfType
         //
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
