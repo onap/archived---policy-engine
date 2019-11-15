@@ -178,8 +178,8 @@ public class CommonDictionaryJpaTest {
         data.prePersist();
         data.setId(1);
         assertTrue(1 == data.getId());
-        data.setRiskName("Test");
-        assertTrue("Test".equals(data.getRiskName()));
+        data.setName("Test");
+        assertTrue("Test".equals(data.getName()));
         data.setDescription("Test");
         assertTrue("Test".equals(data.getDescription()));
         data.setCreatedDate(new Date());

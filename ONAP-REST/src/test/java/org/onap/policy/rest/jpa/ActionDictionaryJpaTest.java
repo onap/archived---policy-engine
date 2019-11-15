@@ -289,6 +289,13 @@ public class ActionDictionaryJpaTest {
         data.setXacmlId("Test");
         assertTrue("Test".equals(data.getXacmlId()));
         data.toString();
+
+        RuleAlgorithms ra0 = new RuleAlgorithms(new DummyIdentifier());
+        assertTrue(ra0.isStandard());
+        assertFalse(ra0.isCustom());
+        RuleAlgorithms ra1 = new RuleAlgorithms(new DummyIdentifier(), 'C');
+        assertFalse(ra1.isStandard());
+        assertTrue(ra1.isCustom());
     }
 
     @Test

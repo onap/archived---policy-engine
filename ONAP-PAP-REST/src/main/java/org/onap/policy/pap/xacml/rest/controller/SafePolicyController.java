@@ -107,7 +107,7 @@ public class SafePolicyController {
             }
             UserInfo userInfo = utils.getUserInfo(userId);
             List<Object> duplicateData =
-                    commonClassDao.checkDuplicateEntry(riskTypeData.getRiskName(), "name", RiskType.class);
+                    commonClassDao.checkDuplicateEntry(riskTypeData.getName(), "name", RiskType.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
                 RiskType data = (RiskType) duplicateData.get(0);

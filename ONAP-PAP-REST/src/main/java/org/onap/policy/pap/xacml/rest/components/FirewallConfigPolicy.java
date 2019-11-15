@@ -610,16 +610,16 @@ public class FirewallConfigPolicy extends Policy {
 
                         TermList termEntry = new TermList();
                         termEntry.setTermName(ruleName);
-                        termEntry.setSrcIPList(srcListInsert);
-                        termEntry.setDestIPList(destListInsert);
+                        termEntry.setSrcIpList(srcListInsert);
+                        termEntry.setDestIpList(destListInsert);
                         termEntry.setProtocolList("null");
                         termEntry.setPortList("null");
                         termEntry.setSrcPortList("null");
                         termEntry.setDestPortList(destPortListInsert);
                         termEntry.setAction(action);
                         termEntry.setDescription(description);
-                        termEntry.setFromZones(fromZoneInsert);
-                        termEntry.setToZones(toZoneInsert);
+                        termEntry.setFromZone(fromZoneInsert);
+                        termEntry.setToZone(toZoneInsert);
                         termEntry.setUserCreatedBy(userInfo);
                         dbConnection.save(termEntry);
 
@@ -962,16 +962,16 @@ public class FirewallConfigPolicy extends Policy {
 
                             TermList termEntry = new TermList();
                             termEntry.setTermName(ruleName);
-                            termEntry.setSrcIPList(srcListInsert);
-                            termEntry.setDestIPList(destListInsert);
+                            termEntry.setSrcIpList(srcListInsert);
+                            termEntry.setDestIpList(destListInsert);
                             termEntry.setProtocolList("null");
                             termEntry.setPortList("null");
                             termEntry.setSrcPortList("null");
                             termEntry.setDestPortList(destPortListInsert);
                             termEntry.setAction(action);
                             termEntry.setDescription(description);
-                            termEntry.setFromZones(fromZoneInsert);
-                            termEntry.setToZones(toZoneInsert);
+                            termEntry.setFromZone(fromZoneInsert);
+                            termEntry.setToZone(toZoneInsert);
                             termEntry.setUserCreatedBy(userInfo);
                             dbConnection.save(termEntry);
 
@@ -1144,7 +1144,7 @@ public class FirewallConfigPolicy extends Policy {
         serviceListEntry.setServiceName(groupName);
         serviceListEntry.setServiceDescription(description);
         serviceListEntry.setServiceType(type);
-        serviceListEntry.setServiceTransProtocol(transportProtocol);
+        serviceListEntry.setServiceTransportProtocol(transportProtocol);
         serviceListEntry.setServiceAppProtocol("null");
         serviceListEntry.setServicePorts(ports);
         dbConnection.save(serviceListEntry);
