@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e67d5dbc_e43b0553",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/RiskType.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-15T14:20:13Z",
+      "side": 1,
+      "message": "is setName/getName being used too?  if not, could just rename this field to \"riskName\"",
+      "revId": "dcd4dad7bcfe10fc16cd8d240439b6c4a08afa42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b44ab5a4_662bcd3a",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/TermList.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-15T14:20:13Z",
+      "side": 1,
+      "message": "don\u0027t think these methods are needed",
+      "revId": "dcd4dad7bcfe10fc16cd8d240439b6c4a08afa42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d406473_8ffb7c88",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/daoimpl/PolicyValidationDaoImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-15T14:20:13Z",
+      "side": 1,
+      "message": "maybe use assertEquals for these cases",
+      "revId": "dcd4dad7bcfe10fc16cd8d240439b6c4a08afa42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4fd347ed_54812e8e",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/daoimpl/PolicyValidationDaoImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-15T14:20:13Z",
+      "side": 1,
+      "message": "what I like to do is use two objects whose content is identical, except that one of the letters of one the fields has been \"incremented\" to the next letter, then the hash codes should be different\n\ncould also add:\n\n  assertEquals(x.hash, x.hash)",
+      "revId": "dcd4dad7bcfe10fc16cd8d240439b6c4a08afa42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
