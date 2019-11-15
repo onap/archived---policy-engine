@@ -38,15 +38,14 @@ public class ImportBRMSTemplate {
     public static void main(String[] args) {
         try {
             ImportParameters importParameters = new ImportParameters();
-            importParameters.setFilePath("testResources" + File.separator + "test.drl");
+            importParameters.setFilePath("resources" + File.separator + "test.drl");
             importParameters.setServiceName("testTemplate");
             importParameters.setRequestID(UUID.randomUUID());
             importParameters.setServiceType(IMPORT_TYPE.BRMSPARAM);
 
             // API method to create Policy or update policy
-            PolicyChangeResponse response = null;
             PolicyEngine policyEngine = new PolicyEngine("config.properties");
-            response = policyEngine.policyEngineImport(importParameters);
+            PolicyChangeResponse response = policyEngine.policyEngineImport(importParameters);
             System.out.println(response.getResponseMessage());
 
         } catch (Exception e) {
