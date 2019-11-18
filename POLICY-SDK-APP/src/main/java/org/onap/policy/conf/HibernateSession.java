@@ -32,7 +32,7 @@ import org.hibernate.cfg.Configuration;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.controller.PolicyController;
-import org.onap.policy.rest.jpa.SystemLogDB;
+import org.onap.policy.rest.jpa.SystemLogDb;
 
 @SuppressWarnings("deprecation")
 public class HibernateSession {
@@ -51,7 +51,7 @@ public class HibernateSession {
             prop.setProperty("hibernate.connection.driver_class", PolicyController.getLogdbDriver());
             prop.setProperty("show_sql", "false");
             logSessionFactory = new Configuration().addPackage("org.onap.policy.*").addProperties(prop)
-                    .addAnnotatedClass(SystemLogDB.class).buildSessionFactory();
+                    .addAnnotatedClass(SystemLogDb.class).buildSessionFactory();
         } catch (Exception ex) {
             LOGGER.error("Exception Occured while creating Log database Hibernate session" + ex);
         }

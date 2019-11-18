@@ -31,7 +31,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.conf.HibernateSession;
 import org.onap.policy.controller.PolicyController;
 import org.onap.policy.dao.SystemLogDbDao;
-import org.onap.policy.rest.jpa.SystemLogDB;
+import org.onap.policy.rest.jpa.SystemLogDb;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +41,10 @@ public class SystemLogDbDaoImpl implements SystemLogDbDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<SystemLogDB> getLoggingData() {
+    public List<SystemLogDb> getLoggingData() {
         Session session = HibernateSession.getSession();
         Transaction tx = session.beginTransaction();
-        List<SystemLogDB> system = null;
+        List<SystemLogDb> system = null;
         try {
             String sqlWhere = null;
             if (PolicyController.isjUnit()) {
@@ -53,12 +53,12 @@ public class SystemLogDbDaoImpl implements SystemLogDbDao {
                 sqlWhere = "date > DATE_SUB(curdate(), INTERVAL 5 DAY) ORDER BY date DESC limit "
                         + PolicyController.getLogTableLimit() + "";
             }
-            Criteria cr = session.createCriteria(SystemLogDB.class);
+            Criteria cr = session.createCriteria(SystemLogDb.class);
             cr.add(Restrictions.sqlRestriction(sqlWhere));
             system = cr.list();
             tx.commit();
         } catch (Exception e) {
-            logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying SystemLogDB Table" + e);
+            logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying SystemLogDb Table" + e);
         } finally {
             try {
                 session.close();
@@ -71,10 +71,10 @@ public class SystemLogDbDaoImpl implements SystemLogDbDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<SystemLogDB> getSystemAlertData() {
+    public List<SystemLogDb> getSystemAlertData() {
         Session session = HibernateSession.getSession();
         Transaction tx = session.beginTransaction();
-        List<SystemLogDB> system = null;
+        List<SystemLogDb> system = null;
         try {
             String sqlWhere = null;
             if (PolicyController.isjUnit()) {
@@ -83,12 +83,12 @@ public class SystemLogDbDaoImpl implements SystemLogDbDao {
                 sqlWhere = "date > DATE_SUB(curdate(), INTERVAL 5 DAY) and logtype = 'error' ORDER BY date DESC limit "
                         + PolicyController.getSystemAlertTableLimit() + "";
             }
-            Criteria cr = session.createCriteria(SystemLogDB.class);
+            Criteria cr = session.createCriteria(SystemLogDb.class);
             cr.add(Restrictions.sqlRestriction(sqlWhere));
             system = cr.list();
             tx.commit();
         } catch (Exception e) {
-            logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying SystemLogDB Table" + e);
+            logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying SystemLogDb Table" + e);
         } finally {
             try {
                 session.close();

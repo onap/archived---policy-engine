@@ -24,6 +24,8 @@ package org.onap.policy.rest.daoimpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -53,7 +55,7 @@ import org.onap.policy.rest.jpa.OnapName;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyRoles;
 import org.onap.policy.rest.jpa.PolicyVersion;
-import org.onap.policy.rest.jpa.SystemLogDB;
+import org.onap.policy.rest.jpa.SystemLogDb;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.rest.jpa.WatchPolicyNotificationTable;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
@@ -70,7 +72,7 @@ public class PolicyValidationDaoImplTest {
 
     /**
      * Set up all unit tests.
-     * 
+     *
      * @throws SQLException on SQL exceptions
      */
     @BeforeClass
@@ -98,13 +100,13 @@ public class PolicyValidationDaoImplTest {
         PolicyValidationDaoImpl.setSessionfactory(sessionFactory);
         // PolicyController.setLogTableLimit("1");
         // HibernateSession.setSession(sessionFactory);
-        SystemLogDB data1 = new SystemLogDB();
+        SystemLogDb data1 = new SystemLogDb();
         data1.setDate(new Date());
         data1.setLogtype("INFO");
         data1.setRemote("Test");
         data1.setSystem("Test");
         data1.setType("Test");
-        SystemLogDB data2 = new SystemLogDB();
+        SystemLogDb data2 = new SystemLogDb();
         data2.setDate(new Date());
         data2.setLogtype("error");
         data2.setRemote("Test");
@@ -332,6 +334,64 @@ public class PolicyValidationDaoImplTest {
         assertTrue(dataCur.size() == 1);
         assertTrue(dataCur.get(0) instanceof WatchPolicyNotificationTable);
         assertEquals(watch, dataCur.get(0));
+
+        WatchPolicyNotificationTable table0 = new WatchPolicyNotificationTable();
+        WatchPolicyNotificationTable table1 = new WatchPolicyNotificationTable();
+        assertEquals(table0, table0);
+        assertEquals(table0, table1);
+        assertNotEquals(table0, null);
+        String helloString = "Hello";
+        Object helloObject = helloString;
+        assertNotEquals(table0, helloObject);
+
+        table0.setId(1);
+        assertNotEquals(table0, table1);
+        table1.setId(1);
+        assertEquals(table0, table1);
+
+        table0.setPolicyName("GoToOz");
+        assertNotEquals(table0, table1);
+        table1.setPolicyName("GoToOz");
+        assertEquals(table0, table1);
+        table1.setPolicyName(null);
+        assertNotEquals(table0, table1);
+        table0.setPolicyName(null);
+        assertEquals(table0, table1);
+        table1.setPolicyName("GoToOz");
+        assertNotEquals(table0, table1);
+        table0.setPolicyName("GoToOz");
+        assertEquals(table0, table1);
+        assertEquals(table0, table1);
+        table1.setPolicyName("InOz");
+        assertNotEquals(table0, table1);
+        table0.setPolicyName("InOz");
+        assertEquals(table0, table1);
+
+        table0.setLoginIds("Wizard");
+        assertNotEquals(table0, table1);
+        table1.setLoginIds("Wizard");
+        assertEquals(table0, table1);
+        table1.setLoginIds(null);
+        assertNotEquals(table0, table1);
+        table0.setLoginIds(null);
+        assertEquals(table0, table1);
+        table0.setLoginIds("Wizard");
+        assertNotEquals(table0, table1);
+        table1.setLoginIds("Wizard");
+        assertEquals(table0, table1);
+        table1.setLoginIds(null);
+        table1.setLoginIds("Witch");
+        assertNotEquals(table0, table1);
+        table0.setLoginIds("Witch");
+        assertEquals(table0, table1);
+
+        assertNotNull(table0.hashCode());
+        assertNotNull(table1.hashCode());
+        assertEquals(table0.hashCode(), table0.hashCode());
+
+        table0.setLoginIds("Witci");
+        assertNotEquals(table0, table1);
+        assertNotEquals(table0.hashCode(), table1.hashCode());
     }
 
     /*
@@ -453,6 +513,7 @@ public class PolicyValidationDaoImplTest {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserLoginId("TestID");
         userInfo.setUserName("Test");
+        assertEquals("Test", userInfo.getIdentiferByUserId().getUri().getPath());
         commonClassDao.save(userInfo);
         List<String> multipleData = new ArrayList<>();
         multipleData.add("TestID:Test1");

@@ -366,7 +366,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController {
         try {
             varbindId =
                     (VarbindDictionary) commonclassdao.getEntityItem(VarbindDictionary.class, "varbindName", attrib);
-            return varbindId.getVarbindOID();
+            return varbindId.getVarbindOid();
         } catch (Exception e) {
             policyLogger.error("Error during retrieving varbindName " + attrib, e);
             return attrib;

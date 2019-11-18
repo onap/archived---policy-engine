@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +23,7 @@ package org.onap.policy.rest.jpa;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,209 +39,97 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Getter;
+import lombok.Setter;
 
+/**
+ * The Class TermList.
+ */
 @Entity
-@Table(name="TERM")
-@NamedQuery(name="TermList.findAll", query="SELECT e FROM TermList e")
+@Table(name = "TERM")
+@NamedQuery(name = "TermList.findAll", query = "SELECT e FROM TermList e")
+@Getter
+@Setter
 public class TermList implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="termName", nullable=false)
+    @Column(name = "termName", nullable = false)
     @OrderBy("asc")
     private String termName;
 
-    @Column(name="description")
-    private String termDescription;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name="fromzone")
+    @Column(name = "fromzone")
     private String fromZone;
 
-    @Column(name="tozone")
+    @Column(name = "tozone")
     private String toZone;
 
-    @Column(name="srcIPList")
-    private String srcIPList;
+    @Column(name = "srcIPList")
+    private String srcIpList;
 
-    @Column(name="destIPList")
-    private String destIPList;
+    @Column(name = "destIPList")
+    private String destIpList;
 
-    @Column(name="protocolList")
+    @Column(name = "protocolList")
     private String protocolList;
 
-    @Column(name="portList")
+    @Column(name = "portList")
     private String portList;
 
-    @Column(name="srcPortList")
+    @Column(name = "srcPortList")
     private String srcPortList;
 
-    @Column(name="destPortList")
+    @Column(name = "destPortList")
     private String destPortList;
 
-    @Column(name="action")
+    @Column(name = "action")
     private String action;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="created_date", updatable=false)
+    @Column(name = "created_date", updatable = false)
     private Date createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="modified_date", nullable=false)
+    @Column(name = "modified_date", nullable = false)
     private Date modifiedDate;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="created_by")
+    @JoinColumn(name = "created_by")
     private UserInfo userCreatedBy;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="modified_by")
+    @JoinColumn(name = "modified_by")
     private UserInfo userModifiedBy;
 
+    /**
+     * Instantiates a new term list.
+     */
     public TermList() {
         this.modifiedDate = new Date();
     }
 
-    public Date getCreatedDate() {
-        return this.createdDate;
-    }
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Date getModifiedDate() {
-        return this.modifiedDate;
-    }
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public UserInfo getUserCreatedBy() {
-        return userCreatedBy;
-    }
-
-    public void setUserCreatedBy(UserInfo userCreatedBy) {
-        this.userCreatedBy = userCreatedBy;
-    }
-
-    public UserInfo getUserModifiedBy() {
-        return userModifiedBy;
-    }
-
-    public void setUserModifiedBy(UserInfo userModifiedBy) {
-        this.userModifiedBy = userModifiedBy;
-    }
-
+    /**
+     * Pre persist.
+     */
     @PrePersist
-    public void	prePersist() {
+    public void prePersist() {
         Date date = new Date();
         this.createdDate = date;
         this.modifiedDate = date;
     }
 
+    /**
+     * Pre update.
+     */
     @PreUpdate
     public void preUpdate() {
         this.modifiedDate = new Date();
     }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTermName() {
-        return this.termName;
-    }
-
-    public void setTermName(String termName) {
-        this.termName = termName;
-    }
-
-    public String getTermDescription() {
-        return this.termDescription;
-    }
-
-    public void setDescription(String termDescription) {
-        this.termDescription = termDescription;
-    }
-
-    public String getFromZone() {
-        return this.fromZone;
-    }
-
-    public void setFromZones(String fromZone) {
-        this.fromZone = fromZone;
-    }
-
-    public String getToZone() {
-        return this.toZone;
-    }
-
-    public void setToZones(String toZone) {
-        this.toZone = toZone;
-    }
-
-    public String getSrcIPList() {
-        return this.srcIPList;
-    }
-
-    public void setSrcIPList(String srcIPList) {
-        this.srcIPList = srcIPList;
-    }
-
-    public String getDestIPList() {
-        return this.destIPList;
-    }
-
-    public void setDestIPList(String destIPList) {
-        this.destIPList = destIPList;
-    }
-
-    public String getProtocolList() {
-        return this.protocolList;
-    }
-
-    public void setProtocolList(String protocolList) {
-        this.protocolList = protocolList;
-    }
-
-    public String getPortList() {
-        return this.portList;
-    }
-
-    public void setPortList(String portList) {
-        this.portList = portList;
-    }
-
-    public String getSrcPortList() {
-        return this.srcPortList;
-    }
-
-    public void setSrcPortList(String srcPortList) {
-        this.srcPortList = srcPortList;
-    }
-
-    public String getDestPortList() {
-        return this.destPortList;
-    }
-
-    public void setDestPortList(String destPortList) {
-        this.destPortList = destPortList;
-    }
-
-
-    public String getAction() {
-        return this.action;
-    }
-
-    public void setAction(String action) {
-        this.action = action;
-    }
-
 }

@@ -40,8 +40,8 @@ import org.onap.policy.rest.jpa.ClosedLoopSite;
 import org.onap.policy.rest.jpa.OnapName;
 import org.onap.policy.rest.jpa.PepOptions;
 import org.onap.policy.rest.jpa.UserInfo;
-import org.onap.policy.rest.jpa.VNFType;
-import org.onap.policy.rest.jpa.VSCLAction;
+import org.onap.policy.rest.jpa.VnfType;
+import org.onap.policy.rest.jpa.VsclAction;
 import org.onap.policy.rest.jpa.VarbindDictionary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -54,9 +54,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class ClosedLoopDictionaryController {
 
     private static CommonClassDao commonClassDao;
-    private static String vsclaction = "vsclaction";
+    private static String vsclaction = "action";
     private static String operation = "operation";
-    private static String vnftype = "vnftype";
+    private static String vnftype = "type";
     private static String pepName = "pepName";
     private static String varbindName = "varbindName";
     private static String serviceName = "serviceName";
@@ -98,7 +98,7 @@ public class ClosedLoopDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getVSCLActionDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getDataByEntity(response, vsclActionDatas, vsclaction, VSCLAction.class);
+        utils.getDataByEntity(response, vsclActionDatas, vsclaction, VsclAction.class);
     }
 
     @RequestMapping(
@@ -107,7 +107,7 @@ public class ClosedLoopDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getVSCLActionDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getData(response, vsclActionDatas, VSCLAction.class);
+        utils.getData(response, vsclActionDatas, VsclAction.class);
     }
 
     @RequestMapping(
@@ -116,7 +116,7 @@ public class ClosedLoopDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getVNFTypeDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getDataByEntity(response, vnfTypeDatas, vnftype, VNFType.class);
+        utils.getDataByEntity(response, vnfTypeDatas, vnftype, VnfType.class);
     }
 
     @RequestMapping(
@@ -125,7 +125,7 @@ public class ClosedLoopDictionaryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getVNFTypeDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.getData(response, vnfTypeDatas, VNFType.class);
+        utils.getData(response, vnfTypeDatas, VnfType.class);
     }
 
     @RequestMapping(
@@ -208,22 +208,22 @@ public class ClosedLoopDictionaryController {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
-            VSCLAction vSCLAction;
+            VsclAction vSCLAction;
             String userId = null;
             if (fromAPI) {
-                vSCLAction = mapper.readValue(root.get(dictionaryFields).toString(), VSCLAction.class);
+                vSCLAction = mapper.readValue(root.get(dictionaryFields).toString(), VsclAction.class);
                 userId = "API";
             } else {
-                vSCLAction = mapper.readValue(root.get("vsclActionDictionaryData").toString(), VSCLAction.class);
+                vSCLAction = mapper.readValue(root.get("vsclActionDictionaryData").toString(), VsclAction.class);
                 userId = root.get(userid).textValue();
             }
             UserInfo userInfo = utils.getUserInfo(userId);
 
             List<Object> duplicateData =
-                    commonClassDao.checkDuplicateEntry(vSCLAction.getVsclaction(), vsclaction, VSCLAction.class);
+                    commonClassDao.checkDuplicateEntry(vSCLAction.getAction(), vsclaction, VsclAction.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
-                VSCLAction data = (VSCLAction) duplicateData.get(0);
+                VsclAction data = (VsclAction) duplicateData.get(0);
                 if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     vSCLAction.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
@@ -242,7 +242,7 @@ public class ClosedLoopDictionaryController {
                     vSCLAction.setModifiedDate(new Date());
                     commonClassDao.update(vSCLAction);
                 }
-                responseString = mapper.writeValueAsString(commonClassDao.getData(VSCLAction.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(VsclAction.class));
             } else {
                 responseString = duplicateResponseString;
             }
@@ -272,22 +272,22 @@ public class ClosedLoopDictionaryController {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
-            VNFType vNFType;
+            VnfType vNFType;
             String userId = null;
             if (fromAPI) {
-                vNFType = mapper.readValue(root.get(dictionaryFields).toString(), VNFType.class);
+                vNFType = mapper.readValue(root.get(dictionaryFields).toString(), VnfType.class);
                 userId = "API";
             } else {
-                vNFType = mapper.readValue(root.get("vnfTypeDictionaryData").toString(), VNFType.class);
+                vNFType = mapper.readValue(root.get("vnfTypeDictionaryData").toString(), VnfType.class);
                 userId = root.get(userid).textValue();
             }
             UserInfo userInfo = utils.getUserInfo(userId);
 
             List<Object> duplicateData =
-                    commonClassDao.checkDuplicateEntry(vNFType.getVnftype(), vnftype, VNFType.class);
+                    commonClassDao.checkDuplicateEntry(vNFType.getType(), vnftype, VnfType.class);
             boolean duplicateflag = false;
             if (!duplicateData.isEmpty()) {
-                VNFType data = (VNFType) duplicateData.get(0);
+                VnfType data = (VnfType) duplicateData.get(0);
                 if (request.getParameter(operation) != null && "update".equals(request.getParameter(operation))) {
                     vNFType.setId(data.getId());
                 } else if ((request.getParameter(operation) != null
@@ -306,7 +306,7 @@ public class ClosedLoopDictionaryController {
                     vNFType.setModifiedDate(new Date());
                     commonClassDao.update(vNFType);
                 }
-                responseString = mapper.writeValueAsString(commonClassDao.getData(VNFType.class));
+                responseString = mapper.writeValueAsString(commonClassDao.getData(VnfType.class));
             } else {
                 responseString = duplicateResponseString;
             }
@@ -325,7 +325,7 @@ public class ClosedLoopDictionaryController {
     @RequestMapping(value = {"/cl_dictionary/remove_vnfType"}, method = {RequestMethod.POST})
     public void removeVnfType(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.removeData(request, response, vnfTypeDatas, VNFType.class);
+        utils.removeData(request, response, vnfTypeDatas, VnfType.class);
     }
 
     @RequestMapping(value = {"/cl_dictionary/save_pepOptions"}, method = {RequestMethod.POST})
@@ -396,7 +396,7 @@ public class ClosedLoopDictionaryController {
     @RequestMapping(value = {"/cl_dictionary/remove_pepOptions"}, method = {RequestMethod.POST})
     public void removePEPOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.removeData(request, response, pepOptionDatas, VNFType.class);
+        utils.removeData(request, response, pepOptionDatas, VnfType.class);
     }
 
     @RequestMapping(value = {"/cl_dictionary/save_service"}, method = {RequestMethod.POST})
@@ -460,7 +460,7 @@ public class ClosedLoopDictionaryController {
     @RequestMapping(value = {"/cl_dictionary/remove_Service"}, method = {RequestMethod.POST})
     public void removeServiceType(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.removeData(request, response, closedLoopDatas, VNFType.class);
+        utils.removeData(request, response, closedLoopDatas, VnfType.class);
     }
 
     @RequestMapping(value = {"/cl_dictionary/save_siteName"}, method = {RequestMethod.POST})
@@ -523,7 +523,7 @@ public class ClosedLoopDictionaryController {
     @RequestMapping(value = {"/cl_dictionary/remove_site"}, method = {RequestMethod.POST})
     public void removeSiteType(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.removeData(request, response, closedLoopSiteDatas, VNFType.class);
+        utils.removeData(request, response, closedLoopSiteDatas, VnfType.class);
     }
 
     @RequestMapping(value = {"/cl_dictionary/save_varbind"}, method = {RequestMethod.POST})
@@ -588,6 +588,6 @@ public class ClosedLoopDictionaryController {
     @RequestMapping(value = {"/cl_dictionary/remove_varbindDict"}, method = {RequestMethod.POST})
     public void removeVarbind(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
-        utils.removeData(request, response, varbindDatas, VNFType.class);
+        utils.removeData(request, response, varbindDatas, VnfType.class);
     }
 }

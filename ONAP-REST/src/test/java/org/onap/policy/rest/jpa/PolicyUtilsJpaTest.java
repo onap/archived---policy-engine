@@ -21,7 +21,8 @@
 
 package org.onap.policy.rest.jpa;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -116,97 +117,102 @@ public class PolicyUtilsJpaTest {
 
         PolicyVersion version0 = new PolicyVersion();
         PolicyVersion version1 = new PolicyVersion();
-        assertTrue(version0.equals(version0));
-        assertTrue(version0.equals(version1));
-        assertFalse(version0.equals(null));
+        assertEquals(version0, version0);
+        assertEquals(version0, version1);
+        assertNotEquals(version0, null);
         String helloString = "Hello";
         Object helloObject = helloString;
-        assertFalse(version0.equals(helloObject));
+        assertNotEquals(version0, helloObject);
 
         version0.setId(1);
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version1.setId(1);
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version0.setActiveVersion(1);
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version1.setActiveVersion(1);
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version0.setCreatedBy("Dorothy");
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version1.setCreatedBy("Dorothy");
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version1.setCreatedBy(null);
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version0.setCreatedBy(null);
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version1.setCreatedBy("Dorothy");
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version0.setCreatedBy("Dorothy");
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version0.setCreatedDate(new Date(12345L));
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version1.setCreatedDate(new Date(12345L));
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version1.setCreatedDate(null);
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version0.setCreatedDate(null);
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version1.setCreatedDate(new Date(12345L));
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version0.setCreatedDate(new Date(12345L));
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version0.setHigherVersion(1);
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version1.setHigherVersion(1);
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version0.setModifiedBy("Dorothy");
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version1.setModifiedBy("Dorothy");
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version1.setModifiedBy(null);
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version0.setModifiedBy(null);
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version1.setModifiedBy("Dorothy");
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version0.setModifiedBy("Dorothy");
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version0.setModifiedDate(new Date(12345L));
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version1.setModifiedDate(new Date(12345L));
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version1.setModifiedDate(null);
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version0.setModifiedDate(null);
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version1.setModifiedDate(new Date(12345L));
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version0.setModifiedDate(new Date(12345L));
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version0.setPolicyName("GoToOz");
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version1.setPolicyName("GoToOz");
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version1.setPolicyName(null);
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version0.setPolicyName(null);
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
         version1.setPolicyName("GoToOz");
-        assertFalse(version0.equals(version1));
+        assertNotEquals(version0, version1);
         version0.setPolicyName("GoToOz");
-        assertTrue(version0.equals(version1));
+        assertEquals(version0, version1);
 
         assertNotNull(version0.hashCode());
         assertNotNull(version1.hashCode());
+        assertEquals(version0.hashCode(), version0.hashCode());
+
+        version0.setPolicyName("GoToOy");
+        assertNotEquals(version0, version1);
+        assertNotEquals(version0.hashCode(), version1.hashCode());
     }
 
     /**
      * Test system log DB.
      */
     @Test
-    public void testSystemLogDB() {
-        SystemLogDB data = new SystemLogDB();
-        new SystemLogDB(1, "", "", "", "", "");
+    public void testSystemLogDb() {
+        SystemLogDb data = new SystemLogDb();
+        new SystemLogDb(1, "", "", "", "", "");
         data.setId(1);
         assertTrue(1 == data.getId());
         data.setDescription("Test");

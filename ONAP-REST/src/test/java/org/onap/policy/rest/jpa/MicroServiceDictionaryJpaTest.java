@@ -247,7 +247,7 @@ public class MicroServiceDictionaryJpaTest {
      */
     @Test
     public void testVmType() {
-        VMType data = new VMType();
+        VmType data = new VmType();
         data.setId(1);
         assertTrue(1 == data.getId());
         data.setName("Test");
