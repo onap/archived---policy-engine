@@ -26,9 +26,6 @@ import static org.junit.Assert.fail;
 
 import com.att.research.xacml.util.XACMLProperties;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -40,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.servlet.ReadListener;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
@@ -199,8 +195,8 @@ public class XacmlRestTest extends Mockito {
     }
 
     @Test
-    public void testConstructorIsPrivate()
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public void testConstructorIsPrivate() throws NoSuchMethodException, IllegalAccessException,
+                    InvocationTargetException, InstantiationException {
         Constructor<XacmlRestProperties> constructor = XacmlRestProperties.class.getDeclaredConstructor();
         assertTrue(Modifier.isPrivate(constructor.getModifiers()));
         constructor.setAccessible(true);
@@ -289,9 +285,12 @@ public class XacmlRestTest extends Mockito {
         XacmlRest.dumpRequest(httpServletRequest);
 
         Map<String, String[]> parameterMap = new LinkedHashMap<>();
-        String[] mapValue0 = {"MapValue0"};
-        String[] mapValue1 = {"MapValue0"};
-        String[] mapValue2 = {};
+        String[] mapValue0 =
+            { "MapValue0" };
+        String[] mapValue1 =
+            { "MapValue0" };
+        String[] mapValue2 =
+            {};
         parameterMap.put("Key0", mapValue0);
         parameterMap.put("Key1", mapValue1);
         parameterMap.put("Key2", mapValue2);

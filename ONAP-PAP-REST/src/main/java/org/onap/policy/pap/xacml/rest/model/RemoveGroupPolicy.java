@@ -26,14 +26,14 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.onap.policy.rest.util.PDPPolicyContainer;
+import org.onap.policy.rest.util.PdpPolicyContainer;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 
 public class RemoveGroupPolicy {
 
     // Container from where we are fetching the policies
-    private static PDPPolicyContainer policyContainer;
+    private static PdpPolicyContainer policyContainer;
 
     private StdPDPGroup updatedObject;
     private final StdPDPGroup group;
@@ -57,7 +57,7 @@ public class RemoveGroupPolicy {
         if (this.group == null) {
             return;
         }
-        setRemoveGroupPolicy(new PDPPolicyContainer(group));
+        setRemoveGroupPolicy(new PdpPolicyContainer(group));
     }
 
     /**
@@ -71,7 +71,7 @@ public class RemoveGroupPolicy {
         this.isSaved = true;
     }
 
-    private static void setRemoveGroupPolicy(PDPPolicyContainer pdpPolicyContainer) {
+    private static void setRemoveGroupPolicy(PdpPolicyContainer pdpPolicyContainer) {
         RemoveGroupPolicy.policyContainer = pdpPolicyContainer;
     }
 

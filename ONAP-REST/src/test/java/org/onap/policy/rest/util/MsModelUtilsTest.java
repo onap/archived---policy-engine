@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,12 +42,17 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.DictionaryData;
-import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
+import org.onap.policy.rest.util.MsModelUtils.ModelType;
 
-public class MSModelUtilsTest {
-    private static Logger logger = FlexLogger.getLogger(MSModelUtilsTest.class);
+public class MsModelUtilsTest {
+    private static Logger logger = FlexLogger.getLogger(MsModelUtilsTest.class);
     private static CommonClassDao commonClassDao;
 
+    /**
+     * Set tests up.
+     *
+     * @throws Exception on setup failures
+     */
     @Before
     public void setUp() throws Exception {
         List<Object> dictionaryData = new ArrayList<Object>();
@@ -55,27 +63,27 @@ public class MSModelUtilsTest {
         logger.info("setUp: Entering");
         commonClassDao = mock(CommonClassDao.class);
         when(commonClassDao.getDataById(DictionaryData.class, "dictionaryName", "GocVNFType"))
-                .thenReturn(dictionaryData);
+                        .thenReturn(dictionaryData);
     }
 
     @Test
-    public void testMSModelUtils() {
-        HashMap<String, MSAttributeObject> classMap = new HashMap<>();
+    public void testMsModelUtils() {
+        HashMap<String, MsAttributeObject> classMap = new HashMap<>();
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("DKaTVESPolicy-v1802.xmi").getFile());
-        MSModelUtils utils = new MSModelUtils("http://org.onap", "http://org.onap.policy");
-        Map<String, MSAttributeObject> tempMap =
-                utils.processEpackage(file.getAbsolutePath().toString(), MODEL_TYPE.XMI);
+        MsModelUtils utils = new MsModelUtils("http://org.onap", "http://org.onap.policy");
+        Map<String, MsAttributeObject> tempMap = utils.processEpackage(file.getAbsolutePath().toString(),
+                        ModelType.XMI);
         classMap.putAll(tempMap);
-        MSAttributeObject mainClass = classMap.get("StandardDeviationThreshold");
-        String dependTemp = StringUtils.replaceEach(mainClass.getDependency(), new String[] {"[", "]", " "},
-                new String[] {"", "", ""});
+        MsAttributeObject mainClass = classMap.get("StandardDeviationThreshold");
+        String dependTemp = StringUtils.replaceEach(mainClass.getDependency(), new String[]
+            { "[", "]", " " }, new String[]
+            { "", "", "" });
         List<String> dependency = new ArrayList<String>(Arrays.asList(dependTemp.split(",")));
         dependency = utils.getFullDependencyList(dependency, classMap);
         String subAttribute = utils.createSubAttributes(dependency, classMap, "StandardDeviationThreshold");
         assertTrue(subAttribute != null);
     }
-
 
     /**
      * Run the void stringBetweenDots(String, String) method test.
@@ -85,25 +93,24 @@ public class MSModelUtilsTest {
     public void testStringBetweenDots() {
 
         // expect: uniqueKeys should contain a string value
-        MSModelUtils controllerA = new MSModelUtils();
+        MsModelUtils controllerA = new MsModelUtils();
         String str = "testing\\.byCorrectWay\\.OfDATA";
         assertEquals(1, controllerA.stringBetweenDots(str));
 
         // expect: uniqueKeys should not contain a string value
         str = "testing\byWrongtWay.\\OfDATA";
-        MSModelUtils controllerB = new MSModelUtils();
+        MsModelUtils controllerB = new MsModelUtils();
         assertEquals(0, controllerB.stringBetweenDots(str));
     }
 
     /**
-     * Run the Map<String,String> load(String) method test.
+     * Run the load method test.
      */
-
     @Test
     public void testLoad() {
 
         boolean isLocalTesting = true;
-        MSModelUtils controller = new MSModelUtils();
+        MsModelUtils controller = new MsModelUtils();
         String fileName = null;
         Map<String, String> result = null;
         try {
@@ -146,7 +153,7 @@ public class MSModelUtilsTest {
             logger.error("Exception Occured while loading file" + e1);
         }
 
-        MSModelUtils controller = new MSModelUtils(commonClassDao);
+        MsModelUtils controller = new MsModelUtils(commonClassDao);
         if (isLocalTesting) {
             try {
                 controller.parseTosca(fileName);
