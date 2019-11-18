@@ -33,7 +33,7 @@ import org.onap.policy.common.utils.test.ToStringTester;
 /**
  * Class to perform unit testing of POJOs.
  */
-public class ModelsTest {
+public class GetterSetterToStringTest {
     private static final String POJO_PACKAGE = "org.onap.policy.rest.jpa";
 
     @Test

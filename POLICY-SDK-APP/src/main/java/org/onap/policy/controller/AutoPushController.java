@@ -58,7 +58,7 @@ import org.onap.policy.rest.adapter.AutoPushTabAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
-import org.onap.policy.rest.util.PDPPolicyContainer;
+import org.onap.policy.rest.util.PdpPolicyContainer;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
@@ -84,7 +84,7 @@ public class AutoPushController extends RestrictedBaseController {
     CommonClassDao commonClassDao;
 
     private PDPGroupContainer container;
-    private PDPPolicyContainer policyContainer;
+    private PdpPolicyContainer policyContainer;
     private PolicyController policyController;
     protected List<OnapPDPGroup> groups = Collections.synchronizedList(new ArrayList<>());
 
@@ -377,7 +377,7 @@ public class AutoPushController extends RestrictedBaseController {
             logger.info(
                     "**********************************************************************************************");
 
-            policyContainer = new PDPPolicyContainer(group);
+            policyContainer = new PdpPolicyContainer(group);
             if (removePolicyData.size() > 0) {
                 IntStream.range(0, removePolicyData.size()).mapToObj(i -> removePolicyData.get(i).toString())
                         .forEach(polData -> this.policyContainer.removeItem(polData));

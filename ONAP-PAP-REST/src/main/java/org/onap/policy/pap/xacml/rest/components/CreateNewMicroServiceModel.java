@@ -49,16 +49,16 @@ import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.rest.jpa.MicroServiceModels;
 import org.onap.policy.rest.jpa.UserInfo;
-import org.onap.policy.rest.util.MSAttributeObject;
-import org.onap.policy.rest.util.MSModelUtils;
-import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
+import org.onap.policy.rest.util.MsAttributeObject;
+import org.onap.policy.rest.util.MsModelUtils;
+import org.onap.policy.rest.util.MsModelUtils.ModelType;
 
 public class CreateNewMicroServiceModel {
     private static final Logger logger = FlexLogger.getLogger(CreateNewMicroServiceModel.class);
     private MicroServiceModels newModel = null;
-    private HashMap<String, MSAttributeObject> classMap = new HashMap<>();
+    private HashMap<String, MsAttributeObject> classMap = new HashMap<>();
 
-    private MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
+    private MsModelUtils utils = new MsModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
 
     public CreateNewMicroServiceModel(String fileName, String serviceName, String string, String version) {
         super();
@@ -84,7 +84,7 @@ public class CreateNewMicroServiceModel {
         this.newModel.setUserCreatedBy(userInfo);
         String cleanUpFile = null;
 
-        Map<String, MSAttributeObject> tempMap = new HashMap<>();
+        Map<String, MsAttributeObject> tempMap = new HashMap<>();
         // Need to delete the file
         if (importFile.contains(".zip")) {
             extractFolder(randomID + ".zip");
@@ -100,7 +100,7 @@ public class CreateNewMicroServiceModel {
                 cleanUpFile = "ExtractDir" + File.separator + randomID + ".yml";
 
             } else {
-                tempMap = utils.processEpackage("ExtractDir" + File.separator + randomID + ".xmi", MODEL_TYPE.XMI);
+                tempMap = utils.processEpackage("ExtractDir" + File.separator + randomID + ".xmi", ModelType.XMI);
                 classMap.putAll(tempMap);
                 cleanUpFile = "ExtractDir" + File.separator + randomID + ".xmi";
             }
@@ -111,7 +111,7 @@ public class CreateNewMicroServiceModel {
     }
 
     private void processFiles(String modelName, List<File> fileList) {
-        Map<String, MSAttributeObject> tempMap;
+        Map<String, MsAttributeObject> tempMap;
         for (File file : fileList) {
             if (file.isFile()) {
                 int indx = file.getName().lastIndexOf('.');
@@ -123,7 +123,7 @@ public class CreateNewMicroServiceModel {
 
                 } else {
 
-                    tempMap = utils.processEpackage(file.getAbsolutePath(), MODEL_TYPE.XMI);
+                    tempMap = utils.processEpackage(file.getAbsolutePath(), ModelType.XMI);
                     classMap.putAll(tempMap);
                 }
             }
@@ -149,7 +149,7 @@ public class CreateNewMicroServiceModel {
 
             utils.parseTosca(fileName);
 
-            MSAttributeObject msAttributes = new MSAttributeObject();
+            MsAttributeObject msAttributes = new MsAttributeObject();
             msAttributes.setClassName(modelName);
 
             LinkedHashMap<String, String> returnAttributeList = new LinkedHashMap<>();
@@ -256,7 +256,7 @@ public class CreateNewMicroServiceModel {
     public Map<String, String> addValuesToNewModel(String type) {
 
         Map<String, String> successMap = new HashMap<>();
-        MSAttributeObject mainClass = null;
+        MsAttributeObject mainClass = null;
         List<String> dependency = null;
         String subAttribute = null;
 
@@ -317,7 +317,7 @@ public class CreateNewMicroServiceModel {
                 dependency = utils.getFullDependencyList(dependency, classMap);
                 if (!dependency.isEmpty()) {
                     for (String element : dependency) {
-                        MSAttributeObject temp = new MSAttributeObject();
+                        MsAttributeObject temp = new MsAttributeObject();
                         if (classMap.containsKey(element)) {
                             temp = classMap.get(element);
                             mainClass.addAllRefAttribute(temp.getRefAttribute());

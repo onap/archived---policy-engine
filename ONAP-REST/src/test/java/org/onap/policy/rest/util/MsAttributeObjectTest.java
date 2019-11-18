@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +22,16 @@
 package org.onap.policy.rest.util;
 
 import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
+
 import org.junit.Test;
 
-public class MSAttributeObjectTest {
+public class MsAttributeObjectTest {
 
     @Test
-    public void testMSAttributeObject() {
-        MSAttributeObject data = new MSAttributeObject();
+    public void testMsAttributeObject() {
+        MsAttributeObject data = new MsAttributeObject();
         data.setClassName("Test");
         assertTrue("Test".equals(data.getClassName()));
         data.setRefAttribute(new HashMap<>());
@@ -60,8 +63,8 @@ public class MSAttributeObjectTest {
     }
 
     @Test
-    public void testMSAttributeValue() {
-        MSAttributeValue data = new MSAttributeValue();
+    public void testMsAttributeValue() {
+        MsAttributeValue data = new MsAttributeValue();
         data.setName("Test");
         assertTrue("Test".equals(data.getName()));
         data.setType("Test");

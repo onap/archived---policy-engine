@@ -45,19 +45,19 @@ import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.rest.jpa.OptimizationModels;
 import org.onap.policy.rest.jpa.UserInfo;
-import org.onap.policy.rest.util.MSAttributeObject;
-import org.onap.policy.rest.util.MSModelUtils;
-import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
+import org.onap.policy.rest.util.MsAttributeObject;
+import org.onap.policy.rest.util.MsModelUtils;
+import org.onap.policy.rest.util.MsModelUtils.ModelType;
 
 public class CreateNewOptimizationModel {
     private static final Logger logger = FlexLogger.getLogger(CreateNewOptimizationModel.class);
     private OptimizationModels newModel = null;
-    private HashMap<String, MSAttributeObject> classMap = new HashMap<>();
+    private HashMap<String, MsAttributeObject> classMap = new HashMap<>();
 
     private static final String EXTRACTDIR = "ExtractDir";
     private static final String SUCCESS = "success";
 
-    MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
+    MsModelUtils utils = new MsModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
 
     public CreateNewOptimizationModel() {
         super();
@@ -75,7 +75,7 @@ public class CreateNewOptimizationModel {
         this.newModel.setUserCreatedBy(userInfo);
         String cleanUpFile = null;
 
-        Map<String, MSAttributeObject> tempMap = new HashMap<>();
+        Map<String, MsAttributeObject> tempMap = new HashMap<>();
         // Need to delete the file
         if (importFile.contains(".zip")) {
             extractFolder(randomID + ".zip");
@@ -103,7 +103,7 @@ public class CreateNewOptimizationModel {
                 cleanUpFile = EXTRACTDIR + File.separator + randomID + ".yml";
 
             } else {
-                tempMap = utils.processEpackage(EXTRACTDIR + File.separator + randomID + ".xmi", MODEL_TYPE.XMI);
+                tempMap = utils.processEpackage(EXTRACTDIR + File.separator + randomID + ".xmi", ModelType.XMI);
                 classMap.putAll(tempMap);
                 cleanUpFile = EXTRACTDIR + File.separator + randomID + ".xmi";
             }
@@ -118,7 +118,7 @@ public class CreateNewOptimizationModel {
 
             utils.parseTosca(fileName);
 
-            MSAttributeObject msAttributes = new MSAttributeObject();
+            MsAttributeObject msAttributes = new MsAttributeObject();
             msAttributes.setClassName(modelName);
 
             LinkedHashMap<String, String> returnAttributeList = new LinkedHashMap<>();
@@ -216,7 +216,7 @@ public class CreateNewOptimizationModel {
     public Map<String, String> addValuesToNewModel() {
 
         Map<String, String> successMap = new HashMap<>();
-        MSAttributeObject mainClass;
+        MsAttributeObject mainClass;
 
         if (!classMap.containsKey(this.newModel.getModelName())) {
             logger.error(

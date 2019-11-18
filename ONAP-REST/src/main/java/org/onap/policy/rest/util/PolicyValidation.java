@@ -3,13 +3,14 @@
  * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,9 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
@@ -42,11 +40,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
+
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -67,41 +69,54 @@ import org.onap.policy.xacml.util.XACMLPolicyScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class PolicyValidation {
-
     private static final Logger LOGGER = FlexLogger.getLogger(PolicyValidation.class);
 
-    public static final String CONFIG_POLICY = "Config";
-    public static final String ACTION_POLICY = "Action";
-    public static final String DECISION_POLICY = "Decision";
-    public static final String DECISION_POLICY_MS = "Decision_MS";
-    public static final String CLOSEDLOOP_POLICY = "ClosedLoop_Fault";
-    public static final String CLOSEDLOOP_PM = "ClosedLoop_PM";
-    public static final String ENFORCER_CONFIG_POLICY = "Enforcer Config";
-    public static final String MICROSERVICES = "Micro Service";
-    public static final String FIREWALL = "Firewall Config";
-    public static final String OPTIMIZATION="Optimization";
-    public static final String BRMSPARAM = "BRMS_Param";
-    public static final String BRMSRAW = "BRMS_Raw";
-    public static final String HTML_ITALICS_LNBREAK = "</i><br>";
-    public static final String SUCCESS = "success";
-    public static final String EMPTY_COMPONENT_ATTR =
-            "Component Attributes: One or more Fields in Component Attributes is Empty.";
-    public static final String ISREQUIRED = " is required";
-    public static final String SPACESINVALIDCHARS = " : value has spaces or invalid characters</i><br>";
-    private static final String REQUIRED_ATTRIBUTE = "required-true";
+    private static final String ACTION_POLICY = "Action";
+    private static final String BOOLEAN = "boolean";
+    private static final String BRMSPARAM = "BRMS_Param";
+    private static final String BRMSRAW = "BRMS_Raw";
+    private static final String CLOSEDLOOP_PM = "ClosedLoop_PM";
+    private static final String CLOSEDLOOP_POLICY = "ClosedLoop_Fault";
+    private static final String CONFIG_POLICY = "Config";
     private static final String DECISION_MS_MODEL = "MicroService_Model";
+    private static final String DECISION_POLICY = "Decision";
+    private static final String DECISION_POLICY_MS = "Decision_MS";
+    private static final String ENFORCER_CONFIG_POLICY = "Enforcer Config";
+    private static final String FIREWALL = "Firewall Config";
+    private static final String HTML_ITALICS_LNBREAK = "</i><br>";
+    private static final String INTEGER = "integer";
+    private static final String ISREQUIRED = " is required";
+    private static final String JAVA = "java";
+    private static final String LIST = "list";
+    private static final String MAP = "map";
+    private static final String MICROSERVICES = "Micro Service";
+    private static final String MISSING_COMPONENT_ATTRIBUTE_VALUE = "<b>Component Attributes</b>:"
+                    + "<i> has one missing Component Attribute value</i><br>";
+    private static final String MISSING_ATTRIBUTE_VALUE = "<b>Rule Attributes</b>:"
+                    + "<i> has one missing Attribute value</i><br>";
+    private static final String MISSING_COMPONENT_ATTRIBUTE_KEY = "<b>Component Attributes</b>:"
+                    + "<i> has one missing Component Attribute key</i><br>";
+    private static final String OPTIMIZATION = "Optimization";
     private static final String RAW = "Raw";
+    private static final String REQUIRED_ATTRIBUTE = "required-true";
+    private static final String RULE_ALGORITHMS = "<b>Rule Algorithms</b>:<i>";
+    private static final String SELECT_AT_LEAST_ONE_D2_VIRTUALIZED_SERVICES = "<b>D2/Virtualized Services</b>: "
+                    + "<i>Select at least one D2/Virtualized Services";
+    private static final String SPACESINVALIDCHARS = " : value has spaces or invalid characters</i><br>";
+    private static final String STRING = "string";
+    private static final String SUCCESS = "success";
+    private static final String VALUE = "value";
 
     private static Map<String, String> mapAttribute = new HashMap<>();
     private static Map<String, String> jsonRequestMap = new HashMap<>();
     private static List<String> modelRequiredFieldsList = new ArrayList<>();
-    private Set<String> allReqTrueKeys = new HashSet<>();
-    private Set<String> allOptReqTrueKeys = new HashSet<>();
 
     private static CommonClassDao commonClassDao;
+
+    private Set<String> allReqTrueKeys = new HashSet<>();
+    private Set<String> allOptReqTrueKeys = new HashSet<>();
 
     @Autowired
     public PolicyValidation(CommonClassDao commonClassDao) {
@@ -114,7 +129,6 @@ public class PolicyValidation {
     public PolicyValidation() {
         // Empty constructor
     }
-
 
     /**
      * Validate policy.
@@ -148,68 +162,64 @@ public class PolicyValidation {
             }
 
             if (!"API".equals(policyData.getApiflag()) && policyData.getAttributes() != null
-                    && !policyData.getAttributes().isEmpty()) {
+                            && !policyData.getAttributes().isEmpty()) {
                 for (Object attribute : policyData.getAttributes()) {
                     if (attribute instanceof LinkedHashMap<?, ?>) {
-                        String value = null;
+                        String attValue = null;
                         String key = null;
                         if (((LinkedHashMap<?, ?>) attribute).get("key") != null) {
                             key = ((LinkedHashMap<?, ?>) attribute).get("key").toString();
                             if (!PolicyUtils.policySpecialCharWithDashValidator(key).contains(SUCCESS)) {
-                                responseString.append("<b>Attributes or Component Attributes</b>:<i>" + value
-                                        + SPACESINVALIDCHARS);
+                                responseString.append("<b>Attributes or Component Attributes</b>:<i>" + attValue
+                                                + SPACESINVALIDCHARS);
                                 valid = false;
                             }
                         } else {
                             if (CONFIG_POLICY.equals(policyData.getPolicyType())) {
                                 if ("Base".equals(policyData.getConfigPolicyType())) {
-                                    responseString
-                                    .append("<b>Attributes</b>:<i> has one missing Attribute key</i><br>");
+                                    responseString.append(
+                                                    "<b>Attributes</b>:<i> has one missing Attribute key</i><br>");
                                 }
                                 if (BRMSPARAM.equals(policyData.getConfigPolicyType())
-                                        || BRMSRAW.equals(policyData.getConfigPolicyType())) {
-                                    responseString
-                                    .append("<b>Rule Attributes</b>:<i> has one missing Attribute key</i><br>");
+                                                || BRMSRAW.equals(policyData.getConfigPolicyType())) {
+                                    responseString.append(
+                                                    "<b>Rule Attributes</b>:<i> has one missing Attribute key</i><br>");
                                 }
                             } else {
-                                responseString.append(
-                                        "<b>Component Attributes</b>:<i> has one missing Component Attribute key</i><br>");
+                                responseString.append(MISSING_COMPONENT_ATTRIBUTE_KEY);
                             }
                             valid = false;
                         }
-                        if (((LinkedHashMap<?, ?>) attribute).get("value") != null) {
-                            value = ((LinkedHashMap<?, ?>) attribute).get("value").toString();
-                            if (!PolicyUtils.policySpecialCharWithDashValidator(value).contains(SUCCESS)) {
+                        if (((LinkedHashMap<?, ?>) attribute).get(VALUE) != null) {
+                            attValue = ((LinkedHashMap<?, ?>) attribute).get(VALUE).toString();
+                            if (!PolicyUtils.policySpecialCharWithDashValidator(attValue).contains(SUCCESS)) {
                                 if (CONFIG_POLICY.equals(policyData.getPolicyType())) {
                                     if ("Base".equals(policyData.getConfigPolicyType())) {
-                                        responseString.append("<b>Attributes</b>:<i>" + value
-                                                + SPACESINVALIDCHARS);
+                                        responseString.append("<b>Attributes</b>:<i>" + attValue + SPACESINVALIDCHARS);
                                     }
                                     if (BRMSPARAM.equals(policyData.getConfigPolicyType())
-                                            || BRMSRAW.equals(policyData.getConfigPolicyType())) {
-                                        responseString.append("<b>Rule Attributes</b>:<i>" + value
-                                                + SPACESINVALIDCHARS);
+                                                    || BRMSRAW.equals(policyData.getConfigPolicyType())) {
+                                        responseString.append(
+                                                        "<b>Rule Attributes</b>:<i>" + attValue + SPACESINVALIDCHARS);
                                     }
                                 } else {
-                                    responseString.append("<b>Component Attributes</b>:<i>" + value
-                                            + SPACESINVALIDCHARS);
+                                    responseString.append(
+                                                    "<b>Component Attributes</b>:<i>" + attValue + SPACESINVALIDCHARS);
                                 }
                                 valid = false;
                             }
                         } else {
                             if (CONFIG_POLICY.equals(policyData.getPolicyType())) {
                                 if ("Base".equals(policyData.getConfigPolicyType())) {
-                                    responseString
-                                    .append("<b>Attributes</b>:<i> has one missing Attribute value</i><br>");
+                                    responseString.append(
+                                                    "<b>Attributes</b>:<i> has one missing Attribute value</i><br>");
                                 }
                                 if (BRMSPARAM.equals(policyData.getConfigPolicyType())
-                                        || BRMSRAW.equals(policyData.getConfigPolicyType())) {
-                                    responseString.append(
-                                            "<b>Rule Attributes</b>:<i> has one missing Attribute value</i><br>");
+                                                || BRMSRAW.equals(policyData.getConfigPolicyType())) {
+                                    responseString.append(MISSING_ATTRIBUTE_VALUE);
                                 }
                             } else {
-                                responseString.append(
-                                        "<b>Component Attributes</b>:<i> has one missing Component Attribute value</i><br>");
+                                responseString.append(MISSING_COMPONENT_ATTRIBUTE_VALUE);
                             }
                             valid = false;
                         }
@@ -219,25 +229,24 @@ public class PolicyValidation {
 
             // Decision Policy Attributes Validation
             if (!"API".equals(policyData.getApiflag()) && policyData.getSettings() != null
-                    && !policyData.getSettings().isEmpty()) {
+                            && !policyData.getSettings().isEmpty()) {
                 for (Object attribute : policyData.getAttributes()) {
                     if (attribute instanceof LinkedHashMap<?, ?>) {
                         String value = null;
                         if (((LinkedHashMap<?, ?>) attribute).get("key") == null) {
-                            responseString
-                            .append("<b>Settings Attributes</b>:<i> has one missing Attribute key</i><br>");
+                            responseString.append(
+                                            "<b>Settings Attributes</b>:<i> has one missing Attribute key</i><br>");
                             valid = false;
                         }
-                        if (((LinkedHashMap<?, ?>) attribute).get("value") != null) {
-                            value = ((LinkedHashMap<?, ?>) attribute).get("value").toString();
+                        if (((LinkedHashMap<?, ?>) attribute).get(VALUE) != null) {
+                            value = ((LinkedHashMap<?, ?>) attribute).get(VALUE).toString();
                             if (!PolicyUtils.policySpecialCharValidator(value).contains(SUCCESS)) {
-                                responseString.append("<b>Settings Attributes</b>:<i>" + value
-                                        + SPACESINVALIDCHARS);
+                                responseString.append("<b>Settings Attributes</b>:<i>" + value + SPACESINVALIDCHARS);
                                 valid = false;
                             }
                         } else {
-                            responseString
-                            .append("<b>Settings Attributes</b>:<i> has one missing Attribute Value</i><br>");
+                            responseString.append(
+                                            "<b>Settings Attributes</b>:<i> has one missing Attribute Value</i><br>");
                             valid = false;
                         }
                     }
@@ -245,31 +254,28 @@ public class PolicyValidation {
             }
 
             if (!"API".equals(policyData.getApiflag()) && policyData.getRuleAlgorithmschoices() != null
-                    && !policyData.getRuleAlgorithmschoices().isEmpty()) {
+                            && !policyData.getRuleAlgorithmschoices().isEmpty()) {
                 for (Object attribute : policyData.getRuleAlgorithmschoices()) {
                     if (attribute instanceof LinkedHashMap<?, ?>) {
                         String label = ((LinkedHashMap<?, ?>) attribute).get("id").toString();
                         if (((LinkedHashMap<?, ?>) attribute).get("dynamicRuleAlgorithmField1") == null) {
-                            responseString.append(
-                                    "<b>Rule Algorithms</b>:<i>" + label + " : Field 1 value is not selected</i><br>");
+                            responseString.append(RULE_ALGORITHMS + label + " : Field 1 value is not selected</i><br>");
                             valid = false;
                         }
                         if (((LinkedHashMap<?, ?>) attribute).get("dynamicRuleAlgorithmCombo") == null) {
-                            responseString.append(
-                                    "<b>Rule Algorithms</b>:<i>" + label + " : Field 2 value is not selected</i><br>");
+                            responseString.append(RULE_ALGORITHMS + label + " : Field 2 value is not selected</i><br>");
                             valid = false;
                         }
                         if (((LinkedHashMap<?, ?>) attribute).get("dynamicRuleAlgorithmField2") != null) {
-                            String value =
-                                    ((LinkedHashMap<?, ?>) attribute).get("dynamicRuleAlgorithmField2").toString();
+                            String value = ((LinkedHashMap<?, ?>) attribute).get("dynamicRuleAlgorithmField2")
+                                            .toString();
                             if (!PolicyUtils.policySpecialCharValidator(value).contains(SUCCESS)) {
-                                responseString.append("<b>Rule Algorithms</b>:<i>" + label
-                                        + " : Field 3 value has special characters</i><br>");
+                                responseString.append(RULE_ALGORITHMS + label
+                                                + " : Field 3 value has special characters</i><br>");
                                 valid = false;
                             }
                         } else {
-                            responseString
-                            .append("<b>Rule Algorithms</b>:<i>" + label + " : Field 3 value is empty</i><br>");
+                            responseString.append(RULE_ALGORITHMS + label + " : Field 3 value is empty</i><br>");
                             valid = false;
                         }
                     }
@@ -278,14 +284,15 @@ public class PolicyValidation {
 
             if (CONFIG_POLICY.equalsIgnoreCase(policyData.getPolicyType())) {
                 if ("Base".equals(policyData.getConfigPolicyType())
-                        || CLOSEDLOOP_POLICY.equals(policyData.getConfigPolicyType())
-                        || CLOSEDLOOP_PM.equals(policyData.getConfigPolicyType())
-                        || ENFORCER_CONFIG_POLICY.equals(policyData.getConfigPolicyType())
-                        || MICROSERVICES.equals(policyData.getConfigPolicyType())
-                        || OPTIMIZATION.equals(policyData.getConfigPolicyType())) {
+                                || CLOSEDLOOP_POLICY.equals(policyData.getConfigPolicyType())
+                                || CLOSEDLOOP_PM.equals(policyData.getConfigPolicyType())
+                                || ENFORCER_CONFIG_POLICY.equals(policyData.getConfigPolicyType())
+                                || MICROSERVICES.equals(policyData.getConfigPolicyType())
+                                || OPTIMIZATION.equals(policyData.getConfigPolicyType())) {
 
                     if (!Strings.isNullOrEmpty(policyData.getOnapName())) {
-                        String onapNameValidate = PolicyUtils.policySpecialCharWithDashValidator(policyData.getOnapName());
+                        String onapNameValidate = PolicyUtils
+                                        .policySpecialCharWithDashValidator(policyData.getOnapName());
                         if (!onapNameValidate.contains(SUCCESS)) {
                             responseString.append("<b>OnapName</b>:<i>" + onapNameValidate + HTML_ITALICS_LNBREAK);
                             valid = false;
@@ -357,25 +364,25 @@ public class PolicyValidation {
                         if (configType != null) {
                             if ("JSON".equals(configType)) {
                                 if (!PolicyUtils.isJSONValid(configBodyData)) {
-                                    responseString
-                                    .append("Config Body: JSON Content is not valid" + HTML_ITALICS_LNBREAK);
+                                    responseString.append(
+                                                    "Config Body: JSON Content is not valid" + HTML_ITALICS_LNBREAK);
                                     valid = false;
                                 }
                             } else if ("XML".equals(configType)) {
                                 if (!PolicyUtils.isXMLValid(configBodyData)) {
-                                    responseString.append(
-                                            "Config Body: XML Content data is not valid" + HTML_ITALICS_LNBREAK);
+                                    responseString.append("Config Body: XML Content data is not valid"
+                                                    + HTML_ITALICS_LNBREAK);
                                     valid = false;
                                 }
                             } else if ("PROPERTIES".equals(configType)) {
                                 if (!PolicyUtils.isPropValid(configBodyData) || "".equals(configBodyData)) {
-                                    responseString
-                                    .append("Config Body: Property data is not valid" + HTML_ITALICS_LNBREAK);
+                                    responseString.append(
+                                                    "Config Body: Property data is not valid" + HTML_ITALICS_LNBREAK);
                                     valid = false;
                                 }
                             } else if ("OTHER".equals(configType) && ("".equals(configBodyData))) {
-                                responseString
-                                .append("Config Body: Config Body Should not be Empty" + HTML_ITALICS_LNBREAK);
+                                responseString.append(
+                                                "Config Body: Config Body Should not be Empty" + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             }
                         }
@@ -397,14 +404,14 @@ public class PolicyValidation {
                         valid = false;
                     }
                     if (policyData.getSecurityZone() == null || policyData.getSecurityZone().isEmpty()) {
-                        responseString
-                        .append("<b>Security Zone</b>:<i> Security Zone is required" + HTML_ITALICS_LNBREAK);
+                        responseString.append(
+                                        "<b>Security Zone</b>:<i> Security Zone is required" + HTML_ITALICS_LNBREAK);
                         valid = false;
                     }
                 }
                 // Validate BRMS_Param Policy Data
                 if (BRMSPARAM.equalsIgnoreCase(policyData.getConfigPolicyType())
-                        && Strings.isNullOrEmpty(policyData.getRuleName())) {
+                                && Strings.isNullOrEmpty(policyData.getRuleName())) {
                     responseString.append("<b>BRMS Template</b>:<i>BRMS Template is required" + HTML_ITALICS_LNBREAK);
                     valid = false;
                 }
@@ -415,8 +422,8 @@ public class PolicyValidation {
 
                         // If there are any error other than Annotations then this is not Valid
                         if (message.contains("[ERR")) {
-                            responseString.append(
-                                    "<b>Raw Rule Validate</b>:<i>Raw Rule has error" + message + HTML_ITALICS_LNBREAK);
+                            responseString.append("<b>Raw Rule Validate</b>:<i>Raw Rule has error" + message
+                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                     } else {
@@ -427,17 +434,17 @@ public class PolicyValidation {
                 // Validate ClosedLoop_PM Policy Data
                 if (CLOSEDLOOP_PM.equalsIgnoreCase(policyData.getConfigPolicyType())) {
                     try {
-                        if (Strings.isNullOrEmpty(
-                                policyData.getServiceTypePolicyName().get("serviceTypePolicyName").toString())) {
+                        if (Strings.isNullOrEmpty(policyData.getServiceTypePolicyName().get("serviceTypePolicyName")
+                                        .toString())) {
                             responseString.append("<b>ServiceType PolicyName</b>:<i>ServiceType PolicyName is required"
-                                    + HTML_ITALICS_LNBREAK);
+                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
 
                     } catch (Exception e) {
                         LOGGER.error("ERROR in ClosedLoop_PM PolicyName", e);
                         responseString.append("<b>ServiceType PolicyName</b>:<i>ServiceType PolicyName is required"
-                                + HTML_ITALICS_LNBREAK);
+                                        + HTML_ITALICS_LNBREAK);
                         valid = false;
                     }
 
@@ -451,11 +458,9 @@ public class PolicyValidation {
                                 valid = false;
                             }
                         }
-                        if ((pmBody.isGamma() || pmBody.isMcr() || pmBody.isTrinity() || pmBody.isvDNS()
-                                || pmBody.isvUSP()) != true) {
-                            responseString
-                            .append("<b>D2/Virtualized Services</b>: <i>Select at least one D2/Virtualized Services"
-                                    + HTML_ITALICS_LNBREAK);
+                        if (!pmBody.isGamma() && !pmBody.isMcr() && !pmBody.isTrinity() && !pmBody.isvDNS()
+                                        && !pmBody.isvUSP()) {
+                            responseString.append(SELECT_AT_LEAST_ONE_D2_VIRTUALIZED_SERVICES + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                         if (pmBody.getGeoLink() != null && !pmBody.getGeoLink().isEmpty()) {
@@ -473,16 +478,17 @@ public class PolicyValidation {
                                     String attributeValidate = PolicyUtils.policySpecialCharValidator(value);
                                     if (!attributeValidate.contains(SUCCESS)) {
                                         responseString.append("<b>Attributes</b>:<i>" + key
-                                                + " : value has spaces or invalid characters" + HTML_ITALICS_LNBREAK);
+                                                        + " : value has spaces or invalid characters"
+                                                        + HTML_ITALICS_LNBREAK);
                                         valid = false;
                                     }
                                 }
                             }
                         }
                     } else {
-                        responseString
-                        .append("<b>D2/Virtualized Services</b>:<i>Select atleast one D2/Virtualized Services"
-                                + HTML_ITALICS_LNBREAK);
+                        responseString.append(
+                                        "<b>D2/Virtualized Services</b>:<i>Select atleast one D2/Virtualized Services"
+                                                        + HTML_ITALICS_LNBREAK);
                         valid = false;
                     }
                 }
@@ -497,38 +503,40 @@ public class PolicyValidation {
                                 String apiCondition = (String) json.get("conditions");
                                 if (Strings.isNullOrEmpty(apiCondition)) {
                                     responseString.append("<b>Conditions</b>: <i>Select At least one Condition"
-                                            + HTML_ITALICS_LNBREAK);
+                                                    + HTML_ITALICS_LNBREAK);
                                     return responseString;
                                 }
                             } else {
-                                responseString
-                                .append("<b>Conditions</b>: <i>There were no conditions provided in configBody json"
-                                        + HTML_ITALICS_LNBREAK);
+                                responseString.append("<b>Conditions</b>:"
+                                                + " <i>There were no conditions provided in configBody json"
+                                                + HTML_ITALICS_LNBREAK);
                                 return responseString;
                             }
                         } else {
                             if (policyData.getTrapDatas().getTrap1() != null) {
                                 if (policyData.getClearTimeOut() == null) {
-                                    responseString.append(
-                                            "<b>Trigger Clear TimeOut</b>: <i>Trigger Clear TimeOut is required when atleast One Trigger Signature is enabled</i><br>");
+                                    responseString.append("<b>Trigger Clear TimeOut</b>: "
+                                                    + "<i>Trigger Clear TimeOut is required when at "
+                                                    + "least One Trigger Signature is enabled</i><br>");
                                     valid = false;
                                 }
                                 if (policyData.getTrapMaxAge() == null) {
-                                    responseString.append(
-                                            "<b>Trap Max Age</b>: <i>Trap Max Age is required when atleast One Trigger Signature is enabled</i><br>");
+                                    responseString.append("<b>Trap Max Age</b>: <i>Trap Max Age is required when at "
+                                                    + "least One Trigger Signature is enabled</i><br>");
                                     valid = false;
                                 }
                             }
                             if (policyData.getFaultDatas().getTrap1() != null
-                                    && policyData.getVerificationclearTimeOut() == null) {
+                                            && policyData.getVerificationclearTimeOut() == null) {
                                 responseString.append(
-                                        "<b>Fault Clear TimeOut</b>: <i>Fault Clear TimeOut is required when atleast One Fault Signature is enabled</i><br>");
+                                                "<b>Fault Clear TimeOut</b>: <i>Fault Clear TimeOut is required when at"
+                                                                + "least One Fault Signature is enabled</i><br>");
                                 valid = false;
                             }
                         }
 
-                        ClosedLoopFaultBody faultBody =
-                                mapper.readValue(policyData.getJsonBody(), ClosedLoopFaultBody.class);
+                        ClosedLoopFaultBody faultBody = mapper.readValue(policyData.getJsonBody(),
+                                        ClosedLoopFaultBody.class);
                         if (faultBody.getEmailAddress() != null && !faultBody.getEmailAddress().isEmpty()) {
                             String result = emailValidation(faultBody.getEmailAddress(), responseString.toString());
                             if (!SUCCESS.equals(result)) {
@@ -537,26 +545,24 @@ public class PolicyValidation {
                             }
                         }
                         if (!(faultBody.isGamma() || faultBody.isMcr() || faultBody.isTrinity() || faultBody.isvDNS()
-                                || faultBody.isvUSP())) {
-                            responseString
-                            .append("<b>D2/Virtualized Services</b>: <i>Select at least one D2/Virtualized Services"
-                                    + HTML_ITALICS_LNBREAK);
+                                        || faultBody.isvUSP())) {
+                            responseString.append(SELECT_AT_LEAST_ONE_D2_VIRTUALIZED_SERVICES + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                         if (faultBody.getActions() == null || faultBody.getActions().isEmpty()) {
-                            responseString
-                            .append("<b>vPRO Actions</b>: <i>vPRO Actions is required" + HTML_ITALICS_LNBREAK);
+                            responseString.append(
+                                            "<b>vPRO Actions</b>: <i>vPRO Actions is required" + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                         if (faultBody.getClosedLoopPolicyStatus() == null
-                                || faultBody.getClosedLoopPolicyStatus().isEmpty()) {
-                            responseString.append(
-                                    "<b>Policy Status</b>: <i>Policy Status is required" + HTML_ITALICS_LNBREAK);
+                                        || faultBody.getClosedLoopPolicyStatus().isEmpty()) {
+                            responseString.append("<b>Policy Status</b>: <i>Policy Status is required"
+                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                         if (faultBody.getConditions() == null) {
-                            responseString.append(
-                                    "<b>Conditions</b>: <i>Select At least one Condition" + HTML_ITALICS_LNBREAK);
+                            responseString.append("<b>Conditions</b>: <i>Select At least one Condition"
+                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                         if (faultBody.getGeoLink() != null && !faultBody.getGeoLink().isEmpty()) {
@@ -567,28 +573,28 @@ public class PolicyValidation {
                             }
                         }
                         if (faultBody.getAgingWindow() == 0) {
-                            responseString
-                            .append("<b>Aging Window</b>: <i>Aging Window is required" + HTML_ITALICS_LNBREAK);
+                            responseString.append(
+                                            "<b>Aging Window</b>: <i>Aging Window is required" + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                         if (faultBody.getTimeInterval() == 0) {
-                            responseString.append(
-                                    "<b>Time Interval</b>: <i>Time Interval is required" + HTML_ITALICS_LNBREAK);
+                            responseString.append("<b>Time Interval</b>: <i>Time Interval is required"
+                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                         if (faultBody.getRetrys() == 0) {
                             responseString.append("<b>Number of Retries</b>: <i>Number of Retries is required"
-                                    + HTML_ITALICS_LNBREAK);
+                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                         if (faultBody.getTimeOutvPRO() == 0) {
-                            responseString.append(
-                                    "<b>APP-C Timeout</b>: <i>APP-C Timeout is required" + HTML_ITALICS_LNBREAK);
+                            responseString.append("<b>APP-C Timeout</b>: <i>APP-C Timeout is required"
+                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                         if (faultBody.getTimeOutRuby() == 0) {
-                            responseString
-                            .append("<b>TimeOutRuby</b>: <i>TimeOutRuby is required" + HTML_ITALICS_LNBREAK);
+                            responseString.append(
+                                            "<b>TimeOutRuby</b>: <i>TimeOutRuby is required" + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                         if (faultBody.getVnfType() == null || faultBody.getVnfType().isEmpty()) {
@@ -596,31 +602,31 @@ public class PolicyValidation {
                             valid = false;
                         }
                     } else {
-                        responseString
-                        .append("<b>D2/Virtualized Services</b>: <i>Select atleast one D2/Virtualized Services"
-                                + HTML_ITALICS_LNBREAK);
-                        responseString
-                        .append("<b>vPRO Actions</b>: <i>vPRO Actions is required" + HTML_ITALICS_LNBREAK);
-                        responseString
-                        .append("<b>Aging Window</b>: <i>Aging Window is required" + HTML_ITALICS_LNBREAK);
-                        responseString
-                        .append("<b>Policy Status</b>: <i>Policy Status is required" + HTML_ITALICS_LNBREAK);
-                        responseString
-                        .append("<b>Conditions</b>: <i>Select Atleast one Condition" + HTML_ITALICS_LNBREAK);
+                        responseString.append(
+                                        "<b>D2/Virtualized Services</b>: <i>Select atleast one D2/Virtualized Services"
+                                                        + HTML_ITALICS_LNBREAK);
+                        responseString.append(
+                                        "<b>vPRO Actions</b>: <i>vPRO Actions is required" + HTML_ITALICS_LNBREAK);
+                        responseString.append(
+                                        "<b>Aging Window</b>: <i>Aging Window is required" + HTML_ITALICS_LNBREAK);
+                        responseString.append(
+                                        "<b>Policy Status</b>: <i>Policy Status is required" + HTML_ITALICS_LNBREAK);
+                        responseString.append(
+                                        "<b>Conditions</b>: <i>Select Atleast one Condition" + HTML_ITALICS_LNBREAK);
                         responseString.append("<b>PEP Name</b>: <i>PEP Name is required" + HTML_ITALICS_LNBREAK);
                         responseString.append("<b>PEP Action</b>: <i>PEP Action is required" + HTML_ITALICS_LNBREAK);
-                        responseString
-                        .append("<b>Time Interval</b>: <i>Time Interval is required" + HTML_ITALICS_LNBREAK);
                         responseString.append(
-                                "<b>Number of Retries</b>: <i>Number of Retries is required" + HTML_ITALICS_LNBREAK);
-                        responseString
-                        .append("<b>APP-C Timeout</b>: <i>APP-C Timeout is required" + HTML_ITALICS_LNBREAK);
+                                        "<b>Time Interval</b>: <i>Time Interval is required" + HTML_ITALICS_LNBREAK);
+                        responseString.append("<b>Number of Retries</b>: <i>Number of Retries is required"
+                                        + HTML_ITALICS_LNBREAK);
+                        responseString.append(
+                                        "<b>APP-C Timeout</b>: <i>APP-C Timeout is required" + HTML_ITALICS_LNBREAK);
                         responseString.append("<b>TimeOutRuby</b>: <i>TimeOutRuby is required" + HTML_ITALICS_LNBREAK);
                         responseString.append("<b>Vnf Type</b>: <i>Vnf Type is required" + HTML_ITALICS_LNBREAK);
                         valid = false;
                     }
                 }
-                
+
                 // Validate MicroService Policy Data
                 if (MICROSERVICES.equals(policyData.getConfigPolicyType())) {
                     boolean tmpValid = validateMsModel(policyData, responseString);
@@ -630,7 +636,7 @@ public class PolicyValidation {
                 }
 
                 // Validate Optimization Policy Data
-                if (OPTIMIZATION.equals(policyData.getConfigPolicyType())){
+                if (OPTIMIZATION.equals(policyData.getConfigPolicyType())) {
                     boolean tmpValid = validateOptimization(policyData, responseString);
                     if (!tmpValid) {
                         valid = false;
@@ -639,7 +645,7 @@ public class PolicyValidation {
             }
 
             if ((DECISION_POLICY.equalsIgnoreCase(policyData.getPolicyType()))
-                    || (DECISION_POLICY_MS.equalsIgnoreCase(policyData.getPolicyType()))) {
+                            || (DECISION_POLICY_MS.equalsIgnoreCase(policyData.getPolicyType()))) {
                 if (!RAW.equalsIgnoreCase(policyData.getRuleProvider())) {
                     if (!Strings.isNullOrEmpty(policyData.getOnapName())) {
                         String onapNameValidate = PolicyUtils.policySpecialCharValidator(policyData.getOnapName());
@@ -653,7 +659,8 @@ public class PolicyValidation {
                     }
                 }
                 if (RAW.equalsIgnoreCase(policyData.getRuleProvider())) {
-                    Object policy = XACMLPolicyScanner.readPolicy(new ByteArrayInputStream(StringEscapeUtils.unescapeXml(policyData.getRawXacmlPolicy()).getBytes(StandardCharsets.UTF_8)));
+                    Object policy = XACMLPolicyScanner.readPolicy(new ByteArrayInputStream(StringEscapeUtils
+                                    .unescapeXml(policyData.getRawXacmlPolicy()).getBytes(StandardCharsets.UTF_8)));
                     if (!(policy instanceof PolicySetType || policy instanceof PolicyType)) {
                         responseString.append("Raw XACML: The XACML Content is not valid" + HTML_ITALICS_LNBREAK);
                         valid = false;
@@ -690,7 +697,7 @@ public class PolicyValidation {
                             valid = false;
                         }
                         if (!policyData.getRainyday().getTreatmentTableChoices().isEmpty()
-                                && policyData.getRainyday().getTreatmentTableChoices() != null) {
+                                        && policyData.getRainyday().getTreatmentTableChoices() != null) {
 
                             for (Object treatmentMap : policyData.getRainyday().getTreatmentTableChoices()) {
                                 String errorCode = null;
@@ -706,20 +713,20 @@ public class PolicyValidation {
 
                                 }
                                 if (Strings.isNullOrEmpty(errorCode) && Strings.isNullOrEmpty(treatment)) {
-                                    responseString.append(
-                                            "Rainy Day <b>Error Code</b> and <b>Desired Treatment</b> cannot be empty<br>");
+                                    responseString.append("Rainy Day <b>Error Code</b> and "
+                                                    + "<b>Desired Treatment</b> cannot be empty<br>");
                                     valid = false;
                                     break;
                                 }
                                 if (Strings.isNullOrEmpty(errorCode)) {
-                                    responseString.append(
-                                            "Rainy Day <b>Error Code</b> is Required for each Desired Treatment<br>");
+                                    responseString.append("Rainy Day <b>Error Code</b> is Required "
+                                                    + "for each Desired Treatment<br>");
                                     valid = false;
                                     break;
                                 }
                                 if (Strings.isNullOrEmpty(treatment)) {
-                                    responseString.append(
-                                            "Rainy Day <b>Desired Treatment</b> is Required for each Error Code<br>");
+                                    responseString.append("Rainy Day <b>Desired Treatment"
+                                                    + "</b> is Required for each Error Code<br>");
                                     valid = false;
                                     break;
                                 }
@@ -733,8 +740,8 @@ public class PolicyValidation {
                 }
 
                 if ("GUARD_YAML".equals(policyData.getRuleProvider())
-                        || "GUARD_BL_YAML".equals(policyData.getRuleProvider())
-                        || "GUARD_MIN_MAX".equals(policyData.getRuleProvider())) {
+                                || "GUARD_BL_YAML".equals(policyData.getRuleProvider())
+                                || "GUARD_MIN_MAX".equals(policyData.getRuleProvider())) {
                     if (policyData.getYamlparams() == null) {
                         responseString.append("<b> Guard Params are Required </b>" + HTML_ITALICS_LNBREAK);
                         valid = false;
@@ -748,13 +755,13 @@ public class PolicyValidation {
                             valid = false;
                         }
                         if (Strings.isNullOrEmpty(policyData.getYamlparams().getGuardActiveStart())) {
-                            responseString.append(
-                                    "Guard Params <b>Guard Active Start</b> is Required " + HTML_ITALICS_LNBREAK);
+                            responseString.append("Guard Params <b>Guard Active Start</b> is Required "
+                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                         if (Strings.isNullOrEmpty(policyData.getYamlparams().getGuardActiveEnd())) {
-                            responseString
-                            .append("Guard Params <b>Guard Active End</b> is Required " + HTML_ITALICS_LNBREAK);
+                            responseString.append(
+                                            "Guard Params <b>Guard Active End</b> is Required " + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                         if ("GUARD_YAML".equals(policyData.getRuleProvider())) {
@@ -762,22 +769,22 @@ public class PolicyValidation {
                                 responseString.append(" Guard Params <b>Limit</b> is Required " + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             } else if (!PolicyUtils.isInteger(policyData.getYamlparams().getLimit())) {
-                                responseString
-                                .append(" Guard Params <b>Limit</b> Should be Integer " + HTML_ITALICS_LNBREAK);
+                                responseString.append(
+                                                " Guard Params <b>Limit</b> Should be Integer " + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             }
                             if (Strings.isNullOrEmpty(policyData.getYamlparams().getTimeWindow())) {
-                                responseString
-                                .append("Guard Params <b>Time Window</b> is Required" + HTML_ITALICS_LNBREAK);
+                                responseString.append(
+                                                "Guard Params <b>Time Window</b> is Required" + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             } else if (!PolicyUtils.isInteger(policyData.getYamlparams().getTimeWindow())) {
-                                responseString.append(
-                                        " Guard Params <b>Time Window</b> Should be Integer " + HTML_ITALICS_LNBREAK);
+                                responseString.append(" Guard Params <b>Time Window</b> Should be Integer "
+                                                + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             }
                             if (Strings.isNullOrEmpty(policyData.getYamlparams().getTimeUnits())) {
-                                responseString
-                                .append("Guard Params <b>Time Units</b> is Required" + HTML_ITALICS_LNBREAK);
+                                responseString.append(
+                                                "Guard Params <b>Time Units</b> is Required" + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             }
                         } else if ("GUARD_MIN_MAX".equals(policyData.getRuleProvider())) {
@@ -785,32 +792,32 @@ public class PolicyValidation {
                                 responseString.append(" Guard Params <b>Min</b> is Required " + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             } else if (!PolicyUtils.isInteger(policyData.getYamlparams().getMin())) {
-                                responseString
-                                .append(" Guard Params <b>Min</b> Should be Integer " + HTML_ITALICS_LNBREAK);
+                                responseString.append(
+                                                " Guard Params <b>Min</b> Should be Integer " + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             }
                             if (Strings.isNullOrEmpty(policyData.getYamlparams().getMax())) {
                                 responseString.append(" Guard Params <b>Max</b> is Required " + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             } else if (!PolicyUtils.isInteger(policyData.getYamlparams().getMax())) {
-                                responseString
-                                .append(" Guard Params <b>Max</b> Should be Integer " + HTML_ITALICS_LNBREAK);
+                                responseString.append(
+                                                " Guard Params <b>Max</b> Should be Integer " + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             }
                         } else if ("GUARD_BL_YAML".equals(policyData.getRuleProvider())
-                                && "Use Manual Entry".equals(policyData.getBlackListEntryType())) {
+                                        && "Use Manual Entry".equals(policyData.getBlackListEntryType())) {
 
                             if (policyData.getYamlparams().getBlackList() == null
-                                    || policyData.getYamlparams().getBlackList().isEmpty()) {
-                                responseString
-                                .append(" Guard Params <b>BlackList</b> is Required " + HTML_ITALICS_LNBREAK);
+                                            || policyData.getYamlparams().getBlackList().isEmpty()) {
+                                responseString.append(
+                                                " Guard Params <b>BlackList</b> is Required " + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             } else {
                                 for (String blackList : policyData.getYamlparams().getBlackList()) {
-                                    if (blackList == null
-                                            || !(SUCCESS.equals(PolicyUtils.policySpecialCharValidator(blackList)))) {
+                                    if (blackList == null || !(SUCCESS
+                                                    .equals(PolicyUtils.policySpecialCharValidator(blackList)))) {
                                         responseString.append(" Guard Params <b>BlackList</b> Should be valid String"
-                                                + HTML_ITALICS_LNBREAK);
+                                                        + HTML_ITALICS_LNBREAK);
                                         valid = false;
                                         break;
                                     }
@@ -829,21 +836,21 @@ public class PolicyValidation {
                         valid = false;
                     }
                 } else {
-                    responseString.append(
-                            "<b>ActionPerformer</b>:<i> ActionPerformer Should not be empty" + HTML_ITALICS_LNBREAK);
+                    responseString.append("<b>ActionPerformer</b>:<i> ActionPerformer Should not be empty"
+                                    + HTML_ITALICS_LNBREAK);
                     valid = false;
                 }
 
                 if (!Strings.isNullOrEmpty(policyData.getActionAttributeValue())) {
-                    String actionAttribute =
-                            PolicyUtils.policySpecialCharValidator(policyData.getActionAttributeValue());
+                    String actionAttribute = PolicyUtils
+                                    .policySpecialCharValidator(policyData.getActionAttributeValue());
                     if (!actionAttribute.contains(SUCCESS)) {
                         responseString.append("<b>ActionAttribute</b>:<i>" + actionAttribute + HTML_ITALICS_LNBREAK);
                         valid = false;
                     }
                 } else {
-                    responseString.append(
-                            "<b>ActionAttribute</b>:<i> ActionAttribute Should not be empty" + HTML_ITALICS_LNBREAK);
+                    responseString.append("<b>ActionAttribute</b>:<i> ActionAttribute Should not be empty"
+                                    + HTML_ITALICS_LNBREAK);
                     valid = false;
                 }
             }
@@ -853,7 +860,7 @@ public class PolicyValidation {
                 if (valid) {
                     if (commonClassDao != null) {
                         List<Object> spData = commonClassDao.getDataById(SafePolicyWarning.class, "riskType",
-                                policyData.getRiskType());
+                                        policyData.getRiskType());
                         if (!spData.isEmpty()) {
                             SafePolicyWarning safePolicyWarningData = (SafePolicyWarning) spData.get(0);
                             value = "<b>Message</b>:<i>" + safePolicyWarningData.getMessage() + "</i>";
@@ -890,14 +897,14 @@ public class PolicyValidation {
     private MicroServiceModels getAttributeObject(String name, String version) {
         MicroServiceModels workingModel = null;
         try {
-            List<Object> microServiceModelsData =
-                    commonClassDao.getDataById(MicroServiceModels.class, "modelName:version", name + ":" + version);
+            List<Object> microServiceModelsData = commonClassDao.getDataById(MicroServiceModels.class,
+                            "modelName:version", name + ":" + version);
             if (microServiceModelsData != null) {
                 workingModel = (MicroServiceModels) microServiceModelsData.get(0);
             }
         } catch (Exception e) {
             String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Template.  The template name, " + name
-                    + " was not found in the dictionary: ";
+                            + " was not found in the dictionary: ";
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message + e);
             return null;
         }
@@ -905,16 +912,17 @@ public class PolicyValidation {
         return workingModel;
     }
 
-    private OptimizationModels getOptimizationModelData(String name, String version) {  
+    private OptimizationModels getOptimizationModelData(String name, String version) {
         OptimizationModels workingModel = null;
-        try{
-            List<Object> optimizationModelsData = commonClassDao.getDataById(OptimizationModels.class, "modelName:version", name+":"+version);
-            if(optimizationModelsData != null){
+        try {
+            List<Object> optimizationModelsData = commonClassDao.getDataById(OptimizationModels.class,
+                            "modelName:version", name + ":" + version);
+            if (optimizationModelsData != null) {
                 workingModel = (OptimizationModels) optimizationModelsData.get(0);
             }
-        }catch(Exception e){
-            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Template.  The template name, " 
-                    + name + " was not found in the dictionary: ";
+        } catch (Exception e) {
+            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Template.  The template name, " + name
+                            + " was not found in the dictionary: ";
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message + e);
             return null;
         }
@@ -933,8 +941,9 @@ public class PolicyValidation {
                 pullJsonKeyPairs(value); // RECURSIVE CALL
             } else {
                 if (value.isArray()) {
-                    String newValue = StringUtils.replaceEach(value.toString(), new String[] {"[", "]", "\""},
-                            new String[] {"", "", ""});
+                    String newValue = StringUtils.replaceEach(value.toString(), new String[]
+                        { "[", "]", "\"" }, new String[]
+                        { "", "", "" });
                     mapAttribute.put(key, newValue);
                 } else {
                     mapAttribute.put(key, value.toString().trim());
@@ -958,11 +967,11 @@ public class PolicyValidation {
                 try {
                     String valueStr = value.toString();
                     String stringValue = valueStr.substring(valueStr.indexOf('[') + 1, valueStr.lastIndexOf(']'));
-                    
+
                     if (stringValue.isEmpty()) {
                         stringValue = "{\"test\":\"test\"}";
                     }
-                    
+
                     ObjectMapper mapper = new ObjectMapper();
                     JsonNode newValue = mapper.readTree(stringValue);
                     jsonRequestMap.put(key.trim(), value.toString().trim());
@@ -981,10 +990,9 @@ public class PolicyValidation {
         try (JsonReader jsonReader = Json.createReader(new StringReader(value))) {
             return jsonReader.readObject();
         } catch (JsonException | IllegalStateException e) {
-            LOGGER.info(
-                    XACMLErrorConstants.ERROR_DATA_ISSUE
-                    + "Improper JSON format... may or may not cause issues in validating the policy: " + value,
-                    e);
+            LOGGER.info(XACMLErrorConstants.ERROR_DATA_ISSUE
+                            + "Improper JSON format... may or may not cause issues in validating the policy: " + value,
+                            e);
             return null;
         }
     }
@@ -1044,13 +1052,13 @@ public class PolicyValidation {
             if (obj instanceof String && ((String) obj).contains(REQUIRED_ATTRIBUTE)) {
                 LOGGER.debug("key : " + key);
                 LOGGER.debug("obj : " + obj);
-                allReqTrueKeys.add(key);    //For MicroService policies
-                allOptReqTrueKeys.add(key); //For Optimization policies
-                
+                allReqTrueKeys.add(key); // For MicroService policies
+                allOptReqTrueKeys.add(key); // For Optimization policies
+
                 // get the type from value and add that one also
                 String type = StringUtils.substringBefore((String) obj, ":");
-                if (!StringUtils.isBlank(type) && !StringUtils.containsAny(type.toLowerCase(), MSModelUtils.STRING,
-                        MSModelUtils.INTEGER, MSModelUtils.LIST, MSModelUtils.MAP, "java", "boolean")) {
+                if (!StringUtils.isBlank(type) && !StringUtils.containsAny(type.toLowerCase(), STRING, INTEGER, LIST,
+                                MAP, JAVA, BOOLEAN)) {
                     allReqTrueKeys.add(type);
                 }
             }
@@ -1066,7 +1074,7 @@ public class PolicyValidation {
     }
 
     private boolean validateMsModel(PolicyRestAdapter policyData, StringBuilder responseString)
-            throws JsonProcessingException {
+                    throws JsonProcessingException {
         boolean valid = true;
         if (!Strings.isNullOrEmpty(policyData.getServiceType())) {
 
@@ -1102,7 +1110,7 @@ public class PolicyValidation {
                                 int startNum = Integer.parseInt(tempString[0]);
                                 int endNum = Integer.parseInt(tempString[1]);
                                 String returnString = "InvalidreturnModel Range:" + raMap.getKey() + " must be between "
-                                        + startNum + " - " + endNum + ",";
+                                                + startNum + " - " + endNum + ",";
 
                                 if (value != null) {
                                     if (PolicyUtils.isInteger(value.replace("\"", ""))) {
@@ -1117,8 +1125,8 @@ public class PolicyValidation {
                                     }
                                 } else {
                                     responseString.append("<b>" + raMap.getKey() + "</b>:<i>" + raMap.getKey()
-                                    + " is required for the MicroService model " + service
-                                    + HTML_ITALICS_LNBREAK);
+                                                    + " is required for the MicroService model " + service
+                                                    + HTML_ITALICS_LNBREAK);
                                     valid = false;
                                 }
 
@@ -1129,26 +1137,26 @@ public class PolicyValidation {
                         // model
                         if (Strings.isNullOrEmpty(policyData.getLocation())) {
                             responseString.append("<b>Micro Service Model</b>:<i> location is required for this model"
-                                    + HTML_ITALICS_LNBREAK);
+                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
 
                         if (Strings.isNullOrEmpty(policyData.getConfigName())) {
                             responseString.append("<b>Micro Service Model</b>:<i> configName is required for this model"
-                                    + HTML_ITALICS_LNBREAK);
+                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
 
                         if (Strings.isNullOrEmpty(policyData.getUuid())) {
                             responseString.append("<b>Micro Service Model</b>:<i> uuid is required for this model"
-                                    + HTML_ITALICS_LNBREAK);
+                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
-                        
+
                         if (Strings.isNullOrEmpty(policyData.getPolicyScope())) {
-                            responseString
-                            .append("<b>Micro Service Model</b>:<i> policyScope is required for this model"
-                                    + HTML_ITALICS_LNBREAK);
+                            responseString.append(
+                                            "<b>Micro Service Model</b>:<i> policyScope is required for this model"
+                                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                     }
@@ -1157,11 +1165,12 @@ public class PolicyValidation {
                     // GUI request are already validated from the SDK-APP
                     if ("API".equals(policyData.getApiflag())) {
                         // first , get the complete set of required fields
-                        populateReqFieldSet(new String[] {refAttributes, modelAttributes}, subAttributes);
+                        populateReqFieldSet(new String[]
+                            { refAttributes, modelAttributes }, subAttributes);
 
                         // ignore req fields in which parent is not reqd
-                        populateRequiredFields(new String[] {refAttributes, modelAttributes}, subAttributes,
-                                modelAttributes);
+                        populateRequiredFields(new String[]
+                            { refAttributes, modelAttributes }, subAttributes, modelAttributes);
 
                         if (modelRequiredFieldsList != null && !modelRequiredFieldsList.isEmpty()) {
                             // create jsonRequestMap with all json keys and values from request
@@ -1175,12 +1184,12 @@ public class PolicyValidation {
                                     String value = jsonRequestMap.get(requiredField);
                                     if (StringUtils.isBlank(value) || "\"\"".equals(value)) {
                                         responseString.append("<b>Micro Service Model</b>:<i> " + requiredField
-                                                + ISREQUIRED + HTML_ITALICS_LNBREAK);
+                                                        + ISREQUIRED + HTML_ITALICS_LNBREAK);
                                         valid = false;
                                     }
                                 } else {
-                                    responseString.append("<b>Micro Service Model</b>:<i> " + requiredField
-                                            + ISREQUIRED + HTML_ITALICS_LNBREAK);
+                                    responseString.append("<b>Micro Service Model</b>:<i> " + requiredField + ISREQUIRED
+                                                    + HTML_ITALICS_LNBREAK);
                                     valid = false;
                                 }
                             }
@@ -1188,12 +1197,13 @@ public class PolicyValidation {
                     }
                 } else {
                     responseString.append("<b>Micro Service Model</b>:<i> Invalid Model. The model name, " + service
-                            + " of version, " + version + " was not found in the dictionary" + HTML_ITALICS_LNBREAK);
+                                    + " of version, " + version + " was not found in the dictionary"
+                                    + HTML_ITALICS_LNBREAK);
                     valid = false;
                 }
             } else {
-                responseString.append(
-                        "<b>Micro Service Version</b>:<i> Micro Service Version is required" + HTML_ITALICS_LNBREAK);
+                responseString.append("<b>Micro Service Version</b>:<i> Micro Service Version is required"
+                                + HTML_ITALICS_LNBREAK);
                 valid = false;
             }
         } else {
@@ -1202,28 +1212,26 @@ public class PolicyValidation {
         }
 
         if (Strings.isNullOrEmpty(policyData.getPriority())
-                && !DECISION_MS_MODEL.equals(policyData.getRuleProvider())) {
+                        && !DECISION_MS_MODEL.equals(policyData.getRuleProvider())) {
             responseString.append("<b>Priority</b>:<i> Priority is required" + HTML_ITALICS_LNBREAK);
         }
 
-
         return valid;
     }
-    
+
     private boolean validateOptimization(PolicyRestAdapter policyData, StringBuilder responseString) {
         boolean valid = true;
-        
+
         // Checks for required policy data in request
         if (Strings.isNullOrEmpty(policyData.getServiceType())) {
-            responseString.append(
-                    "<b>Optimization Service</b>:<i> Optimization policy data is missing or invalid Json." 
+            responseString.append("<b>Optimization Service</b>:<i> Optimization policy data is missing or invalid Json."
                             + HTML_ITALICS_LNBREAK);
             return false;
         }
-        
+
         modelRequiredFieldsList.clear();
         pullJsonKeyPairs((JsonNode) policyData.getPolicyJSON());
-        
+
         // parse the service and version from the policy data
         String service;
         String version;
@@ -1234,22 +1242,20 @@ public class PolicyValidation {
             service = policyData.getServiceType();
             version = policyData.getVersion();
         }
-        
+
         // Checks for required version in policy data
         if (Strings.isNullOrEmpty(version)) {
-            responseString.append(
-                    "<b>Optimization Service Version</b>:<i> Optimization Service Version is required" 
+            responseString.append("<b>Optimization Service Version</b>:<i> Optimization Service Version is required"
                             + HTML_ITALICS_LNBREAK);
             return false;
         }
-            
+
         OptimizationModels returnModel = getOptimizationModelData(service, version);
-        
+
         // Checks if valid model exists in the database
         if (returnModel == null) {
-            responseString.append("<b>Optimization Service Model</b>:<i> Invalid Model. The model name, " 
-                    + service + " of version, " + version 
-                    + " was not found in the dictionary" + HTML_ITALICS_LNBREAK);
+            responseString.append("<b>Optimization Service Model</b>:<i> Invalid Model. The model name, " + service
+                            + " of version, " + version + " was not found in the dictionary" + HTML_ITALICS_LNBREAK);
             return false;
         }
 
@@ -1259,16 +1265,15 @@ public class PolicyValidation {
         String modelAttributes = returnModel.getAttributes();
 
         if (!Strings.isNullOrEmpty(annotation)) {
-            Map<String, String> rangeMap = Splitter.on(",").withKeyValueSeparator("=")
-                    .split(annotation);
-            for (Entry<String, String> rMap : rangeMap.entrySet()) {
-                if (rMap.getValue().contains("range::")) {
-                    String value = mapAttribute.get(rMap.getKey().trim());
-                    String[] tempString = rMap.getValue().split("::")[1].split("-");
+            Map<String, String> rangeMap = Splitter.on(",").withKeyValueSeparator("=").split(annotation);
+            for (Entry<String, String> rangeMapEntry : rangeMap.entrySet()) {
+                if (rangeMapEntry.getValue().contains("range::")) {
+                    String value = mapAttribute.get(rangeMapEntry.getKey().trim());
+                    String[] tempString = rangeMapEntry.getValue().split("::")[1].split("-");
                     int startNum = Integer.parseInt(tempString[0]);
                     int endNum = Integer.parseInt(tempString[1]);
-                    String returnString = "InvalidreturnModel Range:" + rMap.getKey()
-                    + " must be between " + startNum + " - " + endNum + ",";
+                    String returnString = "InvalidreturnModel Range:" + rangeMapEntry.getKey() + " must be between "
+                                    + startNum + " - " + endNum + ",";
 
                     if (value != null) {
                         if (PolicyUtils.isInteger(value.replace("\"", ""))) {
@@ -1282,9 +1287,8 @@ public class PolicyValidation {
                             valid = false;
                         }
                     } else {
-                        responseString.append("<b>" + rMap.getKey() + "</b>:<i>" + rMap.getKey()
-                        + " is required for the Optimization model " + service
-                        + HTML_ITALICS_LNBREAK);
+                        responseString.append("<b>" + rangeMapEntry.getKey() + "</b>:<i>" + rangeMapEntry.getKey()
+                                        + " is required for the Optimization model " + service + HTML_ITALICS_LNBREAK);
                         valid = false;
                     }
 
@@ -1296,12 +1300,13 @@ public class PolicyValidation {
         // GUI request are already validated from the SDK-APP
         if ("API".equals(policyData.getApiflag())) {
             // first , get the complete set of required fields
-            populateReqFieldSet(new String[] {refAttributes, modelAttributes}, subAttributes);
+            populateReqFieldSet(new String[]
+                { refAttributes, modelAttributes }, subAttributes);
 
             modelRequiredFieldsList.addAll(allOptReqTrueKeys);
-            
+
             if (modelRequiredFieldsList != null && !modelRequiredFieldsList.isEmpty()) {
-                
+
                 // create jsonRequestMap with all json keys and values from request
                 JsonNode rootNode = (JsonNode) policyData.getPolicyJSON();
                 jsonRequestMap.clear();
@@ -1312,13 +1317,13 @@ public class PolicyValidation {
                     if (jsonRequestMap.containsKey(requiredField)) {
                         String value = jsonRequestMap.get(requiredField);
                         if (StringUtils.isBlank(value) || "\"\"".equals(value)) {
-                            responseString.append("<b>Optimization Service Model</b>:<i> " 
-                                    + requiredField + ISREQUIRED + HTML_ITALICS_LNBREAK);
+                            responseString.append("<b>Optimization Service Model</b>:<i> " + requiredField + ISREQUIRED
+                                            + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
                     } else {
-                        responseString.append("<b>Optimization Service Model</b>:<i> " 
-                                + requiredField + ISREQUIRED + HTML_ITALICS_LNBREAK);
+                        responseString.append("<b>Optimization Service Model</b>:<i> " + requiredField + ISREQUIRED
+                                        + HTML_ITALICS_LNBREAK);
                         valid = false;
                     }
                 }
@@ -1334,7 +1339,7 @@ public class PolicyValidation {
     }
 
     private void populateRequiredFields(String[] attrArr, String subAttributes, String modelAttributes)
-            throws JsonProcessingException {
+                    throws JsonProcessingException {
         // get list of required fields from the ref_Attributes of the Model
         for (String attributes : attrArr) {
             if (!StringUtils.isBlank(attributes)) {
@@ -1367,7 +1372,6 @@ public class PolicyValidation {
         // Get all keys with "required-true" defined in their value from subAttribute
         getAllKeys(jsonSub);
 
-
         // parse refAttrbutes
         for (String attr : attrArr) {
             if (attr != null) {
@@ -1382,6 +1386,5 @@ public class PolicyValidation {
             }
         }
     }
-
 
 }
