@@ -94,9 +94,9 @@ import org.onap.policy.rest.jpa.GroupPolicyScopeList;
 import org.onap.policy.rest.jpa.MicroServiceModels;
 import org.onap.policy.rest.jpa.MicroserviceHeaderdeFaults;
 import org.onap.policy.rest.jpa.PolicyEntity;
-import org.onap.policy.rest.util.MSAttributeObject;
-import org.onap.policy.rest.util.MSModelUtils;
-import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
+import org.onap.policy.rest.util.MsAttributeObject;
+import org.onap.policy.rest.util.MsModelUtils;
+import org.onap.policy.rest.util.MsModelUtils.ModelType;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.onap.portalsdk.core.web.support.JsonMessage;
@@ -126,7 +126,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
     private String directory;
     private List<String> modelList = new ArrayList<>();
     private List<String> dirDependencyList = new ArrayList<>();
-    private LinkedHashMap<String, MSAttributeObject> classMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, MsAttributeObject> classMap = new LinkedHashMap<>();
     String referenceAttributes;
     String attributeString;
     Set<String> allManyTrueKeys = null;
@@ -1539,7 +1539,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         }
 
         List<File> fileList = new ArrayList<>();
-        MSModelUtils msModelUtils = new MSModelUtils(commonClassDao);
+        MsModelUtils msModelUtils = new MsModelUtils(commonClassDao);
         this.directory = "model";
         if (zip) {
             extractFolder(this.newFile);
@@ -1579,7 +1579,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             modelType = "yml";
             modelList.add(this.newModel.getModelName());
             String className = this.newModel.getModelName();
-            MSAttributeObject msAttributes = new MSAttributeObject();
+            MsAttributeObject msAttributes = new MsAttributeObject();
             msAttributes.setClassName(className);
 
             LinkedHashMap<String, String> returnAttributeList = new LinkedHashMap<>();
@@ -1681,10 +1681,10 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
     private void retrieveDependency(String workingFile) {
 
-        MSModelUtils utils = new MSModelUtils(PolicyController.getMsOnapName(), PolicyController.getMsPolicyName());
-        Map<String, MSAttributeObject> tempMap;
+        MsModelUtils utils = new MsModelUtils(PolicyController.getMsOnapName(), PolicyController.getMsPolicyName());
+        Map<String, MsAttributeObject> tempMap;
 
-        tempMap = utils.processEpackage(workingFile, MODEL_TYPE.XMI);
+        tempMap = utils.processEpackage(workingFile, ModelType.XMI);
 
         classMap.putAll(tempMap);
         LOGGER.info(tempMap);
@@ -1734,7 +1734,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
     private List<String> createList() {
         List<String> list = new ArrayList<>();
-        for (Entry<String, MSAttributeObject> entrySet : classMap.entrySet()) {
+        for (Entry<String, MsAttributeObject> entrySet : classMap.entrySet()) {
             if (entrySet.getValue().isPolicyTempalate()) {
                 list.add(entrySet.getKey());
             }

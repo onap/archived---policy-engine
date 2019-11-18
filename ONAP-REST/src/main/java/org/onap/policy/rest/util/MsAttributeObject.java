@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017,2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +24,12 @@ package org.onap.policy.rest.util;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MSAttributeObject {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class MsAttributeObject {
 
     private String className;
     private Map<String, String> attribute = new HashMap<>();
@@ -35,38 +41,6 @@ public class MSAttributeObject {
     private boolean policyTempalate;
     private String ruleFormation;
     private String dataOrderInfo;
-
-    public Map<String, String> getRefAttribute() {
-        return refAttribute;
-    }
-
-    public void setRefAttribute(Map<String, String> refAttribute) {
-        this.refAttribute = refAttribute;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public Map<String, String> getAttribute() {
-        return attribute;
-    }
-
-    public void setAttribute(Map<String, String> attribute) {
-        this.attribute = attribute;
-    }
-
-    public Map<String, String> getEnumType() {
-        return enumType;
-    }
-
-    public void setEnumType(Map<String, String> enumType) {
-        this.enumType = enumType;
-    }
 
     public void addAttribute(String key, String value) {
         this.attribute.put(key, value);
@@ -84,36 +58,12 @@ public class MSAttributeObject {
         this.refAttribute.putAll(map);
     }
 
-    public Map<String, Object> getSubClass() {
-        return subClass;
-    }
-
-    public void setSubClass(Map<String, Object> subClass) {
-        this.subClass = subClass;
-    }
-
     public void addAllSubClass(Map<String, Object> subClass) {
         this.subClass.putAll(subClass);
     }
 
-    public String getDependency() {
-        return dependency;
-    }
-
-    public void setDependency(String dependency) {
-        this.dependency = dependency;
-    }
-
     public void addSingleEnum(String key, String value) {
         this.enumType.put(key, value);
-    }
-
-    public Map<String, String> getMatchingSet() {
-        return matchingSet;
-    }
-
-    public void setMatchingSet(Map<String, String> matchingSet) {
-        this.matchingSet = matchingSet;
     }
 
     public void addMatchingSet(String key, String value) {
@@ -122,29 +72,5 @@ public class MSAttributeObject {
 
     public void addMatchingSet(Map<String, String> matchingSet) {
         this.matchingSet.putAll(matchingSet);
-    }
-
-    public boolean isPolicyTempalate() {
-        return policyTempalate;
-    }
-
-    public void setPolicyTempalate(boolean policyTempalate) {
-        this.policyTempalate = policyTempalate;
-    }
-
-    public String getRuleFormation() {
-        return ruleFormation;
-    }
-
-    public void setRuleFormation(String ruleFormation) {
-        this.ruleFormation = ruleFormation;
-    }
-
-    public String getDataOrderInfo() {
-        return dataOrderInfo;
-    }
-
-    public void setDataOrderInfo(String dataOrderInfo) {
-        this.dataOrderInfo = dataOrderInfo;
     }
 }

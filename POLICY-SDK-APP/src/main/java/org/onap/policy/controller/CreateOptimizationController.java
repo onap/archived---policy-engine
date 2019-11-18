@@ -75,9 +75,9 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.MicroserviceHeaderdeFaults;
 import org.onap.policy.rest.jpa.OptimizationModels;
 import org.onap.policy.rest.jpa.PolicyEntity;
-import org.onap.policy.rest.util.MSAttributeObject;
-import org.onap.policy.rest.util.MSModelUtils;
-import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
+import org.onap.policy.rest.util.MsAttributeObject;
+import org.onap.policy.rest.util.MsModelUtils;
+import org.onap.policy.rest.util.MsModelUtils.ModelType;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +103,7 @@ public class CreateOptimizationController extends RestrictedBaseController {
     private String directory;
     private List<String> modelList = new ArrayList<>();
     private List<String> dirDependencyList = new ArrayList<>();
-    private LinkedHashMap<String, MSAttributeObject> classMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, MsAttributeObject> classMap = new LinkedHashMap<>();
     String referenceAttributes;
     String attributeString;
     Set<String> allManyTrueKeys = new HashSet<>();
@@ -668,7 +668,7 @@ public class CreateOptimizationController extends RestrictedBaseController {
         }
 
         List<File> fileList = new ArrayList<>();
-        MSModelUtils modelUtil = new MSModelUtils();
+        MsModelUtils modelUtil = new MsModelUtils();
         this.directory = MODEL;
         if (zip) {
             extractFolder(this.newFile);
@@ -698,7 +698,7 @@ public class CreateOptimizationController extends RestrictedBaseController {
             modelType = "yml";
             modelList.add(this.newModel.getModelName());
             String className = this.newModel.getModelName();
-            MSAttributeObject optimizationAttributes = new MSAttributeObject();
+            MsAttributeObject optimizationAttributes = new MsAttributeObject();
             optimizationAttributes.setClassName(className);
 
             LinkedHashMap<String, String> returnAttributeList = new LinkedHashMap<>();
@@ -798,10 +798,10 @@ public class CreateOptimizationController extends RestrictedBaseController {
 
     private void retrieveDependency(String workingFile) {
 
-        MSModelUtils utils = new MSModelUtils(PolicyController.getMsOnapName(), PolicyController.getMsPolicyName());
-        Map<String, MSAttributeObject> tempMap;
+        MsModelUtils utils = new MsModelUtils(PolicyController.getMsOnapName(), PolicyController.getMsPolicyName());
+        Map<String, MsAttributeObject> tempMap;
 
-        tempMap = utils.processEpackage(workingFile, MODEL_TYPE.XMI);
+        tempMap = utils.processEpackage(workingFile, ModelType.XMI);
 
         classMap.putAll(tempMap);
         LOGGER.info(tempMap);
@@ -823,7 +823,7 @@ public class CreateOptimizationController extends RestrictedBaseController {
 
     private List<String> createList() {
         List<String> list = new ArrayList<>();
-        for (Entry<String, MSAttributeObject> entrySet : classMap.entrySet()) {
+        for (Entry<String, MsAttributeObject> entrySet : classMap.entrySet()) {
             if (entrySet.getValue().isPolicyTempalate()) {
                 list.add(entrySet.getKey());
             }

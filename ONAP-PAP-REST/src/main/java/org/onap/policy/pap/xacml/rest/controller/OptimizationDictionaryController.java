@@ -43,8 +43,8 @@ import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.OptimizationModels;
 import org.onap.policy.rest.jpa.UserInfo;
-import org.onap.policy.rest.util.MSAttributeObject;
-import org.onap.policy.rest.util.MSModelUtils;
+import org.onap.policy.rest.util.MsAttributeObject;
+import org.onap.policy.rest.util.MsModelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -57,7 +57,7 @@ public class OptimizationDictionaryController {
     private static CommonClassDao commonClassDao;
 
     private static String operation = "operation";
-    private LinkedHashMap<String, MSAttributeObject> classMap;
+    private LinkedHashMap<String, MsAttributeObject> classMap;
     private static String dictionaryFields = "dictionaryFields";
     private static String duplicateResponseString = "Duplicate";
     private static String optimizationModelsDictionaryDatas = "optimizationModelsDictionaryDatas";
@@ -85,7 +85,7 @@ public class OptimizationDictionaryController {
         OptimizationDictionaryController.commonClassDao = commonClassDao;
     }
 
-    MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
+    MsModelUtils utils = new MsModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
 
     private OptimizationModels newModel;
 
@@ -157,12 +157,12 @@ public class OptimizationDictionaryController {
                     Set<String> keys = jsonObject.keySet();
                     for (String key : keys) {
                         String value = jsonObject.get(key).toString();
-                        MSAttributeObject msAttributeObject = mapper1.readValue(value, MSAttributeObject.class);
+                        MsAttributeObject msAttributeObject = mapper1.readValue(value, MsAttributeObject.class);
                         classMap.put(key, msAttributeObject);
                     }
 
                     userId = root.get("userid").textValue();
-                    MSAttributeObject mainClass = classMap.get(this.newModel.getModelName());
+                    MsAttributeObject mainClass = classMap.get(this.newModel.getModelName());
                     this.newModel.setDependency("[]");
                     String value = new Gson().toJson(mainClass.getSubClass());
                     this.newModel.setSubattributes(value);
@@ -212,7 +212,7 @@ public class OptimizationDictionaryController {
                             Set<String> keys = jsonObject.keySet();
                             for (String key : keys) {
                                 String value = jsonObject.get(key).toString();
-                                MSAttributeObject msAttributeObject = mapper1.readValue(value, MSAttributeObject.class);
+                                MsAttributeObject msAttributeObject = mapper1.readValue(value, MsAttributeObject.class);
                                 classMap.put(key, msAttributeObject);
                             }
                         }
@@ -279,11 +279,11 @@ public class OptimizationDictionaryController {
         dUtils.removeData(request, response, optimizationModelsDictionaryDatas, OptimizationModels.class);
     }
 
-    private void addValuesToNewModel(HashMap<String, MSAttributeObject> classMap) {
+    private void addValuesToNewModel(HashMap<String, MsAttributeObject> classMap) {
         // Loop through the classmap and pull out the required info for the new file.
         String subAttribute = null;
 
-        MSAttributeObject mainClass = classMap.get(this.newModel.getModelName());
+        MsAttributeObject mainClass = classMap.get(this.newModel.getModelName());
 
         if (mainClass != null) {
             String dependTemp = StringUtils.replaceEach(mainClass.getDependency(), new String[] {"[", "]", " "},
@@ -291,7 +291,7 @@ public class OptimizationDictionaryController {
             ArrayList<String> dependency = new ArrayList<>(Arrays.asList(dependTemp.split(",")));
             dependency = getFullDependencyList(dependency);
             for (String element : dependency) {
-                MSAttributeObject temp = classMap.get(element);
+                MsAttributeObject temp = classMap.get(element);
                 if (temp != null) {
                     mainClass.addAllRefAttribute(temp.getRefAttribute());
                     mainClass.addAllAttribute(temp.getAttribute());
@@ -322,7 +322,7 @@ public class OptimizationDictionaryController {
         returnList.addAll(dependency);
         for (String element : dependency) {
             if (classMap.containsKey(element)) {
-                MSAttributeObject value = classMap.get(element);
+                MsAttributeObject value = classMap.get(element);
                 String rawValue =
                         StringUtils.replaceEach(value.getDependency(), new String[] {"[", "]"}, new String[] {"", ""});
                 workingList = new ArrayList<>(Arrays.asList(rawValue.split(",")));

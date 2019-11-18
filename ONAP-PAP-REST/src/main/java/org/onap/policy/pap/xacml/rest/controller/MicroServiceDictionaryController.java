@@ -54,8 +54,8 @@ import org.onap.policy.rest.jpa.MicroServiceModels;
 import org.onap.policy.rest.jpa.MicroserviceHeaderdeFaults;
 import org.onap.policy.rest.jpa.PrefixList;
 import org.onap.policy.rest.jpa.UserInfo;
-import org.onap.policy.rest.util.MSAttributeObject;
-import org.onap.policy.rest.util.MSModelUtils;
+import org.onap.policy.rest.util.MsAttributeObject;
+import org.onap.policy.rest.util.MsModelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -75,7 +75,7 @@ public class MicroServiceDictionaryController {
     private static String getDictionary = "getDictionary";
     private static String errorMsg = "error";
     private static String dictionaryDBQuery = "dictionaryDBQuery";
-    private LinkedHashMap<String, MSAttributeObject> classMap;
+    private LinkedHashMap<String, MsAttributeObject> classMap;
     private List<String> modelList = new ArrayList<>();
     private static String dictionaryFields = "dictionaryFields";
     private static String duplicateResponseString = "Duplicate";
@@ -109,7 +109,7 @@ public class MicroServiceDictionaryController {
         MicroServiceDictionaryController.commonClassDao = commonClassDao;
     }
 
-    MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
+    MsModelUtils utils = new MsModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
 
     private MicroServiceModels newModel;
 
@@ -650,12 +650,12 @@ public class MicroServiceDictionaryController {
                     Set<String> keys = jsonObject.keySet();
                     for (String key : keys) {
                         String value = jsonObject.get(key).toString();
-                        MSAttributeObject msAttributeObject = mapper1.readValue(value, MSAttributeObject.class);
+                        MsAttributeObject msAttributeObject = mapper1.readValue(value, MsAttributeObject.class);
                         classMap.put(key, msAttributeObject);
                     }
 
                     userId = root.get("userid").textValue();
-                    MSAttributeObject mainClass = classMap.get(this.newModel.getModelName());
+                    MsAttributeObject mainClass = classMap.get(this.newModel.getModelName());
                     this.newModel.setDependency("[]");
                     String value = new Gson().toJson(mainClass.getSubClass());
                     this.newModel.setSubAttributes(value);
@@ -703,7 +703,7 @@ public class MicroServiceDictionaryController {
                             Set<String> keys = jsonObject.keySet();
                             for (String key : keys) {
                                 String value = jsonObject.get(key).toString();
-                                MSAttributeObject msAttributeObject = mapper1.readValue(value, MSAttributeObject.class);
+                                MsAttributeObject msAttributeObject = mapper1.readValue(value, MsAttributeObject.class);
                                 classMap.put(key, msAttributeObject);
                             }
                         }
@@ -769,11 +769,11 @@ public class MicroServiceDictionaryController {
         utils.removeData(request, response, microServiceModelsDictionaryDatas, MicroServiceModels.class);
     }
 
-    private void addValuesToNewModel(HashMap<String, MSAttributeObject> classMap) {
+    private void addValuesToNewModel(HashMap<String, MsAttributeObject> classMap) {
         // Loop through the classmap and pull out the required info for the new file.
         String subAttribute = null;
 
-        MSAttributeObject mainClass = classMap.get(this.newModel.getModelName());
+        MsAttributeObject mainClass = classMap.get(this.newModel.getModelName());
 
         if (mainClass != null) {
             String dependTemp = StringUtils.replaceEach(mainClass.getDependency(), new String[] {"[", "]", " "},
@@ -781,7 +781,7 @@ public class MicroServiceDictionaryController {
             ArrayList<String> dependency = new ArrayList<>(Arrays.asList(dependTemp.split(",")));
             dependency = getFullDependencyList(dependency);
             for (String element : dependency) {
-                MSAttributeObject temp = classMap.get(element);
+                MsAttributeObject temp = classMap.get(element);
                 if (temp != null) {
                     mainClass.addAllRefAttribute(temp.getRefAttribute());
                     mainClass.addAllAttribute(temp.getAttribute());
@@ -812,7 +812,7 @@ public class MicroServiceDictionaryController {
         returnList.addAll(dependency);
         for (String element : dependency) {
             if (classMap.containsKey(element)) {
-                MSAttributeObject value = classMap.get(element);
+                MsAttributeObject value = classMap.get(element);
                 String rawValue =
                         StringUtils.replaceEach(value.getDependency(), new String[] {"[", "]"}, new String[] {"", ""});
                 workingList = new ArrayList<>(Arrays.asList(rawValue.split(",")));
