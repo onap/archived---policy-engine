@@ -3,7 +3,7 @@
  * ONAP-XACML
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
- * Modifications Copyright (C) 2018 AT&T Intellectual Property.
+ * Modifications Copyright (C) 2018-2019 AT&T Intellectual Property.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,14 +54,14 @@ public class StdPAPPolicyParams {
     private List<Object> dynamicVariableList;
     private List<String> dataTypeList;
     private Map<String, String> dropDownMap;
-    private Map<String,String> treatments;
+    private Map<String, String> treatments;
     private String policyID;
     private String ruleID;
     private String version;
     private String jsonBody;
     private String brmsController;
     private List<String> brmsDependency;
-    private Map<String,String> drlRuleAndUIParams;
+    private Map<String, String> drlRuleAndUIParams;
     private boolean draft;
     private String oldPolicyFileName;
     private String serviceType;
@@ -75,8 +75,7 @@ public class StdPAPPolicyParams {
     private String rawXacmlPolicy = null;
 
     /**
-
-     * Default constructor
+     * Default constructor.
      */
     private StdPAPPolicyParams() {
         super();
@@ -186,7 +185,7 @@ public class StdPAPPolicyParams {
         return providerComboBox;
     }
 
-    public Map<String,String> getDynamicSettingsMap() {
+    public Map<String, String> getDynamicSettingsMap() {
         return dynamicSettingsMap;
     }
 
@@ -198,11 +197,11 @@ public class StdPAPPolicyParams {
         return dataTypeList;
     }
 
-    public Map<String,String> getDropDownMap() {
+    public Map<String, String> getDropDownMap() {
         return dropDownMap;
     }
 
-    public Map<String,String> getTreatments() {
+    public Map<String, String> getTreatments() {
         return treatments;
     }
 
@@ -230,7 +229,7 @@ public class StdPAPPolicyParams {
         return brmsDependency;
     }
 
-    public Map<String,String> getDrlRuleAndUIParams() {
+    public Map<String, String> getDrlRuleAndUIParams() {
         return drlRuleAndUIParams;
     }
 
@@ -269,8 +268,9 @@ public class StdPAPPolicyParams {
     public String getRawXacmlPolicy() {
         return rawXacmlPolicy;
     }
+
     /**
-     * Builder class for the Policy parameters
+     * Builder class for the Policy parameters.
      */
     public static class StdPAPPolicyParamsBuilder {
         StdPAPPolicyParams m = new StdPAPPolicyParams();
@@ -283,7 +283,6 @@ public class StdPAPPolicyParams {
             m.configPolicyType = configPolicyType;
             return this;
         }
-
 
         public StdPAPPolicyParamsBuilder policyName(String policyName) {
             m.policyName = policyName;
@@ -405,12 +404,12 @@ public class StdPAPPolicyParams {
             return this;
         }
 
-        public StdPAPPolicyParamsBuilder dropDownMap(Map<String, String> dropDownMap){
+        public StdPAPPolicyParamsBuilder dropDownMap(Map<String, String> dropDownMap) {
             m.dropDownMap = dropDownMap;
             return this;
         }
 
-        public StdPAPPolicyParamsBuilder treatments(Map<String,String> treatments) {
+        public StdPAPPolicyParamsBuilder treatments(Map<String, String> treatments) {
             m.treatments = treatments;
             return this;
         }
@@ -445,13 +444,13 @@ public class StdPAPPolicyParams {
             return this;
         }
 
-        public StdPAPPolicyParamsBuilder drlRuleAndUIParams(Map<String,String> drlRuleAndUIParams) {
+        public StdPAPPolicyParamsBuilder drlRuleAndUIParams(Map<String, String> drlRuleAndUIParams) {
             m.drlRuleAndUIParams = drlRuleAndUIParams;
             return this;
         }
 
-        public StdPAPPolicyParamsBuilder draft(boolean b) {
-            m.draft = b;
+        public StdPAPPolicyParamsBuilder draft(boolean isDraft) {
+            m.draft = isDraft;
             return this;
         }
 
@@ -460,8 +459,8 @@ public class StdPAPPolicyParams {
             return this;
         }
 
-        public StdPAPPolicyParamsBuilder serviceType(String s) {
-            m.serviceType = s;
+        public StdPAPPolicyParamsBuilder serviceType(String serviceType) {
+            m.serviceType = serviceType;
             return this;
         }
 
@@ -499,7 +498,7 @@ public class StdPAPPolicyParams {
             m.dictionaryFields = dictionaryFields;
             return this;
         }
-        
+
         public StdPAPPolicyParamsBuilder rawXacmlPolicy(String rawXacmlPolicy) {
             m.rawXacmlPolicy = rawXacmlPolicy;
             return this;

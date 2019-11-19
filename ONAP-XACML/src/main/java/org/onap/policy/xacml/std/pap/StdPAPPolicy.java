@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.xacml.std.pap;
 
 import java.io.Serializable;
@@ -89,12 +90,19 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         //
     }
 
-    //Constructor for sending location when pushing policies
+    // Constructor for sending location when pushing policies
     public StdPAPPolicy(URI location) {
         this.location = location;
     }
 
-    //Constructor for Validating Config Policies
+    /**
+     * Constructor for Validating Config Policies.
+     *
+     * @param policyName String
+     * @param body String
+     * @param configType String
+     * @param configPolicyType String
+     */
     public StdPAPPolicy(String policyName, String body, String configType, String configPolicyType) {
         this.policyName = policyName;
         this.configBodyData = body;
@@ -103,15 +111,16 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
     }
 
     /**
-     * Constructor for
-     *  Create Config Policies from API and Admin Console
-     *  Updating Config Policies from the API
-     *  Create/Update Action Policies from API
-     *  Create/Update Decision Policies
+     * Constructor.
+     * Create Config Policies from API and Admin Console
+     * Updating Config Policies from the API
+     * Create/Update Action Policies from API
+     * Create/Update Decision Policies
+     *
      * @param stdPAPPolicyParams Input params object
      */
     public StdPAPPolicy(StdPAPPolicyParams stdPAPPolicyParams) {
-        this.configPolicyType=stdPAPPolicyParams.getConfigPolicyType();
+        this.configPolicyType = stdPAPPolicyParams.getConfigPolicyType();
         this.policyName = stdPAPPolicyParams.getPolicyName();
         this.policyDescription = stdPAPPolicyParams.getDescription();
         this.onapName = stdPAPPolicyParams.getOnapName();
@@ -391,31 +400,25 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
     @Override
     public String toString() {
         return "StdPAPPolicy [policyName=" + policyName + ", policyDescription=" + policyDescription + ", onapName="
-                + onapName + ", configName=" + configName + ", dynamicFieldConfigAttributes=" +
-                dynamicFieldConfigAttributes + ", configBodyData=" + configBodyData
-                + ", policyID=" + policyID + ", ruleID=" + ruleID + ", configType=" + configType + ", editPolicy=" +
-                ", version=" + ", domain=" + domain
-                + ", configPolicyType=" + configPolicyType + ", jsonBody=" + jsonBody + ", highestVersion=" +
-                highestVersion + ", location=" + location
-                + ",dynamicRuleAlgorithmLabels=" + dynamicRuleAlgorithmLabels + ",dynamicRuleAlgorithmCombo=" +
-                dynamicRuleAlgorithmCombo
-                + ",dynamicRuleAlgorithmField1=" + dynamicRuleAlgorithmField1 + ",dynamicRuleAlgorithmField2=" +
-                dynamicRuleAlgorithmField2
-                + ",actionPerformer=" + actionPerformer + ",actionAttribute=" + actionAttribute + ",actionBody=" +
-                actionBody + ",dropDownMap=" + dropDownMap
-                + ",actionDictHeader=" + actionDictHeader + ",actionDictType=" + actionDictType + ",actionDictUrl=" +
-                actionDictUrl
-                + ",actionDictMethod=" + actionDictMethod + ",dynamicSettingsMap=" + dynamicSettingsMap + "," +
-                "dynamicVariableList=" + dynamicVariableList + ",providerComboBox=" + providerComboBox
-                + ",dataTypeList=" + dataTypeList + ",draft=" + ",oldPolicyFileName=" + oldPolicyFileName + "," +
-                "serviceType=" + serviceType
-                + ",uuid=" + uuid + ",msLocation=" + msLocation + ",priority=" + priority + ",deleteCondition=" +
-                deleteCondition + ",dictionaryType=" + dictionaryType
-                + ",dictionary=" + dictionary + ",dictionaryFields=" + dictionaryFields + ",uuid=" + uuid + "," +
-                "msLocation=" + msLocation + ",priority="
-                + priority + ",deleteCondition=" + deleteCondition + ",riskType=" + riskType + ",riskLevel=" +
-                riskLevel + ",guard=" + guard + ",ttlDate=" + ttlDate
-                + ",treatments=" + treatments + "]";
+                + onapName + ", configName=" + configName + ", dynamicFieldConfigAttributes="
+                + dynamicFieldConfigAttributes + ", configBodyData=" + configBodyData + ", policyID=" + policyID
+                + ", ruleID=" + ruleID + ", configType=" + configType + ", editPolicy=" + ", version=" + ", domain="
+                + domain + ", configPolicyType=" + configPolicyType + ", jsonBody=" + jsonBody + ", highestVersion="
+                + highestVersion + ", location=" + location + ",dynamicRuleAlgorithmLabels="
+                + dynamicRuleAlgorithmLabels + ",dynamicRuleAlgorithmCombo=" + dynamicRuleAlgorithmCombo
+                + ",dynamicRuleAlgorithmField1=" + dynamicRuleAlgorithmField1 + ",dynamicRuleAlgorithmField2="
+                + dynamicRuleAlgorithmField2 + ",actionPerformer=" + actionPerformer + ",actionAttribute="
+                + actionAttribute + ",actionBody=" + actionBody + ",dropDownMap=" + dropDownMap + ",actionDictHeader="
+                + actionDictHeader + ",actionDictType=" + actionDictType + ",actionDictUrl=" + actionDictUrl
+                + ",actionDictMethod=" + actionDictMethod + ",dynamicSettingsMap=" + dynamicSettingsMap + ","
+                + "dynamicVariableList=" + dynamicVariableList + ",providerComboBox=" + providerComboBox
+                + ",dataTypeList=" + dataTypeList + ",draft=" + ",oldPolicyFileName=" + oldPolicyFileName + ","
+                + "serviceType=" + serviceType + ",uuid=" + uuid + ",msLocation=" + msLocation + ",priority=" + priority
+                + ",deleteCondition=" + deleteCondition + ",dictionaryType=" + dictionaryType + ",dictionary="
+                + dictionary + ",dictionaryFields=" + dictionaryFields + ",uuid=" + uuid + "," + "msLocation="
+                + msLocation + ",priority=" + priority + ",deleteCondition=" + deleteCondition + ",riskType=" + riskType
+                + ",riskLevel=" + riskLevel + ",guard=" + guard + ",ttlDate=" + ttlDate + ",treatments=" + treatments
+                + "]";
     }
 
     // Methods needed for JSON Deserialization
@@ -435,8 +438,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.configName = configName;
     }
 
-    public void setDynamicFieldConfigAttributes(
-            Map<String, String> dynamicFieldConfigAttributes) {
+    public void setDynamicFieldConfigAttributes(Map<String, String> dynamicFieldConfigAttributes) {
         this.dynamicFieldConfigAttributes = dynamicFieldConfigAttributes;
     }
 
@@ -484,8 +486,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.location = location;
     }
 
-    public void setDynamicRuleAlgorithmLabels(
-            List<String> dynamicRuleAlgorithmLabels) {
+    public void setDynamicRuleAlgorithmLabels(List<String> dynamicRuleAlgorithmLabels) {
         this.dynamicRuleAlgorithmLabels = dynamicRuleAlgorithmLabels;
     }
 
@@ -493,13 +494,11 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.dynamicRuleAlgorithmCombo = dynamicRuleAlgorithmCombo;
     }
 
-    public void setDynamicRuleAlgorithmField1(
-            List<String> dynamicRuleAlgorithmField1) {
+    public void setDynamicRuleAlgorithmField1(List<String> dynamicRuleAlgorithmField1) {
         this.dynamicRuleAlgorithmField1 = dynamicRuleAlgorithmField1;
     }
 
-    public void setDynamicRuleAlgorithmField2(
-            List<String> dynamicRuleAlgorithmField2) {
+    public void setDynamicRuleAlgorithmField2(List<String> dynamicRuleAlgorithmField2) {
         this.dynamicRuleAlgorithmField2 = dynamicRuleAlgorithmField2;
     }
 
@@ -638,7 +637,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
     public void setTreatments(Map<String, String> treatments) {
         this.treatments = treatments;
     }
-    
+
     public String getRawXacmlPolicy() {
         return rawXacmlPolicy;
     }
