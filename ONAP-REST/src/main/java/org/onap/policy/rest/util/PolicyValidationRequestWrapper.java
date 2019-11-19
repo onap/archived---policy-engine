@@ -42,6 +42,7 @@ import javax.json.JsonReader;
 import javax.servlet.http.HttpServletRequest;
 
 import org.onap.policy.api.AttributeType;
+import org.onap.policy.api.PolicyClass;
 import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -64,8 +65,10 @@ public class PolicyValidationRequestWrapper {
     private static final String PRIORITY = "priority";
     private static final String RISKLEVEL = "riskLevel";
     private static final String RISKTYPE = "riskType";
+    private static final String SECURITY_ZONE_ID = "securityZoneId";
     private static final String SERVICE = "service";
     private static final String SERVICETYPE_POLICY_NAME = "serviceTypePolicyName";
+    private static final String UUID = "uuid";
     private static final String VERSION = "version";
 
     /**
@@ -75,7 +78,6 @@ public class PolicyValidationRequestWrapper {
      * @return the policy rest adapter
      */
     public PolicyRestAdapter populateRequestParameters(HttpServletRequest request) {
-
         PolicyRestAdapter policyData = null;
         ClosedLoopFaultTrapDatas trapDatas = null;
         ClosedLoopFaultTrapDatas faultDatas = null;
@@ -93,18 +95,13 @@ public class PolicyValidationRequestWrapper {
                 policyData.setFaultDatas(faultDatas);
             }
 
-            JsonObject json;
-            json = stringToJsonObject(root.toString());
-
-            if (json != null) {
-                if (json.containsKey("policyJSON")) {
-                    policyData.setPolicyJSON(root.get("policyJSON"));
-                } else {
-                    String jsonBodyData = json.getJsonObject("policyData").get("jsonBodyData").toString();
-                    policyData.setJsonBody(jsonBodyData);
-                }
+            JsonObject json = stringToJsonObject(root.toString());
+            if (json.containsKey("policyJSON")) {
+                policyData.setPolicyJSON(root.get("policyJSON"));
+            } else {
+                String jsonBodyData = json.getJsonObject("policyData").get("jsonBodyData").toString();
+                policyData.setJsonBody(jsonBodyData);
             }
-
         } catch (Exception e) {
             LOGGER.error("Exception Occured while populating request parameters: " + e);
         }
@@ -119,7 +116,6 @@ public class PolicyValidationRequestWrapper {
      * @return the policy rest adapter
      */
     public PolicyRestAdapter populateRequestParameters(PolicyParameters parameters) {
-
         PolicyRestAdapter policyData = new PolicyRestAdapter();
 
         /*
@@ -148,336 +144,321 @@ public class PolicyValidationRequestWrapper {
             return null;
         }
 
-        if (parameters.getPolicyClass() != null && !"Config".equals(parameters.getPolicyClass().toString())) {
+        if (parameters.getPolicyClass() == null) {
+            parameters.setPolicyClass(PolicyClass.Config);
+        }
 
-            policyData.setPolicyType(parameters.getPolicyClass().toString());
+        policyData.setPolicyType(parameters.getPolicyClass().toString());
 
-            // Get Matching attribute values
-            Map<AttributeType, Map<String, String>> attributes = parameters.getAttributes();
-            Map<String, String> matching = null;
-            if (attributes != null) {
-                matching = attributes.get(AttributeType.MATCHING);
-            }
+        switch (parameters.getPolicyClass()) {
+            case Config:
+                return populateConfigParameters(parameters, policyData, json);
 
-            if ("Decision".equals(parameters.getPolicyClass().toString())) {
+            case Decision:
+                return populateDecisionParameters(parameters, policyData, getMatchingAttributeValues(parameters));
 
-                String ruleProvider = parameters.getRuleProvider().toString();
-                policyData.setRuleProvider(ruleProvider);
+            case Action:
+                return populateActionParameters(parameters, policyData, getMatchingAttributeValues(parameters));
 
-                if ("Rainy_Day".equals(ruleProvider)) {
+            default:
+                return null;
+        }
+    }
 
-                    // Set Matching attributes in RainyDayParams in adapter
-                    RainyDayParams rainyday = new RainyDayParams();
+    private PolicyRestAdapter populateConfigParameters(PolicyParameters parameters, PolicyRestAdapter policyData,
+                    JsonObject json) {
+        policyData.setConfigPolicyType(parameters.getPolicyConfigType().toString());
 
-                    if (matching != null) {
-                        rainyday.setServiceType(matching.get("ServiceType"));
-                        rainyday.setVnfType(matching.get("VNFType"));
-                        rainyday.setBbid(matching.get("BB_ID"));
-                        rainyday.setWorkstep(matching.get("WorkStep"));
-                    }
+        // Config Specific
+        policyData.setConfigBodyData(parameters.getConfigBody()); // Base
+        policyData.setConfigType((parameters.getConfigBodyType() != null)
+                        ? parameters.getConfigBodyType().toString().toUpperCase()
+                        : null); // Base
 
-                    Map<String, String> treatments = parameters.getTreatments();
-                    ArrayList<Object> treatmentsTableChoices = new ArrayList<>();
+        switch (parameters.getPolicyConfigType()) {
+            case Firewall:
+                return populateConfigFirewallParameters(policyData, json);
+            case MicroService:
+                return populateConfigMicroserviceParameters(parameters, policyData, json);
+            case Optimization:
+                return populateConfigOptimizationParameters(parameters, policyData, json);
+            case ClosedLoop_Fault:
+                return populateConfigClosedLoopFaultParameters(policyData, json);
+            case ClosedLoop_PM:
+                return populateConfigClosedLoopPmParameters(policyData, json);
+            case BRMS_PARAM:
+                return populateConfigBrmsParameters(parameters, policyData);
 
-                    for (String keyField : treatments.keySet()) {
-                        LinkedHashMap<String, String> treatmentMap = new LinkedHashMap<>();
-                        String errorcode = keyField;
-                        String treatment = treatments.get(errorcode);
-                        treatmentMap.put("errorcode", errorcode);
-                        treatmentMap.put("treatment", treatment);
-                        treatmentsTableChoices.add(treatmentMap);
-                    }
-                    rainyday.setTreatmentTableChoices(treatmentsTableChoices);
-                    policyData.setRainyday(rainyday);
+            // case BRMS_RAW:, case Base:, and case Extended: handled as default cases
+            default:
+                return policyData;
+        }
+    }
 
-                } else if ("GUARD_YAML".equals(ruleProvider) || "GUARD_BL_YAML".equals(ruleProvider)
-                                || "GUARD_MIN_MAX".equals(ruleProvider)) {
+    private PolicyRestAdapter populateConfigFirewallParameters(PolicyRestAdapter policyData, JsonObject json) {
+        policyData.setConfigPolicyType("Firewall Config");
 
-                    // Set Matching attributes in YAMLParams in adapter
-                    YAMLParams yamlparams = new YAMLParams();
+        // get values and attributes from the JsonObject
+        if (json != null) {
+            policyData.setSecurityZone(getNewOrExistingKeyValue(json, SECURITY_ZONE_ID, policyData.getSecurityZone()));
+            policyData.setConfigName(getNewOrExistingKeyValue(json, CONFIG_NAME, policyData.getConfigName()));
+        }
+        return policyData;
+    }
 
-                    if (matching != null) {
-                        yamlparams.setActor(matching.get("actor"));
-                        yamlparams.setRecipe(matching.get("recipe"));
-                        yamlparams.setGuardActiveStart(matching.get("guardActiveStart"));
-                        yamlparams.setGuardActiveEnd(matching.get("guardActiveEnd"));
+    private PolicyRestAdapter populateConfigMicroserviceParameters(PolicyParameters parameters,
+                    PolicyRestAdapter policyData, JsonObject json) {
+        policyData.setConfigPolicyType("Micro Service");
 
-                        if ("GUARD_YAML".equals(ruleProvider)) {
-                            yamlparams.setLimit(matching.get("limit"));
-                            yamlparams.setTimeWindow(matching.get("timeWindow"));
-                            yamlparams.setTimeUnits(matching.get("timeUnits"));
-                        } else if ("GUARD_MIN_MAX".equals(ruleProvider)) {
-                            yamlparams.setMin(matching.get("min"));
-                            yamlparams.setMax(matching.get("max"));
-                        } else {
-
-                            List<String> blackList = new ArrayList<>();
-
-                            if (!Strings.isNullOrEmpty(matching.get("blackList"))) {
-                                String[] blackListArray = matching.get("blackList").split(",");
-                                for (String element : blackListArray) {
-                                    blackList.add(element);
-                                }
-                            }
-
-                            yamlparams.setBlackList(blackList);
-
-                        }
-                    }
-                    policyData.setYamlparams(yamlparams);
-                }
-
-            } else if ("Action".equals(parameters.getPolicyClass().toString())) {
-
-                ArrayList<Object> ruleAlgorithmChoices = new ArrayList<>();
-
-                List<String> dynamicLabelRuleAlgorithms = parameters.getDynamicRuleAlgorithmLabels();
-                List<String> dynamicFieldFunctionRuleAlgorithms = parameters.getDynamicRuleAlgorithmFunctions();
-                List<String> dynamicFieldOneRuleAlgorithms = parameters.getDynamicRuleAlgorithmField1();
-                List<String> dyrnamicFieldTwoRuleAlgorithms = parameters.getDynamicRuleAlgorithmField2();
-
-                if (dynamicLabelRuleAlgorithms != null && !dynamicLabelRuleAlgorithms.isEmpty()) {
-
-                    for (int i = dynamicLabelRuleAlgorithms.size() - 1; i >= 0; i--) {
-                        LinkedHashMap<String, String> ruleAlgorithm = new LinkedHashMap<>();
-
-                        String id = dynamicLabelRuleAlgorithms.get(i);
-                        String dynamicRuleAlgorithmField1 = dynamicFieldOneRuleAlgorithms.get(i);
-                        String dynamicRuleAlgorithmCombo = dynamicFieldFunctionRuleAlgorithms.get(i);
-                        String dynamicRuleAlgorithmField2 = dyrnamicFieldTwoRuleAlgorithms.get(i);
-
-                        ruleAlgorithm.put("id", id);
-                        ruleAlgorithm.put("dynamicRuleAlgorithmField1", dynamicRuleAlgorithmField1);
-                        ruleAlgorithm.put("dynamicRuleAlgorithmCombo", dynamicRuleAlgorithmCombo);
-                        ruleAlgorithm.put("dynamicRuleAlgorithmField2", dynamicRuleAlgorithmField2);
-
-                        ruleAlgorithmChoices.add(ruleAlgorithm);
-                    }
-                }
-
-                policyData.setRuleAlgorithmschoices(ruleAlgorithmChoices);
-
-                ArrayList<Object> attributeList = new ArrayList<>();
-                if (matching != null) {
-                    for (Map.Entry<String, String> entry : matching.entrySet()) {
-                        LinkedHashMap<String, String> attributeMap = new LinkedHashMap<>();
-                        String key = entry.getKey();
-                        String value = entry.getValue();
-                        attributeMap.put("key", key);
-                        attributeMap.put("value", value);
-                        attributeList.add(attributeMap);
-                    }
-                }
-
-                policyData.setAttributes(attributeList);
-                policyData.setActionAttributeValue(parameters.getActionAttribute());
-                policyData.setActionPerformer(parameters.getActionPerformer());
-
-            }
+        // Get values and attributes from the JsonObject
+        if (json != null) {
+            return getJsonObjectValuesAndAttributes(parameters, policyData, json);
         } else {
+            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + INVALIDJSON + parameters.getConfigBody();
+            LOGGER.error(message);
+            return null;
+        }
+    }
 
-            policyData.setPolicyType("Config");
-            policyData.setConfigPolicyType(parameters.getPolicyConfigType().toString());
+    private PolicyRestAdapter populateConfigOptimizationParameters(PolicyParameters parameters,
+                    PolicyRestAdapter policyData, JsonObject json) {
+        policyData.setConfigPolicyType("Optimization");
 
-            // Config Specific
-            policyData.setConfigBodyData(parameters.getConfigBody()); // Base
-            policyData.setConfigType((parameters.getConfigBodyType() != null)
-                            ? parameters.getConfigBodyType().toString().toUpperCase()
-                            : null); // Base
+        // get values and attributes from the JsonObject
+        if (json != null) {
+            return getJsonObjectValuesAndAttributes(parameters, policyData, json);
+        } else {
+            return policyData;
+        }
+    }
 
-            if ("FW".equalsIgnoreCase(parameters.getPolicyConfigType().toString())) {
+    private PolicyRestAdapter populateConfigClosedLoopFaultParameters(PolicyRestAdapter policyData, JsonObject json) {
+        policyData.setConfigPolicyType("ClosedLoop_Fault");
 
-                policyData.setConfigPolicyType("Firewall Config");
+        if (json != null) {
+            policyData.setJsonBody(json.toString());
+            policyData.setOnapName(getNewOrExistingKeyValue(json, ONAPNAME, policyData.getOnapName()));
+        }
+        return policyData;
+    }
 
-                // get values and attributes from the JsonObject
-                if (json != null) {
-                    if (json.get("securityZoneId") != null) {
-                        String securityZone = json.get("securityZoneId").toString().replace("\"", "");
-                        policyData.setSecurityZone(securityZone);
-                    }
-                    if (json.get(CONFIG_NAME) != null) {
-                        String configName = json.get(CONFIG_NAME).toString().replace("\"", "");
-                        policyData.setConfigName(configName);
-                    }
-                }
+    private PolicyRestAdapter populateConfigClosedLoopPmParameters(PolicyRestAdapter policyData, JsonObject json) {
+        policyData.setConfigPolicyType("ClosedLoop_PM");
 
-            } else if ("MS".equals(parameters.getPolicyConfigType().toString())) {
+        if (json != null) {
+            policyData.setJsonBody(json.toString());
+            policyData.setOnapName(getNewOrExistingKeyValue(json, ONAPNAME, policyData.getOnapName()));
+            if (json.get(SERVICETYPE_POLICY_NAME) != null) {
+                String serviceType = json.get(SERVICETYPE_POLICY_NAME).toString().replace("\"", "");
+                LinkedHashMap<String, String> serviceTypePolicyName = new LinkedHashMap<>();
+                serviceTypePolicyName.put(SERVICETYPE_POLICY_NAME, serviceType);
+                policyData.setServiceTypePolicyName(serviceTypePolicyName);
+            }
+        }
+        return policyData;
+    }
 
-                policyData.setConfigPolicyType("Micro Service");
+    private PolicyRestAdapter populateConfigBrmsParameters(PolicyParameters parameters, PolicyRestAdapter policyData) {
+        Map<AttributeType, Map<String, String>> drlRuleAndUiParams = parameters.getAttributes();
+        Map<String, String> rule = drlRuleAndUiParams.get(AttributeType.RULE);
+        policyData.setRuleName(rule.get("templateName"));
 
-                // get values and attributes from the JsonObject
-                if (json != null) {
-                    if (json.containsKey(CONTENT)) {
-                        String content = json.get(CONTENT).toString();
-                        ObjectMapper mapper = new ObjectMapper();
-                        JsonNode policyJson = null;
-                        try {
-                            policyJson = mapper.readTree(content);
-                        } catch (IOException e) {
-                            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + INVALIDJSON
-                                            + parameters.getConfigBody();
-                            LOGGER.error(message, e);
-                            return null;
-                        }
-                        policyData.setPolicyJSON(policyJson);
-                    }
-                    if (json.containsKey(SERVICE)) {
-                        String serviceType = json.get(SERVICE).toString().replace("\"", "");
-                        policyData.setServiceType(serviceType);
-                    }
-                    if (json.containsKey("uuid")) {
-                        String uuid = json.get("uuid").toString().replace("\"", "");
-                        policyData.setUuid(uuid);
-                    }
-                    if (json.containsKey(LOCATION)) {
-                        String msLocation = json.get(LOCATION).toString().replace("\"", "");
-                        policyData.setLocation(msLocation);
-                    }
-                    if (json.containsKey(CONFIG_NAME)) {
-                        String configName = json.get(CONFIG_NAME).toString().replace("\"", "");
-                        policyData.setConfigName(configName);
-                    }
-                    if (json.containsKey(PRIORITY)) {
-                        String priority = json.get(PRIORITY).toString().replace("\"", "");
-                        policyData.setPriority(priority);
-                    }
-                    if (json.containsKey(VERSION)) {
-                        String version = json.get(VERSION).toString().replace("\"", "");
-                        policyData.setVersion(version);
-                    }
-                    if (json.containsKey(POLICYSCOPE)) {
-                        String policyScope = json.get(POLICYSCOPE).toString().replace("\"", "");
-                        policyData.setPolicyScope(policyScope);
-                    }
-                    if (json.containsKey(RISKTYPE)) {
-                        String riskType = json.get(RISKTYPE).toString().replace("\"", "");
-                        policyData.setRiskType(riskType);
-                    }
-                    if (json.containsKey(RISKLEVEL)) {
-                        String riskLevel = json.get(RISKLEVEL).toString().replace("\"", "");
-                        policyData.setRiskLevel(riskLevel);
-                    }
-                    if (json.containsKey(GUARD)) {
-                        String guard = json.get(GUARD).toString().replace("\"", "");
-                        policyData.setGuard(guard);
-                    }
-                } else {
-                    String message = XACMLErrorConstants.ERROR_DATA_ISSUE + INVALIDJSON + parameters.getConfigBody();
-                    LOGGER.error(message);
-                    return null;
-                }
+        return policyData;
+    }
 
-            } else if ("Optimization".equals(parameters.getPolicyConfigType().toString())) {
+    private PolicyRestAdapter populateDecisionParameters(PolicyParameters parameters, PolicyRestAdapter policyData,
+                    Map<String, String> matching) {
+        policyData.setRuleProvider(parameters.getRuleProvider().toString());
 
-                policyData.setConfigPolicyType("Optimization");
+        switch (parameters.getRuleProvider()) {
+            case RAINY_DAY:
+                return populateDecisionRainyDayParameters(parameters, policyData, matching);
 
-                // get values and attributes from the JsonObject
-                if (json != null) {
-                    if (json.containsKey(CONTENT)) {
-                        String content = json.get(CONTENT).toString();
-                        ObjectMapper mapper = new ObjectMapper();
-                        JsonNode policyJson = null;
-                        try {
-                            policyJson = mapper.readTree(content);
-                        } catch (IOException e) {
-                            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + INVALIDJSON
-                                            + parameters.getConfigBody();
-                            LOGGER.error(message, e);
-                            return null;
-                        }
-                        policyData.setPolicyJSON(policyJson);
-                    }
-                    if (json.containsKey(SERVICE)) {
-                        String serviceType = json.get(SERVICE).toString().replace("\"", "");
-                        policyData.setServiceType(serviceType);
-                    }
-                    if (json.containsKey("uuid")) {
-                        String uuid = json.get("uuid").toString().replace("\"", "");
-                        policyData.setUuid(uuid);
-                    }
-                    if (json.containsKey(LOCATION)) {
-                        String msLocation = json.get(LOCATION).toString().replace("\"", "");
-                        policyData.setLocation(msLocation);
-                    }
-                    if (json.containsKey(CONFIG_NAME)) {
-                        String configName = json.get(CONFIG_NAME).toString().replace("\"", "");
-                        policyData.setConfigName(configName);
-                    }
-                    if (json.containsKey(PRIORITY)) {
-                        String priority = json.get(PRIORITY).toString().replace("\"", "");
-                        policyData.setPriority(priority);
-                    }
-                    if (json.containsKey(VERSION)) {
-                        String version = json.get(VERSION).toString().replace("\"", "");
-                        policyData.setVersion(version);
-                    }
-                    if (json.containsKey(POLICYSCOPE)) {
-                        String policyScope = json.get(POLICYSCOPE).toString().replace("\"", "");
-                        policyData.setPolicyScope(policyScope);
-                    }
-                    if (json.containsKey(RISKTYPE)) {
-                        String riskType = json.get(RISKTYPE).toString().replace("\"", "");
-                        policyData.setRiskType(riskType);
-                    }
-                    if (json.containsKey(RISKLEVEL)) {
-                        String riskLevel = json.get(RISKLEVEL).toString().replace("\"", "");
-                        policyData.setRiskLevel(riskLevel);
-                    }
-                    if (json.containsKey(GUARD)) {
-                        String guard = json.get(GUARD).toString().replace("\"", "");
-                        policyData.setGuard(guard);
-                    }
-                }
+            case GUARD_BL_YAML:
+            case GUARD_MIN_MAX:
+            case GUARD_YAML:
+                return populateDecisionGuardParameters(policyData, matching);
 
-            } else if ("Fault".equals(parameters.getPolicyConfigType().toString())) {
+            case AAF:
+            case CUSTOM:
+            case RAW:
+            default:
+                return policyData;
+        }
+    }
 
-                policyData.setConfigPolicyType("ClosedLoop_Fault");
+    private PolicyRestAdapter populateDecisionRainyDayParameters(PolicyParameters parameters,
+                    PolicyRestAdapter policyData, Map<String, String> matching) {
+        // Set Matching attributes in RainyDayParams in adapter
+        RainyDayParams rainyday = new RainyDayParams();
 
-                if (json != null) {
-                    policyData.setJsonBody(json.toString());
-                    if (json.get(ONAPNAME) != null) {
-                        String onapName = json.get(ONAPNAME).toString().replace("\"", "");
-                        policyData.setOnapName(onapName);
-                    }
-                }
+        if (matching != null) {
+            rainyday.setServiceType(matching.get("ServiceType"));
+            rainyday.setVnfType(matching.get("VNFType"));
+            rainyday.setBbid(matching.get("BB_ID"));
+            rainyday.setWorkstep(matching.get("WorkStep"));
+        }
 
-            } else if ("PM".equals(parameters.getPolicyConfigType().toString())) {
+        Map<String, String> treatments = parameters.getTreatments();
+        ArrayList<Object> treatmentsTableChoices = new ArrayList<>();
 
-                policyData.setConfigPolicyType("ClosedLoop_PM");
+        for (String keyField : treatments.keySet()) {
+            LinkedHashMap<String, String> treatmentMap = new LinkedHashMap<>();
+            String errorcode = keyField;
+            String treatment = treatments.get(errorcode);
+            treatmentMap.put("errorcode", errorcode);
+            treatmentMap.put("treatment", treatment);
+            treatmentsTableChoices.add(treatmentMap);
+        }
+        rainyday.setTreatmentTableChoices(treatmentsTableChoices);
+        policyData.setRainyday(rainyday);
 
-                if (json != null) {
-                    policyData.setJsonBody(json.toString());
-                    if (json.get(ONAPNAME) != null) {
-                        String onapName = json.get(ONAPNAME).toString().replace("\"", "");
-                        policyData.setOnapName(onapName);
-                    }
-                    if (json.get(SERVICETYPE_POLICY_NAME) != null) {
-                        String serviceType = json.get(SERVICETYPE_POLICY_NAME).toString().replace("\"", "");
-                        LinkedHashMap<String, String> serviceTypePolicyName = new LinkedHashMap<>();
-                        serviceTypePolicyName.put(SERVICETYPE_POLICY_NAME, serviceType);
-                        policyData.setServiceTypePolicyName(serviceTypePolicyName);
-                    }
-                }
-            } else if ("BRMS_Param".equals(parameters.getPolicyConfigType().toString())) {
-                Map<AttributeType, Map<String, String>> drlRuleAndUiParams = parameters.getAttributes();
-                Map<String, String> rule = drlRuleAndUiParams.get(AttributeType.RULE);
-                policyData.setRuleName(rule.get("templateName"));
+        return policyData;
+    }
 
+    private PolicyRestAdapter populateDecisionGuardParameters(PolicyRestAdapter policyData,
+                    Map<String, String> matching) {
+        // Set Matching attributes in YAMLParams in adapter
+        YAMLParams yamlparams = new YAMLParams();
+
+        if (matching == null) {
+            policyData.setYamlparams(yamlparams);
+            return policyData;
+        }
+
+        yamlparams.setActor(matching.get("actor"));
+        yamlparams.setRecipe(matching.get("recipe"));
+        yamlparams.setGuardActiveStart(matching.get("guardActiveStart"));
+        yamlparams.setGuardActiveEnd(matching.get("guardActiveEnd"));
+
+        yamlparams.setLimit(matching.get("limit"));
+        yamlparams.setTimeWindow(matching.get("timeWindow"));
+        yamlparams.setTimeUnits(matching.get("timeUnits"));
+
+        yamlparams.setMin(matching.get("min"));
+        yamlparams.setMax(matching.get("max"));
+
+        List<String> blackList = new ArrayList<>();
+
+        if (!Strings.isNullOrEmpty(matching.get("blackList"))) {
+            String[] blackListArray = matching.get("blackList").split(",");
+            for (String element : blackListArray) {
+                blackList.add(element);
             }
         }
 
-        return policyData;
+        yamlparams.setBlackList(blackList);
 
+        policyData.setYamlparams(yamlparams);
+        return policyData;
+    }
+
+    private PolicyRestAdapter populateActionParameters(PolicyParameters parameters, PolicyRestAdapter policyData,
+                    Map<String, String> matching) {
+        ArrayList<Object> ruleAlgorithmChoices = new ArrayList<>();
+
+        List<String> dynamicLabelRuleAlgorithms = parameters.getDynamicRuleAlgorithmLabels();
+        List<String> dynamicFieldFunctionRuleAlgorithms = parameters.getDynamicRuleAlgorithmFunctions();
+        List<String> dynamicFieldOneRuleAlgorithms = parameters.getDynamicRuleAlgorithmField1();
+        List<String> dyrnamicFieldTwoRuleAlgorithms = parameters.getDynamicRuleAlgorithmField2();
+
+        if (dynamicLabelRuleAlgorithms != null && !dynamicLabelRuleAlgorithms.isEmpty()) {
+
+            for (int i = dynamicLabelRuleAlgorithms.size() - 1; i >= 0; i--) {
+                LinkedHashMap<String, String> ruleAlgorithm = new LinkedHashMap<>();
+
+                String id = dynamicLabelRuleAlgorithms.get(i);
+                String dynamicRuleAlgorithmField1 = dynamicFieldOneRuleAlgorithms.get(i);
+                String dynamicRuleAlgorithmCombo = dynamicFieldFunctionRuleAlgorithms.get(i);
+                String dynamicRuleAlgorithmField2 = dyrnamicFieldTwoRuleAlgorithms.get(i);
+
+                ruleAlgorithm.put("id", id);
+                ruleAlgorithm.put("dynamicRuleAlgorithmField1", dynamicRuleAlgorithmField1);
+                ruleAlgorithm.put("dynamicRuleAlgorithmCombo", dynamicRuleAlgorithmCombo);
+                ruleAlgorithm.put("dynamicRuleAlgorithmField2", dynamicRuleAlgorithmField2);
+
+                ruleAlgorithmChoices.add(ruleAlgorithm);
+            }
+        }
+
+        policyData.setRuleAlgorithmschoices(ruleAlgorithmChoices);
+
+        ArrayList<Object> attributeList = new ArrayList<>();
+        if (matching != null) {
+            for (Map.Entry<String, String> entry : matching.entrySet()) {
+                LinkedHashMap<String, String> attributeMap = new LinkedHashMap<>();
+                String key = entry.getKey();
+                String value = entry.getValue();
+                attributeMap.put("key", key);
+                attributeMap.put("value", value);
+                attributeList.add(attributeMap);
+            }
+        }
+
+        policyData.setAttributes(attributeList);
+        policyData.setActionAttributeValue(parameters.getActionAttribute());
+        policyData.setActionPerformer(parameters.getActionPerformer());
+
+        return policyData;
+    }
+
+    private PolicyRestAdapter getJsonObjectValuesAndAttributes(PolicyParameters parameters,
+                    PolicyRestAdapter policyData, JsonObject json) {
+        if (json.containsKey(CONTENT)) {
+            String content = json.get(CONTENT).toString();
+            JsonNode policyJson = null;
+            try {
+                policyJson = new ObjectMapper().readTree(content);
+            } catch (IOException e) {
+                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + INVALIDJSON + parameters.getConfigBody();
+                LOGGER.error(message, e);
+                return null;
+            }
+            policyData.setPolicyJSON(policyJson);
+        }
+
+        // @formatter:off
+        policyData.setServiceType(getNewOrExistingKeyValue(json, SERVICE,     policyData.getServiceType()));
+        policyData.setUuid(getNewOrExistingKeyValue(       json, UUID,        policyData.getUuid()));
+        policyData.setLocation(getNewOrExistingKeyValue(   json, LOCATION,    policyData.getLocation()));
+        policyData.setConfigName(getNewOrExistingKeyValue( json, CONFIG_NAME, policyData.getConfigName()));
+        policyData.setPriority(getNewOrExistingKeyValue(   json, PRIORITY,    policyData.getPriority()));
+        policyData.setVersion(getNewOrExistingKeyValue(    json, VERSION,     policyData.getVersion()));
+        policyData.setPolicyScope(getNewOrExistingKeyValue(json, POLICYSCOPE, policyData.getPolicyScope()));
+        policyData.setRiskType(getNewOrExistingKeyValue(   json, RISKTYPE,    policyData.getRiskType()));
+        policyData.setRiskLevel(getNewOrExistingKeyValue(  json, RISKLEVEL,   policyData.getRiskLevel()));
+        policyData.setGuard(getNewOrExistingKeyValue(      json, GUARD,       policyData.getGuard()));
+        // @formatter:on
+
+        return policyData;
+    }
+
+    private String getNewOrExistingKeyValue(final JsonObject json, final String key, final String existingValue) {
+        if (json.containsKey(key)) {
+            return json.get(key).toString().replace("\"", "");
+        } else {
+            return existingValue;
+        }
+    }
+
+    private Map<String, String> getMatchingAttributeValues(PolicyParameters parameters) {
+        // Get Matching attribute values
+        Map<AttributeType, Map<String, String>> attributes = parameters.getAttributes();
+        Map<String, String> matching = null;
+        if (attributes != null) {
+            matching = attributes.get(AttributeType.MATCHING);
+        }
+        return matching;
     }
 
     private JsonObject stringToJsonObject(String value) {
         try (JsonReader jsonReader = Json.createReader(new StringReader(value))) {
             return jsonReader.readObject();
-        } catch (JsonException | IllegalStateException e) {
+        } catch (JsonException | IllegalStateException jsonHandlingException) {
             LOGGER.info(XACMLErrorConstants.ERROR_DATA_ISSUE
                             + "Improper JSON format... may or may not cause issues in validating the policy: " + value,
-                            e);
-            return null;
+                            jsonHandlingException);
+            throw jsonHandlingException;
         }
     }
 
