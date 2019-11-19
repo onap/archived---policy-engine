@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "09af48ff_c8e4c2ec",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidationRequestWrapper.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-19T17:26:00Z",
+      "side": 1,
+      "message": "Great catch!",
+      "parentUuid": "5fb90f3a_8aa129f6",
+      "revId": "f02e5f3fcfa85dd99123e0f79b849275d05fdf8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "171279c1_2a1f3129",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidationRequestWrapper.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-19T16:26:24Z",
       "side": 1,
       "message": "could eliminate this variable altogether",
+      "revId": "f02e5f3fcfa85dd99123e0f79b849275d05fdf8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76f57e98_f4357f6d",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidationRequestWrapper.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-19T17:26:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "171279c1_2a1f3129",
       "revId": "f02e5f3fcfa85dd99123e0f79b849275d05fdf8a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
