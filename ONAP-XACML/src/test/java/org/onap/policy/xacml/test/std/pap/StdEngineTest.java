@@ -62,6 +62,11 @@ public class StdEngineTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
+    /**
+     * setUpClass.
+     *
+     * @throws IOException IOException
+     */
     @BeforeClass
     public static void setUpClass() throws IOException {
         new File("target/test/resources/pdps").mkdirs();
@@ -73,6 +78,12 @@ public class StdEngineTest {
                 StandardCopyOption.REPLACE_EXISTING);
     }
 
+    /**
+     * setUp.
+     *
+     * @throws PAPException PAPException
+     * @throws IOException IOException
+     */
     @Before
     public void setUp() throws PAPException, IOException {
 
