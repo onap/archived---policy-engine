@@ -38,6 +38,10 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <modules>
+                <module>base</module>
+                <module>install</module>
+            </modules>
         </profile>
         <profile>
             <id>docker</id>
