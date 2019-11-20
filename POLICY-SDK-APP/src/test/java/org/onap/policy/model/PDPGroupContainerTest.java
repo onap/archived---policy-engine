@@ -24,35 +24,45 @@ package org.onap.policy.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doThrow;
 
 import com.att.research.xacml.api.pap.PAPException;
-
+import java.awt.Checkbox;
+import java.util.Set;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.onap.policy.rest.util.PolicyContainer.ItemSetChangeListener;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
 
+
+@RunWith(MockitoJUnitRunner.class)
 public class PDPGroupContainerTest {
     private PAPPolicyEngine engine = Mockito.mock(PAPPolicyEngine.class);
     private PDPGroupContainer container = new PDPGroupContainer(engine);
 
+    private PDPGroupContainer mockContainer = Mockito.mock(PDPGroupContainer.class);
+    private OnapPDPGroup mockGroup = Mockito.mock(OnapPDPGroup.class);
+    private OnapPDPGroup mockNewGroup = Mockito.mock(OnapPDPGroup.class);
+    private OnapPDP mockPdp = Mockito.mock(OnapPDP.class);
+
+    private Object itemId = new Object();
+
     @Test
     public void testContainer() throws PAPException {
-        Object itemId = new Object();
         assertEquals(container.isSupported(itemId), false);
 
         container.refreshGroups();
         assertEquals(container.getGroups().size(), 0);
 
-        OnapPDPGroup group = Mockito.mock(OnapPDPGroup.class);
-        container.makeDefault(group);
-        OnapPDPGroup newGroup = Mockito.mock(OnapPDPGroup.class);
-        container.removeGroup(group, newGroup);
-        OnapPDP pdp = Mockito.mock(OnapPDP.class);
-        container.updatePDP(pdp);
-        container.updateGroup(group);
+        container.makeDefault(mockGroup);
+        container.removeGroup(mockGroup, mockNewGroup);
+        container.updatePDP(mockPdp);
+        container.updateGroup(mockGroup);
+        container.updateGroup(mockGroup, "testUserName");
         assertNull(container.getContainerPropertyIds());
         assertEquals(container.getItemIds().size(), 0);
         assertEquals(container.getType(itemId), null);
@@ -63,8 +73,8 @@ public class PDPGroupContainerTest {
         container.addNewGroup(name, description);
         String id = "testID";
         int jmxport = 0;
-        container.addNewPDP(id, newGroup, name, description, jmxport);
-        container.movePDP(pdp, newGroup);
+        container.addNewPDP(id, mockNewGroup, name, description, jmxport);
+        container.movePDP(mockPdp, mockNewGroup);
         ItemSetChangeListener listener = null;
         container.addItemSetChangeListener(listener);
         container.nextItemId(itemId);
@@ -76,7 +86,7 @@ public class PDPGroupContainerTest {
         container.indexOfId(itemId);
         assertEquals(container.getItemIds().size(), 0);
         container.removeItem(itemId);
-        container.removePDP(pdp, newGroup);
+        container.removePDP(mockPdp, mockNewGroup);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -118,4 +128,90 @@ public class PDPGroupContainerTest {
     public void testGetItemIds() {
         container.getItemIds(0, 1);
     }
+
+    @Test(expected = PAPException.class)
+    public void testExceptionRefreshGroups() {
+        doThrow(PAPException.class).when(mockContainer).refreshGroups();
+        mockContainer.refreshGroups();
+    }
+
+    @Test(expected = PAPException.class)
+    public void testExceptionMakeDefault() {
+        doThrow(PAPException.class).when(mockContainer).makeDefault(mockGroup);
+        mockContainer.makeDefault(mockGroup);
+    }
+
+    @Test(expected = Exception.class)
+    public void testExceptionRemoveGroup() throws PAPException{
+        doThrow(PAPException.class).when(mockContainer).removeGroup(mockGroup, mockNewGroup);
+        mockContainer.removeGroup(mockGroup, mockNewGroup);
+    }
+
+    @Test(expected = PAPException.class)
+    public void testExceptionRemovePDP() throws PAPException {
+        doThrow(PAPException.class).when(mockContainer).removePDP(mockPdp, mockGroup);
+        mockContainer.removePDP(mockPdp, mockGroup);
+    }
+
+    @Test(expected = PAPException.class)
+    public void testExceptionUpdatePDP() {
+        doThrow(PAPException.class).when(mockContainer).updatePDP(mockPdp);
+        mockContainer.updatePDP(mockPdp);
+    }
+
+    @Test(expected = PAPException.class)
+    public void testExceptionUpdateGroup() {
+        doThrow(PAPException.class).when(mockContainer).updateGroup(mockGroup);
+        mockContainer.updateGroup(mockGroup);
+    }
+
+    @Test(expected = PAPException.class)
+    public void testExceptionUpdateGroupUser() {
+        String user = "testUserName";
+        doThrow(PAPException.class).when(mockContainer).updateGroup(mockGroup, user);
+        mockContainer.updateGroup(mockGroup, user);
+    }
+
+    @Test(expected = PAPException.class)
+    public void testExceptionMovePDP() {
+        doThrow(PAPException.class).when(mockContainer).movePDP(mockPdp, mockGroup);
+        mockContainer.movePDP(mockPdp, mockGroup);
+    }
+
+    @Test(expected = Exception.class)
+    public void testExceptionRemoveItem() {
+        doThrow(Exception.class).when(mockContainer).removeItem(itemId);
+        mockContainer.removeItem(itemId);
+    }
+
+    @Test
+    public void testGetType() {
+        String propertyId = "Id";
+        assertEquals(container.getType(propertyId), String.class);
+
+        propertyId = "Name";
+        assertEquals(container.getType(propertyId), String.class);
+
+        propertyId = "Description";
+        assertEquals(container.getType(propertyId), String.class);
+
+        propertyId = "Default";
+        assertEquals(container.getType(propertyId), Boolean.class);
+
+        propertyId = "Status";
+        assertEquals(container.getType(propertyId), String.class);
+
+        propertyId = "PDPs";
+        assertEquals(container.getType(propertyId), Set.class);
+
+        propertyId = "Policies";
+        assertEquals(container.getType(propertyId), Set.class);
+
+        propertyId = "PIP Configurations";
+        assertEquals(container.getType(propertyId), Set.class);
+
+        propertyId = "Selected";
+        assertEquals(container.getType(propertyId), Checkbox.class);
+    }
+
 }
