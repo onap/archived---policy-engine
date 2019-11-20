@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b8999eda_c0df116b",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 702,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-20T12:40:19Z",
+      "side": 0,
+      "message": "This was unused - and when I tried to do a JUnit on it an exception was thrown because of removing an object from concurrentlist.",
+      "range": {
+        "startLine": 689,
+        "startChar": 0,
+        "endLine": 702,
+        "endChar": 7
+      },
+      "revId": "89ef1958121b877e990ff8755f9087cd306d4b4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
