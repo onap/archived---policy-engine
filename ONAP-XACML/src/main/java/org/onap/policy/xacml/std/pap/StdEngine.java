@@ -686,20 +686,6 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
     }
 
     /**
-     * removeGroupProperties.
-     *
-     * @param id String
-     * @param properties Properties
-     */
-    public static void removeGroupProperties(String id, Properties properties) {
-        for (Object key : properties.keySet()) {
-            if (key.toString().startsWith(id + ".")) {
-                properties.remove(key);
-            }
-        }
-    }
-
-    /**
      * setGroupProperties.
      *
      * @param group PDPGroup
