@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "362f2791_781997dd",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/model/PDPGroupContainerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-21T21:51:26Z",
+      "side": 1,
+      "message": "this will not provide any additional coverage as \"mockContainer\" is a mock, not a real object\n\nsame comment below",
+      "revId": "28527150c3170f8931cb1720ec5e1631a183f697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8214b6ff_abf81ec9",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/model/PDPGroupContainerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-21T21:51:26Z",
+      "side": 1,
+      "message": "doesn\u0027t appear that this variable is needed",
+      "revId": "28527150c3170f8931cb1720ec5e1631a183f697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "641aa97d_0c96fd75",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/model/PDPGroupContainerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-21T21:51:26Z",
+      "side": 1,
+      "message": "swap arguments - expected value goes on the left",
+      "revId": "28527150c3170f8931cb1720ec5e1631a183f697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7026fcc4_f5ad82b9",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/model/RolesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-21T21:51:26Z",
+      "side": 1,
+      "message": "might want to consider the way TestModels does this - the whole class can be tested with just a few lines.",
+      "revId": "28527150c3170f8931cb1720ec5e1631a183f697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8fbc0432_073156f6",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/model/RolesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-21T21:51:26Z",
+      "side": 1,
+      "message": "just 2019",
+      "revId": "28527150c3170f8931cb1720ec5e1631a183f697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8628829d_0120bfee",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/model/RolesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-21T21:51:26Z",
+      "side": 1,
+      "message": "delete this line",
+      "revId": "28527150c3170f8931cb1720ec5e1631a183f697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c247bb7e_f5bdc18e",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/model/RolesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-21T21:51:26Z",
+      "side": 1,
+      "message": "swap arguments - the \"expected\" value should always go on the left\n\nsame comment below",
+      "revId": "28527150c3170f8931cb1720ec5e1631a183f697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
