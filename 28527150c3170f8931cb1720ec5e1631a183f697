@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4282d372_efbf2922",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/model/PDPGroupContainerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 6006
+      },
+      "writtenOn": "2019-11-21T23:55:51Z",
+      "side": 1,
+      "message": "Hi Jim, I must have misunderstood your response from earlier. I will continue to work on this and push an update.",
+      "parentUuid": "362f2791_781997dd",
+      "revId": "28527150c3170f8931cb1720ec5e1631a183f697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8214b6ff_abf81ec9",
         "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/model/PDPGroupContainerTest.java",
         "patchSetId": 1
