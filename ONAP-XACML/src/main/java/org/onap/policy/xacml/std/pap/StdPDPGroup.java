@@ -59,13 +59,21 @@ import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPItemSetChangeNotifier.StdItemSetChangeListener;
 
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @ToString
 public class StdPDPGroup extends StdPDPItemSetChangeNotifier
         implements OnapPDPGroup, StdItemSetChangeListener, Comparable<Object>, Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final String groupNotExist = "Group directory does NOT exist";
+    private static final String MSG_GROUPNOTEXIST = "Group directory does NOT exist";
+    private static final String MSG_LOADFAILURE = "Failed to load group policy properties file: ";
+    private static final String STR_APPEND_NAME = ".name";
+    private static final String STR_APPEND_DESCRIPTION = ".description";
+    private static final String STR_APPEND_PDPS = ".pdps";
+    private static final String STR_CLASS = "StdPDPGroup";
+    private static final String PROPS_POLICY = "xacml.policy.properties";
+    private static final String PROPS_PIP = "xacml.pip.properties";
+
     private static Log logger = LogFactory.getLog(StdPDPGroup.class);
 
     private String id;
@@ -174,11 +182,11 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
         //
         for (Object key : properties.keySet()) {
             if (key.toString().startsWith(this.id + ".")) {
-                if (key.toString().endsWith(".name")) {
+                if (key.toString().endsWith(STR_APPEND_NAME)) {
                     this.name = properties.getProperty(key.toString());
-                } else if (key.toString().endsWith(".description")) {
+                } else if (key.toString().endsWith(STR_APPEND_DESCRIPTION)) {
                     this.description = properties.getProperty(key.toString());
-                } else if (key.toString().endsWith(".pdps")) {
+                } else if (key.toString().endsWith(STR_APPEND_PDPS)) {
                     String pdpList = properties.getProperty(key.toString());
                     if (pdpList != null && pdpList.length() > 0) {
                         for (String pdpId : Splitter.on(',').omitEmptyStrings().trimResults().split(pdpList)) {
@@ -197,25 +205,25 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
         //
         // Validate our directory
         //
-        if (Files.notExists(directory)) {
+        if (! directory.toFile().exists()) {
             logger.warn("Group directory does NOT exist: " + directory.toString());
             try {
                 Files.createDirectory(directory);
-                this.status.addLoadWarning(groupNotExist);
+                this.status.addLoadWarning(MSG_GROUPNOTEXIST);
             } catch (IOException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdPDPGroup", groupNotExist);
-                this.status.addLoadError(groupNotExist);
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS, MSG_GROUPNOTEXIST);
+                this.status.addLoadError(MSG_GROUPNOTEXIST);
                 this.status.setStatus(PDPGroupStatus.Status.LOAD_ERRORS);
             }
         }
         //
         // Parse policies
         //
-        this.loadPolicies(Paths.get(directory.toString(), "xacml.policy.properties"));
+        this.loadPolicies(Paths.get(directory.toString(), PROPS_POLICY));
         //
         // Parse pip config
         //
-        this.loadPIPConfig(Paths.get(directory.toString(), "xacml.pip.properties"));
+        this.loadPIPConfig(Paths.get(directory.toString(), PROPS_PIP));
     }
 
     /**
@@ -253,10 +261,10 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
                 //
                 this.readPolicyProperties(directory, policyProperties);
             } catch (IOException e) {
-                logger.warn("Failed to load group policy properties file: " + file, e);
+                logger.warn(MSG_LOADFAILURE + file, e);
                 this.status.addLoadError("Not policy properties defined");
                 this.status.setStatus(Status.LOAD_ERRORS);
-                throw new PAPException("Failed to load group policy properties file: " + file);
+                throw new PAPException(MSG_LOADFAILURE + file);
             }
         }
     }
@@ -313,7 +321,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
                 logger.warn("Failed to open group PIP Config properties file: " + file, e);
                 this.status.addLoadError("Not PIP config properties defined");
                 this.status.setStatus(Status.LOAD_ERRORS);
-                throw new PAPException("Failed to load group policy properties file: " + file);
+                throw new PAPException(MSG_LOADFAILURE + file);
 
             }
         }
@@ -500,7 +508,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
         for (PDPPolicy policy : this.policies) {
             // for all policies need to tell PDP the "name", which is the base name for the file id
             if (policy.getName() != null) {
-                properties.setProperty(policy.getId() + ".name", policy.getName());
+                properties.setProperty(policy.getId() + STR_APPEND_NAME, policy.getName());
             }
             // put the policy on the correct list
             if (policy.isRoot()) {
@@ -550,7 +558,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
                 try {
                     Files.delete(tempFile);
                 } catch (Exception ee) {
-                    PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, ee, "StdPDPGroup",
+                    PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, ee, STR_CLASS,
                             "Policy was invalid, could NOT delete it.");
                 }
                 throw new PAPException("Policy is invalid");
@@ -568,7 +576,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
             //
             return tempRootPolicy;
         } catch (IOException e) {
-            PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "StdPDPGroup", "Failed to publishPolicy");
+            PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, STR_CLASS, "Failed to publishPolicy");
         }
         return null;
     }
@@ -586,69 +594,18 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
      * @throws PAPException PAPException
      */
     public void copyPolicyToFile(String id, InputStream policy) throws PAPException {
-        try {
-            //
-            // Copy the policy over
-            //
-            long num;
-            Path policyFilePath = Paths.get(this.directory.toAbsolutePath().toString(), id);
-
-            Path policyFile;
-            if (Files.exists(policyFilePath)) {
-                policyFile = policyFilePath;
-            } else {
-                policyFile = Files.createFile(policyFilePath);
-            }
-
-            try (OutputStream os = Files.newOutputStream(policyFile)) {
-                num = ByteStreams.copy(policy, os);
-            }
-
-            logger.info("Copied " + num + " bytes for policy " + name);
-
-            for (PDPPolicy p : policies) {
-                if (p.getId().equals(id)) {
-                    // we just re-copied/refreshed/updated the policy file for a policy that already exists in this
-                    // group
-                    logger.info("Policy '" + id + "' already exists in group '" + getId() + "'");
-                    return;
-                }
-            }
-
-            // policy is new to this group
-            StdPDPPolicy tempRootPolicy = new StdPDPPolicy(id, true, name, policyFile.toUri());
-            if (!tempRootPolicy.isValid()) {
-                try {
-                    Files.delete(policyFile);
-                } catch (Exception ee) {
-                    PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, ee, "StdPDPGroup",
-                            "Policy was invalid, could NOT delete it.");
-                }
-                throw new PAPException("Policy is invalid");
-            }
-            //
-            // Add it in
-            //
-            this.policies.add(tempRootPolicy);
-            //
-            // We are changed
-            //
-            this.firePDPGroupChanged(this);
-        } catch (IOException e) {
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdPDPGroup", "Failed to copyPolicyToFile");
-            throw new PAPException("Failed to copy policy to file: " + e);
-        }
+        copyPolicyToFile(id, this.name, policy);
     }
 
     /**
      * Policy Engine API Copy one policy file into the Group's directory but do not change the configuration.
      *
      * @param id String
-     * @param name String
+     * @param fileName String
      * @param policy InputStream
      * @throws PAPException PAPException
      */
-    public void copyPolicyToFile(String id, String name, InputStream policy) throws PAPException {
+    public void copyPolicyToFile(String id, String fileName, InputStream policy) throws PAPException {
         try {
             //
             // Copy the policy over
@@ -657,7 +614,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
             Path policyFilePath = Paths.get(this.directory.toAbsolutePath().toString(), id);
 
             Path policyFile;
-            if (Files.exists(policyFilePath)) {
+            if (policyFilePath.toFile().exists()) {
                 policyFile = policyFilePath;
             } else {
                 policyFile = Files.createFile(policyFilePath);
@@ -667,7 +624,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
                 num = ByteStreams.copy(policy, os);
             }
 
-            logger.info("Copied " + num + " bytes for policy " + name);
+            logger.info("Copied " + num + " bytes for policy " + fileName);
             for (PDPPolicy p : policies) {
                 if (p.getId().equals(id)) {
                     // we just re-copied/refreshed/updated the policy file for a policy that already exists in this
@@ -678,12 +635,12 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
             }
 
             // policy is new to this group
-            StdPDPPolicy tempRootPolicy = new StdPDPPolicy(id, true, name, policyFile.toUri());
+            StdPDPPolicy tempRootPolicy = new StdPDPPolicy(id, true, fileName, policyFile.toUri());
             if (!tempRootPolicy.isValid()) {
                 try {
                     Files.delete(policyFile);
                 } catch (Exception ee) {
-                    PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, ee, "StdPDPGroup",
+                    PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, ee, STR_CLASS,
                             "Policy was invalid, could NOT delete it.");
                 }
                 throw new PAPException("Policy is invalid");
@@ -698,7 +655,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
             this.firePDPGroupChanged(this);
 
         } catch (IOException e) {
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdPDPGroup", "Failed to copyPolicyToFile");
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS, "Failed to copyPolicyToFile");
             throw new PAPException("Failed to copy policy to file: " + e);
         }
     }
@@ -730,7 +687,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
             this.firePDPGroupChanged(this);
             return true;
         } catch (Exception e) {
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdPDPGroup", "Failed to delete policy");
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS, "Failed to delete policy");
         }
         return false;
     }
@@ -762,7 +719,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
             this.firePDPGroupChanged(this);
             return true;
         } catch (Exception e) {
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdPDPGroup", "Failed to delete policy " + policy);
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS, "Failed to delete policy " + policy);
         }
         return false;
     }
@@ -817,14 +774,14 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
         // Validate our directory
         //
         boolean fire = false;
-        if (Files.notExists(directory)) {
+        if (! directory.toFile().exists()) {
             logger.warn("Group directory does NOT exist: " + directory.toString());
             try {
                 Files.createDirectory(directory);
                 fire = true;
                 this.status.addLoadWarning("Created missing group directory");
             } catch (IOException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdPDPGroup",
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS,
                         "Failed to create missing Group directory.");
                 this.status.addLoadError("Failed to create missing Group directory.");
                 this.status.setStatus(PDPGroupStatus.Status.LOAD_ERRORS);
@@ -833,14 +790,14 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
         //
         // Validate our PIP config file
         //
-        Path pipPropertiesFile = Paths.get(directory.toString(), "xacml.pip.properties");
-        if (Files.notExists(pipPropertiesFile)) {
+        Path pipPropertiesFile = Paths.get(directory.toString(), PROPS_PIP);
+        if (! pipPropertiesFile.toFile().exists()) {
             try {
                 Files.createFile(pipPropertiesFile);
                 fire = true;
                 this.status.addLoadWarning("Created missing PIP properties file");
             } catch (IOException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdPDPGroup",
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS,
                         "Failed to create missing PIP properties file");
                 this.status.addLoadError("Failed to create missing PIP properties file");
                 this.status.setStatus(PDPGroupStatus.Status.LOAD_ERRORS);
@@ -849,14 +806,14 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
         //
         // Valid our policy properties file
         //
-        Path policyPropertiesFile = Paths.get(directory.toString(), "xacml.policy.properties");
-        if (Files.notExists(policyPropertiesFile)) {
+        Path policyPropertiesFile = Paths.get(directory.toString(), PROPS_POLICY);
+        if (! policyPropertiesFile.toFile().exists()) {
             try {
                 Files.createFile(policyPropertiesFile);
                 fire = true;
                 this.status.addLoadWarning("Created missing Policy properties file");
             } catch (IOException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdPDPGroup",
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS,
                         "Failed to create missing Policy properties file");
                 this.status.addLoadError("Failed to create missing Policy properties file");
                 this.status.setStatus(PDPGroupStatus.Status.LOAD_ERRORS);
@@ -910,7 +867,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
                 try {
                     policy = new StdPDPPolicy(id, isRoot, policyPath.toUri(), properties);
                 } catch (IOException e) {
-                    PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdPDPGroup",
+                    PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS,
                             "Failed to create policy object");
                     policy = null;
                 }
@@ -957,7 +914,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
         try {
             saveGroupConfiguration();
         } catch (PAPException | IOException e) {
-            PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "StdPDPGroup",
+            PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, STR_CLASS,
                     "Unable to save group configuration change");
             // don't notify other things of change if we cannot save it???
             return;
@@ -1019,13 +976,13 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
 
         // save info about each policy
         for (PDPPolicy policy : this.policies) {
-            policyProperties.put(policy.getId() + ".name", policy.getName());
+            policyProperties.put(policy.getId() + STR_APPEND_NAME, policy.getName());
         }
 
         //
         // Now we can save the file
         //
-        Path file = Paths.get(this.directory.toString(), "xacml.policy.properties");
+        Path file = Paths.get(this.directory.toString(), PROPS_POLICY);
         try (OutputStream os = Files.newOutputStream(file)) {
             policyProperties.store(os, "");
         } catch (Exception e) {
@@ -1039,11 +996,11 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
         //
         // Now we can save the file
         //
-        file = Paths.get(this.directory.toString(), "xacml.pip.properties");
+        file = Paths.get(this.directory.toString(), PROPS_PIP);
         try (OutputStream os = Files.newOutputStream(file)) {
             pipProperties.store(os, "");
         } catch (Exception e) {
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdPDPGroup", "Group PIP Config save failed");
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS, "Group PIP Config save failed");
             throw new PAPException("Failed to save pip properties file '" + file + "'");
         }
     }
@@ -1077,8 +1034,8 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier
         props.setProperty("AAF.classname", "org.onap.policy.xacml.std.pip.engines.aaf.AAFEngine");
         props.setProperty(XACMLProperties.PROP_PIP_ENGINES, "AAF");
         // read from PIP properties file.
-        Path file = Paths.get(StdEngine.pipPropertyFile);
-        if (!Files.notExists(file)) {
+        Path file = Paths.get(StdEngine.PIP_PROPERTY_FILE);
+        if (file.toFile().exists()) {
             InputStream in;
             Properties prop = new Properties();
             try {

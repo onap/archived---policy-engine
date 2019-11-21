@@ -66,9 +66,13 @@ import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
  *
  */
 public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyEngine {
-    public static final String pipPropertyFile = "pip.properties";
+    public static final String PIP_PROPERTY_FILE = "pip.properties";
 
-    private static final String addGroup = "addGroup ";
+    private static final String STR_ADDGROUP = "addGroup ";
+    private static final String STR_CLASS = "StdEngine";
+    private static final String STR_APPEND_NAME = ".name";
+    private static final String STR_APPEND_DESCRIPTION = ".description";
+    private static final String STR_APPEND_PDPS = ".pdps";
 
     private static Log logger = LogFactory.getLog(StdEngine.class);
 
@@ -143,13 +147,13 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         if (this.repository == null) {
             throw new PAPException("No repository specified.");
         }
-        if (Files.notExists(this.repository)) {
+        if (! this.repository.toFile().exists()) {
             Files.createDirectory(repository);
         }
-        if (!Files.isDirectory(this.repository)) {
+        if (! this.repository.toFile().isDirectory()) {
             throw new PAPException("Repository is NOT a directory: " + this.repository.toAbsolutePath());
         }
-        if (!Files.isWritable(this.repository)) {
+        if (! this.repository.toFile().canWrite()) {
             throw new PAPException("Repository is NOT writable: " + this.repository.toAbsolutePath());
         }
         //
@@ -177,7 +181,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
             //
             this.groups = this.readProperties(this.repository, properties);
         } catch (IOException e) {
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdEngine", "Failed to load properties file");
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS, "Failed to load properties file");
             this.groups = new HashSet<>();
         }
         //
@@ -210,7 +214,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
             //
             // Does it exist?
             //
-            if (Files.notExists(defaultPath)) {
+            if (! defaultPath.toFile().exists()) {
                 //
                 // Create its directory
                 //
@@ -227,7 +231,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
                     try (OutputStream os = Files.newOutputStream(policyPath)) {
                         props.store(os, "");
                     } catch (IOException e) {
-                        PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdEngine",
+                        PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS,
                                 "Failed to write default policy properties");
                     }
                 }
@@ -239,7 +243,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
                     try (OutputStream os = Files.newOutputStream(pipPath)) {
                         props.store(os, "");
                     } catch (IOException e) {
-                        PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdEngine",
+                        PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS,
                                 "Failed to write default pip properties");
                     }
                 }
@@ -247,7 +251,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
             //
             // Create the default group
             //
-            StdPDPGroup newDefault = new StdPDPGroup(defaultId, true, "default",
+            StdPDPGroup newDefault = new StdPDPGroup(defaultId, true, PROP_PAP_GROUPS_DEFAULT_NAME,
                     "The default group where new PDP's are put.", defaultPath);
             //
             // Add it to our list
@@ -266,7 +270,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
                     properties.store(os, "");
                 }
             } catch (IOException e) {
-                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "StdEngine",
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, STR_CLASS,
                         "Failed to save properties with new default group information.");
             }
             //
@@ -275,7 +279,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
             wasDefaultGroupJustAdded = true;
             return newDefault;
         } catch (IOException e) {
-            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "StdEngine", "Failed to create default group");
+            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, STR_CLASS, "Failed to create default group");
             throw new PAPException("Failed to create default group");
         }
     }
@@ -333,7 +337,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         // If it exists already
         //
         if (Files.exists(groupPath)) {
-            logger.warn(addGroup + id + " directory exists");
+            logger.warn(STR_ADDGROUP + id + " directory exists");
         } else {
             try {
                 //
@@ -341,7 +345,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
                 //
                 Files.createDirectory(groupPath);
             } catch (IOException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdEngine", "Failed to create " + groupPath);
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS, "Failed to create " + groupPath);
                 throw new PAPException("Failed to create " + id);
             }
         }
@@ -350,8 +354,8 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         //
 
         Path policyProperties = Paths.get(groupPath.toString(), "xacml.policy.properties");
-        if (Files.exists(policyProperties)) {
-            logger.warn(addGroup + id + " file exists");
+        if (policyProperties.toFile().exists()) {
+            logger.warn(STR_ADDGROUP + id + " file exists");
         } else {
             Properties props = new Properties();
             props.setProperty(XACMLProperties.PROP_REFERENCEDPOLICIES, "");
@@ -362,7 +366,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
                     props.store(os, "");
                 }
             } catch (IOException e) {
-                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "StdEngine", "Failed to create policyProperties");
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, STR_CLASS, "Failed to create policyProperties");
                 throw new PAPException("Failed to create " + id);
             }
         }
@@ -371,8 +375,8 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         //
         Path pipProperties = Paths.get(groupPath.toString(), "xacml.pip.properties");
         Properties props = new Properties();
-        if (Files.exists(pipProperties)) {
-            logger.warn(addGroup + id + " file exists.");
+        if (pipProperties.toFile().exists()) {
+            logger.warn(STR_ADDGROUP + id + " file exists.");
         } else {
             try {
                 props = setPipProperties(props);
@@ -381,7 +385,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
                     props.store(os, "");
                 }
             } catch (IOException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdEngine", "Failed to create pipProperties");
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS, "Failed to create pipProperties");
                 throw new PAPException("Failed to create " + id);
             }
 
@@ -628,8 +632,8 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         List<String> ids = new ArrayList<>();
         for (PDPGroup group : this.groups) {
             ids.add(group.getId());
-            properties.setProperty(group.getId() + ".name", group.getName() == null ? "" : group.getName());
-            properties.setProperty(group.getId() + ".description",
+            properties.setProperty(group.getId() + STR_APPEND_NAME, group.getName() == null ? "" : group.getName());
+            properties.setProperty(group.getId() + STR_APPEND_DESCRIPTION,
                     group.getDescription() == null ? "" : group.getDescription());
             //
             // Iterate its PDPs
@@ -637,8 +641,8 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
             List<String> pdps = new ArrayList<>();
             for (PDP pdp : group.getPdps()) {
                 pdps.add(pdp.getId());
-                properties.setProperty(pdp.getId() + ".name", pdp.getName() == null ? "" : pdp.getName());
-                properties.setProperty(pdp.getId() + ".description",
+                properties.setProperty(pdp.getId() + STR_APPEND_NAME, pdp.getName() == null ? "" : pdp.getName());
+                properties.setProperty(pdp.getId() + STR_APPEND_DESCRIPTION,
                         pdp.getDescription() == null ? "" : pdp.getDescription());
                 if (pdp instanceof OnapPDP) {
                     properties.setProperty(pdp.getId() + ".jmxport",
@@ -654,7 +658,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
             if (logger.isDebugEnabled()) {
                 logger.debug("Group " + group.getId() + " PDPS: " + pdpList);
             }
-            properties.setProperty(group.getId() + ".pdps", pdpList);
+            properties.setProperty(group.getId() + STR_APPEND_PDPS, pdpList);
         }
         if (ids.isEmpty()) {
             throw new PAPException("Inconsistency - we have NO groups. We should have at least one.");
@@ -720,8 +724,8 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         //
         // Set its properties
         //
-        properties.setProperty(group.getId() + ".name", group.getName());
-        properties.setProperty(group.getId() + ".description", group.getDescription());
+        properties.setProperty(group.getId() + STR_APPEND_NAME, group.getName());
+        properties.setProperty(group.getId() + STR_APPEND_DESCRIPTION, group.getDescription());
         //
         // Set its PDP list
         //
@@ -736,9 +740,9 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
                 }
                 pdpList = Joiner.on(',').skipNulls().join(ids);
             }
-            properties.setProperty(group.getId() + ".pdps", pdpList);
+            properties.setProperty(group.getId() + STR_APPEND_PDPS, pdpList);
         } else {
-            properties.setProperty(group.getId() + ".pdps", "");
+            properties.setProperty(group.getId() + STR_APPEND_PDPS, "");
         }
     }
 
@@ -786,7 +790,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
             //
             this.saveConfiguration();
         } catch (IOException | PAPException e) {
-            PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "StdEngine", "Failed to save configuration");
+            PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, STR_CLASS, "Failed to save configuration");
         }
     }
 
@@ -796,8 +800,8 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         props.setProperty("AAF.description", "AAFEngine to communicate with AAF to take decisions");
         props.setProperty("AAF.classname", "org.onap.policy.xacml.std.pip.engines.aaf.AAFEngine");
         // read from PIP properties file.
-        Path file = Paths.get(pipPropertyFile);
-        if (!Files.notExists(file)) {
+        Path file = Paths.get(PIP_PROPERTY_FILE);
+        if (file.toFile().exists()) {
             InputStream in;
             Properties prop = new Properties();
             try {
@@ -947,7 +951,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
                     throw new PAPException("Unable to rename directory; reason unknown");
                 }
             } catch (Exception e) {
-                PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "StdEngine", "Unable to rename directory");
+                PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, STR_CLASS, "Unable to rename directory");
                 throw new PAPException(
                         "Unable to move directory from '" + oldPath + "' to '" + newPath + "': " + e.getMessage(), e);
             }
@@ -1022,7 +1026,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
         //
         // If it exists already
         //
-        if (!Files.exists(groupPath)) {
+        if (! groupPath.toFile().exists()) {
             logger.warn("removeGroup " + id + " directory does not exist" + groupPath.toString());
         } else {
             try {
@@ -1040,7 +1044,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
                 //
                 Files.delete(groupPath);
             } catch (IOException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdEngine", "Failed to delete " + groupPath);
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, STR_CLASS, "Failed to delete " + groupPath);
                 throw new PAPException("Failed to delete " + id);
             }
         }
