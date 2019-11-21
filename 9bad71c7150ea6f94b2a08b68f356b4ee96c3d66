@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6ee299c_e0571c86",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-21T17:41:20Z",
+      "side": 1,
+      "message": "Tricky - NOT not exists is really exists",
+      "range": {
+        "startLine": 804,
+        "startChar": 7,
+        "endLine": 804,
+        "endChar": 37
+      },
+      "revId": "9bad71c7150ea6f94b2a08b68f356b4ee96c3d66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
