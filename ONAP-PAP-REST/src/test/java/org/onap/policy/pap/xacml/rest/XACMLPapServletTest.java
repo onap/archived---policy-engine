@@ -20,31 +20,47 @@
 
 package org.onap.policy.pap.xacml.rest;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mockrunner.mock.web.MockHttpServletRequest;
+import com.mockrunner.mock.web.MockHttpServletResponse;
+import java.io.IOException;
+import java.util.Properties;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
+import org.springframework.mock.web.MockServletConfig;
 
 public class XACMLPapServletTest {
+    String systemKey = "xacml.properties";
+    String oldProperty = System.getProperty(systemKey);
+
+    @Before
+    public void setup() {
+        // Set the system property temporarily
+        System.setProperty(systemKey, "xacml.pap.properties");
+    }
+
     @Test
     public void testSetAndGet() {
-        String systemKey = "xacml.properties";
         String testVal = "testVal";
         XACMLPapServlet servlet = new XACMLPapServlet();
 
-        // Set the system property temporarily
-        String oldProperty = System.getProperty(systemKey);
-        System.setProperty(systemKey, "xacml.pap.properties");
-
+        assertNotNull(servlet);
         assertNotNull(XACMLPapServlet.getConfigHome());
         assertNotNull(XACMLPapServlet.getActionHome());
         assertEquals(XACMLPapServlet.getPersistenceUnit(), "XACML-PAP-REST");
-
-        // assertNull(XACMLPapServlet.getEmf());
-        // assertNull(XACMLPapServlet.getPDPFile());
-        // assertNull(XACMLPapServlet.getPAPEngine());
-        // assertNull(servlet.getIa());
 
         XACMLPapServlet.setPapDbDriver(testVal);
         assertEquals(XACMLPapServlet.getPapDbDriver(), testVal);
@@ -58,7 +74,37 @@ public class XACMLPapServletTest {
         assertEquals(XACMLPapServlet.getMsOnapName(), testVal);
         XACMLPapServlet.setMsPolicyName(testVal);
         assertEquals(XACMLPapServlet.getMsPolicyName(), testVal);
+    }
 
+    @Test
+    public void testMethods() throws ServletException, IOException, PAPException {
+        XACMLPapServlet servlet = new XACMLPapServlet();
+        ServletConfig config = new MockServletConfig();
+        assertThatThrownBy(() -> servlet.init(config)).isInstanceOf(ServletException.class);
+
+        ObjectMapper mapper = new ObjectMapper();
+        HttpServletResponse response = new MockHttpServletResponse();
+        assertThatCode(() -> XACMLPapServlet.mapperWriteValue(mapper, response, "hello")).doesNotThrowAnyException();
+        assertThatCode(() -> XACMLPapServlet.mapperWriteValue(null, null, null)).doesNotThrowAnyException();
+
+        assertNull(XACMLPapServlet.getPapUrl());
+
+        HttpServletRequest request = new MockHttpServletRequest();
+        assertThatThrownBy(() -> servlet.doDelete(request, response)).isInstanceOf(NullPointerException.class);
+
+        StringBuffer urlPath = new StringBuffer("http://foo");
+        Properties policies = new Properties();
+        servlet.populatePolicyURL(urlPath, policies);
+        assertNull(policies.getProperty("foo.url"));
+
+        policies.setProperty(XACMLProperties.PROP_ROOTPOLICIES, "foo");
+        policies.setProperty(XACMLProperties.PROP_REFERENCEDPOLICIES, "bar");
+        servlet.populatePolicyURL(urlPath, policies);
+        assertEquals("http://foo?id=foo", policies.getProperty("foo.url"));
+    }
+
+    @After
+    public void after() {
         // Restore the original system property
         if (oldProperty != null) {
             System.setProperty(systemKey, oldProperty);
