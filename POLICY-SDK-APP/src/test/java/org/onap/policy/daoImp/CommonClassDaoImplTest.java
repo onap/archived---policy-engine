@@ -24,23 +24,29 @@ package org.onap.policy.daoImp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-
 import javax.script.SimpleBindings;
-
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.h2.tools.Server;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.conf.HibernateSession;
@@ -454,6 +460,71 @@ public class CommonClassDaoImplTest {
         } catch (Exception e) {
             fail();
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testExceptions() {
+        SessionFactory sfMock = Mockito.mock(SessionFactory.class);
+        Session mockSession = Mockito.mock(Session.class);
+        Criteria crMock = Mockito.mock(Criteria.class);
+        Transaction mockTransaction = Mockito.mock(Transaction.class);
+
+        CommonClassDaoImpl.setSessionfactory(sfMock);
+
+        when(sfMock.openSession()).thenReturn(mockSession);
+        when(mockSession.createCriteria(OnapName.class)).thenReturn(crMock);
+
+        when(crMock.list()).thenThrow(Exception.class);
+        when(mockSession.close()).thenThrow(Exception.class);
+
+        when(mockSession.beginTransaction()).thenReturn(mockTransaction);
+        doThrow(Exception.class).when(mockTransaction).commit();
+
+        List<Object> dataList = commonClassDao.getData(OnapName.class);
+        assertNull(dataList);
+
+        List<Object> dataByIdList = commonClassDao.getDataById(UserInfo.class, "userLoginId:userName", "TestID:Test");
+        assertNull(dataByIdList);
+
+        commonClassDao.save(null);
+        commonClassDao.delete(null);
+        commonClassDao.update(null);
+
+        List<Object> dupEntryList =
+                commonClassDao.checkDuplicateEntry("TestID:Test", "userLoginId:userName", UserInfo.class);
+        assertNull(dupEntryList);
+
+        List<PolicyRoles> userRoles = commonClassDao.getUserRoles();
+        assertNull(userRoles);
+
+        Object entityItem = commonClassDao.getEntityItem(UserInfo.class, "testColName", "testKey");
+        assertNull(entityItem);
+
+        commonClassDao.updateQuery("testQueryString");
+
+        List<String> dataByColumn = commonClassDao.getDataByColumn(UserInfo.class, "testColName");
+        assertNull(dataByColumn);
+
+        List<Object> entityData = commonClassDao.getMultipleDataOnAddingConjunction(UserInfo.class, "", null);
+        assertNull(entityData);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testCheckExistingGroupListforUpdate() {
+        Object retObj = commonClassDao.checkExistingGroupListforUpdate("testString1", "testString2");
+        assertNotNull(retObj);
+        assertTrue(retObj instanceof List);
+        List<Object> retList = (List<Object>) retObj;
+        assertTrue(retList.isEmpty());
+    }
+
+    @Test
+    public void testEmptyMethods() {
+        commonClassDao.deleteAll();
+        commonClassDao.updateClAlarms("TestString1", "TestString2");
+        commonClassDao.updateClYaml("TestString1", "TestString2");
     }
 
     @After
