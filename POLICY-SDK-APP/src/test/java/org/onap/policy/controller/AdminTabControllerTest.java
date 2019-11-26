@@ -23,20 +23,22 @@
 package org.onap.policy.controller;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -54,6 +56,7 @@ public class AdminTabControllerTest {
     private static CommonClassDao commonClassDao;
     private HttpServletRequest request;
     private MockHttpServletResponse response;
+    private AdminTabController admin;
 
     /**
      * Before.
@@ -62,21 +65,17 @@ public class AdminTabControllerTest {
      */
     @Before
     public void setUp() throws Exception {
-
+        admin = new AdminTabController();
         logger.info("setUp: Entering");
         commonClassDao = mock(CommonClassDao.class);
-
         request = mock(HttpServletRequest.class);
         response = new MockHttpServletResponse();
-
         HttpSession mockSession = mock(HttpSession.class);
         User user = new User();
         user.setOrgUserId("Test");
         Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name"))).thenReturn(user);
         Mockito.when(request.getSession(false)).thenReturn(mockSession);
-
         AdminTabController.setCommonClassDao(commonClassDao);
-
         GlobalRoleSettings globalRole = new GlobalRoleSettings();
         globalRole.setLockdown(true);
         globalRole.setRole("super-admin");
@@ -87,7 +86,6 @@ public class AdminTabControllerTest {
 
     @Test
     public void testGetAdminRole() {
-        AdminTabController admin = new AdminTabController();
         assertNotNull(AdminTabController.getCommonClassDao());
         try {
             admin.getAdminTabEntityData(request, response);
@@ -100,7 +98,6 @@ public class AdminTabControllerTest {
 
     @Test
     public void testSaveAdminRole() throws Exception {
-        AdminTabController admin = new AdminTabController();
         String data = "{\"lockdowndata\":{\"lockdown\":true}}";
         BufferedReader reader = new BufferedReader(new StringReader(data));
         try {
@@ -112,5 +109,19 @@ public class AdminTabControllerTest {
             logger.error("Exception Occured" + e);
             fail();
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetAdminTabEntityDataException() throws IOException {
+        HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
+        when(mockResponse.getWriter()).thenThrow(Exception.class);
+        admin.getAdminTabEntityData(request, mockResponse);
+        verify(mockResponse).getWriter();
+    }
+
+    @Test
+    public void testSaveAdminTabLockdownValueException() throws IOException {
+        assertNull(admin.saveAdminTabLockdownValue(request, response));
     }
 }
