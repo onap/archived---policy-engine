@@ -47,6 +47,8 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 
+import lombok.Getter;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
@@ -113,6 +115,7 @@ public class PolicyValidation {
     private static Map<String, String> jsonRequestMap = new HashMap<>();
     private static List<String> modelRequiredFieldsList = new ArrayList<>();
 
+    @Getter
     private static CommonClassDao commonClassDao;
 
     private Set<String> allReqTrueKeys = new HashSet<>();
@@ -230,7 +233,7 @@ public class PolicyValidation {
             // Decision Policy Attributes Validation
             if (!"API".equals(policyData.getApiflag()) && policyData.getSettings() != null
                             && !policyData.getSettings().isEmpty()) {
-                for (Object attribute : policyData.getAttributes()) {
+                for (Object attribute : policyData.getSettings()) {
                     if (attribute instanceof LinkedHashMap<?, ?>) {
                         String value = null;
                         if (((LinkedHashMap<?, ?>) attribute).get("key") == null) {

@@ -1,0 +1,38 @@
+{
+    "service": "TOSCA_namingJenny",
+    "location": "Test  DictMSLoc",
+    "uuid": "testDict  DCAEUIID",
+    "policyName": "testModelValidation",
+    "description": "test",
+    "configName": "testDict  MSConfName",
+    "templateVersion": "1607",
+    "version": "gw12181031",
+    "priority": "5",
+    "policyScope": "resource=ResourcetypeVenktest1,service=ServiceName1707,type=Name1707,closedLoopControlName=Retest_retest1",
+    "riskType": "Test",
+    "riskLevel": "3",
+    "guard": "True",
+    "content": {
+        "police-instance-name": "testing",
+        "naming-models": [
+            {
+                "naming-properties": [
+                    {
+                        "property-value": "test",
+                        "source-endpoint": "test",
+                        "property-name": "testPropertyname",
+                        "increment-sequence": {
+                            "scope": "VNF",
+                            "start-value": "1",
+                            "length": "3",
+                            "increment": "2"
+                        },
+                        "source-system": "TOSCA"
+                    }
+                ],
+                "naming-type": "testNamingType",
+                "naming-recipe": "testNamingRecipe"
+            }
+        ]
+    }
+}

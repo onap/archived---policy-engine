@@ -202,7 +202,6 @@ public class MsModelUtils {
             processXmiEpackage(file);
         }
         return classMap;
-
     }
 
     /**
