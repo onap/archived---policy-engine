@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3465c20e_dd5124ff",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-27T11:19:38Z",
+      "side": 0,
+      "message": "I assume this is a bug. The attributes are validated in the previous block of code.",
+      "range": {
+        "startLine": 233,
+        "startChar": 51,
+        "endLine": 233,
+        "endChar": 64
+      },
+      "revId": "9bad71c7150ea6f94b2a08b68f356b4ee96c3d66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

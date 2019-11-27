@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b30f64c_197edac5",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/util/PolicyValidationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-27T11:19:38Z",
+      "side": 1,
+      "message": "All I want to test here is that the validation does not throw an exception for any of the config policy types with bad values, I will check the validation of these policy types with specific test cases in the next review.",
+      "range": {
+        "startLine": 86,
+        "startChar": 1,
+        "endLine": 104,
+        "endChar": 61
+      },
+      "revId": "35f44d97d569ef4da46d17c30cae71e75bcfe0c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e21a3f84_887eefa9",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/util/PolicyValidationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-27T11:19:38Z",
+      "side": 1,
+      "message": "If the \"id\" value is not in the algorithm choice map, we get a NPE, which is caught in the PolicyValidation class and null is returned from the method. Are we comfortable with that behaviour?",
+      "range": {
+        "startLine": 321,
+        "startChar": 2,
+        "endLine": 321,
+        "endChar": 58
+      },
+      "revId": "35f44d97d569ef4da46d17c30cae71e75bcfe0c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
