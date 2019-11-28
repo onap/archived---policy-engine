@@ -41,6 +41,7 @@ import org.junit.Test;
 import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.common.utils.resources.TextFileUtils;
+import org.onap.policy.rest.adapter.ClosedLoopFaultTrapDatas;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 
 public class PolicyValidationTest {
@@ -340,5 +341,748 @@ public class PolicyValidationTest {
         mapChoice.put("dynamicRuleAlgorithmField2", "%%%$$$");
         responseString = validation.validatePolicy(policyData).toString();
         assertThat(responseString).contains("Field 3 value has special characters");
+    }
+
+    @Test
+    public void testPolicyConfigBaseValidation() throws IOException {
+        PolicyValidation validation = new PolicyValidation();
+        PolicyRestAdapter policyData = new PolicyRestAdapter();
+        policyData.setPolicyName("ALegalPolicyName");
+        policyData.setPolicyDescription("A Valid Description");
+
+        String responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success", responseString);
+
+        policyData.setApiflag("API");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success", responseString);
+
+        policyData.setPolicyType("Config");
+        policyData.setConfigPolicyType("Base");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Onap Name Should not be empty");
+
+        policyData.setOnapName("%%%$$$$");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>OnapName</b>:<i>The Value in Required Field");
+
+        policyData.setOnapName("AValidOnapName");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Risk Level Should not be Empty");
+
+        policyData.setRiskType("%%%$$$$");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>RiskType</b>:<i>The Value in Required Field");
+
+        policyData.setRiskType("AValidRiskType");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Risk Level Should not be Empty");
+
+        policyData.setRiskLevel("%%%$$$$");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>RiskLevel</b>:<i>The Value in Required Field");
+
+        policyData.setRiskLevel("AValidRiskLevel");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Guard Value Should not be Empty");
+
+        policyData.setGuard("%%%$$$$");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Guard</b>:<i>The Value in Required Field");
+
+        policyData.setGuard("AValidGuard");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Config Name Should not be Empty");
+
+        policyData.setConfigName("%%%$$$$");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("ConfigName:The Value in Required Field");
+
+        policyData.setConfigName("AValidConfigName");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Config Type Should not be Empty");
+
+        policyData.setConfigType("%%%$$$$");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("ConfigType:The Value in Required Field");
+
+        policyData.setConfigType("AValidConfigType");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Config Body Should not be Empty");
+
+        policyData.setConfigBodyData("");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Config Body Should not be Empty");
+
+        policyData.setConfigBodyData("%%%$$$$");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setConfigType(null);
+        policyData.setConfigBodyData("ValidConfigBodyData");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Config Type Should not be Empty");
+
+        policyData.setConfigType("JSON");
+        policyData.setConfigBodyData("{");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Config Body: JSON Content is not valid");
+
+        policyData.setConfigBodyData("ValidConfigBodyData");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setConfigType("XML");
+        policyData.setConfigBodyData("{");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Config Body: XML Content data is not valid");
+
+        policyData.setConfigBodyData("<tag>value</tag>");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setConfigType("PROPERTIES");
+        policyData.setConfigBodyData("{");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Config Body: Property data is not valid");
+
+        policyData.setConfigBodyData("propertyName=PropertyValue");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+    }
+
+    @Test
+    public void testPolicyConfigFirewallValidation() throws IOException {
+        PolicyValidation validation = new PolicyValidation();
+        PolicyRestAdapter policyData = new PolicyRestAdapter();
+        policyData.setPolicyName("ALegalPolicyName");
+        policyData.setPolicyDescription("A Valid Description");
+
+        String responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success", responseString);
+
+        policyData.setApiflag("API");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success", responseString);
+
+        // Invalid values tested in config base test
+        policyData.setOnapName("AValidOnapName");
+        policyData.setRiskType("AValidRiskType");
+        policyData.setRiskLevel("AValidRiskLevel");
+        policyData.setGuard("AValidGuard");
+        assertEquals("success", responseString);
+
+        policyData.setPolicyType("Config");
+        policyData.setConfigPolicyType("Firewall Config");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Config Name is required");
+
+        policyData.setConfigName("");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Config Name is required");
+
+        policyData.setConfigName("%%%$$$$");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>ConfigName</b>:<i>The Value in Required Field");
+
+        policyData.setConfigName("AValidConfigName");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Security Zone is required");
+
+        policyData.setSecurityZone("");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Security Zone is required");
+
+        policyData.setSecurityZone("AValidSeurityZone");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+    }
+
+    @Test
+    public void testPolicyConfigBRMSValidation() throws IOException {
+        PolicyValidation validation = new PolicyValidation();
+        PolicyRestAdapter policyData = new PolicyRestAdapter();
+        policyData.setPolicyName("ALegalPolicyName");
+        policyData.setPolicyDescription("A Valid Description");
+
+        String responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success", responseString);
+
+        policyData.setApiflag("API");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success", responseString);
+
+        // Invalid values tested in config base test
+        policyData.setOnapName("AValidOnapName");
+        policyData.setRiskType("AValidRiskType");
+        policyData.setRiskLevel("AValidRiskLevel");
+        policyData.setGuard("AValidGuard");
+        assertEquals("success", responseString);
+
+        policyData.setPolicyType("Config");
+        policyData.setConfigPolicyType("BRMS_Param");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("BRMS Template is required");
+
+        policyData.setRuleName("");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("BRMS Template is required");
+
+        policyData.setRuleName("AValidRuleName");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+        policyData.setRuleName(null);
+
+        policyData.setConfigPolicyType("BRMS_Raw");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Raw Rule is required");
+
+        policyData.setConfigBodyData("");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Raw Rule is required");
+
+        policyData.setConfigBodyData("InvalidConfigBodyData");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("expecting one of the following tokens");
+
+        policyData.setConfigBodyData("import org.onap.policy.test.DummyTestSomething;");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+    }
+
+    @Test
+    public void testPolicyConfigCloseLoopPmValidation() throws IOException {
+        PolicyValidation validation = new PolicyValidation();
+        PolicyRestAdapter policyData = new PolicyRestAdapter();
+        policyData.setPolicyName("ALegalPolicyName");
+        policyData.setPolicyDescription("A Valid Description");
+
+        String responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success", responseString);
+
+        policyData.setApiflag("API");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success", responseString);
+
+        // Invalid values tested in config base test
+        policyData.setOnapName("AValidOnapName");
+        policyData.setRiskType("AValidRiskType");
+        policyData.setRiskLevel("AValidRiskLevel");
+        policyData.setGuard("AValidGuard");
+        assertEquals("success", responseString);
+
+        policyData.setPolicyType("Config");
+        policyData.setConfigPolicyType("ClosedLoop_PM");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("ServiceType PolicyName is required");
+
+        Map<String, String> serviceTypePolicyName = null;
+        policyData.setServiceTypePolicyName(serviceTypePolicyName);
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("ServiceType PolicyName is required");
+
+        serviceTypePolicyName = new LinkedHashMap<>();
+        policyData.setServiceTypePolicyName(serviceTypePolicyName);
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("ServiceType PolicyName is required");
+
+        serviceTypePolicyName.put("AKey", "AValue");
+        policyData.setServiceTypePolicyName(serviceTypePolicyName);
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("ServiceType PolicyName is required");
+        serviceTypePolicyName.clear();
+
+        serviceTypePolicyName.put("serviceTypePolicyName", "");
+        policyData.setServiceTypePolicyName(serviceTypePolicyName);
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("ServiceType PolicyName is required");
+
+        serviceTypePolicyName.put("serviceTypePolicyName", "AValidserviceTypePolicyName");
+        policyData.setServiceTypePolicyName(serviceTypePolicyName);
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("");
+        assertNull(validation.validatePolicy(policyData));
+
+        policyData.setJsonBody("InvalidConfigBodyData");
+        assertNull(validation.validatePolicy(policyData));
+
+        policyData.setJsonBody("{}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("{\"gamma\": false}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("{\"gamma\": true}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"mcr\": false}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("{\"mcr\": true}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"trinity\": false}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("{\"trinity\": true}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"vDNS\": false}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("{\"vDNS\": true}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"vUSP\": false}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("{\"vUSP\": true}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"trinity\": true, \"emailAddress\": null}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"trinity\": true, \"emailAddress\": \"\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Email Address is not Valid");
+
+        policyData.setJsonBody("{\"trinity\": true, \"emailAddress\": \"%%%$$$\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Email Address is not Valid");
+
+        policyData.setJsonBody("{\"trinity\": true, \"emailAddress\": \"dorothy@emealdcity.oz\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"trinity\": true, \"geoLink\": null}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"trinity\": true, \"geoLink\": \"\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"trinity\": true, \"geoLink\": \"$$$%%%\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("The Value in Required Field");
+
+        policyData.setJsonBody("{\"trinity\": true, \"geoLink\": \"AValidGeoLink\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"trinity\": true, \"attributes\": null}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"trinity\": true, \"attributes\": {}}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"trinity\": true, \"attributes\": {\"an0\":\"av0\"}}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setJsonBody("{\"trinity\": true, \"attributes\": {\"an0\":\"$$$%%%\"}}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("value has spaces or invalid characters");
+
+        policyData.setJsonBody("{\"trinity\": true, \"attributes\": {\"Message\":\"$$$%%%\"}}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+    }
+
+    @Test
+    public void testPolicyConfigCloseLoopFaultValidation() throws IOException {
+        PolicyValidation validation = new PolicyValidation();
+        PolicyRestAdapter policyData = new PolicyRestAdapter();
+        policyData.setPolicyName("ALegalPolicyName");
+        policyData.setPolicyDescription("A Valid Description");
+
+        String responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success", responseString);
+
+        policyData.setApiflag("API");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success", responseString);
+
+        // Invalid values tested in config base test
+        policyData.setOnapName("AValidOnapName");
+        policyData.setRiskType("AValidRiskType");
+        policyData.setRiskLevel("AValidRiskLevel");
+        policyData.setGuard("AValidGuard");
+        assertEquals("success", responseString);
+
+        policyData.setPolicyType("Config");
+        policyData.setConfigPolicyType("ClosedLoop_Fault");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("");
+        assertNull(validation.validatePolicy(policyData));
+
+        policyData.setJsonBody("InvalidConfigBodyData");
+        assertNull(validation.validatePolicy(policyData));
+
+        policyData.setJsonBody("{}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("There were no conditions provided in configBody json");
+
+        policyData.setJsonBody("{\"conditions\": null}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("There were no conditions provided in configBody json");
+
+        policyData.setJsonBody("{\"conditions\": \"\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select At least one Condition");
+
+        policyData.setJsonBody("{\"conditions\": \"AValidCondition\"}");
+        assertNull(validation.validatePolicy(policyData));
+
+        policyData.setApiflag("NOAPI");
+
+        policyData.setJsonBody("");
+        assertNull(validation.validatePolicy(policyData));
+
+        policyData.setJsonBody("InvalidConfigBodyData");
+        assertNull(validation.validatePolicy(policyData));
+
+        ClosedLoopFaultTrapDatas trapDatas = new ClosedLoopFaultTrapDatas();
+        policyData.setTrapDatas(trapDatas);
+
+        ClosedLoopFaultTrapDatas faultDatas = new ClosedLoopFaultTrapDatas();
+        policyData.setFaultDatas(faultDatas);
+
+        policyData.setJsonBody("{}");
+        assertThat(responseString).contains("Select At least one Condition");
+
+        List<Object> trap1 = new ArrayList<>();
+        trapDatas.setTrap1(trap1);
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Trigger Clear TimeOut is required");
+
+        policyData.setClearTimeOut("AValidClearTimeout");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Trap Max Age is required");
+
+        policyData.setTrapMaxAge("AValidTrapMaxAge");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        trapDatas.setTrap1(null);
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        faultDatas.setTrap1(null);
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        faultDatas.setTrap1(trap1);
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Fault Clear TimeOut is required when");
+
+        policyData.setVerificationclearTimeOut("AValidVerificationClearTimeout");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("{\"gamma\": false}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("{\"gamma\": true}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("vPRO Actions is required");
+
+        policyData.setJsonBody("{\"mcr\": false}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("{\"mcr\": true}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("vPRO Actions is required");
+
+        policyData.setJsonBody("{\"trinity\": false}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("{\"trinity\": true}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("vPRO Actions is required");
+
+        policyData.setJsonBody("{\"vDNS\": false}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("{\"vDNS\": true}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("vPRO Actions is required");
+
+        policyData.setJsonBody("{\"vUSP\": false}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select at least one D2");
+
+        policyData.setJsonBody("{\"vUSP\": true}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("vPRO Actions is required");
+
+        policyData.setJsonBody("{\"trinity\": true, \"emailAddress\": null}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("vPRO Actions is required");
+
+        policyData.setJsonBody("{\"trinity\": true, \"emailAddress\": \"\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("vPRO Actions is required");
+
+        policyData.setJsonBody("{\"trinity\": true, \"emailAddress\": \"%%%$$$\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Email Address is not Valid");
+
+        policyData.setJsonBody("{\"trinity\": true, \"emailAddress\": \"dorothy@emealdcity.oz\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("vPRO Actions is required");
+
+        policyData.setJsonBody("{\"trinity\": true, \"actions\": null}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("vPRO Actions is required");
+
+        policyData.setJsonBody("{\"trinity\": true, \"actions\": \"\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("vPRO Actions is required");
+
+        policyData.setJsonBody("{\"trinity\": true, \"actions\": \"$$$%%%\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Policy Status is required");
+        assertThat(responseString).contains("Vnf Type is required");
+
+        policyData.setJsonBody("{\"trinity\": true, \"actions\": \"ValidActions\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Policy Status is required");
+
+        policyData.setJsonBody("{\"trinity\": true, \"actions\": \"ValidActions\", \"closedLoopPolicyStatus\": null}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Policy Status is required");
+
+        policyData.setJsonBody("{\"trinity\": true, \"actions\": \"ValidActions\", \"closedLoopPolicyStatus\": \"\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Policy Status is required");
+
+        policyData.setJsonBody(
+                        "{\"trinity\": true, \"actions\": \"ValidActions\", \"closedLoopPolicyStatus\": \"$$$%%%\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select At least one Condition");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\""
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select At least one Condition");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": null"
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Select At least one Condition");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\""
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Aging Window is required");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\","
+                        + "\"geoLink\": null"
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Aging Window is required");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\","
+                        + "\"geoLink\": \"\""
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Aging Window is required");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\","
+                        + "\"geoLink\": \"%%%$$$\""
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("GeoLink</b>:<i>The Value in Required Field");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\","
+                        + "\"geoLink\": \"AValidGeoLink\""
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Aging Window is required");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\","
+                        + "\"agingWindow\": -1"
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Time Interval is required");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\","
+                        + "\"agingWindow\": -1,"
+                        + "\"timeInterval\": -1"
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Number of Retries is required");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\","
+                        + "\"agingWindow\": -1,"
+                        + "\"timeInterval\": -1,"
+                        + "\"retrys\": -1"
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("APP-C Timeout is required");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\","
+                        + "\"agingWindow\": -1,"
+                        + "\"timeInterval\": -1,"
+                        + "\"retrys\": -1,"
+                        + "\"timeOutvPRO\": -1"
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("TimeOutRuby is required");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\","
+                        + "\"agingWindow\": -1,"
+                        + "\"timeInterval\": -1,"
+                        + "\"retrys\": -1,"
+                        + "\"timeOutvPRO\": -1,"
+                        + "\"timeOutRuby\": -1"
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Vnf Type is required");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\","
+                        + "\"agingWindow\": -1,"
+                        + "\"timeInterval\": -1,"
+                        + "\"retrys\": -1,"
+                        + "\"timeOutvPRO\": -1,"
+                        + "\"timeOutRuby\": -1,"
+                        + "\"vnfType\": null"
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Vnf Type is required");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\","
+                        + "\"agingWindow\": -1,"
+                        + "\"timeInterval\": -1,"
+                        + "\"retrys\": -1,"
+                        + "\"timeOutvPRO\": -1,"
+                        + "\"timeOutRuby\": -1,"
+                        + "\"vnfType\": \"\""
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Vnf Type is required");
+
+        // @formatter:off
+        policyData.setJsonBody("{"
+                        + "\"trinity\": true,"
+                        + "\"actions\": \"ValidActions\","
+                        + "\"closedLoopPolicyStatus\": \"AValidStatus\","
+                        + "\"conditions\": \"SEND\","
+                        + "\"agingWindow\": -1,"
+                        + "\"timeInterval\": -1,"
+                        + "\"retrys\": -1,"
+                        + "\"timeOutvPRO\": -1,"
+                        + "\"timeOutRuby\": -1,"
+                        + "\"vnfType\": \"AValid VNF Type\""
+                        + "}");
+        // @formatter:on
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
     }
 }
