@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0fe8c607_b9730080",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-29T11:59:52Z",
+      "side": 0,
+      "message": "Can never happen due to the check on line 364",
+      "range": {
+        "startLine": 381,
+        "startChar": 77,
+        "endLine": 381,
+        "endChar": 105
+      },
+      "revId": "35f44d97d569ef4da46d17c30cae71e75bcfe0c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fe5568f_80854e2b",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-29T11:59:52Z",
+      "side": 0,
+      "message": "This condition can never be true due to the check on line 364.",
+      "range": {
+        "startLine": 386,
+        "startChar": 66,
+        "endLine": 386,
+        "endChar": 95
+      },
+      "revId": "35f44d97d569ef4da46d17c30cae71e75bcfe0c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
