@@ -880,7 +880,7 @@ public class PolicyValidation {
         }
     }
 
-    protected String emailValidation(String email, String response) {
+    private String emailValidation(String email, String response) {
         String res = response;
         if (email != null) {
             String validateEmail = PolicyUtils.validateEmailAddress(email.replace("\"", ""));

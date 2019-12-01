@@ -1,0 +1,27 @@
+{
+    "police-instance-name": "content1",
+    "police-instance-range": "11",
+    "naming-models": [
+        {
+            "naming-properties": [
+                {
+                    "property-value": "test",
+                    "source-endpoint": "test",
+                    "property-name": "testPropertyname",
+                    "increment-sequence": {
+                        "scope": "VNF",
+                        "start-value": "1",
+                        "length": "3",
+                        "increment": "2"
+                    },
+                    "source-system": "TOSCA"
+                }
+            ],
+            "naming-type": "testNamingType",
+            "naming-recipe": "testNamingRecipe"
+        }
+    ],
+    "some-container": {
+        "container-name": "container-value"
+    }
+}

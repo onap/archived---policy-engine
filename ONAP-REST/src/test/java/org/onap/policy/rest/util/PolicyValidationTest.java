@@ -26,6 +26,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,13 +40,22 @@ import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.rest.adapter.ClosedLoopFaultTrapDatas;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.MicroServiceModels;
 
+@RunWith(MockitoJUnitRunner.class)
 public class PolicyValidationTest {
+    @Mock
+    private CommonClassDao commonClassDao;
 
     @Before
     public void setUp() throws Exception {
@@ -103,13 +114,6 @@ public class PolicyValidationTest {
         policyData.setConfigPolicyType("Strange");
         responseString = validation.validatePolicy(policyData).toString();
         assertThat(responseString).doesNotContain("success");
-    }
-
-    @Test
-    public final void testEmailValidation() {
-        PolicyValidation validation = new PolicyValidation();
-        String result = validation.emailValidation("testemail@test.com", "SUCCESS");
-        assertEquals("success", result);
     }
 
     @Test
@@ -1084,5 +1088,199 @@ public class PolicyValidationTest {
         // @formatter:on
         responseString = validation.validatePolicy(policyData).toString();
         assertEquals("success@#", responseString);
+    }
+
+    @Test
+    public void testPolicyConfigMicroServiceValidation() throws IOException {
+        PolicyValidation validation = new PolicyValidation(commonClassDao);
+        PolicyRestAdapter policyData = new PolicyRestAdapter();
+        policyData.setPolicyName("ALegalPolicyName");
+        policyData.setPolicyDescription("A Valid Description");
+
+        String responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success", responseString);
+
+        policyData.setApiflag("NOAPI");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success", responseString);
+
+        // Invalid values tested in config base test
+        policyData.setOnapName("AValidOnapName");
+        policyData.setRiskType("AValidRiskType");
+        policyData.setRiskLevel("AValidRiskLevel");
+        policyData.setGuard("AValidGuard");
+        assertEquals("success", responseString);
+
+        policyData.setPolicyType("Config");
+        policyData.setConfigPolicyType("Micro Service");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Micro Service Model is required");
+
+        policyData.setServiceType("");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Micro Service Model is required");
+
+        policyData.setServiceType("ServiceType");
+        assertNull(validation.validatePolicy(policyData));
+
+        policyData.setPolicyJSON("");
+        assertNull(validation.validatePolicy(policyData));
+
+        String msJsonContentString0 = TextFileUtils
+                        .getTextFileAsString("src/test/resources/policies/MicroServicePolicyContent0.json");
+        policyData.setPolicyJSON(new ObjectMapper().readTree(msJsonContentString0));
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Micro Service Version is required");
+
+        String msJsonContentString1 = TextFileUtils
+                        .getTextFileAsString("src/test/resources/policies/MicroServicePolicyContent1.json");
+        policyData.setPolicyJSON(new ObjectMapper().readTree(msJsonContentString1));
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Micro Service Version is required");
+
+        policyData.setServiceType("ServiceType-vServiceVersion");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("The model name, ServiceType of version, ServiceVersion was not found");
+
+        policyData.setServiceType("ServiceType");
+        policyData.setRuleProvider("MicroService_Model");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).doesNotContain("Priority is required");
+
+        policyData.setVersion("ServiceVersion");
+        Mockito.when(commonClassDao.getDataById(MicroServiceModels.class, "modelName:version",
+                        "ServiceType:ServiceVersion")).thenReturn(null);
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("The model name, ServiceType of version, ServiceVersion was not found");
+
+        List<Object> msModelsList = new ArrayList<>();
+        MicroServiceModels msModels = new MicroServiceModels();
+        msModelsList.add(msModels);
+        Mockito.when(commonClassDao.getDataById(MicroServiceModels.class, "modelName:version",
+                        "ServiceType:ServiceVersion")).thenReturn(msModelsList);
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        msModels.setAnnotation("SomeAnntation");
+        assertNull(validation.validatePolicy(policyData));
+
+        msModels.setAnnotation("annotation0Key=annotation0Value");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        msModels.setAnnotation("annotation0Key=range::10-100");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("annotation0Key is required for the MicroService model");
+
+        msModels.setAnnotation("police-instance-name=range::10-100");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Model Range:police-instance-name must be between 10 - 100");
+
+        msModels.setAnnotation("police-instance-range=range::12-100");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Model Range:police-instance-range must be between 12 - 100");
+
+        msModels.setAnnotation("police-instance-range=range::0-10");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("Model Range:police-instance-range must be between 0 - 10");
+
+        msModels.setAnnotation("police-instance-range=range::10-100");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        msModels.setAnnotation(null);
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setRuleProvider("Not_MicroService_Model");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> location is required for this model");
+
+        policyData.setLocation("AValidLocation");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> configName is required for this model");
+
+        policyData.setConfigName("AValidConfigname");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> uuid is required for this model");
+
+        policyData.setUuid("AValidUUID");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> policyScope is required for this model");
+
+        policyData.setPolicyScope("AValidPolicyScope");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Priority</b>:<i> Priority is required");
+
+        policyData.setPriority("AValidPriority");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        policyData.setApiflag("API");
+        assertNull(validation.validatePolicy(policyData));
+
+        msModels.setSubAttributes("{}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        msModels.setSubAttributes("{\"subAttrName0\": \"subAttrValue0\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        msModels.setSubAttributes("{\"subAttrName0\": 10}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        msModels.setSubAttributes("{\"subAttrName0\": {}}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        msModels.setSubAttributes("{\"subAttrName0\": []}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertEquals("success@#", responseString);
+
+        msModels.setSubAttributes("{\"subAttrName0\": \"subAttrValue0-required-true\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> subAttrName0 is required");
+
+        msModels.setSubAttributes("{\"subAttrName0\": \":subAttrValue0-required-true\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> subAttrName0 is required");
+
+        msModels.setSubAttributes("{\"subAttrName0\": \"UnknownType:subAttrValue0-required-true\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> subAttrName0 is required");
+
+        msModels.setSubAttributes("{\"subAttrName0\": \"string:subAttrValue0-required-true\"}");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> subAttrName0 is required");
+
+        msModels.setRefAttributes("refAttrName0=");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> subAttrName0 is required");
+
+        msModels.setRefAttributes("refAttrName0=refAttrValue0");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> subAttrName0 is required");
+
+        msModels.setRefAttributes("refAttrName0=refAttrValue0-required-true");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> subAttrName0 is required");
+
+        msModels.setAttributes("");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> subAttrName0 is required");
+
+        msModels.setAttributes("modelAttrName0=modelAttrValue0");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("<b>Micro Service Model</b>:<i> subAttrName0 is required");
+
+        msModels.setRefAttributes("refAttrName0=refAttrValue0-required-true,");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).contains("refAttrName0 is required");
+
+        msModels.setRefAttributes("police-instance-range=refAttrValue0-required-true,");
+        responseString = validation.validatePolicy(policyData).toString();
+        assertThat(responseString).doesNotContain("police-instance-range is required");
     }
 }
