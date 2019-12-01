@@ -378,15 +378,11 @@ public class PolicyValidation {
                                     valid = false;
                                 }
                             } else if ("PROPERTIES".equals(configType)) {
-                                if (!PolicyUtils.isPropValid(configBodyData) || "".equals(configBodyData)) {
+                                if (!PolicyUtils.isPropValid(configBodyData)) {
                                     responseString.append(
                                                     "Config Body: Property data is not valid" + HTML_ITALICS_LNBREAK);
                                     valid = false;
                                 }
-                            } else if ("OTHER".equals(configType) && ("".equals(configBodyData))) {
-                                responseString.append(
-                                                "Config Body: Config Body Should not be Empty" + HTML_ITALICS_LNBREAK);
-                                valid = false;
                             }
                         }
                     } else {
@@ -490,7 +486,7 @@ public class PolicyValidation {
                         }
                     } else {
                         responseString.append(
-                                        "<b>D2/Virtualized Services</b>:<i>Select atleast one D2/Virtualized Services"
+                                        "<b>D2/Virtualized Services</b>:<i>Select at least one D2/Virtualized Services"
                                                         + HTML_ITALICS_LNBREAK);
                         valid = false;
                     }
@@ -606,7 +602,7 @@ public class PolicyValidation {
                         }
                     } else {
                         responseString.append(
-                                        "<b>D2/Virtualized Services</b>: <i>Select atleast one D2/Virtualized Services"
+                                        "<b>D2/Virtualized Services</b>: <i>Select at least one D2/Virtualized Services"
                                                         + HTML_ITALICS_LNBREAK);
                         responseString.append(
                                         "<b>vPRO Actions</b>: <i>vPRO Actions is required" + HTML_ITALICS_LNBREAK);
