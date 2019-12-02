@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc47799a_0c1ce3c7",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/CommonClassDaoImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-02T18:09:45Z",
+      "side": 1,
+      "message": "not needed.  The only way this could be false is if \"sf\" is null.  If that\u0027s possible, then this test should be replaced with assertNotNull.  Otherwise, it should be eliminated altogether.",
+      "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "452588ab_a72eb312",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/CommonClassDaoImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-02T18:09:45Z",
+      "side": 1,
+      "message": "is this needed?",
+      "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43d7f00f_b3f68699",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/SystemLogDbDaoImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-02T18:09:45Z",
+      "side": 1,
+      "message": "is this needed?",
+      "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
