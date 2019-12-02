@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "bcb47b9d_d8ae8e57",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/CommonClassDaoImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 6006
+      },
+      "writtenOn": "2019-12-02T20:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76f556f0_59a6c5cf",
+      "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43d7f00f_b3f68699",
         "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/SystemLogDbDaoImplTest.java",
         "patchSetId": 2
@@ -200,6 +218,24 @@
       "writtenOn": "2019-12-02T20:05:25Z",
       "side": 1,
       "message": "Following up on Pam\u0027s comment above, question if the before|after Class booleans in setjUnit should be reversed, here doesn\u0027t seem right neither.",
+      "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53db7cf3_e3b4d59c",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/SystemLogDbDaoImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 6006
+      },
+      "writtenOn": "2019-12-02T20:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27d3f128_ea571111",
       "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
