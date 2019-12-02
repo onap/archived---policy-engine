@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "6b7dfe3e_e924b5df",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/util/PolicyValidationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-02T16:11:20Z",
+      "side": 1,
+      "message": "btw: I think sonar will complain about these (and other) duplicate strings",
+      "parentUuid": "6a506203_9313c9d6",
+      "range": {
+        "startLine": 1125,
+        "startChar": 8,
+        "endLine": 1125,
+        "endChar": 79
+      },
+      "revId": "9989f963213d61dc87b01c54d80eee82dc9b2153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "51865d8e_953978d6",
         "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/util/PolicyValidationTest.java",
         "patchSetId": 1
