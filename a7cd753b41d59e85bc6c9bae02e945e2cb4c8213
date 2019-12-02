@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "bd1ed828_1663b080",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/CommonClassDaoImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 6006
+      },
+      "writtenOn": "2019-12-02T20:11:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc47799a_0c1ce3c7",
+      "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "452588ab_a72eb312",
         "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/CommonClassDaoImplTest.java",
         "patchSetId": 2
@@ -48,6 +66,24 @@
       "writtenOn": "2019-12-02T18:09:45Z",
       "side": 1,
       "message": "is this needed?",
+      "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2211e43_24159443",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/CommonClassDaoImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 6006
+      },
+      "writtenOn": "2019-12-02T20:11:48Z",
+      "side": 1,
+      "message": "I added the annotation for the following warning(s): \"Type safety: A generic array of Class\u003c? extends Throwable\u003e is created for a varargs parameter\"",
+      "parentUuid": "452588ab_a72eb312",
       "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -88,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "014adb41_ffbc159b",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/SystemLogDbDaoImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 6006
+      },
+      "writtenOn": "2019-12-02T20:11:48Z",
+      "side": 1,
+      "message": "I added the annotation for the following warning(s): \"Type safety: A generic array of Class\u003c? extends Throwable\u003e is created for a varargs parameter\"",
+      "parentUuid": "43d7f00f_b3f68699",
+      "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3794007_bed716fa",
         "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/SystemLogDbDaoImplTest.java",
         "patchSetId": 2
@@ -108,6 +162,30 @@
       "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f97cdfd7_01ec0ed5",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/SystemLogDbDaoImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 6006
+      },
+      "writtenOn": "2019-12-02T20:11:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3794007_bed716fa",
+      "range": {
+        "startLine": 56,
+        "startChar": 34,
+        "endLine": 56,
+        "endChar": 39
+      },
+      "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
