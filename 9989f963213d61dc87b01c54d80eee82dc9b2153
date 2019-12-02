@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6a506203_9313c9d6",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/util/PolicyValidationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-12-02T16:09:35Z",
+      "side": 1,
+      "message": "Execution falls through the code to give the same message for all these different cases. You need to specify the policy type, service type, and Policy JSON in order to get past this \"Micro Service Model is required\" error message.",
+      "parentUuid": "71bdad69_aa3461f7",
+      "range": {
+        "startLine": 1125,
+        "startChar": 8,
+        "endLine": 1125,
+        "endChar": 79
+      },
+      "revId": "9989f963213d61dc87b01c54d80eee82dc9b2153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "51865d8e_953978d6",
         "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/util/PolicyValidationTest.java",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2019-12-02T11:41:58Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 1129,
+        "startChar": 8,
+        "endLine": 1129,
+        "endChar": 79
+      },
+      "revId": "9989f963213d61dc87b01c54d80eee82dc9b2153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5eb1a8cd_50c1f0da",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/util/PolicyValidationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1129,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-12-02T16:09:35Z",
+      "side": 1,
+      "message": "See comment above.",
+      "parentUuid": "51865d8e_953978d6",
       "range": {
         "startLine": 1129,
         "startChar": 8,
