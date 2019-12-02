@@ -50,6 +50,29 @@
       "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3794007_bed716fa",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/SystemLogDbDaoImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-02T18:33:58Z",
+      "side": 1,
+      "message": "Hmm - I thought this would be the opposite.",
+      "range": {
+        "startLine": 56,
+        "startChar": 34,
+        "endLine": 56,
+        "endChar": 39
+      },
+      "revId": "a7cd753b41d59e85bc6c9bae02e945e2cb4c8213",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
