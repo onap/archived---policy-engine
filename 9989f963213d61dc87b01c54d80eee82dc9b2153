@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "71bdad69_aa3461f7",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/util/PolicyValidationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-02T11:41:58Z",
+      "side": 1,
+      "message": "string hasn\u0027t changed - maybe cut-n-paste here?",
+      "range": {
+        "startLine": 1125,
+        "startChar": 8,
+        "endLine": 1125,
+        "endChar": 79
+      },
+      "revId": "9989f963213d61dc87b01c54d80eee82dc9b2153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51865d8e_953978d6",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/util/PolicyValidationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1129,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-02T11:41:58Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 1129,
+        "startChar": 8,
+        "endLine": 1129,
+        "endChar": 79
+      },
+      "revId": "9989f963213d61dc87b01c54d80eee82dc9b2153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
