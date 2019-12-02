@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f560c371_bea18a14",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/util/PolicyValidationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-02T16:13:43Z",
+      "side": 1,
+      "message": "Just confusing because here it gets set explicitly.",
+      "range": {
+        "startLine": 1120,
+        "startChar": 8,
+        "endLine": 1120,
+        "endChar": 74
+      },
+      "revId": "9989f963213d61dc87b01c54d80eee82dc9b2153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "71bdad69_aa3461f7",
         "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/util/PolicyValidationTest.java",
         "patchSetId": 1
