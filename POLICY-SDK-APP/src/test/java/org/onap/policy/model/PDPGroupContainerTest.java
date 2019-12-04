@@ -21,8 +21,12 @@
 package org.onap.policy.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 import com.att.research.xacml.api.pap.PAPException;
 import java.awt.Checkbox;
@@ -106,7 +110,7 @@ public class PDPGroupContainerTest {
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
-    public void testGetIdByIndex() {
+    public void testGetIdByIndexException() {
         container.getIdByIndex(0);
     }
 
@@ -116,7 +120,7 @@ public class PDPGroupContainerTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testGetItemIds() {
+    public void testGetItemIdsException() {
         container.getItemIds(0, 1);
     }
 
@@ -164,5 +168,97 @@ public class PDPGroupContainerTest {
     public void testContainerRemovePDP() throws PAPException {
         doThrow(PAPException.class).when(engine).removePDP(pdp);
         container.removePDP(pdp, group);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testRemoveDefaultGroup() throws PAPException {
+        when(group.isDefaultGroup()).thenReturn(true);
+        container.removeGroup(group, newGroup);
+    }
+
+    @Test
+    public void testGetItemIds() {
+        assertNotNull(container.getItemIds(0, 0));
+    }
+
+    @Test
+    public void testContainsId() {
+        assertFalse(container.containsId(group));
+    }
+
+    @Test
+    public void testGroupMethods() {
+        container.groups.add(group);
+
+        Object retObj = container.getIdByIndex(0);
+        assertTrue(retObj instanceof OnapPDPGroup);
+        assertNotNull(retObj);
+
+        Object retFirstItemId = container.firstItemId();
+        assertTrue(retFirstItemId instanceof OnapPDPGroup);
+        assertNotNull(retFirstItemId);
+
+        Object retLastItemId = container.lastItemId();
+        assertTrue(retLastItemId instanceof OnapPDPGroup);
+        assertNotNull(retLastItemId);
+
+        assertTrue(container.isFirstId(group));
+
+        assertTrue(container.isLastId(group));
+    }
+
+    @Test
+    public void testNextItemId() {
+        OnapPDPGroup groupNotInList = Mockito.mock(OnapPDPGroup.class);
+        Object retObj = null;
+
+        container.groups.add(group);
+        container.groups.add(newGroup);
+
+        assertNull(container.nextItemId(groupNotInList));
+        assertNull(container.nextItemId(newGroup));
+
+        retObj = container.nextItemId(group);
+        assertNotNull(retObj);
+        assertTrue(retObj instanceof OnapPDPGroup);
+    }
+
+    @Test
+    public void testPrevItemId() {
+        OnapPDPGroup groupNotInList = Mockito.mock(OnapPDPGroup.class);
+        Object retObj = null;
+
+        container.groups.add(group);
+        container.groups.add(newGroup);
+
+        assertNull(container.prevItemId(groupNotInList));
+        assertNull(container.prevItemId(group));
+
+        retObj = container.prevItemId(newGroup);
+        assertNotNull(retObj);
+        assertTrue(retObj instanceof OnapPDPGroup);
+    }
+
+    @Test
+    public void testRemoveNullItem() {
+        OnapPDPGroup nullGroup = null;
+        assertFalse(container.removeItem(nullGroup));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testRemoveDefaultItem() {
+        when(group.getId()).thenReturn("Default");
+        container.removeItem(group);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testRemoveItem() throws PAPException {
+        assertTrue(container.removeItem(group));
+
+        PAPPolicyEngine mockPAPPolicyEngine = Mockito.mock(PAPPolicyEngine.class);
+        PDPGroupContainer groupContainer = new PDPGroupContainer(mockPAPPolicyEngine);
+        when(mockPAPPolicyEngine.getDefaultGroup()).thenThrow(PAPException.class);
+        assertFalse(groupContainer.removeItem(group));
     }
 }

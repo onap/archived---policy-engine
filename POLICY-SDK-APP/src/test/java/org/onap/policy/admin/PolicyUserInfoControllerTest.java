@@ -24,11 +24,15 @@ package org.onap.policy.admin;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -61,5 +65,15 @@ public class PolicyUserInfoControllerTest {
         } catch (Exception e) {
             fail();
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetPolicyUserInfoException() throws IOException {
+        HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
+        when(mockResponse.getWriter()).thenThrow(IOException.class);
+        PolicyUserInfoController controller = new PolicyUserInfoController();
+        controller.getPolicyUserInfo(request, mockResponse);
+        verify(mockResponse, atLeast(1)).getWriter();
     }
 }

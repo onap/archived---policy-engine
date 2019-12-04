@@ -22,23 +22,28 @@
 
 package org.onap.policy.admin;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import javax.json.JsonArray;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -55,8 +60,12 @@ import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.portalsdk.core.domain.User;
 import org.onap.portalsdk.core.util.SystemProperties;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+@RunWith(PowerMockRunner.class)
 public class PolicyManagerServletTest extends Mockito {
 
     private static Logger logger = FlexLogger.getLogger(PolicyManagerServletTest.class);
@@ -745,5 +754,64 @@ public class PolicyManagerServletTest extends Mockito {
                 fail();
             }
         }
+    }
+
+    @Test
+    public void testSetPolicyNames() {
+        JsonArray mockJsonArray = Mockito.mock(JsonArray.class);
+        PolicyManagerServlet.setPolicyNames(mockJsonArray);
+        assertEquals(mockJsonArray, PolicyManagerServlet.getPolicyNames());
+    }
+
+    @Test
+    public void testDoPostSetErrorException() throws IOException {
+        PolicyManagerServlet servlet = new PolicyManagerServlet();
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
+        doThrow(IOException.class).when(mockRequest).getReader();
+        doThrow(IOException.class).when(mockResponse).sendError(any(Integer.class), any(String.class));
+        servlet.doPost(mockRequest, mockResponse);
+        verify(mockRequest).getReader();
+    }
+
+    @Test
+    public void testDoPostException() throws IOException {
+        PolicyManagerServlet servlet = new PolicyManagerServlet();
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
+
+        doThrow(IOException.class).when(mockRequest).getReader();
+        doThrow(IOException.class).when(mockResponse).sendError(any(Integer.class), any(String.class));
+        doThrow(IOException.class).when(mockResponse).getWriter();
+
+        servlet.doPost(mockRequest, mockResponse);
+        verify(mockRequest).getReader();
+        verify(mockResponse).getWriter();
+    }
+
+    @Test
+    public void testDoPostSuccess() throws IOException {
+        PolicyManagerServlet servlet = new PolicyManagerServlet();
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
+        PrintWriter mockPrintWriter = Mockito.mock(PrintWriter.class);
+
+        doThrow(IOException.class).when(mockRequest).getReader();
+        when(mockResponse.getWriter()).thenReturn(mockPrintWriter);
+
+        servlet.doPost(null, mockResponse);
+        verify(mockResponse).getWriter();
+    }
+
+    @PrepareForTest(ServletFileUpload.class)
+    @Test
+    public void testDoPostUploadFileException() {
+        PolicyManagerServlet servlet = new PolicyManagerServlet();
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
+        PowerMockito.mockStatic(ServletFileUpload.class);
+        when(ServletFileUpload.isMultipartContent(mockRequest)).thenReturn(true);
+        servlet.doPost(mockRequest, mockResponse);
+        PowerMockito.verifyStatic(ServletFileUpload.class, Mockito.times(1));
     }
 }
