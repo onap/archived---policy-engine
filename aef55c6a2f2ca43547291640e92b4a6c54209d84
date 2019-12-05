@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab7ba2c6_a479cc79",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/components/HumanPolicyComponentTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-12-05T16:02:54Z",
+      "side": 1,
+      "message": "I would normally put the @Before and @BeforeClass as the first methods in the test class",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 0
+      },
+      "revId": "aef55c6a2f2ca43547291640e92b4a6c54209d84",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
