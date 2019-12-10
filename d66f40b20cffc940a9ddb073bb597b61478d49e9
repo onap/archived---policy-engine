@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a1e4c95_bda76227",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/components/HumanPolicyComponentTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-10T22:23:38Z",
+      "side": 1,
+      "message": "\"PrePost\" \u003d\u003e \"Post\"?\n\nsame question below",
+      "revId": "d66f40b20cffc940a9ddb073bb597b61478d49e9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
