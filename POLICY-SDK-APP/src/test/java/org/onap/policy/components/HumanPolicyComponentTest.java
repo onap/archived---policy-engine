@@ -34,6 +34,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.JAXBElement;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
@@ -41,6 +45,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -52,6 +57,16 @@ public class HumanPolicyComponentTest {
     private static File temp;
     private static File tempAction;
     private static File tempConfig;
+
+    @BeforeClass
+    public static void setup() throws IOException {
+        temp = File.createTempFile("tmpFile", ".tmp");
+        tempAction = File.createTempFile("Action_test", ".tmp");
+        tempConfig = File.createTempFile("Config_test", ".tmp");
+        temp.deleteOnExit();
+        tempAction.deleteOnExit();
+        tempConfig.deleteOnExit();
+    }
 
     @Test
     public void testAttributeIdentifiers() {
@@ -67,16 +82,6 @@ public class HumanPolicyComponentTest {
 
         attrIds.setType(newTestType);
         assertEquals(newTestType, attrIds.getType());
-    }
-
-    @BeforeClass
-    public static void setup() throws IOException {
-        temp = File.createTempFile("tmpFile", ".tmp");
-        tempAction = File.createTempFile("Action_test", ".tmp");
-        tempConfig = File.createTempFile("Config_test", ".tmp");
-        temp.deleteOnExit();
-        tempAction.deleteOnExit();
-        tempConfig.deleteOnExit();
     }
 
     @SuppressWarnings("unchecked")
@@ -136,46 +141,105 @@ public class HumanPolicyComponentTest {
     }
 
     @Test
-    public void testHtmlProcessorOnPreVisitPolicySet() throws IOException {
+    public void testHtmlProcessorOnPrePostVisitPolicySet() throws IOException {
         PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
         PolicySetType mockPolicyParent = Mockito.mock(PolicySetType.class);
-        when(mockPolicySetType.getPolicySetOrPolicyOrPolicySetIdReference()).thenReturn(Collections.emptyList());
+
         processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        when(mockPolicySetType.getPolicySetOrPolicyOrPolicySetIdReference()).thenReturn(Collections.emptyList());
+        when(mockPolicySetType.getDescription()).thenReturn(null);
 
         CallbackResult preResult = processor.onPreVisitPolicySet(mockPolicyParent, mockPolicySetType);
         assertEquals("CONTINUE", preResult.name());
+        verify(mockPolicySetType, atLeast(1)).getPolicySetOrPolicyOrPolicySetIdReference();
+        verify(mockPolicySetType, atLeast(1)).getDescription();
 
         CallbackResult postResult = processor.onPostVisitPolicySet(mockPolicyParent, mockPolicySetType);
         assertEquals("CONTINUE", postResult.name());
+        verify(mockPolicySetType, atLeast(1)).getPolicySetOrPolicyOrPolicySetIdReference();
+        verify(mockPolicySetType, atLeast(1)).getDescription();
     }
 
     @Test
-    public void testHtmlProcessorOnPreVisitPolicySetNullParent() throws IOException {
+    public void testHtmlProcessorOnPrePostVisitPolicySetNullParent() throws IOException {
         PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
         PolicySetType mockPolicyParent = null;
         JAXBElement<?> mockElement = Mockito.mock(JAXBElement.class);
+
         List<JAXBElement<?>> testList = new ArrayList<JAXBElement<?>>();
         testList.add(mockElement);
-        when(mockPolicySetType.getPolicySetOrPolicyOrPolicySetIdReference()).thenReturn(testList);
+
         processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        when(mockPolicySetType.getPolicySetOrPolicyOrPolicySetIdReference()).thenReturn(testList);
+        when(mockPolicySetType.getDescription()).thenReturn("");
 
         CallbackResult res = processor.onPreVisitPolicySet(mockPolicyParent, mockPolicySetType);
         assertEquals("CONTINUE", res.name());
+        verify(mockPolicySetType, atLeast(1)).getPolicySetOrPolicyOrPolicySetIdReference();
+        verify(mockPolicySetType, atLeast(1)).getDescription();
 
         CallbackResult postResult = processor.onPostVisitPolicySet(mockPolicyParent, mockPolicySetType);
         assertEquals("CONTINUE", postResult.name());
+        verify(mockPolicySetType, atLeast(1)).getPolicySetOrPolicyOrPolicySetIdReference();
+        verify(mockPolicySetType, atLeast(1)).getDescription();
+    }
+
+    @Test
+    public void testHtmlProcessorOnPrePostVisitPolicy() throws IOException {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        PolicyType mockPolicyType = Mockito.mock(PolicyType.class);
+        List<Object> testList = new ArrayList<Object>();
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        when(mockPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()).thenReturn(testList);
+        when(mockPolicySetType.getDescription()).thenReturn(null);
+
+        CallbackResult preResult = processor.onPreVisitPolicy(mockPolicySetType, mockPolicyType);
+        assertEquals("CONTINUE", preResult.name());
+        verify(mockPolicyType, atLeast(1)).getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
+        verify(mockPolicyType, atLeast(1)).getDescription();
+
+        CallbackResult postResult = processor.onPostVisitPolicy(mockPolicySetType, mockPolicyType);
+        assertEquals("CONTINUE", postResult.name());
+        verify(mockPolicyType, atLeast(1)).getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
+        verify(mockPolicyType, atLeast(1)).getDescription();
+    }
+
+    @Test
+    public void testHtmlProcessorOnPrePostVisitPolicyNullParent() throws IOException {
+        PolicyType mockPolicyType = Mockito.mock(PolicyType.class);
+        PolicySetType mockPolicyParent = null;
+        List<Object> testList = new ArrayList<Object>();
+        testList.add(new Object());
+        processor = new HtmlProcessor(temp, mockPolicyType);
+
+        when(mockPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()).thenReturn(testList);
+        when(mockPolicyType.getDescription()).thenReturn("");
+
+        CallbackResult res = processor.onPreVisitPolicy(mockPolicyParent, mockPolicyType);
+        assertEquals("CONTINUE", res.name());
+        verify(mockPolicyType, atLeast(1)).getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
+        verify(mockPolicyType, atLeast(1)).getDescription();
+
+        CallbackResult postResult = processor.onPostVisitPolicy(mockPolicyParent, mockPolicyType);
+        assertEquals("CONTINUE", postResult.name());
+        verify(mockPolicyType, atLeast(1)).getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
+        verify(mockPolicyType, atLeast(1)).getDescription();
     }
 
     @Test
     public void testHtmlProcessorPolicy() throws IOException {
         PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
         PolicyType mockPolicyType = Mockito.mock(PolicyType.class);
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
         when(mockPolicyType.getRuleCombiningAlgId()).thenReturn(null);
         when(mockPolicyType.getPolicyId()).thenReturn(null);
         when(mockPolicyType.getVersion()).thenReturn(null);
         when(mockPolicyType.getTarget()).thenReturn(null);
 
-        processor = new HtmlProcessor(temp, mockPolicySetType);
         processor.policy(mockPolicyType);
         verify(mockPolicyType).getRuleCombiningAlgId();
         verify(mockPolicyType).getPolicyId();
@@ -184,17 +248,138 @@ public class HumanPolicyComponentTest {
     }
 
     @Test
+    public void testHtmlProcessorPolicyListEmpty() throws IOException {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        PolicyType mockPolicyType = Mockito.mock(PolicyType.class);
+        TargetType mockTargetType = Mockito.mock(TargetType.class);
+        List<AnyOfType> anyOfList = new ArrayList<AnyOfType>();
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        when(mockPolicyType.getRuleCombiningAlgId()).thenReturn(null);
+        when(mockPolicyType.getPolicyId()).thenReturn(null);
+        when(mockPolicyType.getVersion()).thenReturn(null);
+        when(mockPolicyType.getTarget()).thenReturn(mockTargetType);
+        when(mockTargetType.getAnyOf()).thenReturn(anyOfList);
+
+        processor.policy(mockPolicyType);
+
+        verify(mockPolicyType, atLeast(1)).getRuleCombiningAlgId();
+        verify(mockPolicyType, atLeast(1)).getPolicyId();
+        verify(mockPolicyType, atLeast(1)).getVersion();
+        verify(mockPolicyType, atLeast(1)).getTarget();
+        verify(mockTargetType, atLeast(1)).getAnyOf();
+    }
+
+    @Test
+    public void testHtmlProcessorPolicyListNotEmpty() throws IOException {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        PolicyType mockPolicyType = Mockito.mock(PolicyType.class);
+        TargetType mockTargetType = Mockito.mock(TargetType.class);
+        List<AnyOfType> anyOfList = new ArrayList<AnyOfType>();
+        anyOfList.add(new AnyOfType());
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        when(mockPolicyType.getRuleCombiningAlgId()).thenReturn(null);
+        when(mockPolicyType.getPolicyId()).thenReturn(null);
+        when(mockPolicyType.getVersion()).thenReturn(null);
+        when(mockPolicyType.getTarget()).thenReturn(mockTargetType);
+        when(mockTargetType.getAnyOf()).thenReturn(anyOfList);
+
+        processor.policy(mockPolicyType);
+        verify(mockPolicyType, atLeast(1)).getRuleCombiningAlgId();
+        verify(mockPolicyType, atLeast(1)).getPolicyId();
+        verify(mockPolicyType, atLeast(1)).getVersion();
+        verify(mockPolicyType, atLeast(1)).getTarget();
+        verify(mockTargetType, atLeast(1)).getAnyOf();
+    }
+
+    @Test
+    public void testHtmlProcessorPolicyNull() throws IOException {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        PolicyType mockPolicyType = Mockito.mock(PolicyType.class);
+        TargetType mockTargetType = Mockito.mock(TargetType.class);
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        when(mockPolicyType.getRuleCombiningAlgId()).thenReturn(null);
+        when(mockPolicyType.getPolicyId()).thenReturn(null);
+        when(mockPolicyType.getVersion()).thenReturn(null);
+        when(mockPolicyType.getTarget()).thenReturn(mockTargetType);
+        when(mockPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()).thenReturn(null);
+        when(mockTargetType.getAnyOf()).thenReturn(null);
+
+        processor.policy(mockPolicyType);
+        verify(mockPolicyType, atLeast(1)).getRuleCombiningAlgId();
+        verify(mockPolicyType, atLeast(1)).getPolicyId();
+        verify(mockPolicyType, atLeast(1)).getVersion();
+        verify(mockPolicyType, atLeast(1)).getTarget();
+        verify(mockPolicyType, atLeast(1)).getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
+        verify(mockTargetType, atLeast(1)).getAnyOf();
+    }
+
+    @Test
     public void testHtmlProcessorPolicySet() throws IOException {
         PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
         when(mockPolicySetType.getPolicyCombiningAlgId()).thenReturn("");
         when(mockPolicySetType.getPolicySetId()).thenReturn("");
         when(mockPolicySetType.getVersion()).thenReturn("");
 
-        processor = new HtmlProcessor(temp, mockPolicySetType);
         processor.policySet(mockPolicySetType, "");
         verify(mockPolicySetType, atLeast(1)).getPolicyCombiningAlgId();
         verify(mockPolicySetType, atLeast(1)).getPolicySetId();
         verify(mockPolicySetType, atLeast(1)).getVersion();
+    }
+
+    @Test
+    public void testHtmlProcessorPolicySetNull() {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        TargetType mockTargetType = Mockito.mock(TargetType.class);
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        when(mockPolicySetType.getTarget()).thenReturn(mockTargetType);
+        when(mockTargetType.getAnyOf()).thenReturn(null);
+        when(mockPolicySetType.getPolicySetOrPolicyOrPolicySetIdReference()).thenReturn(null);
+
+        processor.policySet(mockPolicySetType, "");
+        verify(mockPolicySetType, atLeast(1)).getTarget();
+        verify(mockTargetType, atLeast(1)).getAnyOf();
+        verify(mockPolicySetType, atLeast(1)).getPolicySetOrPolicyOrPolicySetIdReference();
+    }
+
+    @Test
+    public void testHtmlProcessorPolicySetEmpty() {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        TargetType mockTargetType = Mockito.mock(TargetType.class);
+        List<AnyOfType> anyOfList = new ArrayList<AnyOfType>();
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        when(mockPolicySetType.getTarget()).thenReturn(mockTargetType);
+        when(mockTargetType.getAnyOf()).thenReturn(anyOfList);
+        when(mockPolicySetType.getPolicySetOrPolicyOrPolicySetIdReference()).thenReturn(null);
+
+        processor.policySet(mockPolicySetType, "");
+        verify(mockPolicySetType, atLeast(1)).getTarget();
+        verify(mockTargetType, atLeast(1)).getAnyOf();
+        verify(mockPolicySetType, atLeast(1)).getPolicySetOrPolicyOrPolicySetIdReference();
+    }
+
+    @Test
+    public void testHtmlProcessorPolicySetNotEmpty() {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        TargetType mockTargetType = Mockito.mock(TargetType.class);
+        List<AnyOfType> anyOfList = new ArrayList<AnyOfType>();
+        anyOfList.add(new AnyOfType());
+
+        when(mockPolicySetType.getTarget()).thenReturn(mockTargetType);
+        when(mockTargetType.getAnyOf()).thenReturn(anyOfList);
+        when(mockPolicySetType.getPolicySetOrPolicyOrPolicySetIdReference()).thenReturn(null);
+
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+        processor.policySet(mockPolicySetType, "");
+        verify(mockPolicySetType, atLeast(1)).getTarget();
+        verify(mockTargetType, atLeast(1)).getAnyOf();
+        verify(mockPolicySetType, atLeast(1)).getPolicySetOrPolicyOrPolicySetIdReference();
     }
 
     @Test
@@ -205,12 +390,12 @@ public class HumanPolicyComponentTest {
         ObligationExpressionsType mockOESType = Mockito.mock(ObligationExpressionsType.class);
         ObligationExpressionType mockOEType = Mockito.mock(ObligationExpressionType.class);
         EffectType effectTypePermit = EffectType.PERMIT;
+        processor = new HtmlProcessor(temp, mockPolicySetType);
 
         List<ObligationExpressionType> oblList = new ArrayList<ObligationExpressionType>();
         oblList.add(mockOEType);
 
         when(mockRuleType.getEffect()).thenReturn(effectTypePermit);
-
         when(mockRuleType.getRuleId()).thenReturn(null);
         when(mockRuleType.getTarget()).thenReturn(null);
         when(mockRuleType.getCondition()).thenReturn(mockConditionType);
@@ -218,7 +403,6 @@ public class HumanPolicyComponentTest {
         when(mockOESType.getObligationExpression()).thenReturn(oblList);
         when(mockOEType.getFulfillOn()).thenReturn(effectTypePermit);
 
-        processor = new HtmlProcessor(temp, mockPolicySetType);
         processor.rule(mockRuleType);
 
         verify(mockRuleType, atLeast(1)).getRuleId();
@@ -229,4 +413,152 @@ public class HumanPolicyComponentTest {
         verify(mockOEType, atLeast(1)).getFulfillOn();
     }
 
+    @Test
+    public void testHtmlProcessorRuleNullEmptyList() throws IOException {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        RuleType mockRuleType = Mockito.mock(RuleType.class);
+        TargetType mockTargetType = Mockito.mock(TargetType.class);
+        EffectType effectTypePermit = EffectType.PERMIT;
+        AdviceExpressionsType mockAdviceExsType = Mockito.mock(AdviceExpressionsType.class);
+        AdviceExpressionType mockAdviceEx = Mockito.mock(AdviceExpressionType.class);
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        List<AnyOfType> anyOfList = new ArrayList<AnyOfType>();
+        List<AdviceExpressionType> adviceExList = new ArrayList<AdviceExpressionType>();
+        adviceExList.add(mockAdviceEx);
+
+        when(mockRuleType.getEffect()).thenReturn(effectTypePermit);
+        when(mockRuleType.getRuleId()).thenReturn(null);
+        when(mockRuleType.getTarget()).thenReturn(mockTargetType);
+        when(mockRuleType.getObligationExpressions()).thenReturn(null);
+        when(mockRuleType.getAdviceExpressions()).thenReturn(mockAdviceExsType);
+        when(mockTargetType.getAnyOf()).thenReturn(null);
+        when(mockAdviceExsType.getAdviceExpression()).thenReturn(adviceExList);
+        when(mockAdviceEx.getAttributeAssignmentExpression()).thenReturn(null);
+        when(mockAdviceEx.getAppliesTo()).thenReturn(effectTypePermit);
+
+        processor.rule(mockRuleType);
+
+        verify(mockRuleType, atLeast(1)).getEffect();
+        verify(mockRuleType, atLeast(1)).getRuleId();
+        verify(mockRuleType, atLeast(1)).getTarget();
+        verify(mockRuleType, atLeast(1)).getCondition();
+        verify(mockRuleType, atLeast(1)).getObligationExpressions();
+        verify(mockRuleType, atLeast(1)).getAdviceExpressions();
+        verify(mockTargetType, atLeast(1)).getAnyOf();
+        verify(mockAdviceExsType, atLeast(1)).getAdviceExpression();
+        verify(mockAdviceEx, atLeast(1)).getAttributeAssignmentExpression();
+        verify(mockAdviceEx, atLeast(1)).getAppliesTo();
+
+        when(mockTargetType.getAnyOf()).thenReturn(anyOfList);
+        processor.rule(mockRuleType);
+        verify(mockTargetType, atLeast(1)).getAnyOf();
+    }
+
+    @Test
+    public void testHtmlProcessorRuleNonNullObjects() {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        RuleType mockRuleType = Mockito.mock(RuleType.class);
+        TargetType mockTargetType = Mockito.mock(TargetType.class);
+        AdviceExpressionsType mockAdvice = Mockito.mock(AdviceExpressionsType.class);
+        ObligationExpressionsType mockObEx = Mockito.mock(ObligationExpressionsType.class);
+        AdviceExpressionType adviceExpTypeMock = Mockito.mock(AdviceExpressionType.class);
+        ObligationExpressionType mockObExType = Mockito.mock(ObligationExpressionType.class);
+        EffectType effectTypePermit = EffectType.PERMIT;
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        List<AnyOfType> anyOfList = new ArrayList<AnyOfType>();
+        anyOfList.add(new AnyOfType());
+
+        List<AdviceExpressionType> adviceList = new ArrayList<AdviceExpressionType>();
+        adviceList.add(adviceExpTypeMock);
+
+        List<AttributeAssignmentExpressionType> attrList = new ArrayList<AttributeAssignmentExpressionType>();
+
+        List<ObligationExpressionType> obExList = new ArrayList<ObligationExpressionType>();
+        obExList.add(mockObExType);
+
+        List<Object> contentList = new ArrayList<>();
+        contentList.add(new Object());
+
+        when(mockRuleType.getRuleId()).thenReturn("");
+        when(mockRuleType.getTarget()).thenReturn(mockTargetType);
+        when(mockRuleType.getEffect()).thenReturn(effectTypePermit);
+        when(mockTargetType.getAnyOf()).thenReturn(anyOfList);
+        when(mockRuleType.getAdviceExpressions()).thenReturn(mockAdvice);
+        when(mockAdvice.getAdviceExpression()).thenReturn(adviceList);
+        when(mockRuleType.getObligationExpressions()).thenReturn(mockObEx);
+        when(mockObEx.getObligationExpression()).thenReturn(obExList);
+        when(mockObExType.getAttributeAssignmentExpression()).thenReturn(null);
+        when(mockObExType.getFulfillOn()).thenReturn(effectTypePermit);
+        when(adviceExpTypeMock.getAdviceId()).thenReturn("");
+        when(adviceExpTypeMock.getAppliesTo()).thenReturn(effectTypePermit);
+        when(adviceExpTypeMock.getAttributeAssignmentExpression()).thenReturn(attrList);
+
+        processor.rule(mockRuleType);
+
+        verify(mockRuleType, atLeast(1)).getRuleId();
+        verify(mockRuleType, atLeast(1)).getTarget();
+        verify(mockRuleType, atLeast(1)).getEffect();
+        verify(mockRuleType, atLeast(1)).getAdviceExpressions();
+        verify(mockRuleType, atLeast(1)).getObligationExpressions();
+        verify(mockTargetType, atLeast(1)).getAnyOf();
+        verify(mockObEx, atLeast(1)).getObligationExpression();
+        verify(mockObExType, atLeast(1)).getAttributeAssignmentExpression();
+        verify(mockObExType, atLeast(1)).getFulfillOn();
+        verify(mockAdvice, atLeast(1)).getAdviceExpression();
+        verify(adviceExpTypeMock, atLeast(1)).getAdviceId();
+        verify(adviceExpTypeMock, atLeast(1)).getAppliesTo();
+        verify(adviceExpTypeMock, atLeast(1)).getAttributeAssignmentExpression();
+    }
+
+    @Test
+    public void testHtmlProcessorOnPreVisitRule() {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        PolicyType mockPolicyType = null;
+        RuleType mockRuleType = Mockito.mock(RuleType.class);
+        EffectType effectTypePermit = EffectType.PERMIT;
+        TargetType mockTargetType = Mockito.mock(TargetType.class);
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        List<AnyOfType> anyOfList = new ArrayList<AnyOfType>();
+        anyOfList.add(new AnyOfType());
+
+        when(mockRuleType.getCondition()).thenReturn(null);
+        when(mockRuleType.getDescription()).thenReturn(null);
+        when(mockRuleType.getEffect()).thenReturn(effectTypePermit);
+        when(mockRuleType.getTarget()).thenReturn(mockTargetType);
+        when(mockTargetType.getAnyOf()).thenReturn(anyOfList);
+
+        CallbackResult callbackResult = processor.onPreVisitRule(mockPolicyType, mockRuleType);
+        assertNotNull(callbackResult);
+
+        verify(mockRuleType, atLeast(1)).getCondition();
+        verify(mockRuleType, atLeast(1)).getDescription();
+        verify(mockRuleType, atLeast(1)).getEffect();
+        verify(mockRuleType, atLeast(1)).getTarget();
+        verify(mockRuleType, atLeast(1)).getAdviceExpressions();
+        verify(mockTargetType, atLeast(1)).getAnyOf();
+
+        mockPolicyType = Mockito.mock(PolicyType.class);
+        when(mockRuleType.getDescription()).thenReturn("");
+
+        callbackResult = processor.onPreVisitRule(mockPolicyType, mockRuleType);
+        assertNotNull(callbackResult);
+    }
+
+    @Test
+    public void testHtmlProcessorOnPostVisitRule() {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        PolicyType mockPolicyType = null;
+        RuleType mockRuleType = Mockito.mock(RuleType.class);
+
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+        CallbackResult callbackResult = processor.onPostVisitRule(mockPolicyType, mockRuleType);
+        assertNotNull(callbackResult);
+
+        mockPolicyType = Mockito.mock(PolicyType.class);
+        callbackResult = processor.onPostVisitRule(mockPolicyType, mockRuleType);
+        assertNotNull(callbackResult);
+    }
 }
