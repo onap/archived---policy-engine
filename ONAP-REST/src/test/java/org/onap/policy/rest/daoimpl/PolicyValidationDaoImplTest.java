@@ -77,6 +77,8 @@ public class PolicyValidationDaoImplTest {
      */
     @BeforeClass
     public static void setupAll() throws SQLException {
+        System.setProperty("h2.bindAddress", "localhost");
+
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName("org.h2.Driver");
         // In-memory DB for testing

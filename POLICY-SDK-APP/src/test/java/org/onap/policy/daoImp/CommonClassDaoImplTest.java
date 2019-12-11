@@ -78,6 +78,8 @@ public class CommonClassDaoImplTest {
     @Before
     public void setUp() throws Exception {
         try {
+            System.setProperty("h2.bindAddress", "localhost");
+
             BasicDataSource dataSource = new BasicDataSource();
             dataSource.setDriverClassName("org.h2.Driver");
             // In-memory DB for testing
