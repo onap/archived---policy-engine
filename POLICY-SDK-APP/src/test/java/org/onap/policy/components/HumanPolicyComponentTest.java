@@ -23,7 +23,9 @@ package org.onap.policy.components;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,16 +38,23 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeSelectorType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -155,6 +164,7 @@ public class HumanPolicyComponentTest {
         verify(mockPolicySetType, atLeast(1)).getPolicySetOrPolicyOrPolicySetIdReference();
         verify(mockPolicySetType, atLeast(1)).getDescription();
     }
+
     @Test
     public void testHtmlProcessorOnPreVisitPolicySetNullParent() {
         PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
@@ -456,6 +466,20 @@ public class HumanPolicyComponentTest {
         verify(mockRuleType, atLeast(1)).getObligationExpressions();
         verify(mockOESType, atLeast(1)).getObligationExpression();
         verify(mockOEType, atLeast(1)).getFulfillOn();
+
+        JAXBElement<?> mockJaxBElement = Mockito.mock(JAXBElement.class);
+        Object mockValueObject = Mockito.mock(Object.class);
+
+        doReturn(mockJaxBElement).when(mockConditionType).getExpression();
+        doReturn(mockValueObject).when(mockJaxBElement).getValue();
+
+        try {
+            processor.rule(mockRuleType);
+            fail();
+        } catch (IllegalArgumentException e) {
+            verify(mockConditionType, atLeast(1)).getExpression();
+            verify(mockJaxBElement, atLeast(1)).getValue();
+        }
     }
 
     @Test
@@ -605,5 +629,210 @@ public class HumanPolicyComponentTest {
         mockPolicyType = Mockito.mock(PolicyType.class);
         callbackResult = processor.onPostVisitRule(mockPolicyType, mockRuleType);
         assertNotNull(callbackResult);
+    }
+
+    @Test
+    public void testHtmlProcessorProcessAttributeAssignments() {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        RuleType mockRuleType = Mockito.mock(RuleType.class);
+        EffectType effectTypePermit = EffectType.PERMIT;
+        ObligationExpressionsType mockOblExsType = Mockito.mock(ObligationExpressionsType.class);
+
+        ObligationExpressionType mockOblExTypeListObj = Mockito.mock(ObligationExpressionType.class);
+        List<ObligationExpressionType> oblExTypeList = new ArrayList<ObligationExpressionType>();
+        oblExTypeList.add(mockOblExTypeListObj);
+
+        AttributeAssignmentExpressionType mockattrAssignListObj = Mockito.mock(AttributeAssignmentExpressionType.class);
+        List<AttributeAssignmentExpressionType> attrAssignList = new ArrayList<AttributeAssignmentExpressionType>();
+        attrAssignList.add(mockattrAssignListObj);
+
+        JAXBElement<?> jaxbElementMock = Mockito.mock(JAXBElement.class);
+        AttributeValueType attrValTypeMock = Mockito.mock(AttributeValueType.class);
+        AttributeDesignatorType attrDesignTypeMock = Mockito.mock(AttributeDesignatorType.class);
+        AttributeSelectorType attrSelTypeMock = Mockito.mock(AttributeSelectorType.class);
+        ApplyType applyTypeMock = Mockito.mock(ApplyType.class);
+        Object genericObjectMock = Mockito.mock(Object.class);
+
+        Object mockContentListObject = Mockito.mock(Object.class);
+        List<Object> contentList = new ArrayList<Object>();
+        contentList.add(mockContentListObject);
+        contentList.add(mockContentListObject);
+
+        when(mockRuleType.getEffect()).thenReturn(effectTypePermit);
+        when(mockRuleType.getObligationExpressions()).thenReturn(mockOblExsType);
+        when(mockOblExsType.getObligationExpression()).thenReturn(oblExTypeList);
+        when(mockOblExTypeListObj.getAttributeAssignmentExpression()).thenReturn(attrAssignList);
+        when(mockOblExTypeListObj.getFulfillOn()).thenReturn(effectTypePermit);
+        when(mockattrAssignListObj.getCategory()).thenReturn("");
+        when(mockattrAssignListObj.getAttributeId()).thenReturn("");
+        doReturn(jaxbElementMock).when(mockattrAssignListObj).getExpression();
+        doReturn(attrValTypeMock).when(jaxbElementMock).getValue();
+        when(attrValTypeMock.getContent()).thenReturn(contentList);
+
+        processor.rule(mockRuleType);
+
+        verify(mockRuleType, atLeast(1)).getEffect();
+        verify(mockRuleType, atLeast(1)).getObligationExpressions();
+        verify(mockOblExsType, atLeast(1)).getObligationExpression();
+        verify(mockOblExTypeListObj, atLeast(1)).getAttributeAssignmentExpression();
+        verify(mockOblExTypeListObj, atLeast(1)).getFulfillOn();
+        verify(mockattrAssignListObj, atLeast(1)).getExpression();
+        verify(jaxbElementMock, atLeast(1)).getValue();
+        verify(attrValTypeMock, atLeast(1)).getContent();
+
+        doReturn(attrDesignTypeMock).when(jaxbElementMock).getValue();
+        processor.rule(mockRuleType);
+        verify(jaxbElementMock, atLeast(1)).getValue();
+
+        doReturn(attrSelTypeMock).when(jaxbElementMock).getValue();
+        processor.rule(mockRuleType);
+        verify(jaxbElementMock, atLeast(1)).getValue();
+
+        doReturn(applyTypeMock).when(jaxbElementMock).getValue();
+        processor.rule(mockRuleType);
+        verify(jaxbElementMock, atLeast(1)).getValue();
+
+        doReturn(genericObjectMock).when(jaxbElementMock).getValue();
+        processor.rule(mockRuleType);
+        verify(jaxbElementMock, atLeast(1)).getValue();
+    }
+
+    @Test
+    public void testHtmlProcessorTarget() {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        processor.target(null);
+
+        AnyOfType mockAnyOfType = Mockito.mock(AnyOfType.class);
+        List<AnyOfType> anyOfList = new ArrayList<AnyOfType>();
+        anyOfList.add(mockAnyOfType);
+        anyOfList.add(mockAnyOfType); // adding duplicate element
+
+        AllOfType mockAllOfType = Mockito.mock(AllOfType.class);
+        List<AllOfType> allOfTypeList = new ArrayList<AllOfType>();
+        allOfTypeList.add(mockAllOfType);
+        allOfTypeList.add(mockAllOfType); // adding duplicate element
+
+        MatchType mockMatchType = Mockito.mock(MatchType.class);
+        List<MatchType> matchTypeList = new ArrayList<MatchType>();
+        matchTypeList.add(mockMatchType);
+        matchTypeList.add(mockMatchType); // adding duplicate element
+
+        AttributeValueType mockAttrValType = Mockito.mock(AttributeValueType.class);
+        AttributeDesignatorType mockAttrDesType = Mockito.mock(AttributeDesignatorType.class);
+        AttributeSelectorType mockAttrSelType = Mockito.mock(AttributeSelectorType.class);
+
+        List<Object> contentList = new ArrayList<Object>();
+
+        when(mockAnyOfType.getAllOf()).thenReturn(allOfTypeList);
+        when(mockAllOfType.getMatch()).thenReturn(matchTypeList);
+        when(mockMatchType.getAttributeValue()).thenReturn(mockAttrValType);
+        when(mockMatchType.getMatchId()).thenReturn("urn:oasis:names:tc:xacml:1.0:function:string-equal");
+        when(mockMatchType.getAttributeDesignator()).thenReturn(mockAttrDesType);
+        when(mockAttrValType.getDataType()).thenReturn("");
+        when(mockAttrValType.getContent()).thenReturn(contentList);
+        when(mockAttrDesType.getCategory()).thenReturn("");
+        when(mockAttrDesType.getAttributeId()).thenReturn("");
+        when(mockAttrDesType.getIssuer()).thenReturn("");
+        when(mockAttrDesType.getDataType()).thenReturn("");
+        processor.target(anyOfList);
+        verify(mockAnyOfType, atLeast(1)).getAllOf();
+        verify(mockAllOfType, atLeast(1)).getMatch();
+        verify(mockMatchType, atLeast(1)).getAttributeValue();
+        verify(mockMatchType, atLeast(1)).getMatchId();
+        verify(mockMatchType, atLeast(1)).getAttributeDesignator();
+        verify(mockAttrValType, atLeast(1)).getDataType();
+        verify(mockAttrValType, atLeast(1)).getContent();
+        verify(mockAttrDesType, atLeast(1)).getCategory();
+        verify(mockAttrDesType, atLeast(1)).getAttributeId();
+        verify(mockAttrDesType, atLeast(1)).getIssuer();
+        verify(mockAttrDesType, atLeast(1)).getDataType();
+
+        when(mockMatchType.getAttributeDesignator()).thenReturn(null);
+        when(mockMatchType.getAttributeSelector()).thenReturn(mockAttrSelType);
+        when(mockAttrSelType.getCategory()).thenReturn("");
+        when(mockAttrSelType.getContextSelectorId()).thenReturn("");
+        when(mockAttrSelType.getDataType()).thenReturn("");
+        processor.target(anyOfList);
+        verify(mockMatchType, atLeast(1)).getAttributeDesignator();
+        verify(mockMatchType, atLeast(1)).getAttributeSelector();
+        verify(mockAttrSelType, atLeast(1)).getCategory();
+        verify(mockAttrSelType, atLeast(1)).getContextSelectorId();
+        verify(mockAttrSelType, atLeast(1)).getDataType();
+
+        when(mockMatchType.getAttributeDesignator()).thenReturn(null);
+        when(mockMatchType.getAttributeSelector()).thenReturn(null);
+        processor.target(anyOfList);
+        verify(mockMatchType, atLeast(1)).getAttributeDesignator();
+        verify(mockMatchType, atLeast(1)).getAttributeSelector();
+    }
+
+    @Test
+    public void testHtmlProcessorStringifyExpression() {
+        PolicySetType mockPolicySetType = Mockito.mock(PolicySetType.class);
+        processor = new HtmlProcessor(temp, mockPolicySetType);
+
+        RuleType mockRuleType = Mockito.mock(RuleType.class);
+        ConditionType mockConditionType = Mockito.mock(ConditionType.class);
+        JAXBElement<?> mockJAXBElement = Mockito.mock(JAXBElement.class);
+        EffectType effectTypePermit = EffectType.PERMIT;
+        Object mockExpressObject = Mockito.mock(Object.class);
+        AttributeDesignatorType mockAttrDesType = Mockito.mock(AttributeDesignatorType.class);
+        AttributeSelectorType mockAttrSelType = Mockito.mock(AttributeSelectorType.class);
+        AttributeValueType mockAttrValType = Mockito.mock(AttributeValueType.class);
+        VariableReferenceType mockVarRefType = Mockito.mock(VariableReferenceType.class);
+
+        Object mockContentObject = Mockito.mock(Object.class);
+        List<Object> contentList = new ArrayList<Object>();
+        contentList.add(mockContentObject);
+
+        when(mockRuleType.getEffect()).thenReturn(effectTypePermit);
+        when(mockRuleType.getCondition()).thenReturn(mockConditionType);
+        doReturn(mockJAXBElement).when(mockConditionType).getExpression();
+        doReturn(mockExpressObject).when(mockJAXBElement).getValue();
+
+        try {
+            processor.rule(mockRuleType);
+            fail();
+        } catch (IllegalArgumentException e) {
+            verify(mockRuleType, atLeast(1)).getEffect();
+            verify(mockRuleType, atLeast(1)).getCondition();
+            verify(mockConditionType, atLeast(1)).getExpression();
+            verify(mockJAXBElement, atLeast(1)).getValue();
+        }
+
+        doReturn(mockAttrDesType).when(mockJAXBElement).getValue();
+        when(mockAttrDesType.getCategory()).thenReturn("");
+        when(mockAttrDesType.getAttributeId()).thenReturn("");
+        when(mockAttrDesType.getDataType()).thenReturn("");
+        processor.rule(mockRuleType);
+        verify(mockJAXBElement, atLeast(1)).getValue();
+        verify(mockAttrDesType, atLeast(1)).getCategory();
+        verify(mockAttrDesType, atLeast(1)).getAttributeId();
+        verify(mockAttrDesType, atLeast(1)).getDataType();
+
+        doReturn(mockAttrSelType).when(mockJAXBElement).getValue();
+        when(mockAttrSelType.getPath()).thenReturn("SamplePath/text()");
+        processor.rule(mockRuleType);
+        verify(mockJAXBElement, atLeast(1)).getValue();
+        verify(mockAttrSelType, atLeast(1)).getPath();
+
+        when(mockAttrSelType.getPath()).thenReturn("");
+        processor.rule(mockRuleType);
+        verify(mockJAXBElement, atLeast(1)).getValue();
+        verify(mockAttrSelType, atLeast(1)).getPath();
+
+        doReturn(mockAttrValType).when(mockJAXBElement).getValue();
+        when(mockAttrValType.getContent()).thenReturn(contentList);
+        processor.rule(mockRuleType);
+        verify(mockJAXBElement, atLeast(1)).getValue();
+        verify(mockAttrValType, atLeast(1)).getContent();
+
+        doReturn(mockVarRefType).when(mockJAXBElement).getValue();
+        processor.rule(mockRuleType);
+        verify(mockJAXBElement, atLeast(1)).getValue();
     }
 }

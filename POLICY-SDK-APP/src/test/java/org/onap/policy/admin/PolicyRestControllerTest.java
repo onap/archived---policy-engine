@@ -26,18 +26,21 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -263,8 +266,8 @@ public class PolicyRestControllerTest {
         BufferedReader reader = new BufferedReader(new StringReader("{\"foo\":\"bar\"}"));
         Mockito.when(request.getReader()).thenReturn(reader);
         Mockito.when(request.getRequestURI()).thenReturn("/pap/foo/");
-        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() ->
-            controller.searchPolicy(request, response));
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> controller.searchPolicy(request, response));
     }
 
     @Test
@@ -291,5 +294,27 @@ public class PolicyRestControllerTest {
         PolicyRestController controller = new PolicyRestController();
         String strReturn = controller.notifyOtherPapsToUpdateConfigurations("mode", "newName", "oldName");
         assertNull(strReturn);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetDictionaryController() throws IOException {
+        PolicyRestController controller = new PolicyRestController();
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
+        PrintWriter mockPrintWriter = Mockito.mock(PrintWriter.class);
+
+        when(mockRequest.getRequestURI()).thenReturn("//testRequestURI///getDictionary");
+        when(mockResponse.getWriter()).thenThrow(IOException.class);
+        controller.getDictionaryController(mockRequest, mockResponse);
+        verify(mockRequest, atLeast(1)).getRequestURI();
+        verify(mockResponse, atLeast(1)).getWriter();
+
+        reset(mockResponse);
+        when(mockRequest.getRequestURI()).thenReturn("testRequestURI///getDictionary");
+        when(mockResponse.getWriter()).thenReturn(mockPrintWriter);
+        controller.getDictionaryController(mockRequest, mockResponse);
+        verify(mockRequest, atLeast(1)).getRequestURI();
+        verify(mockResponse, atLeast(1)).getWriter();
     }
 }
