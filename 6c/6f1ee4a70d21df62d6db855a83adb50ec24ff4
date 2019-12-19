@@ -1,0 +1,11 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Daniel Cruz <dc443y@att.com>
+Code-Review+1: Ali Hockla <ah999m@att.com>
+Code-Review+1: Liam Fallon <liam.fallon@est.tech>
+Code-Review+1: Ram Krishna Verma <ram.krishna.verma@est.tech>
+Code-Review+2: Pamela Dragosh <pdragosh@research.att.com>
+Submitted-by: Pamela Dragosh <pdragosh@research.att.com>
+Submitted-at: Thu, 19 Dec 2019 13:11:59 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/engine/+/99742
+Project: policy/engine
+Branch: refs/heads/master
