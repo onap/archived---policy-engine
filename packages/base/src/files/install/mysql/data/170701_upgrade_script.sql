@@ -20,7 +20,7 @@ use onap_sdk;
 
 INSERT INTO policyeditorscopes (`id`, `scopename`, `created_date`, `created_by`, `modified_date`, `modified_by`) VALUES ('1', 'com', '2017-06-01 11:45:36', 'demo', '2017-06-01 11:45:36', 'demo');
 
-alter table IntegrityAuditEntity modify jdbcUrl varchar(200) not null;
+alter table integrityauditentity modify jdbcUrl varchar(200) not null;
 
 alter table `onap_sdk`.`microservicemodels`
 add column `enumValues` longtext null default null after `version`,
