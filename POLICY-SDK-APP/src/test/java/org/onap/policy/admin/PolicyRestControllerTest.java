@@ -34,8 +34,10 @@ import static org.mockito.Mockito.when;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.policy.controller.CreateFirewallController;
 import org.onap.policy.controller.PolicyController;
@@ -57,8 +60,14 @@ import org.onap.policy.rest.jpa.ServiceList;
 import org.onap.policy.rest.jpa.TermList;
 import org.onap.portalsdk.core.domain.User;
 import org.onap.portalsdk.core.util.SystemProperties;
+import org.onap.portalsdk.core.web.support.UserUtils;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+@RunWith(PowerMockRunner.class)
 public class PolicyRestControllerTest {
 
     private String clRequestString;
@@ -316,5 +325,73 @@ public class PolicyRestControllerTest {
         controller.getDictionaryController(mockRequest, mockResponse);
         verify(mockRequest, atLeast(1)).getRequestURI();
         verify(mockResponse, atLeast(1)).getWriter();
+    }
+
+    @PrepareForTest(UserUtils.class)
+    @Test
+    public void testdeletetDictionaryController() throws IOException {
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
+        PolicyRestController controller = new PolicyRestController();
+        User mockUser = Mockito.mock(User.class);
+        PowerMockito.mockStatic(UserUtils.class);
+        PrintWriter mockPrintWriter = Mockito.mock(PrintWriter.class);
+
+        when(mockRequest.getRequestURI()).thenReturn("//testRequestURI///deleteDictionary");
+        when(mockResponse.getWriter()).thenReturn(mockPrintWriter);
+        when(UserUtils.getUserSession(mockRequest)).thenReturn(mockUser);
+        when(mockUser.getOrgUserId()).thenReturn("testUserId");
+
+        controller.deletetDictionaryController(mockRequest, mockResponse);
+        verify(mockRequest).getRequestURI();
+        verify(mockResponse).getWriter();
+        verify(mockUser).getOrgUserId();
+
+        when(mockRequest.getRequestURI()).thenReturn("testRequestURI///deleteDictionary");
+        controller.deletetDictionaryController(mockRequest, mockResponse);
+        verify(mockRequest, atLeast(1)).getRequestURI();
+    }
+
+    @PrepareForTest(UserUtils.class)
+    @Test
+    public void testSaveDictionaryController() throws IOException {
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
+        PolicyRestController controller = new PolicyRestController();
+        User mockUser = Mockito.mock(User.class);
+        PowerMockito.mockStatic(UserUtils.class);
+        PrintWriter mockPrintWriter = Mockito.mock(PrintWriter.class);
+
+        when(mockRequest.getRequestURI()).thenReturn("//testRequestURI///saveDictionary//import_dictionary");
+        when(mockResponse.getWriter()).thenReturn(mockPrintWriter);
+        when(UserUtils.getUserSession(mockRequest)).thenReturn(mockUser);
+        when(mockUser.getOrgUserId()).thenReturn("testUserId");
+
+        controller.saveDictionaryController(mockRequest, mockResponse);
+        verify(mockRequest).getRequestURI();
+        verify(mockResponse).getWriter();
+        verify(mockUser).getOrgUserId();
+
+        when(mockRequest.getRequestURI()).thenReturn("testRequestURI///saveDictionary");
+        controller.saveDictionaryController(mockRequest, mockResponse);
+        verify(mockRequest, atLeast(1)).getRequestURI();
+    }
+
+    @Test
+    public void testDoConnect() throws Exception {
+        HttpURLConnection mockConnection = Mockito.mock(HttpURLConnection.class);
+        PolicyRestController controller = new PolicyRestController();
+        Mockito.doNothing().when(mockConnection).connect();
+        InputStream mockInputStream = Mockito.mock(InputStream.class);
+
+        when(mockConnection.getResponseCode()).thenReturn(200);
+        when(mockConnection.getInputStream()).thenReturn(mockInputStream);
+
+        Whitebox.invokeMethod(controller, "doConnect", mockConnection);
+        verify(mockConnection).getResponseCode();
+        verify(mockConnection).getInputStream();
+
+        when(mockConnection.getResponseCode()).thenReturn(201);
+        assertNull(Whitebox.invokeMethod(controller, "doConnect", mockConnection));
     }
 }

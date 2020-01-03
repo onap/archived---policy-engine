@@ -28,15 +28,12 @@ import static org.junit.Assert.assertNull;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
 import com.att.research.xacml.util.XACMLProperties;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -79,11 +76,15 @@ public class RESTfulPAPEngineTest {
         XACMLProperties.reloadProperties();
     }
 
-    private void setupConnection(int responseCode) throws Exception {
+    private void setupConnection(int responseCode, String location) throws Exception {
         // Mock connection
         HttpURLConnection connection = Mockito.mock(HttpURLConnection.class);
+
         Mockito.when(connection.getResponseCode()).thenReturn(responseCode);
-        Mockito.when(connection.getHeaderField("Location")).thenReturn("localhost:5678");
+        Mockito.when(connection.getHeaderField("Location")).thenReturn(location);
+
+        InputStream mockInputStream = Mockito.mock(InputStream.class);
+        Mockito.when(connection.getInputStream()).thenReturn(mockInputStream);
 
         // Set the system property temporarily
         String systemKey = "xacml.properties";
@@ -112,7 +113,7 @@ public class RESTfulPAPEngineTest {
 
     @Test
     public void testAllTheExceptions() throws Exception {
-        setupConnection(HttpServletResponse.SC_NO_CONTENT);
+        setupConnection(HttpServletResponse.SC_NO_CONTENT, "localhost:5678");
 
         engine.setDefaultGroup(group);
         assertNull(engine.getDefaultGroup());
@@ -129,6 +130,10 @@ public class RESTfulPAPEngineTest {
 
         assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
             engine.updateGroup(group)
+        );
+
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            engine.updateGroup(group, "testUserName")
         );
 
         assertNull(engine.getGroup(name));
@@ -172,7 +177,24 @@ public class RESTfulPAPEngineTest {
         // Change the mockito to take a different path
         //
         assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
-            setupConnection(HttpServletResponse.SC_FOUND)
+            setupConnection(HttpServletResponse.SC_FOUND, "localhost:5678")
+        );
+
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            setupConnection(200, "localhost:5678")
+        );
+
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            setupConnection(350, "localhost:5678")
+        );
+
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            setupConnection(500, "localhost:5678")
+        );
+
+        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
+            setupConnection(350, null)
         );
     }
+
 }
