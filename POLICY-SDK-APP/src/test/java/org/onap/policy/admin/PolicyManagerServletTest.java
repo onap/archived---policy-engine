@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -23,24 +23,34 @@
 package org.onap.policy.admin;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.json.JsonArray;
+import javax.script.SimpleBindings;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,11 +68,14 @@ import org.onap.policy.rest.jpa.PolicyEditorScopes;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
+import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.portalsdk.core.domain.User;
 import org.onap.portalsdk.core.util.SystemProperties;
+import org.onap.portalsdk.core.web.support.UserUtils;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 @RunWith(PowerMockRunner.class)
@@ -738,7 +751,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testRenameScope() {
+    public void testRenameScope() throws Exception {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<BufferedReader> readers = new ArrayList<>();
@@ -754,6 +767,15 @@ public class PolicyManagerServletTest extends Mockito {
                 fail();
             }
         }
+
+        String inScopeName = "\\\\\\\\inScopeName";
+        String newScopeName = "\\\\\\\\newScopeName";
+        List<Object> scopesList = new ArrayList<Object>();
+        PolicyEditorScopes mockPolicyEditorScope = Mockito.mock(PolicyEditorScopes.class);
+        scopesList.add(mockPolicyEditorScope);
+        when(mockPolicyEditorScope.getScopeName()).thenReturn("inScopeName");
+        Whitebox.invokeMethod(servlet, "renameScope", scopesList, inScopeName, newScopeName, controller);
+        verify(mockPolicyEditorScope, atLeast(1)).getScopeName();
     }
 
     @Test
@@ -813,5 +835,286 @@ public class PolicyManagerServletTest extends Mockito {
         when(ServletFileUpload.isMultipartContent(mockRequest)).thenReturn(true);
         servlet.doPost(mockRequest, mockResponse);
         PowerMockito.verifyStatic(ServletFileUpload.class, Mockito.times(1));
+    }
+
+    @SuppressWarnings("unchecked")
+    @PrepareForTest({PolicyController.class, IOUtils.class})
+    @Test
+    public void testProcessFormFile() throws Exception {
+        PolicyManagerServlet servlet = new PolicyManagerServlet();
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+        FileItem mockFileItem = Mockito.mock(FileItem.class);
+        PowerMockito.mockStatic(PolicyController.class);
+        PowerMockito.mockStatic(IOUtils.class);
+        InputStream mockInputStream = Mockito.mock(InputStream.class);
+
+        long fileSizeLimit = 10;
+        when(PolicyController.getFileSizeLimit()).thenReturn(fileSizeLimit);
+        when(mockFileItem.getName()).thenReturn("testFileName.xls");
+        when(mockFileItem.getInputStream()).thenReturn(mockInputStream);
+        when(mockFileItem.getSize()).thenReturn(fileSizeLimit + 1);
+
+        Whitebox.invokeMethod(servlet, "processFormFile", mockRequest, mockFileItem);
+        verify(mockFileItem, atLeast(1)).getName();
+        verify(mockFileItem, atLeast(1)).getSize();
+
+        when(mockFileItem.getName()).thenReturn("testFileName.txt");
+        Whitebox.invokeMethod(servlet, "processFormFile", mockRequest, mockFileItem);
+        verify(mockFileItem, atLeast(1)).getName();
+
+        when(mockFileItem.getSize()).thenReturn(fileSizeLimit);
+        when(mockFileItem.getName()).thenReturn("testFileName.xls");
+        when(mockFileItem.getInputStream()).thenThrow(IOException.class);
+        Whitebox.invokeMethod(servlet, "processFormFile", mockRequest, mockFileItem);
+        verify(mockFileItem, atLeast(1)).getName();
+        verify(mockFileItem, atLeast(1)).getInputStream();
+        verify(mockFileItem, atLeast(1)).getSize();
+    }
+
+    @Test
+    public void testSearchPolicyList() throws Exception {
+        PolicyManagerServlet servlet = new PolicyManagerServlet();
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+        JSONObject mockJSONObject = Mockito.mock(JSONObject.class);
+
+        mockJSONObject.append("policyList", "sampleValue");
+
+        Object res = Whitebox.invokeMethod(servlet, "searchPolicyList", mockJSONObject, mockRequest);
+        assert (res instanceof JSONObject);
+        assertNotNull(((JSONObject) res).get("result"));
+    }
+
+    @PrepareForTest({UserUtils.class, org.onap.policy.utils.UserUtils.class})
+    @Test
+    public void testLookupPolicyData() throws Exception {
+        PowerMockito.mockStatic(UserUtils.class);
+        PowerMockito.mockStatic(org.onap.policy.utils.UserUtils.class);
+        PolicyManagerServlet servlet = new PolicyManagerServlet();
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+        User mockUser = Mockito.mock(User.class);
+        UserInfo mockUserInfo = Mockito.mock(UserInfo.class);
+        PolicyController mockPolicyController = Mockito.mock(PolicyController.class);
+        List<JSONObject> resultList = new ArrayList<>();
+        JSONObject mockJSONObject = Mockito.mock(JSONObject.class);
+        resultList.add(mockJSONObject);
+
+        Date mockDate = Mockito.mock(Date.class);
+        List<Object> policyDataList = new ArrayList<>();
+        PolicyVersion mockPolicyVersion = Mockito.mock(PolicyVersion.class);
+        policyDataList.add(mockPolicyVersion);
+        JSONArray mockJSONArray = Mockito.mock(JSONArray.class);
+
+        List<Object> rolesList = new ArrayList<>();
+        Roles adminRole = Mockito.mock(Roles.class);
+        Roles editorRole = Mockito.mock(Roles.class);
+        Roles guestRole = Mockito.mock(Roles.class);
+        adminRole.setRole("admin");
+        editorRole.setRole("editor");
+        guestRole.setRole("guest");
+
+        List<Object> filterDataList = new ArrayList<>();
+        PolicyVersion mockPolicyVersionFilter = Mockito.mock(PolicyVersion.class);
+        filterDataList.add(mockPolicyVersionFilter);
+        List<String> listOfRoles = new ArrayList<String>();
+        Set<String> setOfScopes = new HashSet<String>();
+        Pair<Set<String>, List<String>> pairList = new Pair<Set<String>, List<String>>(setOfScopes, listOfRoles);
+
+        PolicyManagerServlet.setPolicyController(mockPolicyController);
+        PowerMockito.when(UserUtils.getUserSession(mockRequest)).thenReturn(mockUser);
+        when(mockPolicyController.getRoles(any(String.class))).thenReturn(rolesList);
+        PowerMockito.when(org.onap.policy.utils.UserUtils.checkRoleAndScope(rolesList)).thenReturn(pairList);
+        when(mockPolicyController.getData(any(Class.class))).thenReturn(filterDataList);
+        when(mockPolicyVersion.getPolicyName()).thenReturn("sampleName");
+        when(mockPolicyVersion.getModifiedDate()).thenReturn(mockDate);
+        when(mockPolicyVersion.getActiveVersion()).thenReturn(1);
+        when(mockPolicyVersion.getCreatedBy()).thenReturn("sampleUserName");
+        when(mockPolicyVersion.getModifiedBy()).thenReturn("sampleUserName");
+        when(mockPolicyController.getEntityItem(UserInfo.class, "userLoginId", "sampleUserName"))
+                .thenReturn(mockUserInfo);
+        when(mockUserInfo.getUserName()).thenReturn("testUserName");
+
+        Whitebox.invokeMethod(servlet, "getPolicyControllerInstance");
+
+        boolean result = Whitebox.invokeMethod(servlet, "lookupPolicyData", mockRequest, policyDataList, null,
+                mockPolicyController, resultList);
+
+        assertTrue(result);
+        verify(mockPolicyController, atLeast(1)).getRoles(any(String.class));
+        verify(mockPolicyController, atLeast(1)).getRoles(any(String.class));
+        verify(mockPolicyController, atLeast(1)).getData(any(Class.class));
+        verify(mockPolicyController, atLeast(1)).getEntityItem(UserInfo.class, "userLoginId", "sampleUserName");
+        verify(mockPolicyVersion, atLeast(1)).getPolicyName();
+        verify(mockPolicyVersion, atLeast(1)).getModifiedDate();
+        verify(mockPolicyVersion, atLeast(1)).getActiveVersion();
+        verify(mockPolicyVersion, atLeast(1)).getCreatedBy();
+        verify(mockPolicyVersion, atLeast(1)).getModifiedBy();
+        verify(mockUserInfo, atLeast(1)).getUserName();
+
+        when(mockPolicyVersionFilter.getPolicyName()).thenReturn("testAdminScope" + File.separator);
+        result = Whitebox.invokeMethod(servlet, "lookupPolicyData", mockRequest, policyDataList, null,
+                mockPolicyController, resultList);
+        assertTrue(result);
+        verify(mockPolicyVersionFilter, atLeast(1)).getPolicyName();
+
+        setOfScopes.add("testAdminScope");
+        result = Whitebox.invokeMethod(servlet, "lookupPolicyData", mockRequest, policyDataList, null,
+                mockPolicyController, resultList);
+        assertTrue(result);
+        verify(mockPolicyVersionFilter, atLeast(1)).getPolicyName();
+
+        listOfRoles.add("super-admin");
+        listOfRoles.add("super-editor");
+        listOfRoles.add("super-guest");
+        filterDataList.clear();
+
+        result = Whitebox.invokeMethod(servlet, "lookupPolicyData", mockRequest, policyDataList, null,
+                mockPolicyController, resultList);
+        assertTrue(result);
+        verify(mockPolicyController, atLeast(1)).getData(any(Class.class));
+
+        listOfRoles.clear();
+        listOfRoles.add("admin");
+        listOfRoles.add("editor");
+        listOfRoles.add("guest");
+        setOfScopes.clear();
+        result = Whitebox.invokeMethod(servlet, "lookupPolicyData", mockRequest, policyDataList, null,
+                mockPolicyController, resultList);
+        assertFalse(result);
+
+        setOfScopes.add("testScope");
+        result = Whitebox.invokeMethod(servlet, "lookupPolicyData", mockRequest, policyDataList, mockJSONArray,
+                mockPolicyController, resultList);
+        assertTrue(result);
+    }
+
+    @Test
+    public void testDeleteEntityFromEsAndPolicyEntityTable() throws Exception {
+        PolicyManagerServlet servlet = new PolicyManagerServlet();
+        PolicyController mockPolicyController = Mockito.mock(PolicyController.class);
+        PolicyRestController mockPolicyRestController = Mockito.mock(PolicyRestController.class);
+        PolicyEntity mockPolicyEntity = Mockito.mock(PolicyEntity.class);
+        ConfigurationDataEntity mockConfigDataEntity = Mockito.mock(ConfigurationDataEntity.class);
+        ActionBodyEntity mockActionBodyEntity = Mockito.mock(ActionBodyEntity.class);
+
+        String policyNamewithoutExtension = "Config_";
+        String configName = "";
+        String actionBodyName = "";
+
+        when(mockPolicyEntity.getScope()).thenReturn("");
+        when(mockPolicyEntity.getPolicyName()).thenReturn("");
+        Mockito.doNothing().when(mockPolicyRestController).deleteElasticData(any(String.class));
+        Mockito.doNothing().when(mockPolicyController).deleteData(mockPolicyEntity);
+        when(mockPolicyEntity.getConfigurationData()).thenReturn(mockConfigDataEntity);
+        when(mockPolicyEntity.getActionBodyEntity()).thenReturn(mockActionBodyEntity);
+        when(mockConfigDataEntity.getConfigurationName()).thenReturn(configName);
+        when(mockActionBodyEntity.getActionBodyName()).thenReturn(actionBodyName);
+        when(mockPolicyRestController.notifyOtherPapsToUpdateConfigurations("delete", null, configName)).thenReturn("");
+
+        Whitebox.invokeMethod(servlet, "deleteEntityFromEsAndPolicyEntityTable", mockPolicyController,
+                mockPolicyRestController, mockPolicyEntity, policyNamewithoutExtension);
+
+        verify(mockPolicyEntity, atLeast(1)).getScope();
+        verify(mockPolicyEntity, atLeast(1)).getPolicyName();
+        verify(mockPolicyEntity, atLeast(1)).getConfigurationData();
+        verify(mockConfigDataEntity, atLeast(1)).getConfigurationName();
+
+        policyNamewithoutExtension = "Action_";
+        when(mockPolicyRestController.notifyOtherPapsToUpdateConfigurations("delete", null, actionBodyName))
+                .thenReturn("");
+
+        Whitebox.invokeMethod(servlet, "deleteEntityFromEsAndPolicyEntityTable", mockPolicyController,
+                mockPolicyRestController, mockPolicyEntity, policyNamewithoutExtension);
+
+        verify(mockPolicyEntity, atLeast(1)).getScope();
+        verify(mockPolicyEntity, atLeast(1)).getPolicyName();
+        verify(mockPolicyEntity, atLeast(1)).getActionBodyEntity();
+        verify(mockActionBodyEntity, atLeast(1)).getActionBodyName();
+
+        policyNamewithoutExtension = "Other_";
+        Whitebox.invokeMethod(servlet, "deleteEntityFromEsAndPolicyEntityTable", mockPolicyController,
+                mockPolicyRestController, mockPolicyEntity, policyNamewithoutExtension);
+
+        verify(mockPolicyEntity, atLeast(1)).getScope();
+        verify(mockPolicyEntity, atLeast(1)).getPolicyName();
+        verify(mockPolicyRestController, atLeast(1)).deleteElasticData(any(String.class));
+        verify(mockPolicyController, atLeast(1)).deleteData(mockPolicyEntity);
+    }
+
+    @PrepareForTest(UserUtils.class)
+    @Test
+    public void testDelete() throws Exception {
+        PolicyManagerServlet servlet = new PolicyManagerServlet();
+        JSONObject mockJSONObject = Mockito.mock(JSONObject.class);
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+        User mockUser = Mockito.mock(User.class);
+        PolicyController mockPolicyController = Mockito.mock(PolicyController.class);
+        PowerMockito.mockStatic(UserUtils.class);
+        List<Object> policyEntityList = new ArrayList<Object>();
+        PolicyEntity mockPolicyEntity = Mockito.mock(PolicyEntity.class);
+        policyEntityList.add(mockPolicyEntity);
+        long policyId = 1;
+
+        PowerMockito.when(UserUtils.getUserSession(mockRequest)).thenReturn(mockUser);
+        PolicyManagerServlet.setPolicyController(mockPolicyController);
+        when(mockUser.getOrgUserId()).thenReturn("sampleUserId");
+        when(mockJSONObject.getString("path")).thenReturn("/sampleScope:samplePolicyName.1.xml");
+        when(mockJSONObject.has("deleteVersion")).thenReturn(true);
+        when(mockJSONObject.getString("deleteVersion")).thenReturn("ALL");
+        when(mockPolicyController.getDataByQuery(any(String.class), any(SimpleBindings.class)))
+                .thenReturn(policyEntityList);
+        when(mockPolicyEntity.getPolicyId()).thenReturn(policyId);
+        when(mockPolicyEntity.getScope()).thenReturn("sampleScope");
+        when(mockPolicyEntity.getPolicyName()).thenReturn("samplePolicyName");
+
+        JSONObject returnObj = Whitebox.invokeMethod(servlet, "delete", mockJSONObject, mockRequest);
+        assertTrue(returnObj.has("result"));
+        verify(mockUser, atLeast(1)).getOrgUserId();
+        verify(mockJSONObject, atLeast(1)).getString(any(String.class));
+        verify(mockJSONObject, atLeast(1)).has(any(String.class));
+        verify(mockPolicyController, atLeast(1)).getDataByQuery(any(String.class), any(SimpleBindings.class));
+        verify(mockPolicyEntity, atLeast(1)).getPolicyId();
+        verify(mockPolicyEntity, atLeast(1)).getScope();
+        verify(mockPolicyEntity, atLeast(1)).getPolicyName();
+
+        when(mockJSONObject.getString("path")).thenReturn("/sampleScope\\:samplePolicyName.1.xml");
+        when(mockJSONObject.getString("deleteVersion")).thenReturn("CURRENT");
+        returnObj = Whitebox.invokeMethod(servlet, "delete", mockJSONObject, mockRequest);
+        assertTrue(returnObj.has("result"));
+        verify(mockJSONObject, atLeast(1)).getString(any(String.class));
+
+        when(mockJSONObject.getString("path")).thenReturn("/sampleScope:samplePolicyName.2.txt");
+        when(mockJSONObject.has("deleteVersion")).thenReturn(false);
+        returnObj = Whitebox.invokeMethod(servlet, "delete", mockJSONObject, mockRequest);
+        assertTrue(returnObj.has("result"));
+        verify(mockJSONObject, atLeast(1)).getString("path");
+        verify(mockJSONObject, atLeast(1)).has("deleteVersion");
+    }
+
+    @Test
+    public void testParsePolicyList() throws Exception {
+        PolicyManagerServlet servlet = new PolicyManagerServlet();
+        List<JSONObject> resultList = new ArrayList<JSONObject>();
+        PolicyController mockPolicyController = Mockito.mock(PolicyController.class);
+        String policyName = "sampleName\\";
+        String policyVersion = "sampleVersion";
+        List<Object> activeDataList = new ArrayList<Object>();
+        PolicyVersion mockPolicyVersion = Mockito.mock(PolicyVersion.class);
+        activeDataList.add(mockPolicyVersion);
+        Date mockDate = Mockito.mock(Date.class);
+
+        when(mockPolicyController.getDataByQuery(any(String.class), any(SimpleBindings.class)))
+                .thenReturn(activeDataList);
+        when(mockPolicyVersion.getPolicyName()).thenReturn("testPolicyName");
+        when(mockPolicyVersion.getModifiedDate()).thenReturn(mockDate);
+        when(mockPolicyVersion.getActiveVersion()).thenReturn(1);
+        when(mockPolicyVersion.getCreatedBy()).thenReturn("sampleUserName");
+        when(mockPolicyVersion.getModifiedBy()).thenReturn("sampleUserName");
+        Whitebox.invokeMethod(servlet, "parsePolicyList", resultList, mockPolicyController, policyName, policyVersion);
+        verify(mockPolicyController, atLeast(1)).getDataByQuery(any(String.class), any(SimpleBindings.class));
+        verify(mockPolicyVersion, atLeast(1)).getPolicyName();
+        verify(mockPolicyVersion, atLeast(1)).getModifiedDate();
+        verify(mockPolicyVersion, atLeast(1)).getActiveVersion();
+        verify(mockPolicyVersion, atLeast(1)).getCreatedBy();
+        verify(mockPolicyVersion, atLeast(1)).getModifiedBy();
     }
 }
