@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e40ec625_0af66887",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/PolicyManagerServletTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-07T14:06:36Z",
+      "side": 1,
+      "message": "2020 - sorry!",
+      "range": {
+        "startLine": 5,
+        "startChar": 22,
+        "endLine": 5,
+        "endChar": 26
+      },
+      "revId": "b33923a605262739fdf1311f2a985201e7d1428d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
