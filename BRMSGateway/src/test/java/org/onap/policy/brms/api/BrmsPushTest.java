@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ package org.onap.policy.brms.api;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,15 +46,17 @@ import org.onap.policy.utils.BackUpHandler;
 import org.onap.policy.utils.BackUpMonitor;
 import org.onap.policy.utils.BackUpMonitorException;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "jdk.internal.reflect.*", "javax.xml.*", "org.xml.*", "org.w3c.*"})
+@PrepareForTest({Persistence.class, BackUpMonitor.class})
 public class BrmsPushTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @PrepareForTest({Persistence.class, BackUpMonitor.class})
     @Test
     public void testPush() throws BackUpMonitorException, PolicyException {
         // Mock emf, persistence, and query

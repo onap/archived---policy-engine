@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018, 2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "jdk.internal.reflect.*", "javax.xml.*", "org.xml.*"})
+@PrepareForTest(OnapPdpEngineFactory.class)
 public class OnapPdpEngineFactoryTest {
     @Test
     public final void testNewEngine() {
@@ -61,7 +64,7 @@ public class OnapPdpEngineFactoryTest {
 
     @PrepareForTest({ EvaluationContextFactory.class, FactoryFinder.class })
     @Test(expected = FactoryException.class)
-    public void negTestEngine() throws FactoryException {
+    public void testNegTestEngine() throws FactoryException {
         // Setup test data
         PowerMockito.mockStatic(FactoryFinder.class);
         PowerMockito.when(FactoryFinder.find(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(null);
@@ -74,7 +77,7 @@ public class OnapPdpEngineFactoryTest {
 
     @PrepareForTest({ EvaluationContextFactory.class, FactoryFinder.class })
     @Test(expected = FactoryException.class)
-    public void negTestEngine2() throws FactoryException {
+    public void testNegTestEngine2() throws FactoryException {
         // Setup test data
         PowerMockito.mockStatic(FactoryFinder.class);
         PowerMockito.when(FactoryFinder.find(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(null);

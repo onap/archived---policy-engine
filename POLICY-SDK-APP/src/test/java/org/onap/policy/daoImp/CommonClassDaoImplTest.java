@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -40,6 +40,7 @@ import javax.script.SimpleBindings;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.h2.tools.Server;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -463,7 +464,7 @@ public class CommonClassDaoImplTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testExceptions() {
+    public void testExceptions() throws HibernateException {
         SessionFactory sfMock = Mockito.mock(SessionFactory.class);
         Session mockSession = Mockito.mock(Session.class);
         Criteria crMock = Mockito.mock(Criteria.class);
@@ -474,11 +475,11 @@ public class CommonClassDaoImplTest {
         when(sfMock.openSession()).thenReturn(mockSession);
         when(mockSession.createCriteria(OnapName.class)).thenReturn(crMock);
 
-        when(crMock.list()).thenThrow(Exception.class);
-        when(mockSession.close()).thenThrow(Exception.class);
+        when(crMock.list()).thenThrow(HibernateException.class);
+        when(mockSession.close()).thenThrow(HibernateException.class);
 
         when(mockSession.beginTransaction()).thenReturn(mockTransaction);
-        doThrow(Exception.class).when(mockTransaction).commit();
+        doThrow(HibernateException.class).when(mockTransaction).commit();
 
         List<?> dataList = commonClassDao.getData(OnapName.class);
         assertNull(dataList);

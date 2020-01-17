@@ -5,6 +5,7 @@
  * Copyright (C) 2018 Ericsson. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
+ * Modifications Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +25,8 @@ package org.onap.policy.std;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
@@ -103,6 +104,8 @@ import org.onap.policy.api.PushPolicyParameters;
 import org.onap.policy.models.APIDictionaryResponse;
 import org.onap.policy.models.APIPolicyConfigResponse;
 import org.onap.policy.std.utils.PolicyConfigConstants;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -111,6 +114,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "jdk.internal.reflect.*", "javax.xml.*", "org.xml.*", "org.w3c.*"})
+@PrepareForTest(StdPolicyEngine.class)
 public class StdPolicyEngineTest {
 
     private static final String ONAP_NAME_VAL = "ONAP_NAME";
