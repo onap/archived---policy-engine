@@ -73,12 +73,14 @@ import org.onap.portalsdk.core.domain.User;
 import org.onap.portalsdk.core.util.SystemProperties;
 import org.onap.portalsdk.core.web.support.UserUtils;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "jdk.internal.reflect.*", "javax.xml.*", "org.xml.*", "org.w3c.*"})
 public class PolicyManagerServletTest extends Mockito {
 
     private static Logger logger = FlexLogger.getLogger(PolicyManagerServletTest.class);
@@ -834,7 +836,6 @@ public class PolicyManagerServletTest extends Mockito {
         PowerMockito.mockStatic(ServletFileUpload.class);
         when(ServletFileUpload.isMultipartContent(mockRequest)).thenReturn(true);
         servlet.doPost(mockRequest, mockResponse);
-        PowerMockito.verifyStatic(ServletFileUpload.class, Mockito.times(1));
     }
 
     @SuppressWarnings("unchecked")
@@ -939,9 +940,9 @@ public class PolicyManagerServletTest extends Mockito {
                 mockPolicyController, resultList);
 
         assertTrue(result);
-        verify(mockPolicyController, atLeast(1)).getRoles(any(String.class));
-        verify(mockPolicyController, atLeast(1)).getRoles(any(String.class));
-        verify(mockPolicyController, atLeast(1)).getData(any(Class.class));
+        verify(mockPolicyController, atLeast(1)).getRoles(any());
+        verify(mockPolicyController, atLeast(1)).getRoles(any());
+        verify(mockPolicyController, atLeast(1)).getData(any());
         verify(mockPolicyController, atLeast(1)).getEntityItem(UserInfo.class, "userLoginId", "sampleUserName");
         verify(mockPolicyVersion, atLeast(1)).getPolicyName();
         verify(mockPolicyVersion, atLeast(1)).getModifiedDate();

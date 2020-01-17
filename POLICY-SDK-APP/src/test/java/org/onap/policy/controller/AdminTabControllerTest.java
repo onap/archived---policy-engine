@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -115,7 +115,7 @@ public class AdminTabControllerTest {
     @Test
     public void testGetAdminTabEntityDataException() throws IOException {
         HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
-        when(mockResponse.getWriter()).thenThrow(Exception.class);
+        when(mockResponse.getWriter()).thenThrow(IOException.class);
         admin.getAdminTabEntityData(request, mockResponse);
         verify(mockResponse).getWriter();
     }

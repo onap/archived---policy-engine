@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * LogParser
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018, 2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,11 +47,13 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.xacml.parser.LogEntryObject.LogType;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-@PrepareForTest({ ParseLogTest.class, IntegrityMonitor.class })
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "jdk.internal.reflect.*", "javax.xml.*", "org.xml.*"})
+@PrepareForTest({ ParseLogTest.class, IntegrityMonitor.class })
 public class ParseLogTest {
 
     private static Logger logger = FlexLogger.getLogger(ParseLogTest.class);

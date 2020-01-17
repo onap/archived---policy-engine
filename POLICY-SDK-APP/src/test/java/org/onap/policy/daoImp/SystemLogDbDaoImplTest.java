@@ -25,6 +25,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -50,8 +52,8 @@ public class SystemLogDbDaoImplTest {
         when(sfMock.openSession()).thenReturn(mockSession);
         when(mockSession.beginTransaction()).thenReturn(mockTransaction);
 
-        doThrow(Exception.class).when(mockTransaction).commit();
-        when(mockSession.close()).thenThrow(Exception.class);
+        doThrow(HibernateException.class).when(mockTransaction).commit();
+        when(mockSession.close()).thenThrow(HibernateException.class);
 
         PolicyController.setjUnit(true);
     }

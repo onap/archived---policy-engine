@@ -2,7 +2,7 @@
   ============LICENSE_START=======================================================
   ONAP Policy Engine
   ================================================================================
-  Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+  Copyright (C) 2017-2018, 2020 AT&T Intellectual Property. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -74,6 +74,11 @@
         <sonar.exclusions>**/gen/**,**/generated-sources/**,**/yang-gen**,**/pax/**,src/main/webapp/app/policyApp/CSS/**/*,src/main/webapp/app/policyApp/libs.bower_components/**/*</sonar.exclusions>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

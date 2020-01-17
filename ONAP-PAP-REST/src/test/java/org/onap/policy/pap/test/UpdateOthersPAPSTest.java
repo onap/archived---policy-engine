@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,7 +36,6 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -45,11 +45,14 @@ import org.onap.policy.pap.xacml.rest.components.Policy;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyDbDaoEntity;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"com.sun.org.apache.xalan.*", "com.sun.org.apache.xerces.*", "jdk.internal.reflect.*", "javax.xml.*", "org.xml.*", "org.w3c.*"})
+@PrepareForTest(UpdateOthersPAPS.class)
 public class UpdateOthersPAPSTest {
 
     private static Logger logger = FlexLogger.getLogger(UpdateOthersPAPSTest.class);
@@ -110,7 +113,7 @@ public class UpdateOthersPAPSTest {
         when(Policy.getActionHome()).thenReturn("test");
         File mockedFile = Mockito.mock(File.class);
         Mockito.when(mockedFile.exists()).thenReturn(true);
-        PowerMockito.whenNew(File.class).withParameterTypes(String.class).withArguments(Matchers.anyString())
+        PowerMockito.whenNew(File.class).withParameterTypes(String.class).withArguments(anyString())
                 .thenReturn(mockedFile);
         updateOtherPaps.updateConfiguration(data, response);
         assertTrue(response.getStatus() == 200);
