@@ -2,7 +2,7 @@
   ============LICENSE_START=======================================================
   ONAP Policy Engine
   ================================================================================
-  Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+  Copyright (C) 2017-2018, 2020 AT&T Intellectual Property. All rights reserved.
   Modifications Copyright (C) 2019 Bell Canada.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,6 +31,12 @@
     <packaging>pom</packaging>
     <name>Policy Packages</name>
     <description>D2 ONAP Policy Installation Packages</description>
+
+    <properties>
+        <!-- There is no code in this sub-module, only holds interfaces. So skip sonar. -->
+        <sonar.skip>true</sonar.skip>
+    </properties>
+
     <profiles>
         <!-- DO NOT CHANGE THE *ORDER* IN WHICH THESE PROFILES ARE DEFINED! -->
         <profile>
