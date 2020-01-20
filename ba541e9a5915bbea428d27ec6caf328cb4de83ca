@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "e6509d32_212c37d4",
+        "filename": "BRMSGateway/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-20T17:52:46Z",
+      "side": 1,
+      "message": "Don\u0027t remember dealing with that when I made these changes, we do have it defined in policy/parent. Let\u0027s leave it to at least be consistent with other repos. I can clean it up when I address the checkstyle JIRa.",
+      "parentUuid": "ea2653f8_057cb125",
+      "revId": "ba541e9a5915bbea428d27ec6caf328cb4de83ca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dd54d958_ae3d7bc1",
         "filename": "ONAP-XACML/pom.xml",
         "patchSetId": 1
