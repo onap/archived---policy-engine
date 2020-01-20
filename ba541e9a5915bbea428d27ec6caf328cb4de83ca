@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "1647e158_7b98ded1",
+        "filename": "ONAP-XACML/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-20T14:01:45Z",
+      "side": 1,
+      "message": "No problem - you can stick to that strategy while you work your way through it.",
+      "parentUuid": "64e3c626_5185afd1",
+      "range": {
+        "startLine": 51,
+        "startChar": 1,
+        "endLine": 76,
+        "endChar": 20
+      },
+      "revId": "ba541e9a5915bbea428d27ec6caf328cb4de83ca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "395c9097_dd0f7fd9",
         "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/SystemLogDbDaoImplTest.java",
         "patchSetId": 1
