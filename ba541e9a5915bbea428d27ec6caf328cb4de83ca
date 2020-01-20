@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ea2653f8_057cb125",
+        "filename": "BRMSGateway/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2020-01-20T16:19:09Z",
+      "side": 1,
+      "message": "It throws an error without it, can\u0027t find the version",
+      "parentUuid": "631f645d_fccbdc63",
+      "revId": "ba541e9a5915bbea428d27ec6caf328cb4de83ca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dd54d958_ae3d7bc1",
         "filename": "ONAP-XACML/pom.xml",
         "patchSetId": 1
