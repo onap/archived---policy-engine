@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dd54d958_ae3d7bc1",
+        "filename": "ONAP-XACML/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-20T12:39:37Z",
+      "side": 1,
+      "message": "It would be better to add these under dependencyManagement in the root pom.xml. Then remove the version from each sub-module that uses them. Then its easier for us to keep the version consistent.",
+      "range": {
+        "startLine": 51,
+        "startChar": 1,
+        "endLine": 76,
+        "endChar": 20
+      },
+      "revId": "ba541e9a5915bbea428d27ec6caf328cb4de83ca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "395c9097_dd0f7fd9",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/daoImp/SystemLogDbDaoImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-20T12:39:37Z",
+      "side": 1,
+      "message": "2019-2020",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "ba541e9a5915bbea428d27ec6caf328cb4de83ca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41d62f42_8b50b73e",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-20T12:39:37Z",
+      "side": 1,
+      "message": "Interesting - a lot of these plugins don\u0027t need to be in here. But don\u0027t worry about them Ali, I\u0027ll clean them out with the sonar configuration update.",
+      "range": {
+        "startLine": 201,
+        "startChar": 12,
+        "endLine": 224,
+        "endChar": 21
+      },
+      "revId": "ba541e9a5915bbea428d27ec6caf328cb4de83ca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
