@@ -1,4 +1,4 @@
-FROM onap/policy-common-alpine:1.4.0
+FROM onap/policy-jdk-debian
 
 LABEL maintainer="Policy Team"
 
@@ -8,9 +8,9 @@ ARG POLICY_LOGS=/var/log/onap
 ENV BUILD_VERSION_ENGINE ${BUILD_VERSION_ENGINE}
 ENV POLICY_LOGS ${POLICY_LOGS}
 
-RUN apk add --no-cache mariadb-client
-
-RUN mkdir -p /tmp/policy-install ${POLICY_LOGS} && \
+RUN apt update && \
+    apt-get install -y mariadb-client && \
+    mkdir -p /tmp/policy-install ${POLICY_LOGS} && \
     chown policy:policy /tmp/policy-install ${POLICY_LOGS} && \
     rmdir ${POLICY_HOME}/etc/ssl && \
     rmdir ${POLICY_HOME}/etc

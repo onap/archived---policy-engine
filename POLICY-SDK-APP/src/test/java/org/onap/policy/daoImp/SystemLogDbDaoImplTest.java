@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -50,8 +52,8 @@ public class SystemLogDbDaoImplTest {
         when(sfMock.openSession()).thenReturn(mockSession);
         when(mockSession.beginTransaction()).thenReturn(mockTransaction);
 
-        doThrow(Exception.class).when(mockTransaction).commit();
-        when(mockSession.close()).thenThrow(Exception.class);
+        doThrow(HibernateException.class).when(mockTransaction).commit();
+        when(mockSession.close()).thenThrow(HibernateException.class);
 
         PolicyController.setjUnit(true);
     }

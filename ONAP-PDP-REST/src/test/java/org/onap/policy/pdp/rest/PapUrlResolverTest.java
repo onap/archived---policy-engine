@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -59,6 +59,9 @@ public class PapUrlResolverTest {
         succeeded = prop.getProperty(XacmlRestProperties.PROP_PAP_SUCCEEDED_URLS);
         rs = PapUrlResolver.getInstance(urls, failed, succeeded);
         Assert.assertTrue(rs.hasMoreUrls());
+        Assert.assertEquals("http://one.localhost.com", rs.getUrl());
+        rs.getNext();
+        Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://two.localhost.com", rs.getUrl());
         rs.getNext();
         Assert.assertTrue(rs.hasMoreUrls());
@@ -66,9 +69,6 @@ public class PapUrlResolverTest {
         rs.getNext();
         Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://four.localhost.com", rs.getUrl());
-        rs.getNext();
-        Assert.assertTrue(rs.hasMoreUrls());
-        Assert.assertEquals("http://one.localhost.com", rs.getUrl());
         rs.succeeded();
         rs.getNext();
         Assert.assertFalse(rs.hasMoreUrls());
@@ -128,13 +128,13 @@ public class PapUrlResolverTest {
         String succeeded = "-1,8/13/15 5:41 PM,8/13/15 4:41 PM,-1";
         PapUrlResolver rs = PapUrlResolver.getInstance(urls, failed, succeeded);
         Assert.assertTrue(rs.hasMoreUrls());
+        Assert.assertEquals("http://one.localhost.com", rs.getUrl());
+        rs.getNext();
+        Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://two.localhost.com", rs.getUrl());
         rs.getNext();
         Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://three.localhost.com", rs.getUrl());
-        rs.getNext();
-        Assert.assertTrue(rs.hasMoreUrls());
-        Assert.assertEquals("http://one.localhost.com", rs.getUrl());
         rs.getNext();
         Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://four.localhost.com", rs.getUrl());
@@ -186,13 +186,13 @@ public class PapUrlResolverTest {
         succeeded = "-1,-1,-1,-1";
         rs = PapUrlResolver.getInstance(urls, failed, succeeded);
         Assert.assertTrue(rs.hasMoreUrls());
+        Assert.assertEquals("http://one.localhost.com", rs.getUrl());
+        rs.getNext();
+        Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://two.localhost.com", rs.getUrl());
         rs.getNext();
         Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://three.localhost.com", rs.getUrl());
-        rs.getNext();
-        Assert.assertTrue(rs.hasMoreUrls());
-        Assert.assertEquals("http://one.localhost.com", rs.getUrl());
         rs.getNext();
         Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://four.localhost.com", rs.getUrl());
@@ -204,6 +204,9 @@ public class PapUrlResolverTest {
         succeeded = "-1,-1,-1,-1";
         rs = PapUrlResolver.getInstance(urls, failed, succeeded);
         Assert.assertTrue(rs.hasMoreUrls());
+        Assert.assertEquals("http://one.localhost.com", rs.getUrl());
+        rs.getNext();
+        Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://two.localhost.com", rs.getUrl());
         rs.getNext();
         Assert.assertTrue(rs.hasMoreUrls());
@@ -211,9 +214,6 @@ public class PapUrlResolverTest {
         rs.getNext();
         Assert.assertTrue(rs.hasMoreUrls());
         Assert.assertEquals("http://four.localhost.com", rs.getUrl());
-        rs.getNext();
-        Assert.assertTrue(rs.hasMoreUrls());
-        Assert.assertEquals("http://one.localhost.com", rs.getUrl());
         rs.getNext();
         Assert.assertFalse(rs.hasMoreUrls());
 

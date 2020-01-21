@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public class BrmsPushTest {
     }
 
     @Test(expected = PolicyException.class)
-    public void brmsHandlerFailTest2() throws PolicyException {
+    public void testBrmsHandlerFail2() throws PolicyException {
         final PropertyChange prop = new PropertyChange();
         prop.key = "defaultName";
         prop.remove = true;
@@ -92,7 +92,7 @@ public class BrmsPushTest {
     }
 
     @Test(expected = PolicyException.class)
-    public void brmsHandlerFailTest3() throws PolicyException {
+    public void testBrmsHandlerFail3() throws PolicyException {
         PropertyChange prop = new PropertyChange();
         prop.key = "repositoryID";
         prop.remove = true;
@@ -107,7 +107,7 @@ public class BrmsPushTest {
     }
 
     @Test(expected = PolicyException.class)
-    public void brmsHandlerFailTest4() throws PolicyException {
+    public void testBrmsHandlerFail4() throws PolicyException {
         final PropertyChange prop = new PropertyChange();
         prop.key = "repositoryURL";
         prop.remove = true;
@@ -118,7 +118,7 @@ public class BrmsPushTest {
     }
 
     @Test(expected = PolicyException.class)
-    public void brmsHandlerFailTest5() throws PolicyException {
+    public void testBrmsHandlerFail5() throws PolicyException {
         final PropertyChange prop = new PropertyChange();
         prop.key = "repositoryName";
         prop.remove = true;
@@ -129,7 +129,7 @@ public class BrmsPushTest {
     }
 
     @Test(expected = PolicyException.class)
-    public void brmsHandlerFailTest6() throws PolicyException {
+    public void testBrmsHandlerFail6() throws PolicyException {
         PropertyChange prop = new PropertyChange();
         prop.key = "repositoryURL";
         prop.value = "http://nexus:8081/nexus/content/repositories/releases,"
@@ -146,7 +146,7 @@ public class BrmsPushTest {
     }
 
     @Test(expected = PolicyException.class)
-    public void brmsHandlerFailTest7() throws PolicyException {
+    public void testBrmsHandlerFail7() throws PolicyException {
         final PropertyChange prop = new PropertyChange();
         prop.key = "repositoryPassword";
         prop.remove = true;
@@ -157,7 +157,7 @@ public class BrmsPushTest {
     }
 
     @Test(expected = PolicyException.class)
-    public void brmsHandlerFailTest8() throws PolicyException {
+    public void testBrmsHandlerFail8() throws PolicyException {
         final PropertyChange prop = new PropertyChange();
         prop.key = "policyKeyID";
         prop.remove = true;
@@ -168,7 +168,7 @@ public class BrmsPushTest {
     }
 
     @Test(expected = PolicyException.class)
-    public void brmsHandlerFailTest9() throws PolicyException {
+    public void testBrmsHandlerFail9() throws PolicyException {
         PropertyChange prop = new PropertyChange();
         prop.key = "sync";
         prop.value = "true";
@@ -188,7 +188,7 @@ public class BrmsPushTest {
     }
 
     @Test(expected = PolicyException.class)
-    public void brmsHandlerFailTest10() throws PolicyException {
+    public void testBrmsHandlerFail10() throws PolicyException {
         final PropertyChange prop = new PropertyChange();
         prop.key = "groupNames";
         prop.value = "";
@@ -200,7 +200,7 @@ public class BrmsPushTest {
     }
 
     @Test(expected = PolicyException.class)
-    public void brmsHandlerFailTest11() throws PolicyException {
+    public void testBrmsHandlerFail11() throws PolicyException {
         final PropertyChange prop = new PropertyChange();
         prop.key = "default.groupID";
         prop.remove = true;
@@ -211,7 +211,7 @@ public class BrmsPushTest {
     }
 
     @Test(expected = PolicyException.class)
-    public void brmsHandlerFailTest12() throws PolicyException {
+    public void testBrmsHandlerFail12() throws PolicyException {
         final PropertyChange prop = new PropertyChange();
         prop.key = "default.artifactID";
         prop.remove = true;
@@ -222,7 +222,7 @@ public class BrmsPushTest {
     }
 
     @Test(expected = PolicyException.class)
-    public void brmsHandlerFailTest13() throws PolicyException {
+    public void testBrmsHandlerFail13() throws PolicyException {
         PropertyChange prop = new PropertyChange();
         prop.key = "NOTIFICATION_TYPE";
         prop.value = "dmaap";

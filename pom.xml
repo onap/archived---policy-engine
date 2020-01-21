@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
-        <version>3.1.0</version>
+        <version>3.1.1-SNAPSHOT</version>
         <relativePath />
     </parent>
     <groupId>org.onap.policy.engine</groupId>
@@ -35,8 +35,6 @@
     <description>The ONAP Policy Engine main pom</description>
     <properties>
         <!-- Project common build settings -->
-        <project.source.version>1.8</project.source.version>
-        <project.target.version>1.8</project.target.version>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Project path properties -->
@@ -56,8 +54,8 @@
         <commons.fileupload.version>1.3.3</commons.fileupload.version>
         <commons.compress.version>1.18</commons.compress.version>
         <elasticsearch.version>6.8.2</elasticsearch.version>
-        <version.policy.common>1.6.1</version.policy.common>
-        <version.policy.models>2.2.0</version.policy.models>
+        <version.policy.common>1.6.2-SNAPSHOT</version.policy.common>
+        <version.policy.models>2.2.1-SNAPSHOT</version.policy.models>
     </properties>
     <modules>
         <module>PolicyEngineUtils</module>
@@ -109,7 +107,7 @@
             <!-- org.w3c.dom dependencies -->
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
-            <version>1.3.03</version>
+            <version>1.4.01</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
@@ -142,7 +140,7 @@
         <!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito -->
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
+            <artifactId>powermock-api-mockito2</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -159,7 +157,7 @@
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-            <version>3.1</version>
+            <version>4.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -191,8 +189,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <encoding>${project.encoding}</encoding>
-                    <source>${project.source.version}</source>
-                    <target>${project.target.version}</target>
+                    <release>${java.version}</release>
                 </configuration>
             </plugin>
             <plugin>
