@@ -516,6 +516,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", " Error stopping thread");
             }
         }
+        // reset pap url
+        setPapUrl(null);
     }
 
     private ConsoleAndApiService getAcServiceInstance() {

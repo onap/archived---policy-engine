@@ -45,6 +45,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 import org.apache.commons.io.IOUtils;
 import org.hibernate.SessionFactory;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -122,6 +123,11 @@ public class ConsoleAndApiServiceTest {
                 .thenReturn("src/test/resources/xacml.pap.properties");
         pap = new XACMLPapServlet();
         pap.init(servletConfig);
+    }
+
+    @AfterClass
+    public static void after() {
+        pap.destroy();
     }
 
     /**

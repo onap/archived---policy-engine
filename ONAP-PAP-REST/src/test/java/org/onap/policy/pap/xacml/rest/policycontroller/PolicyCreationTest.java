@@ -23,8 +23,9 @@ package org.onap.policy.pap.xacml.rest.policycontroller;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import java.util.ArrayList;
@@ -90,6 +91,7 @@ public class PolicyCreationTest {
         assertThatThrownBy(() -> creation.savePolicy(policyData, response))
             .isInstanceOf(IllegalArgumentException.class);
         policyData.setConfigPolicyType("Base");
+        Mockito.when(policyData.getRuleData()).thenReturn(any());
         assertThatCode(() -> creation.savePolicy(policyData, response)).doesNotThrowAnyException();
         policyData.setConfigPolicyType("ClosedLoop_PM");
         assertThatThrownBy(() -> creation.savePolicy(policyData, response))
