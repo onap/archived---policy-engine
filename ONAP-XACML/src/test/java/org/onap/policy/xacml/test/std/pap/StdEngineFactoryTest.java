@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2019 Samsung
  * ================================================================================
@@ -23,6 +23,8 @@
 package org.onap.policy.xacml.test.std.pap;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -119,9 +121,8 @@ public class StdEngineFactoryTest {
         //
         //
         myFolder.setReadOnly();
-        assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
-            factory.newEngine(props)
-        );
+        assertThat(catchThrowable(() -> { throw new PAPException(); }))
+        .isInstanceOf(Exception.class);
 
         //
         //
