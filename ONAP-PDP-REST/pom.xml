@@ -48,6 +48,12 @@
             <groupId>org.onap.policy.engine</groupId>
             <artifactId>ONAP-PDP</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
