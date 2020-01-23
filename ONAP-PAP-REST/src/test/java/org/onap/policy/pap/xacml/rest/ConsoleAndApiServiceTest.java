@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,6 +45,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 import org.apache.commons.io.IOUtils;
 import org.hibernate.SessionFactory;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -122,6 +123,11 @@ public class ConsoleAndApiServiceTest {
                 .thenReturn("src/test/resources/xacml.pap.properties");
         pap = new XACMLPapServlet();
         pap.init(servletConfig);
+    }
+
+    @AfterClass
+    public static void after() {
+        pap.destroy();
     }
 
     /**
