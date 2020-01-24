@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3593cf6b_9a33b71b",
+        "filename": "ONAP-REST/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-24T21:57:42Z",
+      "side": 1,
+      "message": "5.4.10.Final that uses xml api\u0027s - but I\u0027m not sure the ramifications of upgrading. We actually don\u0027t know if it actually works. Somebody needs to run the webapp and see that it actually comes up.",
+      "range": {
+        "startLine": 36,
+        "startChar": 27,
+        "endLine": 36,
+        "endChar": 39
+      },
+      "revId": "222aceefd016933729fd06c2c156cf0e6df84997",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
