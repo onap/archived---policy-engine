@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ae70b07_86a44eff",
+        "filename": "ONAP-XACML/src/test/java/org/onap/policy/xacml/test/std/pap/StdEngineFactoryTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-24T14:07:57Z",
+      "side": 1,
+      "message": "what\u0027s the point of this test?",
+      "revId": "5d07ab3037d17fe8a421797e3c967da5221b487e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d55c9f8b_0960b5fd",
+        "filename": "POLICY-SDK-APP/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-24T14:07:57Z",
+      "side": 1,
+      "message": "${springframework.version} ?",
+      "revId": "5d07ab3037d17fe8a421797e3c967da5221b487e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
