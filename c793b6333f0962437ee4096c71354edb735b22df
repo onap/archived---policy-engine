@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac20a1a6_0ca67ac9",
+        "filename": "POLICY-SDK-APP/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-24T15:14:19Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces",
+      "revId": "c793b6333f0962437ee4096c71354edb735b22df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
