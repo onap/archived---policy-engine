@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a81dd84f_07677fc8",
+        "filename": "ONAP-SDK-APP/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2020-01-24T16:41:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9960b696_e329b4a5",
+      "range": {
+        "startLine": 64,
+        "startChar": 12,
+        "endLine": 70,
+        "endChar": 21
+      },
+      "revId": "c793b6333f0962437ee4096c71354edb735b22df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86cba439_3a7be879",
         "filename": "POLICY-SDK-APP/pom.xml",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "c793b6333f0962437ee4096c71354edb735b22df",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1979bbf4_9a83d1b8",
+        "filename": "POLICY-SDK-APP/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2020-01-24T16:41:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86cba439_3a7be879",
+      "range": {
+        "startLine": 39,
+        "startChar": 12,
+        "endLine": 44,
+        "endChar": 21
+      },
+      "revId": "c793b6333f0962437ee4096c71354edb735b22df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
