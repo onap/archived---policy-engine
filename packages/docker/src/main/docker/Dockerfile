@@ -10,6 +10,8 @@ ENV POLICY_LOGS ${POLICY_LOGS}
 
 RUN apt update && \
     apt-get install -y mariadb-client && \
+    apt-get install -y netcat && \
+    apt-get install -y cron && \
     mkdir -p /tmp/policy-install ${POLICY_LOGS} && \
     chown policy:policy /tmp/policy-install ${POLICY_LOGS} && \
     rmdir ${POLICY_HOME}/etc/ssl && \
