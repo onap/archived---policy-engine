@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43ed6ec5_f6a574c6",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-31T00:23:25Z",
+      "side": 1,
+      "message": "this isn\u0027t needed - the \"try\" statement will close it automatically",
+      "revId": "1d3a383021bc0b2d01e8c03babc686d47e321b85",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
