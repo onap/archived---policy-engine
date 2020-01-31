@@ -16,6 +16,24 @@
       "revId": "1d3a383021bc0b2d01e8c03babc686d47e321b85",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "506a947a_7d2021f3",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2020-01-31T15:05:49Z",
+      "side": 1,
+      "message": "got it! planned to revert this change yesterday",
+      "parentUuid": "43ed6ec5_f6a574c6",
+      "revId": "1d3a383021bc0b2d01e8c03babc686d47e321b85",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
