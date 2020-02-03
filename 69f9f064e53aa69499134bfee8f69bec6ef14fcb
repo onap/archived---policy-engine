@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "79d762e0_259d044c",
+        "filename": "BRMSGateway/pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2020-02-03T15:27:08Z",
+      "side": 1,
+      "message": "ah, my mistake, I\u0027ll update to commons-lang3 (however commons-lang3 version is not defined in the parent repo)",
+      "parentUuid": "d8b20962_9b1637c0",
+      "revId": "69f9f064e53aa69499134bfee8f69bec6ef14fcb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f414c28d_b50382ba",
         "filename": "ONAP-REST/pom.xml",
         "patchSetId": 11
@@ -72,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "e338351d_eb430fd2",
+        "filename": "ONAP-REST/pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2020-02-03T15:27:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f414c28d_b50382ba",
+      "revId": "69f9f064e53aa69499134bfee8f69bec6ef14fcb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7596186_26c0ff3e",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
         "patchSetId": 11
@@ -83,6 +119,24 @@
       "writtenOn": "2020-02-03T14:58:00Z",
       "side": 1,
       "message": "Was there a change in this file?",
+      "revId": "69f9f064e53aa69499134bfee8f69bec6ef14fcb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ad4727f_fb21ef53",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2020-02-03T15:27:08Z",
+      "side": 1,
+      "message": "fixed, thanks!",
+      "parentUuid": "f7596186_26c0ff3e",
       "revId": "69f9f064e53aa69499134bfee8f69bec6ef14fcb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
