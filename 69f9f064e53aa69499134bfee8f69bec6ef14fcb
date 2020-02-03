@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "213956a5_ee4ecc09",
+        "filename": "BRMSGateway/pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-03T15:18:49Z",
+      "side": 1,
+      "message": "Actually - can we wait on that??? There is a JIRA for dependency upgrades via the SECCOM. I will address it there. Right now I need to get this merged and Peyton needs to help figure out the CSIT.",
+      "parentUuid": "a860a8d6_a36b7f27",
+      "revId": "69f9f064e53aa69499134bfee8f69bec6ef14fcb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f414c28d_b50382ba",
         "filename": "ONAP-REST/pom.xml",
         "patchSetId": 11
