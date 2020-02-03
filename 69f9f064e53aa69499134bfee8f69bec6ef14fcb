@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "83d65f1c_00f9608e",
+        "filename": "BRMSGateway/pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-03T15:32:36Z",
+      "side": 1,
+      "message": "Ok this is fine - didn\u0027t realize this was added. So again, I\u0027ll double check again later.",
+      "parentUuid": "79d762e0_259d044c",
+      "revId": "69f9f064e53aa69499134bfee8f69bec6ef14fcb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f414c28d_b50382ba",
         "filename": "ONAP-REST/pom.xml",
         "patchSetId": 11
