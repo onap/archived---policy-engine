@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d8b20962_9b1637c0",
+        "filename": "BRMSGateway/pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-02-03T14:46:57Z",
+      "side": 1,
+      "message": "I think we use commons-lang3.    I think the version is in dependencyManagement from parent repo.   I think this version may have security issues (it is from 2011).",
+      "revId": "69f9f064e53aa69499134bfee8f69bec6ef14fcb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f414c28d_b50382ba",
+        "filename": "ONAP-REST/pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-02-03T14:46:57Z",
+      "side": 1,
+      "message": "same comment as before",
+      "revId": "69f9f064e53aa69499134bfee8f69bec6ef14fcb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
