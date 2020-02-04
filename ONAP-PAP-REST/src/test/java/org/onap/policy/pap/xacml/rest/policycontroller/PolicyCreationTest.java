@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,12 @@ package org.onap.policy.pap.xacml.rest.policycontroller;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -90,6 +91,7 @@ public class PolicyCreationTest {
         assertThatThrownBy(() -> creation.savePolicy(policyData, response))
             .isInstanceOf(IllegalArgumentException.class);
         policyData.setConfigPolicyType("Base");
+        Mockito.when(policyData.getRuleData()).thenReturn(new LinkedHashMap<>());
         assertThatCode(() -> creation.savePolicy(policyData, response)).doesNotThrowAnyException();
         policyData.setConfigPolicyType("ClosedLoop_PM");
         assertThatThrownBy(() -> creation.savePolicy(policyData, response))
