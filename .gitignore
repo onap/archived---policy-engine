@@ -4,7 +4,12 @@
 .classpath
 .jupiter
 .pydevproject
-.idea
+
+# IntelliJ files
+.idea/
+**/*.iml
+overlays/
+
 target
 .metadata/
 ASTRAGateway/policyEngineLog.log
