@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c065b59a_14b2d627",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-18T12:58:25Z",
+      "side": 1,
+      "message": "should do getProperty BEFORE getValue",
+      "revId": "b5308a60b5e8263dabd2faa69b770584f486b100",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "00986d36_78d1da63",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 887,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-18T12:58:25Z",
+      "side": 1,
+      "message": "should do getProperty BEFORE getValue",
+      "revId": "b5308a60b5e8263dabd2faa69b770584f486b100",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
