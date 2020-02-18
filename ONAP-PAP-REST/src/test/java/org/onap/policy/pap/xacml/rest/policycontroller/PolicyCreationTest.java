@@ -29,14 +29,23 @@ import static org.mockito.ArgumentMatchers.eq;
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.onap.policy.pap.xacml.rest.components.PolicyDbDao;
+import org.onap.policy.pap.xacml.rest.components.PolicyDbDaoTransaction;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.PolicyDbDaoEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
+import org.powermock.reflect.Whitebox;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -92,7 +101,23 @@ public class PolicyCreationTest {
             .isInstanceOf(IllegalArgumentException.class);
         policyData.setConfigPolicyType("Base");
         Mockito.when(policyData.getRuleData()).thenReturn(new LinkedHashMap<>());
-        assertThatCode(() -> creation.savePolicy(policyData, response)).doesNotThrowAnyException();
+
+        SessionFactory mockSessionFactory = Mockito.mock(SessionFactory.class);
+        Session mockSession = Mockito.mock(Session.class);
+        Criteria mockCriteria = Mockito.mock(Criteria.class);
+        List<?> policyDbDaoEntityList = new LinkedList<>();
+
+        Mockito.when(mockSessionFactory.openSession()).thenReturn(mockSession);
+        Mockito.when(mockSession.createCriteria(PolicyDbDaoEntity.class)).thenReturn(mockCriteria);
+        Mockito.when(mockCriteria.list()).thenReturn(policyDbDaoEntityList);
+        Whitebox.setInternalState(PolicyDbDao.class, "sessionfactory", mockSessionFactory);
+
+        PolicyDbDao mockPolicyDbDao = Mockito.mock(PolicyDbDao.class);
+        PolicyDbDaoTransaction mockTransaction = Mockito.mock(PolicyDbDaoTransaction.class);
+        Mockito.when(mockPolicyDbDao.getNewTransaction()).thenReturn(mockTransaction);
+
+        assertThatThrownBy(() -> creation.savePolicy(policyData, response))
+            .isInstanceOf(IllegalArgumentException.class);
         policyData.setConfigPolicyType("ClosedLoop_PM");
         assertThatThrownBy(() -> creation.savePolicy(policyData, response))
             .isInstanceOf(IllegalArgumentException.class);
