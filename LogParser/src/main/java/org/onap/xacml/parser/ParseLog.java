@@ -884,11 +884,11 @@ public class ParseLog {
             setLogFileProperties(splitString);
 
             jdbcUrl = config.getProperty("JDBC_URL").replace("'", "");
-            jdbcUser = config.getProperty("JDBC_USER");
+            jdbcUser = config.getProperty(getValue("JDBC_USER"));
             jdbcDriver = config.getProperty("JDBC_DRIVER");
 
             PeCryptoUtils.initAesKey(config.getProperty(PROP_AES_KEY));
-            jdbcPassword = PeCryptoUtils.decrypt(config.getProperty("JDBC_PASSWORD"));
+            jdbcPassword = PeCryptoUtils.decrypt(config.getProperty(getValue("JDBC_PASSWORD")));
             config.setProperty("javax.persistence.jdbc.password", jdbcPassword);
             return config;
 
@@ -900,6 +900,13 @@ public class ParseLog {
                     + " days");
         }
         return null;
+    }
+
+    private static String getValue(final String value) {
+        if (value != null && value.matches("[$][{].*[}]$")) {
+            return System.getenv(value.substring(2, value.length() - 1));
+        }
+        return value;
     }
 
     public static Connection getDbConnection() {
