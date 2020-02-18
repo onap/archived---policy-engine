@@ -256,8 +256,8 @@ public class BrmsPush {
             repUrlList = new ArrayList<>();
             repUrlList.add(repUrl);
         }
-        repUserName = config.getProperty("repositoryUsername");
-        repPassword = PeCryptoUtils.decrypt(config.getProperty("repositoryPassword"));
+        repUserName = getValue(config.getProperty("repositoryUsername"));
+        repPassword = PeCryptoUtils.decrypt(getValue(config.getProperty("repositoryPassword")));
         if (repUserName == null || repPassword == null) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE
                     + "repostoryUserName and respositoryPassword properties are required.");
@@ -365,6 +365,13 @@ public class BrmsPush {
 
         }
 
+    }
+
+    private String getValue(final String value) {
+        if (value != null && value.matches("[$][{].*[}]$")) {
+            return System.getenv(value.substring(2, value.length() - 1));
+        }
+        return value;
     }
 
     private static void setBackupMonitor(final BackUpMonitor instance) {
