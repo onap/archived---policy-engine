@@ -20,6 +20,7 @@
 
 package org.onap.policy.pap.xacml.rest.policycontroller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
@@ -47,6 +48,7 @@ import org.onap.policy.rest.jpa.PolicyDbDaoEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.powermock.reflect.Whitebox;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -74,31 +76,39 @@ public class PolicyCreationTest {
         policyData.setConfigPolicyType("ClosedLoop_Fault");
         policyData.setDomainDir("domain");
         policyData.setPolicyName("policyname");
-        assertThatCode(() -> creation.savePolicy(policyData, response)).doesNotThrowAnyException();
+		ResponseEntity<String> responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
 
         version.setHigherVersion(1);
-        assertThatCode(() -> creation.savePolicy(policyData, response)).doesNotThrowAnyException();
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
 
         policyData.setEditPolicy(true);
-        assertThatCode(() -> creation.savePolicy(policyData, response)).doesNotThrowAnyException();
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
 
         policyData.setEditPolicy(false);
         version.setHigherVersion(0);
-        assertThatCode(() -> creation.savePolicy(policyData, response)).doesNotThrowAnyException();
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
 
         policyData.setEditPolicy(true);
-        assertThatCode(() -> creation.savePolicy(policyData, response)).doesNotThrowAnyException();
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
 
         version.setHigherVersion(1);
         policyData.setConfigPolicyType("Firewall Config");
-        assertThatThrownBy(() -> creation.savePolicy(policyData, response))
-            .isInstanceOf(IllegalArgumentException.class);
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
 
         policyData.setConfigPolicyType("BRMS_Raw");
-        assertThatCode(() -> creation.savePolicy(policyData, response)).doesNotThrowAnyException();
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
+        
         policyData.setConfigPolicyType("BRMS_Param");
-        assertThatThrownBy(() -> creation.savePolicy(policyData, response))
-            .isInstanceOf(IllegalArgumentException.class);
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
+        
         policyData.setConfigPolicyType("Base");
         Mockito.when(policyData.getRuleData()).thenReturn(new LinkedHashMap<>());
 
@@ -116,26 +126,31 @@ public class PolicyCreationTest {
         PolicyDbDaoTransaction mockTransaction = Mockito.mock(PolicyDbDaoTransaction.class);
         Mockito.when(mockPolicyDbDao.getNewTransaction()).thenReturn(mockTransaction);
 
-        assertThatCode(() -> creation.savePolicy(policyData, response)).doesNotThrowAnyException();
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
+
         policyData.setConfigPolicyType("ClosedLoop_PM");
-        assertThatThrownBy(() -> creation.savePolicy(policyData, response))
-            .isInstanceOf(IllegalArgumentException.class);
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
+
         policyData.setConfigPolicyType("Micro Service");
-        assertThatThrownBy(() -> creation.savePolicy(policyData, response))
-            .isInstanceOf(IllegalArgumentException.class);
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
+        
         policyData.setConfigPolicyType("Optimization");
-        assertThatThrownBy(() -> creation.savePolicy(policyData, response))
-            .isInstanceOf(IllegalArgumentException.class);
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
 
         policyData.setPolicyType("Action");
-        List<Object> choices = new ArrayList<Object>();
+        List<Object> choices = new ArrayList<>();
         policyData.setRuleAlgorithmschoices(choices);
-        assertThatCode(() -> creation.savePolicy(policyData, response)).doesNotThrowAnyException();
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
 
         policyData.setPolicyType("Decision");
-        List<Object> settings = new ArrayList<Object>();
+        List<Object> settings = new ArrayList<>();
         policyData.setSettings(settings);
-        assertThatThrownBy(() -> creation.savePolicy(policyData, response))
-            .isInstanceOf(IllegalArgumentException.class);
+        responseEntity = creation.savePolicy(policyData, response);
+		assertThat(responseEntity).isNotNull();
     }
 }
