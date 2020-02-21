@@ -549,6 +549,9 @@ public class PolicyDbDaoTransactionInstance implements PolicyDbDaoTransaction {
 
             IOUtils.closeQuietly(policyXmlStream);
             if (PolicyDbDao.isJunit()) {
+            	if (policyDataString != null) {
+            		logger.warn("isJUnit will overwrite policyDataString");
+            	}
                 // Using parentPath object to set policy data.
                 policyDataString = policy.policyAdapter.getParentPath();
             }
