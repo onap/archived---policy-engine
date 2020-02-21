@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "26278f63_6f95ebff",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/policycontroller/PolicyCreation.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-02-21T18:41:30Z",
+      "side": 1,
+      "message": "Wow, good job, this is seems it would have been a very tough bug to find!   If you want to cover also the case of an empty string in the exception message, you could use \"StringUtils.isBlank(e.getMessage())\" that checks also for the empty string.  I would assume a header with an empty value would be an error as well.",
+      "revId": "3710a41879717441884c75262015c536819a34c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
