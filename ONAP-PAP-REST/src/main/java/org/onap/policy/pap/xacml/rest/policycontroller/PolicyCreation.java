@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -618,7 +618,13 @@ public class PolicyCreation extends AbstractPolicyCreation {
         } catch (Exception e) {
             LOGGER.error("Exception Occured : " + e.getMessage(), e);
             body = ERROR;
-            response.addHeader(ERROR, e.getMessage());
+            //
+            // Because we are catching any old exception instead of a dedicated exception,
+            // its possible the e.getMessage() returns a null value. You cannot add a header
+            // to the response with a null value, it will throw an exception. This is something
+            // this is undesirable.
+            //
+            response.addHeader(ERROR, (e.getMessage() == null ? "missing exception message" : e.getMessage()));
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(body, status);
