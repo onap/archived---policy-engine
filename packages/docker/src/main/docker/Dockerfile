@@ -1,4 +1,4 @@
-FROM onap/policy-jdk-debian
+FROM onap/policy-jdk-debian:2.0.1
 
 LABEL maintainer="Policy Team"
 
