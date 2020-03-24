@@ -1,0 +1,4 @@
+distribution_type: 'maven'
+version: '1.6.0'
+project: 'policy-engine'
+log_dir: 'policy-engine-maven-stage-master/280/'
