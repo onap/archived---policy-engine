@@ -52,8 +52,10 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -81,6 +83,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "jdk.internal.reflect.*", "javax.xml.*", "org.xml.*", "org.w3c.*"})
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PolicyManagerServletTest extends Mockito {
 
     private static Logger logger = FlexLogger.getLogger(PolicyManagerServletTest.class);
@@ -180,7 +183,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testInit() {
+    public void test01Init() {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         ServletConfig servletConfig = mock(ServletConfig.class);
         try {
@@ -201,7 +204,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testBadInitJson() {
+    public void test02BadInitJson() {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         ServletConfig servletConfig = mock(ServletConfig.class);
         try {
@@ -218,7 +221,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testBadInitJsonInvalidFile() {
+    public void test03BadInitJsonInvalidFile() {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         ServletConfig servletConfig = mock(ServletConfig.class);
         try {
@@ -236,7 +239,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @SuppressWarnings("static-access")
     @Test
-    public void testDescribePolicy() {
+    public void test04DescribePolicy() {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         BufferedReader reader = new BufferedReader(
@@ -255,7 +258,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @SuppressWarnings("static-access")
     @Test
-    public void testPolicyScopeList() {
+    public void test05PolicyScopeList() {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
@@ -283,7 +286,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @SuppressWarnings("static-access")
     @Test
-    public void editBasePolicyTest() {
+    public void test06editBasePolicyTest() {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
@@ -307,7 +310,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @SuppressWarnings("static-access")
     @Test
-    public void editBRMSParamPolicyTest() {
+    public void test07editBRMSParamPolicyTest() {
         List<Object> policyData = new ArrayList<>();
         String policyContent = "";
         String configData = "";
@@ -355,7 +358,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @SuppressWarnings("static-access")
     @Test
-    public void editBRMSRawPolicyTest() {
+    public void test08editBRMSRawPolicyTest() {
         List<Object> policyData = new ArrayList<>();
         String policyContent = "";
         String configData = "";
@@ -403,7 +406,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @SuppressWarnings("static-access")
     @Test
-    public void editClosedLoopFaultPolicyTest() {
+    public void test09editClosedLoopFaultPolicyTest() {
         List<Object> policyData = new ArrayList<>();
         String policyContent = "";
         String configData = "";
@@ -451,7 +454,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @SuppressWarnings("static-access")
     @Test
-    public void editClosedLoopPMPolicyTest() {
+    public void test10editClosedLoopPMPolicyTest() {
         List<Object> policyData = new ArrayList<>();
         String policyContent = "";
         String configData = "";
@@ -498,7 +501,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @SuppressWarnings("static-access")
     @Test
-    public void editMicroServicePolicyTest() {
+    public void test11editMicroServicePolicyTest() {
         GroupPolicyScopeList groupData = new GroupPolicyScopeList();
         groupData.setGroupName("Test");
         groupData.setGroupList("resource=SampleResource,service=SampleService,type=SampleType,"
@@ -554,7 +557,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @SuppressWarnings("static-access")
     @Test
-    public void editFirewallPolicyTest() {
+    public void test12editFirewallPolicyTest() {
         List<Object> policyData = new ArrayList<>();
         String policyContent = "";
         String configData = "";
@@ -600,7 +603,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @SuppressWarnings("static-access")
     @Test
-    public void editActionPolicyTest() {
+    public void test13editActionPolicyTest() {
         List<Object> policyData = new ArrayList<>();
         String policyContent = "";
         String configData = "";
@@ -643,7 +646,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @SuppressWarnings("static-access")
     @Test
-    public void editDecisionPolicyTest() {
+    public void test14editDecisionPolicyTest() {
         List<Object> policyData = new ArrayList<>();
         String policyContent = "";
         try {
@@ -681,7 +684,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testAddScope() {
+    public void test15AddScope() {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<BufferedReader> readers = new ArrayList<>();
@@ -703,7 +706,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testClone() {
+    public void test16Clone() {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<BufferedReader> readers = new ArrayList<>();
@@ -728,7 +731,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testRename() {
+    public void test17Rename() {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<BufferedReader> readers = new ArrayList<>();
@@ -753,7 +756,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testRenameScope() throws Exception {
+    public void test18RenameScope() throws Exception {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController controller = mock(PolicyController.class);
         List<BufferedReader> readers = new ArrayList<>();
@@ -781,14 +784,14 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testSetPolicyNames() {
+    public void test19SetPolicyNames() {
         JsonArray mockJsonArray = Mockito.mock(JsonArray.class);
         PolicyManagerServlet.setPolicyNames(mockJsonArray);
         assertEquals(mockJsonArray, PolicyManagerServlet.getPolicyNames());
     }
 
     @Test
-    public void testDoPostSetErrorException() throws IOException {
+    public void test20DoPostSetErrorException() throws IOException {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
@@ -799,7 +802,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testDoPostException() throws IOException {
+    public void test21DoPostException() throws IOException {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
@@ -814,7 +817,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testDoPostSuccess() throws IOException {
+    public void test22DoPostSuccess() throws IOException {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
@@ -829,7 +832,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @PrepareForTest(ServletFileUpload.class)
     @Test
-    public void testDoPostUploadFileException() {
+    public void test23DoPostUploadFileException() {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
@@ -838,10 +841,9 @@ public class PolicyManagerServletTest extends Mockito {
         servlet.doPost(mockRequest, mockResponse);
     }
 
-    @SuppressWarnings("unchecked")
     @PrepareForTest({PolicyController.class, IOUtils.class})
     @Test
-    public void testProcessFormFile() throws Exception {
+    public void test24ProcessFormFile() throws Exception {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
         FileItem mockFileItem = Mockito.mock(FileItem.class);
@@ -873,7 +875,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testSearchPolicyList() throws Exception {
+    public void test25SearchPolicyList() throws Exception {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
         JSONObject mockJSONObject = Mockito.mock(JSONObject.class);
@@ -887,7 +889,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @PrepareForTest({UserUtils.class, org.onap.policy.utils.UserUtils.class})
     @Test
-    public void testLookupPolicyData() throws Exception {
+    public void test26LookupPolicyData() throws Exception {
         PowerMockito.mockStatic(UserUtils.class);
         PowerMockito.mockStatic(org.onap.policy.utils.UserUtils.class);
         PolicyManagerServlet servlet = new PolicyManagerServlet();
@@ -989,7 +991,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testDeleteEntityFromEsAndPolicyEntityTable() throws Exception {
+    public void test27DeleteEntityFromEsAndPolicyEntityTable() throws Exception {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         PolicyController mockPolicyController = Mockito.mock(PolicyController.class);
         PolicyRestController mockPolicyRestController = Mockito.mock(PolicyRestController.class);
@@ -1043,7 +1045,7 @@ public class PolicyManagerServletTest extends Mockito {
 
     @PrepareForTest(UserUtils.class)
     @Test
-    public void testDelete() throws Exception {
+    public void test28Delete() throws Exception {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         JSONObject mockJSONObject = Mockito.mock(JSONObject.class);
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
@@ -1092,7 +1094,7 @@ public class PolicyManagerServletTest extends Mockito {
     }
 
     @Test
-    public void testParsePolicyList() throws Exception {
+    public void test29ParsePolicyList() throws Exception {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         List<JSONObject> resultList = new ArrayList<JSONObject>();
         PolicyController mockPolicyController = Mockito.mock(PolicyController.class);
