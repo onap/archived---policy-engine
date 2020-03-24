@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54038806_d4a5b81e",
+        "filename": "packages/install/src/files/brmsgw.conf",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-24T00:06:13Z",
+      "side": 1,
+      "message": "Again - we cannot change until we release drools-applications.",
+      "range": {
+        "startLine": 62,
+        "startChar": 30,
+        "endLine": 62,
+        "endChar": 38
+      },
+      "revId": "0bcc47ddc125251fd17207f4ff0dab727e61c8de",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
