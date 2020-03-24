@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.onap.policy.engine</groupId>
         <artifactId>PolicyEngineSuite</artifactId>
-        <version>1.6.0-SNAPSHOT</version>
+        <version>1.6.0</version>
     </parent>
     <artifactId>ONAP-SDK-APP</artifactId>
     <packaging>war</packaging>
