@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.onap.policy.engine</groupId>
         <artifactId>PolicyEngineSuite</artifactId>
-        <version>1.6.1-SNAPSHOT</version>
+        <version>1.6.1</version>
     </parent>
     <artifactId>ONAP-REST</artifactId>
     <description>ONAP REST</description>
