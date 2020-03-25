@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14d2f592_2f96aa59",
+        "filename": "BRMSGateway/dependency.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-25T21:21:23Z",
+      "side": 1,
+      "message": "Jorge, I don\u0027t know what to think about this. I say leave it alone. But I think all these changes are really only for JUnit tests and the policy/docker and oom changes are the ones that really matter.",
+      "range": {
+        "startLine": 36,
+        "startChar": 8,
+        "endLine": 36,
+        "endChar": 23
+      },
+      "revId": "c4010ab7cc1f94c826b04f80e672f3042834bfc1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
