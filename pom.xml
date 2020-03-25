@@ -55,7 +55,7 @@
         <commons.compress.version>1.18</commons.compress.version>
         <elasticsearch.version>6.8.2</elasticsearch.version>
         <version.policy.common>1.6.2</version.policy.common>
-        <version.policy.models>2.2.1</version.policy.models>
+        <version.policy.models>2.2.2</version.policy.models>
     </properties>
     <modules>
         <module>PolicyEngineUtils</module>
