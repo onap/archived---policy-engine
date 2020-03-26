@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75e99367_b36203d5",
+        "filename": "releases/1.6.1-container.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-26T00:40:02Z",
+      "side": 1,
+      "message": "Jorge is this right?",
+      "range": {
+        "startLine": 7,
+        "startChar": 13,
+        "endLine": 7,
+        "endChar": 22
+      },
+      "revId": "7f9b4eeaf8d19d04bc53647a4abfd174ae233a6d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
