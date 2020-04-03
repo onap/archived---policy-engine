@@ -27,7 +27,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +52,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -1094,12 +1092,12 @@ public class PolicyManagerServletTest extends Mockito {
         verify(mockJSONObject, atLeast(1)).has("deleteVersion");
     }
 
-    @Ignore
     @Test
     public void test29ParsePolicyList() throws Exception {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         List<JSONObject> resultList = new ArrayList<JSONObject>();
         PolicyController mockPolicyController = Mockito.mock(PolicyController.class);
+        UserInfo mockUserInfo = Mockito.mock(UserInfo.class);
         String policyName = "sampleName\\";
         String policyVersion = "sampleVersion";
         List<Object> activeDataList = new ArrayList<Object>();
@@ -1117,12 +1115,17 @@ public class PolicyManagerServletTest extends Mockito {
         //
         // This intermittently throws an NPE, even when fixing the method order
         //
-        Whitebox.invokeMethod(servlet, "parsePolicyList", resultList, mockPolicyController, policyName, policyVersion);
+        when(mockPolicyController.getEntityItem(UserInfo.class, "userLoginId", "sampleUserName"))
+            .thenReturn(mockUserInfo);
+        when(mockUserInfo.getUserName()).thenReturn("testUserName");
+      	Whitebox.invokeMethod(servlet, "parsePolicyList", resultList, mockPolicyController, policyName, policyVersion);
         verify(mockPolicyController, atLeast(1)).getDataByQuery(any(String.class), any(SimpleBindings.class));
         verify(mockPolicyVersion, atLeast(1)).getPolicyName();
         verify(mockPolicyVersion, atLeast(1)).getModifiedDate();
         verify(mockPolicyVersion, atLeast(1)).getActiveVersion();
         verify(mockPolicyVersion, atLeast(1)).getCreatedBy();
         verify(mockPolicyVersion, atLeast(1)).getModifiedBy();
+
+
     }
 }
