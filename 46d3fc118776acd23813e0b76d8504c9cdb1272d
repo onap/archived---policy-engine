@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d5d119e_6c589ae8",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/PolicyManagerServletTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-03T23:34:58Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces\n\nsame comment below",
+      "revId": "46d3fc118776acd23813e0b76d8504c9cdb1272d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9eea9e27_a9229975",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/PolicyManagerServletTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1129,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-03T23:34:58Z",
+      "side": 1,
+      "message": "why are we catching this exception?",
+      "revId": "46d3fc118776acd23813e0b76d8504c9cdb1272d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3a0a5b9_63be6232",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-03T23:34:58Z",
+      "side": 1,
+      "message": "should be 2.2.3-SNAPSHOT",
+      "revId": "46d3fc118776acd23813e0b76d8504c9cdb1272d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
