@@ -54,8 +54,8 @@
         <commons.fileupload.version>1.3.3</commons.fileupload.version>
         <commons.compress.version>1.18</commons.compress.version>
         <elasticsearch.version>6.8.2</elasticsearch.version>
-        <version.policy.common>1.6.3-SNAPSHOT</version.policy.common>
-        <version.policy.models>2.2.3-SNAPSHOT</version.policy.models>
+        <version.policy.common>1.6.2-SNAPSHOT</version.policy.common>
+        <version.policy.models>2.2.1-SNAPSHOT</version.policy.models>
     </properties>
     <modules>
         <module>PolicyEngineUtils</module>
