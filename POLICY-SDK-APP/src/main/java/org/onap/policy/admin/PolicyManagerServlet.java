@@ -90,6 +90,7 @@ import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
+import org.onap.portalsdk.core.domain.User;
 import org.onap.portalsdk.core.web.support.UserUtils;
 
 @WebServlet(
@@ -227,7 +228,7 @@ public class PolicyManagerServlet extends HttpServlet {
         LOGGER.debug("doPost");
         try {
             // if request contains multipart-form-data
-            if (ServletFileUpload.isMultipartContent(request)) {
+            if (isMultipartContent(request)) {
                 uploadFile(request, response);
             }
             // all other post request has json params in body
@@ -241,6 +242,10 @@ public class PolicyManagerServlet extends HttpServlet {
                 LOGGER.error(EXCEPTION_OCCURED + e1);
             }
         }
+    }
+
+    protected boolean isMultipartContent(HttpServletRequest request) {
+        return ServletFileUpload.isMultipartContent(request);
     }
 
     // Set Error Message for Exception
@@ -285,10 +290,10 @@ public class PolicyManagerServlet extends HttpServlet {
 
     private void processFormFile(HttpServletRequest request, FileItem item) {
         String newFile;
-        if (item.getName().endsWith(".xls") && item.getSize() <= PolicyController.getFileSizeLimit()) {
+        if (item.getName().endsWith(".xls") && item.getSize() <= getFileSizeLimit()) {
             File file = new File(item.getName());
             try (OutputStream outputStream = new FileOutputStream(file)) {
-                IOUtils.copy(item.getInputStream(), outputStream);
+                copyStream(item.getInputStream(), outputStream);
                 newFile = file.toString();
                 PolicyExportAndImportController importController = new PolicyExportAndImportController();
                 importController.importRepositoryFile(newFile, request);
@@ -300,6 +305,14 @@ public class PolicyManagerServlet extends HttpServlet {
         } else { // uploaded file size is greater than allowed
             LOGGER.error("Upload file size limit exceeded! File size (Bytes) is: " + item.getSize());
         }
+    }
+
+    protected long copyStream(InputStream inputStream, OutputStream outputStream) throws IOException {
+        return IOUtils.copy(inputStream, outputStream);
+    }
+
+    protected long getFileSizeLimit() {
+        return PolicyController.getFileSizeLimit();
     }
 
     // File Operation Functionality
@@ -322,7 +335,7 @@ public class PolicyManagerServlet extends HttpServlet {
             JSONObject params = jsonObject.getJSONObject("params");
             Mode mode = Mode.valueOf(params.getString("mode"));
 
-            String userId = UserUtils.getUserSession(request).getOrgUserId();
+            String userId = getUserSession(request).getOrgUserId();
             LOGGER.info(
                     "********************Logging UserID while doing actions on Editor tab****************************");
             LOGGER.info(
@@ -335,6 +348,10 @@ public class PolicyManagerServlet extends HttpServlet {
             responseJsonObject = error(e.getMessage());
         }
         setResponse(response, responseJsonObject);
+    }
+
+    protected User getUserSession(HttpServletRequest request) {
+        return UserUtils.getUserSession(request);
     }
 
     private void setResponse(HttpServletResponse response, JSONObject responseJsonObject) {
@@ -410,9 +427,9 @@ public class PolicyManagerServlet extends HttpServlet {
 
     private boolean lookupPolicyData(HttpServletRequest request, List<Object> policyData, JSONArray policyList,
             PolicyController controller, List<JSONObject> resultList) {
-        String userId = UserUtils.getUserSession(request).getOrgUserId();
+        String userId = getUserSession(request).getOrgUserId();
         List<Object> userRoles = controller.getRoles(userId);
-        Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
+        Pair<Set<String>, List<String>> pair = checkRoleAndScope(userRoles);
         List<String> roles = pair.second;
         Set<String> scopes = pair.first;
         if (roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST)) {
@@ -434,6 +451,10 @@ public class PolicyManagerServlet extends HttpServlet {
             getPolicyDataForSuperRoles(policyData, controller, resultList, roles, scopes);
         }
         return true;
+    }
+
+    protected Pair<Set<String>, List<String>> checkRoleAndScope(List<Object> userRoles) {
+        return org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
     }
 
     private void getPolicyDataForSuperRoles(List<Object> policyData, PolicyController controller,
@@ -518,7 +539,7 @@ public class PolicyManagerServlet extends HttpServlet {
         String path = params.getString("path");
         String userId = null;
         try {
-            userId = UserUtils.getUserSession(request).getOrgUserId();
+            userId = getUserSession(request).getOrgUserId();
         } catch (Exception e) {
             LOGGER.error("Exception Occured while reading userid from cookie" + e);
         }
@@ -643,9 +664,9 @@ public class PolicyManagerServlet extends HttpServlet {
     private JSONObject processPolicyList(JSONObject params, HttpServletRequest request) throws ServletException {
         // Get the Login Id of the User from Request
         String testUserID = getTestUserId();
-        String userId = testUserID != null ? testUserID : UserUtils.getUserSession(request).getOrgUserId();
+        String userId = testUserID != null ? testUserID : getUserSession(request).getOrgUserId();
         List<Object> userRoles = getPolicyControllerInstance().getRoles(userId);
-        Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
+        Pair<Set<String>, List<String>> pair = checkRoleAndScope(userRoles);
         List<String> roles = pair.second;
         Set<String> scopes = pair.first;
         Map<String, String> roleByScope = org.onap.policy.utils.UserUtils.getRoleByScope(userRoles);
@@ -861,7 +882,7 @@ public class PolicyManagerServlet extends HttpServlet {
         boolean isActive = false;
         List<String> policyActiveInPdp = new ArrayList<>();
         Set<String> scopeOfPolicyActiveInPdp = new HashSet<>();
-        String userId = UserUtils.getUserSession(request).getOrgUserId();
+        String userId = getUserSession(request).getOrgUserId();
         String oldPath = params.getString("path");
         String newPath = params.getString("newPath");
         oldPath = oldPath.substring(oldPath.indexOf('/') + 1);
@@ -1194,7 +1215,7 @@ public class PolicyManagerServlet extends HttpServlet {
     // Clone the Policy
     private JSONObject copy(JSONObject params, HttpServletRequest request) throws ServletException {
         try {
-            String userId = UserUtils.getUserSession(request).getOrgUserId();
+            String userId = getUserSession(request).getOrgUserId();
             String oldPath = params.getString("path");
             String newPath = params.getString("newPath");
             oldPath = oldPath.substring(oldPath.indexOf('/') + 1);
@@ -1286,7 +1307,7 @@ public class PolicyManagerServlet extends HttpServlet {
         PolicyEntity policyEntity = null;
         String policyNamewithoutExtension;
         try {
-            String userId = UserUtils.getUserSession(request).getOrgUserId();
+            String userId = getUserSession(request).getOrgUserId();
             String deleteVersion = "";
             String path = params.getString("path");
             LOGGER.debug("delete {}" + path);
@@ -1611,7 +1632,7 @@ public class PolicyManagerServlet extends HttpServlet {
                 if (entity != null) {
                     return error("Scope Already Exists");
                 }
-                String userId = UserUtils.getUserSession(request).getOrgUserId();
+                String userId = getUserSession(request).getOrgUserId();
                 UserInfo userInfo = new UserInfo();
                 userInfo.setUserLoginId(userId);
                 PolicyEditorScopes newScope = new PolicyEditorScopes();
