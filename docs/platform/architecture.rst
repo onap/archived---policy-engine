@@ -1,6 +1,7 @@
 .. This work is licensed under a
 .. Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
+.. _architecture:
 
 
 Architecture
@@ -10,7 +11,7 @@ Architecture
     :depth: 3
 
 POLICY is a subsystem of ONAP that maintains, distributes, and operates on the
-set of rules that underlie ONAP’s control, orchestration, and management
+set of rules that underlie ONAP's control, orchestration, and management
 functions.
 
 POLICY provides a logically centralized environment for the creation and
@@ -136,14 +137,14 @@ selected conditions in effect at that time.
 
 Some examples of types of policies are:
 
-* VNF placement — rules governing where VNFs should be placed, including
+* VNF placement - rules governing where VNFs should be placed, including
   affinity rules
-* Data and feed management — what data to collect and when, retention periods,
+* Data and feed management - what data to collect and when, retention periods,
   and when to send alarms about issues
-* Access control — who (or what) can have access to which data
-* Trigger conditions and actions — what conditions are actionable, and what to
+* Access control - who (or what) can have access to which data
+* Trigger conditions and actions - what conditions are actionable, and what to
   do under those conditions
-* Interactions — how interactions between change management and
+* Interactions - how interactions between change management and
   fault/performance management are handled (for example, should closed loops be
   disabled during maintenance?)
 
@@ -190,7 +191,7 @@ correct component in a control loop such as the MSO, a Controller, or DCAE.
 Policy engines such as XACML and Drools also enforce policies and can trigger
 other components as a result (for example, causing a controller to take
 specific actions specified by the policy).  Additionally, some policies
-(“Guard Policies”) may enforce checks against decided actions.
+("Guard Policies") may enforce checks against decided actions.
 
 
 Policy Unification and Organization
