@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35e0d21a_7cefdac0",
+        "filename": "BRMSGateway/src/test/resources/config.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-04-13T20:57:48Z",
+      "side": 1,
+      "message": "Oopsy",
+      "revId": "b7bdab1bba58bc0fd2738128fbaf19441047366f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
