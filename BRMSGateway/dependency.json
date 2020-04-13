@@ -7,68 +7,68 @@
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "events",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "rest",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "appc",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "aai",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "so",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdnc",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdnr",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }],
         "amsterdam": [{
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "events",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "appc",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "appclcm",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "vfc",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "so",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdnr",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdnc",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "aai",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "sdc",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.drools-applications.controlloop.common",
             "artifactId": "eventmanager",
@@ -80,35 +80,35 @@
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actorServiceProvider",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.appc",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.appclcm",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.so",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.sdnc",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.sdnr",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actor.vfc",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions",
             "artifactId": "model-yaml",
-            "version": "2.2.3-SNAPSHOT"
+            "version": "2.2.4-SNAPSHOT"
         }, {
             "groupId": "com.att.research.xacml",
             "artifactId": "xacml-pdp",
