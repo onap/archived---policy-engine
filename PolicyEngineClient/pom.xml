@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.onap.policy.engine</groupId>
         <artifactId>PolicyEngineSuite</artifactId>
-        <version>1.6.2-SNAPSHOT</version>
+        <version>1.6.2</version>
     </parent>
     <artifactId>PolicyEngineClient</artifactId>
     <dependencies>
