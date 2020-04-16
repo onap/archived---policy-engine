@@ -55,7 +55,7 @@ public class DictionaryController {
     private static String operation = "operation";
     private static String dictionaryFields = "dictionaryFields";
     private static String duplicateResponseString = "Duplicate";
-    private static String onapName = "onapName";
+    private static String onapName = "name";
     private static String attributeDatas = "attributeDictionaryDatas";
     private static String onapNameDatas = "onapNameDictionaryDatas";
 

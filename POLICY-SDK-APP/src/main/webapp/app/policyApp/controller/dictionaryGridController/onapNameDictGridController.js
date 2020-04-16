@@ -58,7 +58,7 @@ app.controller('onapNameDictGridController', function ($scope, PolicyAppService,
             '<button  type="button"  class="btn btn-primary"  ng-click="grid.appScope.editOnapNameWindow(row.entity)"><i class="fa fa-pencil-square-o"></i></button> ' +
             '<button  type="button"  class="btn btn-danger"  ng-click="grid.appScope.deleteOnapName(row.entity)" ><i class="fa fa-trash-o"></i></button> ',  width: '8%'
         },
-            { field: 'onapName', displayName : 'Onap Name', sort: { direction: 'asc', priority: 0 } },
+            { field: 'name', displayName : 'Onap Name', sort: { direction: 'asc', priority: 0 } },
             { field: 'description', width: '20%' },
             {field: 'userCreatedBy.userName', displayName : 'Created By'},
             {field: 'userModifiedBy.userName', displayName : 'Modified By' },
