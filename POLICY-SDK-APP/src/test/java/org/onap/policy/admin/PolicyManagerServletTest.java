@@ -32,6 +32,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -47,15 +48,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -74,16 +72,9 @@ import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.portalsdk.core.domain.User;
 import org.onap.portalsdk.core.util.SystemProperties;
-import org.onap.portalsdk.core.web.support.UserUtils;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "jdk.internal.reflect.*", "javax.xml.*", "org.xml.*", "org.w3c.*"})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PolicyManagerServletTest extends Mockito {
 
@@ -831,29 +822,42 @@ public class PolicyManagerServletTest extends Mockito {
         verify(mockResponse).getWriter();
     }
 
-    @PrepareForTest(ServletFileUpload.class)
     @Test
     public void test23DoPostUploadFileException() {
-        PolicyManagerServlet servlet = new PolicyManagerServlet();
+        PolicyManagerServlet servlet = new PolicyManagerServlet() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            protected boolean isMultipartContent(HttpServletRequest request) {
+                return true;
+            }
+        };
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
-        PowerMockito.mockStatic(ServletFileUpload.class);
-        when(ServletFileUpload.isMultipartContent(mockRequest)).thenReturn(true);
         servlet.doPost(mockRequest, mockResponse);
     }
 
-    @PrepareForTest({PolicyController.class, IOUtils.class})
     @Test
     public void test24ProcessFormFile() throws Exception {
-        PolicyManagerServlet servlet = new PolicyManagerServlet();
+        long fileSizeLimit = 10;
+
+        PolicyManagerServlet servlet = new PolicyManagerServlet() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            protected long getFileSizeLimit() {
+                return fileSizeLimit;
+            }
+
+            @Override
+            protected long copyStream(InputStream inputStream, OutputStream outputStream) throws IOException {
+                // don't really copy the file
+                return 0;
+            }
+        };
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
         FileItem mockFileItem = Mockito.mock(FileItem.class);
-        PowerMockito.mockStatic(PolicyController.class);
-        PowerMockito.mockStatic(IOUtils.class);
         InputStream mockInputStream = Mockito.mock(InputStream.class);
 
-        long fileSizeLimit = 10;
-        when(PolicyController.getFileSizeLimit()).thenReturn(fileSizeLimit);
         when(mockFileItem.getName()).thenReturn("testFileName.xls");
         when(mockFileItem.getInputStream()).thenReturn(mockInputStream);
         when(mockFileItem.getSize()).thenReturn(fileSizeLimit + 1);
@@ -888,12 +892,8 @@ public class PolicyManagerServletTest extends Mockito {
         assertNotNull(((JSONObject) res).get("result"));
     }
 
-    @PrepareForTest({UserUtils.class, org.onap.policy.utils.UserUtils.class})
     @Test
     public void test26LookupPolicyData() throws Exception {
-        PowerMockito.mockStatic(UserUtils.class);
-        PowerMockito.mockStatic(org.onap.policy.utils.UserUtils.class);
-        PolicyManagerServlet servlet = new PolicyManagerServlet();
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
         User mockUser = Mockito.mock(User.class);
         UserInfo mockUserInfo = Mockito.mock(UserInfo.class);
@@ -923,10 +923,22 @@ public class PolicyManagerServletTest extends Mockito {
         Set<String> setOfScopes = new HashSet<String>();
         Pair<Set<String>, List<String>> pairList = new Pair<Set<String>, List<String>>(setOfScopes, listOfRoles);
 
+        PolicyManagerServlet servlet = new PolicyManagerServlet() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            protected User getUserSession(HttpServletRequest request) {
+                return mockUser;
+            }
+
+            @Override
+            protected Pair<Set<String>, List<String>> checkRoleAndScope(List<Object> userRoles) {
+                return pairList;
+            }
+        };
+
         PolicyManagerServlet.setPolicyController(mockPolicyController);
-        PowerMockito.when(UserUtils.getUserSession(mockRequest)).thenReturn(mockUser);
         when(mockPolicyController.getRoles(any(String.class))).thenReturn(rolesList);
-        PowerMockito.when(org.onap.policy.utils.UserUtils.checkRoleAndScope(rolesList)).thenReturn(pairList);
         when(mockPolicyController.getData(any(Class.class))).thenReturn(filterDataList);
         when(mockPolicyVersion.getPolicyName()).thenReturn("sampleName");
         when(mockPolicyVersion.getModifiedDate()).thenReturn(mockDate);
@@ -1044,21 +1056,26 @@ public class PolicyManagerServletTest extends Mockito {
         verify(mockPolicyController, atLeast(1)).deleteData(mockPolicyEntity);
     }
 
-    @PrepareForTest(UserUtils.class)
     @Test
     public void test28Delete() throws Exception {
-        PolicyManagerServlet servlet = new PolicyManagerServlet();
         JSONObject mockJSONObject = Mockito.mock(JSONObject.class);
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
         User mockUser = Mockito.mock(User.class);
         PolicyController mockPolicyController = Mockito.mock(PolicyController.class);
-        PowerMockito.mockStatic(UserUtils.class);
         List<Object> policyEntityList = new ArrayList<Object>();
         PolicyEntity mockPolicyEntity = Mockito.mock(PolicyEntity.class);
         policyEntityList.add(mockPolicyEntity);
         long policyId = 1;
 
-        PowerMockito.when(UserUtils.getUserSession(mockRequest)).thenReturn(mockUser);
+        PolicyManagerServlet servlet = new PolicyManagerServlet() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            protected User getUserSession(HttpServletRequest request) {
+                return mockUser;
+            }
+        };
+
         PolicyManagerServlet.setPolicyController(mockPolicyController);
         when(mockUser.getOrgUserId()).thenReturn("sampleUserId");
         when(mockJSONObject.getString("path")).thenReturn("/sampleScope:samplePolicyName.1.xml");
@@ -1094,12 +1111,12 @@ public class PolicyManagerServletTest extends Mockito {
         verify(mockJSONObject, atLeast(1)).has("deleteVersion");
     }
 
-    @Ignore
     @Test
     public void test29ParsePolicyList() throws Exception {
         PolicyManagerServlet servlet = new PolicyManagerServlet();
         List<JSONObject> resultList = new ArrayList<JSONObject>();
         PolicyController mockPolicyController = Mockito.mock(PolicyController.class);
+        UserInfo mockUserInfo = Mockito.mock(UserInfo.class);
         String policyName = "sampleName\\";
         String policyVersion = "sampleVersion";
         List<Object> activeDataList = new ArrayList<Object>();
@@ -1117,6 +1134,9 @@ public class PolicyManagerServletTest extends Mockito {
         //
         // This intermittently throws an NPE, even when fixing the method order
         //
+        when(mockPolicyController.getEntityItem(UserInfo.class, "userLoginId", "sampleUserName"))
+            .thenReturn(mockUserInfo);
+        when(mockUserInfo.getUserName()).thenReturn("testUserName");
         Whitebox.invokeMethod(servlet, "parsePolicyList", resultList, mockPolicyController, policyName, policyVersion);
         verify(mockPolicyController, atLeast(1)).getDataByQuery(any(String.class), any(SimpleBindings.class));
         verify(mockPolicyVersion, atLeast(1)).getPolicyName();
