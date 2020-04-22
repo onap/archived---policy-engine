@@ -293,7 +293,7 @@ public class AutoPushController extends RestrictedBaseController {
                         }
                         // copy policy to PAP
                         try {
-                            controller.getPapEngine().copyPolicy(selectedPolicy, (StdPDPGroup) pdpDestinationGroupId);
+                            controller.getPapEngine().copyPolicy(selectedPolicy, (StdPDPGroup) pdpDestinationGroupId, userId);
                         } catch (PAPException e) {
                             logger.error("Exception Occured" + e);
                             return null;
@@ -390,7 +390,7 @@ public class AutoPushController extends RestrictedBaseController {
                 updatedGroupObject.setPipConfigs(group.getPipConfigs());
                 updatedGroupObject.setStatus(group.getStatus());
                 updatedGroupObject.setOperation("delete");
-                this.container.updateGroup(updatedGroupObject);
+                this.container.updateGroup(updatedGroupObject, userId);
             }
 
             response.setContentType(PolicyUtils.APPLICATION_JSON);

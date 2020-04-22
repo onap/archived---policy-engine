@@ -61,7 +61,7 @@ public interface PAPPolicyEngine {
             throws PAPException;
 
     // copy the given policy file into the group's directory, but do not include the policy in the group's policy set
-    public void copyPolicy(PDPPolicy policy, OnapPDPGroup group) throws PAPException;
+    public void copyPolicy(PDPPolicy policy, OnapPDPGroup group, String userId) throws PAPException;
 
     public void removePolicy(PDPPolicy policy, OnapPDPGroup group) throws PAPException;
 

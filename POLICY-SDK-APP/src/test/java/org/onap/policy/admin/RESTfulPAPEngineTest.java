@@ -51,6 +51,7 @@ public class RESTfulPAPEngineTest {
     private String policyType = "testType";
     private String policyContent = "testContent";
     private int jmxport = 0;
+    private String userId = "testId";
     OnapPDPGroup group = Mockito.mock(OnapPDPGroup.class);
     OnapPDPGroup newGroup = Mockito.mock(OnapPDPGroup.class);
     OnapPDP pdp = Mockito.mock(OnapPDP.class);
@@ -159,10 +160,10 @@ public class RESTfulPAPEngineTest {
             engine.publishPolicy(id, name, false, policy, newGroup)
         );
 
-        engine.copyFile(id, newGroup, policy);
+        engine.copyFile(id, newGroup, policy, userId);
         PDPPolicy pdpPolicy = Mockito.mock(PDPPolicy.class);
         assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
-            engine.copyPolicy(pdpPolicy, newGroup)
+            engine.copyPolicy(pdpPolicy, newGroup, userId)
         );
 
         assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
@@ -170,7 +171,7 @@ public class RESTfulPAPEngineTest {
         );
 
         assertThatExceptionOfType(PAPException.class).isThrownBy(() ->
-            engine.copyPolicy(null, null)
+            engine.copyPolicy(null, null, null)
         );
 
         //
