@@ -550,7 +550,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
     }
 
     @Override
-    public void copyPolicy(PDPPolicy policy, OnapPDPGroup group) throws PAPException {
+    public void copyPolicy(PDPPolicy policy, OnapPDPGroup group, String userId) throws PAPException {
         //
         // Currently not used on the PAP side. This is done by ((StdPDPGroup) group).copyPolicyToFile
         //

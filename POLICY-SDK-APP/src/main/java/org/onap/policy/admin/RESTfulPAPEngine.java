@@ -270,7 +270,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
     public void publishPolicy(String id, String name, boolean isRoot, InputStream policy, OnapPDPGroup group)
             throws PAPException {
         // copy the (one) file into the target directory on the PAP servlet
-        copyFile(id, group, policy);
+        copyFile(id, group, policy, null);
 
         // adjust the local copy of the group to include the new policy
         PDPPolicy pdpPolicy = new StdPDPPolicy(id, isRoot, name);
@@ -289,10 +289,10 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
      * @param policy Input stream of policy
      * @throws PAPException exception
      */
-    public void copyFile(String policyId, OnapPDPGroup group, InputStream policy) throws PAPException {
+    public void copyFile(String policyId, OnapPDPGroup group, InputStream policy, String usrId) throws PAPException {
         // send the policy file to the PAP Servlet
         try {
-            sendToPap("POST", policy, null, null, GROUP_ID + group.getId(), "policyId=" + policyId);
+            sendToPap("POST", policy, null, null, GROUP_ID + group.getId(), "policyId=" + policyId, "userId=" + usrId );
         } catch (Exception e) {
             String message = UNABLE_MSG + policyId + EXCEPTION_MSG + e;
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + message, e);
@@ -301,12 +301,12 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
     }
 
     @Override
-    public void copyPolicy(PDPPolicy policy, OnapPDPGroup group) throws PAPException {
+    public void copyPolicy(PDPPolicy policy, OnapPDPGroup group, String userId) throws PAPException {
         if (policy == null || group == null) {
             throw new PAPException("Null input policy=" + policy + "  group=" + group);
         }
         try (InputStream is = new FileInputStream(new File(policy.getLocation()))) {
-            copyFile(policy.getId(), group, is);
+            copyFile(policy.getId(), group, is, userId);
         } catch (Exception e) {
             String message = UNABLE_MSG + policy.getId() + EXCEPTION_MSG + e;
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + message, e);
