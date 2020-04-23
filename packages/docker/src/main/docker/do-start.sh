@@ -112,9 +112,6 @@ if [[ $container == pap ]]; then
 	./wait-for-port.sh brmsgw 9989
 	./wait-for-port.sh nexus 8081
 	./wait-for-port.sh drools 6969
-	# wait addional 1 minute for all processes to get fully initialized and synched up
-	sleep 60
-	bash -xv config/push-policies.sh
 fi
 
-sleep 1000d
+sleep infinity
