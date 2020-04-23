@@ -3,7 +3,7 @@
 #============LICENSE_START==================================================
 #  ONAP Policy Engine
 #===========================================================================
-#  Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+#  Copyright (C) 2017-2020 AT&T Intellectual Property. All rights reserved.
 #===========================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -112,9 +112,6 @@ if [[ $container == pap ]]; then
 	./wait-for-port.sh brmsgw 9989
 	./wait-for-port.sh nexus 8081
 	./wait-for-port.sh drools 6969
-	# wait addional 1 minute for all processes to get fully initialized and synched up
-	sleep 60
-	bash -xv config/push-policies.sh
 fi
 
-sleep 1000d
+sleep infinity
