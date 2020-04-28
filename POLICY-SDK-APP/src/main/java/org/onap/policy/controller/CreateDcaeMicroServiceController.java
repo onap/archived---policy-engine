@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -42,6 +41,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,7 +58,6 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -75,7 +74,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -83,6 +81,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -176,6 +175,15 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             String tempJson = root.get(POLICYJSON).toString();
             JSONObject policyJson = new JSONObject(root.get(POLICYJSON).toString());
             if (policyJson != null) {
+                for (Object key : policyJson.keySet()) {
+                    String keyStr = (String) key;
+                    Object keyvalue = policyJson.get(keyStr);
+                    String decodedString = keyvalue.toString().replace("\"", "");
+                    if(decodedString != "true" && decodedString != "false") {
+                        String decodedJson = new String(Base64.getDecoder().decode(decodedString)).replace("\"", "\\\"");
+                        policyJson.put(keyStr, decodedJson);
+                    }
+                }
                 tempJson = saveOriginalJsonObject(policyJson, jsonStringValues).toString();
             }
             // ---replace empty value with the value below before calling decodeContent method.
@@ -198,7 +206,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             JSONObject content = contentJson.getJSONObject("content");
             content = setOriginalJsonObject(content, jsonStringValues);
             contentJson.put("content", content);
-            policyData.setJsonBody(contentJson.toString());
+            policyData.setJsonBody(StringEscapeUtils.unescapeJava(contentJson.toString()));
         }
 
         return policyData;
@@ -564,14 +572,13 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
                     if (arrOfKeys[i].contains(".")) {
                         arrOfKeys[i] = arrOfKeys[i].substring(arrOfKeys[i].indexOf(".") + 1);
                         if (arrOfKeys[i].equals(key)) {
-                            return StringUtils.replaceEach(jsonStringValues.get(k), new String[] {"\""},
-                                    new String[] {"\\\""});
+                            return jsonStringValues.get(k);
                         }
                     }
                 }
             }
             if (k.endsWith(key)) {
-                return StringUtils.replaceEach(jsonStringValues.get(k), new String[] {"\""}, new String[] {"\\\""});
+                jsonStringValues.get(k);
             }
         }
 
@@ -645,25 +652,12 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
                 case OBJECT:
                     JsonObject object = removeNull(obj.getJsonObject(key));
                     if (!object.isEmpty()) {
-                        if (!jsonStringValues.isEmpty()) {
-                            String originalValue = getOriginalValue(key);
-                            if (originalValue != null) {
-                                builder.add(key, object.toString());
-                                break;
-                            }
-                        }
                         builder.add(key, object);
                     }
                     break;
                 case STRING:
                     String str = obj.getString(key);
                     if (str != null && !str.isEmpty()) {
-                        if (!jsonStringValues.isEmpty()) {
-                            String originalValue = getOriginalValue(key);
-                            if (originalValue != null) {
-                                str = getOriginalValue(key);
-                            }
-                        }
                         builder.add(key, str);
                     }
                     break;
@@ -1108,7 +1102,15 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             }
 
             if (obj instanceof JSONArray) {
-                convertToArrayElement(json.getJSONArray(key).getJSONObject(0), keyValue);
+                try {
+                    Object obj1 = json.getJSONArray(key);
+                    if ((obj1 instanceof JSONObject && json.getJSONObject(key).length() > 0)
+                        || (obj1 instanceof JSONArray && json.getJSONArray(key).length() > 0)) {
+                            convertToArrayElement(json.getJSONArray(key).getJSONObject(0), keyValue);
+                    }
+                } catch (Exception ex) {
+                    LOGGER.info("XMI Model load issue : " + ex);
+                }
             }
         }
 
