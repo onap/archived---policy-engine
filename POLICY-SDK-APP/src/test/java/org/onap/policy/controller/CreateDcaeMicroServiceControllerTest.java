@@ -30,12 +30,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jackson.JsonLoader;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,11 +45,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
@@ -59,7 +55,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -167,15 +162,8 @@ public class CreateDcaeMicroServiceControllerTest {
                 + "\"asdafadf\",\"guard\":\"True\",\"riskType\":\"sfsgs\",\"riskLevel\":\"1\","
                 + "\"priority\":\"1\",\"configName\":\"Search\",\"location\":\"Search\","
                 + "\"uuid\":\"Search\",\"policyScope\":\"PolicyScope_ssaaa123\"}},"
-                + "\"policyJSON\":{\"Correlation Priority\":\"testttt\",\"Correlation Window\":"
-                + "\"testttt\",\"Email Notification for failures\":\"sds@l.com\","
-                + "\"Select Server Scope\":\"testttt\",\"Parent Correlation Name\":"
-                + "\"testttt\",\"Parent Correlation Traversal\":\"testttt\",\"logicalConnector\":"
-                + "\"OR\",\"triggerSignature@0.signaturesAlarm.alarmSignatures@0.traversal\":\"testttt\","
-                + "\"triggerSignature@0.signaturesAlarm.alarmSignatures@0.alarmSignature@0.VnfType\":"
-                + "\"  testttt\",\"triggerSignature@0.signaturesAlarm.alarmSignatures@0."
-                + "alarmSignature@0.Contains\":\"AND\",\"triggerSignature@0.signaturesAlarm."
-                + "alarmSignatures@0.alarmSignature@0.FilterValue\":\"testttt\"}}";
+                + "\"policyJSON\":{\"DCAEProcessingRules@0.processingRules_json\":"
+                + "\"eyJuYW1lIjogIkpvaG4iLCAiYWdlIjogIjI4IiwgImNpdHkiOiAiTmV3IFlvcmsifQ==\"}}";
 
         configBodyString = "{\"service\":\"SniroPolicyEntityTest\",\"policyName\":\"someone\",\"description\":\"test\","
                 + "\"templateVersion\":\"1607\",\"version\":\"HD\",\"priority\":\"2\","
