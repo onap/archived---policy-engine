@@ -58,6 +58,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -114,25 +116,23 @@ public class FirewallDictionaryController {
         return DictionaryUtils.getDictionaryUtils();
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_PrefixListDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPrefixListDictionaryEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, pfListDatas, prefixListName, PrefixList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_PrefixListData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPrefixListDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, pfListDatas, PrefixList.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_prefixList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_prefixList"})
     public ModelAndView savePrefixListDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -183,14 +183,14 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_PrefixList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_PrefixList"})
     public void removePrefixListDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, pfListDatas, PrefixList.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/validate_prefixList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/validate_prefixList"})
     public void validatePrefixListDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -218,16 +218,15 @@ public class FirewallDictionaryController {
         }
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_PortListData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPortListDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, portListDatas, PortList.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_portName"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_portName"})
     public ModelAndView savePortListDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -277,31 +276,29 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_PortList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_PortList"})
     public void removePortListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, portListDatas, PortList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ProtocolListData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getProtocolListDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, protocolListDatas, ProtocolList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ProtocolListDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getProtocolListDictionaryEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, protocolListDatas, protocolName, ProtocolList.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_protocolList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_protocolList"})
     public ModelAndView saveProtocolListDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -351,32 +348,30 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_protocol"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_protocol"})
     public void removeProtocolListDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, protocolListDatas, ProtocolList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_AddressGroupDictionaryDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getAddressGroupDictionaryEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, addressGroupDatas, "name", AddressGroup.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_AddressGroupData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getAddressGroupDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, addressGroupDatas, AddressGroup.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_addressGroup"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_addressGroup"})
     public ModelAndView saveAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -434,32 +429,30 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_AddressGroup"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_AddressGroup"})
     public void removeAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, addressGroupDatas, AddressGroup.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ActionListDictionaryDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getActionListDictionaryEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, actionListDatas, "actionName", ActionList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ActionListData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getActionListDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, actionListDatas, ActionList.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_ActionList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_ActionList"})
     public ModelAndView saveActionListDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -509,32 +502,30 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_ActionList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_ActionList"})
     public void removeActionListDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, actionListDatas, ActionList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ServiceGroupData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getServiceGroupDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, serviceGroupDatas, GroupServiceList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ServiceGroupDictionaryDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getServiceGroupDictionaryEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, serviceGroupDatas, "name", GroupServiceList.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_serviceGroup"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_serviceGroup"})
     public ModelAndView saveServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -593,32 +584,30 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_serviceGroup"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_serviceGroup"})
     public void removeServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, serviceGroupDatas, GroupServiceList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_SecurityZoneDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getSecurityZoneDictionaryEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, securityZoneDatas, zoneName, SecurityZone.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_SecurityZoneData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getSecurityZoneDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, securityZoneDatas, SecurityZone.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_securityZone"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_securityZone"})
     public ModelAndView saveSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -668,32 +657,30 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_securityZone"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_securityZone"})
     public void removeSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, securityZoneDatas, SecurityZone.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ServiceListData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getServiceListDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, serviceListDatas, ServiceList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ServiceListDictionaryDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getServiceListDictionaryEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, serviceListDatas, serviceName, ServiceList.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_serviceList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_serviceList"})
     public ModelAndView saveServiceListDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -751,32 +738,30 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_serviceList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_serviceList"})
     public void removeServiceListDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, serviceListDatas, ServiceList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ZoneData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getZoneDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, zoneDatas, Zone.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ZoneDictionaryDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getZoneDictionaryEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, zoneDatas, zoneName, Zone.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_zoneName"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_zoneName"})
     public ModelAndView saveZoneDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -825,31 +810,29 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_zone"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_zone"})
     public void removeZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, zoneDatas, Zone.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_TermListDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getTermListDictionaryEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, termListDictDatas, termName, TermList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_TermListData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getTermListDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, termListDictDatas, TermList.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_termList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_termList"})
     public ModelAndView saveTermListDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -918,32 +901,30 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_termList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_termList"})
     public void removeTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, termListDictDatas, TermList.class);
     }
 
     // ParentList Dictionary Data
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_FWDictionaryListDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getFWDictListDictionaryEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, fwDictListDatas, "parentItemName", FirewallDictionaryList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_FWDictionaryListData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getFWDictionaryListEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, fwDictListDatas, FirewallDictionaryList.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_FWDictionaryList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_FWDictionaryList"})
     public ModelAndView saveFWDictionaryList(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -1001,31 +982,29 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_FWDictionaryList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_FWDictionaryList"})
     public void removeFWDictionaryList(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, fwDictListDatas, FirewallDictionaryList.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_TagPickerNameByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getTagPickerNameEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, fwTagPickerDatas, tagPickerName, FwTagPicker.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_TagPickerListData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getTagPickerDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, fwTagPickerDatas, FwTagPicker.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_fwTagPicker"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_fwTagPicker"})
     public ModelAndView saveFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -1088,32 +1067,30 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_tagPicker"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_tagPicker"})
     public void removeFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, fwTagPickerDatas, FwTagPicker.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_TagListData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getTagDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, fwTagDatas, FwTag.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_TagNameByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getTagNameEntityDataByName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, fwTagDatas, "fwTagName", FwTag.class);
     }
 
-    @RequestMapping(value = {"/fw_dictionary/save_fwTag"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/save_fwTag"})
     public ModelAndView saveFirewallTagDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -1175,7 +1152,7 @@ public class FirewallDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/fw_dictionary/remove_tagList"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/fw_dictionary/remove_tagList"})
     public void removeFirewallTagDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();

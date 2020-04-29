@@ -40,6 +40,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -68,25 +70,23 @@ public class DescriptiveDictionaryController {
         return DictionaryUtils.getDictionaryUtils();
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_DescriptiveScopeByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getDescriptiveDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, descriptiveDatas, dScopeName, DescriptiveScope.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_DescriptiveScope"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getDescriptiveDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, descriptiveDatas, DescriptiveScope.class);
     }
 
-    @RequestMapping(value = {"/descriptive_dictionary/save_descriptive"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/descriptive_dictionary/save_descriptive"})
     public ModelAndView saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -148,7 +148,7 @@ public class DescriptiveDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/descriptive_dictionary/remove_descriptiveScope"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/descriptive_dictionary/remove_descriptiveScope"})
     public void removeDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();

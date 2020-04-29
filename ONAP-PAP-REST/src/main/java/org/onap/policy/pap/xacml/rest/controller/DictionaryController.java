@@ -42,6 +42,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -72,9 +74,8 @@ public class DictionaryController {
         return DictionaryUtils.getDictionaryUtils();
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_AttributeDatabyAttributeName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getAttributeDictionaryEntityDatabyAttributeName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -82,16 +83,15 @@ public class DictionaryController {
     }
 
     // Attribute Dictionary
-    @RequestMapping(
+    @GetMapping(
             value = "/get_AttributeData",
-            method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getAttributeDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, attributeDatas, Attribute.class);
     }
 
-    @RequestMapping(value = {"/attribute_dictionary/save_attribute"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/attribute_dictionary/save_attribute"})
     public ModelAndView saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -164,16 +164,15 @@ public class DictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/attribute_dictionary/remove_attribute"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/attribute_dictionary/remove_attribute"})
     public void removeAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, attributeDatas, Attribute.class);
     }
 
     // OnapName Dictionary
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_OnapNameDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getOnapNameDictionaryByNameEntityData(HttpServletResponse response) {
         LOGGER.info("get_OnapNameDataByName is called");
@@ -181,16 +180,15 @@ public class DictionaryController {
         utils.getDataByEntity(response, onapNameDatas, onapName, OnapName.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_OnapNameData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getOnapNameDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, onapNameDatas, OnapName.class);
     }
 
-    @RequestMapping(value = {"/onap_dictionary/save_onapName"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/onap_dictionary/save_onapName"})
     public ModelAndView saveOnapDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -248,7 +246,7 @@ public class DictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/onap_dictionary/remove_onap"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/onap_dictionary/remove_onap"})
     public void removeOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, onapNameDatas, OnapName.class);
