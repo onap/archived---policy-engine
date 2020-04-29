@@ -16,6 +16,193 @@
       "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dea17d12_1f31640b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-29T14:35:28Z",
+      "side": 1,
+      "message": "perhaps extract this for-loop into its own method",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28fb32c0_ca879654",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-29T14:35:28Z",
+      "side": 1,
+      "message": "use equals() to compare strings",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25dec466_34387ca1",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-29T14:35:28Z",
+      "side": 1,
+      "message": "add StandardCharsets.UTF_8 to decode() argument list",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31011057_cbe14a16",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-29T14:35:28Z",
+      "side": 1,
+      "message": "missing \"return\" ?",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d1dbb3c_d9769021",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 806,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-29T14:35:28Z",
+      "side": 1,
+      "message": "are lines 806-809 correct for the case where key does NOT contain \"@\"?",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "854560d7_a5ed845b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 997,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-29T14:35:28Z",
+      "side": 1,
+      "message": "I guess JSONObject is forgiving - I thought quotes were required around the key names, ex:\n\n  { \"dcaeModelData\": ... }",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4f5a576_d5697847",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1157,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-29T14:35:28Z",
+      "side": 1,
+      "message": "if I understand the documentation for getJSONArray(), \"obj1\" will be the same object as \"obj\".  If that\u0027s the case, then this assignment is not needed and the only test needed in lines 1158-1159 is the very last test, length() \u003e 0.\n\nInteresting - this code only cares about the first item in the array.",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc6b904a_8b4cb4a9",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-29T14:35:28Z",
+      "side": 1,
+      "message": "this is ok as is, but looks like this line could be done once rather than being repeated in every branch",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3455e2e_ecb02372",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 1004,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-29T14:35:28Z",
+      "side": 1,
+      "message": "need a delimiter between labelValue and attributeKey?",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df992714_246472a5",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 1516,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-29T14:35:28Z",
+      "side": 1,
+      "message": "assigning the same value for both true and false?",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2cafb63_dad03ef4",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 1601,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-29T14:35:28Z",
+      "side": 1,
+      "message": "assigning the same value for both true and false?",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
