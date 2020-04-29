@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff42360b_f3fb706f",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 1112,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-04-29T19:20:55Z",
+      "side": 1,
+      "message": "don\u0027t need the test on the left of \"\u0026\u0026\" since it\u0027s the same as line 1110",
+      "revId": "c718bb4e4095b249b7dccf9395fb0bd5ffda90a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
