@@ -51,6 +51,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -93,25 +95,23 @@ public class BRMSDictionaryController {
         return DictionaryUtils.getDictionaryUtils();
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_BRMSParamDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSParamDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, brmsParamDatas, ruleName, BrmsParamTemplate.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_BRMSParamData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSParamDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, brmsParamDatas, BrmsParamTemplate.class);
     }
 
-    @RequestMapping(value = {"/brms_dictionary/set_BRMSParamData"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/brms_dictionary/set_BRMSParamData"})
     public static void setRuleData(HttpServletRequest request) throws IOException {
         StringWriter writer = new StringWriter();
         IOUtils.copy(request.getInputStream(), writer, StandardCharsets.UTF_8);
@@ -119,7 +119,7 @@ public class BRMSDictionaryController {
         rule = cleanStreamBoundary.substring(0, cleanStreamBoundary.lastIndexOf("end") + 4);
     }
 
-    @RequestMapping(value = {"/brms_dictionary/save_BRMSParam"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/brms_dictionary/save_BRMSParam"})
     public ModelAndView saveBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -194,31 +194,29 @@ public class BRMSDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/brms_dictionary/remove_brmsParam"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/brms_dictionary/remove_brmsParam"})
     public void removeBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, brmsParamDatas, BrmsParamTemplate.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_BRMSDependencyDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSDependencyDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, brmsDependencyDatas, dependencyName, BrmsDependency.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_BRMSDependencyData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSDependencyDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, brmsDependencyDatas, BrmsDependency.class);
     }
 
-    @RequestMapping(value = {"/brms_dictionary/save_BRMSDependencyData"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/brms_dictionary/save_BRMSDependencyData"})
     public ModelAndView saveBRMSDependencyDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -301,32 +299,30 @@ public class BRMSDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/brms_dictionary/remove_brmsDependency"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/brms_dictionary/remove_brmsDependency"})
     public void removeBRMSDependencyDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, brmsDependencyDatas, BrmsDependency.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_BRMSControllerDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSControllerDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, brmsControllerDatas, controllerName, BrmsController.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_BRMSControllerData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSControllerDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, brmsControllerDatas, BrmsController.class);
     }
 
-    @RequestMapping(value = {"/brms_dictionary/save_BRMSControllerData"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/brms_dictionary/save_BRMSControllerData"})
     public ModelAndView saveBRMSControllerDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -405,7 +401,7 @@ public class BRMSDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/brms_dictionary/remove_brmsController"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/brms_dictionary/remove_brmsController"})
     public void removeBRMSControllerDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();

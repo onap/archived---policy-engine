@@ -39,6 +39,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -67,25 +69,23 @@ public class ActionPolicyDictionaryController {
         return DictionaryUtils.getDictionaryUtils();
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ActionPolicyDictDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getActionEntitybyName(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, actionDatas, attributeName, ActionPolicyDict.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ActionPolicyDictData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getActionPolicyDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, actionDatas, ActionPolicyDict.class);
     }
 
-    @RequestMapping(value = {"/action_dictionary/save_ActionDict"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/action_dictionary/save_ActionDict"})
     public ModelAndView saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -149,7 +149,7 @@ public class ActionPolicyDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/action_dictionary/remove_actionPolicyDict"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/action_dictionary/remove_actionPolicyDict"})
     public void removeActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
