@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a2993f7_dd835ad5",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-04-29T11:33:32Z",
+      "side": 1,
+      "message": "all the formatting is changed - please ensure environment has been setup to ONAP formatting standards.",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
