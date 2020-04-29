@@ -41,6 +41,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -69,25 +71,23 @@ public class DecisionPolicyDictionaryController {
         return DictionaryUtils.getDictionaryUtils();
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_SettingsDictionaryDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getSettingsDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, settingDatas, xacmlId, DecisionSettings.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_SettingsDictionaryData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getSettingsDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, settingDatas, DecisionSettings.class);
     }
 
-    @RequestMapping(value = {"/decision_dictionary/save_Settings"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/decision_dictionary/save_Settings"})
     public ModelAndView saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -150,31 +150,29 @@ public class DecisionPolicyDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/settings_dictionary/remove_settings"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/settings_dictionary/remove_settings"})
     public void removeSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, settingDatas, DecisionSettings.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_RainyDayDictionaryDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getRainyDayDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, rainDayDatas, bbID, RainyDayTreatments.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_RainyDayDictionaryData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getRainyDayDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, rainDayDatas, RainyDayTreatments.class);
     }
 
-    @RequestMapping(value = {"/decision_dictionary/save_RainyDay"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/decision_dictionary/save_RainyDay"})
     public ModelAndView saveRainyDayDictionary(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
@@ -231,7 +229,7 @@ public class DecisionPolicyDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/decision_dictionary/remove_rainyDay"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/decision_dictionary/remove_rainyDay"})
     public void removeRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, rainDayDatas, RainyDayTreatments.class);

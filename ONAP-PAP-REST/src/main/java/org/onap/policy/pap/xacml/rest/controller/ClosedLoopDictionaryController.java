@@ -47,6 +47,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -92,115 +94,103 @@ public class ClosedLoopDictionaryController {
         return DictionaryUtils.getDictionaryUtils();
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_VSCLActionDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getVSCLActionDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, vsclActionDatas, vsclaction, VsclAction.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_VSCLActionData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getVSCLActionDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, vsclActionDatas, VsclAction.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_VNFTypeDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getVNFTypeDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, vnfTypeDatas, vnftype, VnfType.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_VNFTypeData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getVNFTypeDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, vnfTypeDatas, VnfType.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_PEPOptionsDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPEPOptionsDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, pepOptionDatas, pepName, PepOptions.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_PEPOptionsData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getPEPOptionsDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, pepOptionDatas, PepOptions.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_VarbindDictionaryDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getVarbindDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, varbindDatas, varbindName, VarbindDictionary.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_VarbindDictionaryData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getVarbindDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, varbindDatas, VarbindDictionary.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ClosedLoopServicesDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getClosedLoopServiceDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, closedLoopDatas, serviceName, ClosedLoopD2Services.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ClosedLoopServicesData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getClosedLoopServiceDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, closedLoopDatas, ClosedLoopD2Services.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ClosedLoopSiteDataByName"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getClosedLoopSiteDictionaryByNameEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getDataByEntity(response, closedLoopSiteDatas, siteName, ClosedLoopSite.class);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = {"/get_ClosedLoopSiteData"},
-            method = {RequestMethod.GET},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getClosedLoopSiteDictionaryEntityData(HttpServletResponse response) {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.getData(response, closedLoopSiteDatas, ClosedLoopSite.class);
     }
 
-    @RequestMapping(value = {"/cl_dictionary/save_vsclAction"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/cl_dictionary/save_vsclAction"})
     public ModelAndView saveVSCLAction(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
@@ -258,13 +248,13 @@ public class ClosedLoopDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/cl_dictionary/remove_VsclAction"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/cl_dictionary/remove_VsclAction"})
     public void removeVSCLAction(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, vsclActionDatas, OnapName.class);
     }
 
-    @RequestMapping(value = {"/cl_dictionary/save_vnfType"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/cl_dictionary/save_vnfType"})
     public ModelAndView saveVnfType(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
@@ -322,13 +312,13 @@ public class ClosedLoopDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/cl_dictionary/remove_vnfType"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/cl_dictionary/remove_vnfType"})
     public void removeVnfType(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, vnfTypeDatas, VnfType.class);
     }
 
-    @RequestMapping(value = {"/cl_dictionary/save_pepOptions"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/cl_dictionary/save_pepOptions"})
     public ModelAndView savePEPOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
@@ -393,13 +383,13 @@ public class ClosedLoopDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/cl_dictionary/remove_pepOptions"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/cl_dictionary/remove_pepOptions"})
     public void removePEPOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, pepOptionDatas, VnfType.class);
     }
 
-    @RequestMapping(value = {"/cl_dictionary/save_service"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/cl_dictionary/save_service"})
     public ModelAndView saveServiceType(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
@@ -457,13 +447,13 @@ public class ClosedLoopDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/cl_dictionary/remove_Service"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/cl_dictionary/remove_Service"})
     public void removeServiceType(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, closedLoopDatas, VnfType.class);
     }
 
-    @RequestMapping(value = {"/cl_dictionary/save_siteName"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/cl_dictionary/save_siteName"})
     public ModelAndView saveSiteType(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
@@ -520,13 +510,13 @@ public class ClosedLoopDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/cl_dictionary/remove_site"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/cl_dictionary/remove_site"})
     public void removeSiteType(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, closedLoopSiteDatas, VnfType.class);
     }
 
-    @RequestMapping(value = {"/cl_dictionary/save_varbind"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/cl_dictionary/save_varbind"})
     public ModelAndView saveVarbind(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
@@ -585,7 +575,7 @@ public class ClosedLoopDictionaryController {
         return null;
     }
 
-    @RequestMapping(value = {"/cl_dictionary/remove_varbindDict"}, method = {RequestMethod.POST})
+    @PostMapping(value = {"/cl_dictionary/remove_varbindDict"})
     public void removeVarbind(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DictionaryUtils utils = getDictionaryUtilsInstance();
         utils.removeData(request, response, varbindDatas, VnfType.class);
