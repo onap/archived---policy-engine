@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5aeb2498_12c72d5a",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-04-29T19:26:50Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "0a2993f7_dd835ad5",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dea17d12_1f31640b",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
         "patchSetId": 3
@@ -33,6 +51,24 @@
       "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1216316d_312498f2",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-04-29T19:26:50Z",
+      "side": 1,
+      "message": "Done, extracted into a new method.",
+      "parentUuid": "dea17d12_1f31640b",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "85723f27_ba618bc2",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-04-29T19:26:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28fb32c0_ca879654",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25dec466_34387ca1",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
         "patchSetId": 3
@@ -67,6 +121,24 @@
       "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd659ccc_903f42f4",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-04-29T19:26:50Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "25dec466_34387ca1",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "217ed4a2_48dd583d",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-04-29T19:26:50Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "31011057_cbe14a16",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3d1dbb3c_d9769021",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
         "patchSetId": 3
@@ -101,6 +191,24 @@
       "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "741a5245_a475e6d6",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 806,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-04-29T19:26:50Z",
+      "side": 1,
+      "message": "YES.",
+      "parentUuid": "3d1dbb3c_d9769021",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "e92a6ac9_d580a685",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 997,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-04-29T19:26:50Z",
+      "side": 1,
+      "message": "Well its forming a json correctly. \n\nFor example : {\"dcaeModelData\":{\"annotation\":null,\"dependency\":\"[]\",\"decisionModel\":false,\"refAttributes\":\"DCAEProcessingRules\u003dDCAEProcessRules:MANY-true:description-null,\",\"description\":\"\",\"version\":\"1810v1\",\"userCreatedBy\":{\"userLoginId\":\"su1234\",\"userName\":\"super-admin\"},\"subAttributes\":\"{\\\"DCAEProcessRules\\\":{\\\"processingRules_json\\\":\\\"string:defaultValue-null:required-false:MANY-false:description-null\\\"}}\",\"modelName\":\"DCAE_HighlandPark_Processing_Rules\",\"attributes\":\"\",\"id\":411,\"dataOrderInfo\":null,\"ruleFormation\":null,\"enumValues\":null},\"jsonValue\":{\"DCAEProcessingRules\":[{\"processingRules_json\":\"string\"}]},\"allManyTrueKeys\":[],\"dataOrderInfo\":null,\"headDefautlsData\":null}",
+      "parentUuid": "854560d7_a5ed845b",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4f5a576_d5697847",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
         "patchSetId": 3
@@ -135,6 +261,24 @@
       "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85e3db5d_20b72c2f",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1157,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-04-29T19:26:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4f5a576_d5697847",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "b2b5c784_5d993d66",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-04-29T19:26:50Z",
+      "side": 1,
+      "message": "Making this change just after for loop once.",
+      "parentUuid": "fc6b904a_8b4cb4a9",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b3455e2e_ecb02372",
         "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
         "patchSetId": 3
@@ -169,6 +331,24 @@
       "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb8eec70_7e245650",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 1004,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-04-29T19:26:50Z",
+      "side": 1,
+      "message": "No, that\u0027s how the text field is creating and used.\nFor ex: textField \u003d input#DcaeSamVnfBlackOutConfig@0.delFg.onoffswitch-checkbox (1st)\ntextField \u003d input#DcaeSamVnfBlackOutConfig@0.delFg1.onoffswitch-checkbox (2nd)",
+      "parentUuid": "b3455e2e_ecb02372",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "1dbab0f8_3d0b4c76",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 1516,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-04-29T19:26:50Z",
+      "side": 1,
+      "message": "same as below. removing else if",
+      "parentUuid": "df992714_246472a5",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e2cafb63_dad03ef4",
         "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
         "patchSetId": 3
@@ -203,6 +401,24 @@
       "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fc09dc6_44972f97",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 1601,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-04-29T19:26:50Z",
+      "side": 1,
+      "message": "Tested without else if and working.\nSo removing the else if.",
+      "parentUuid": "e2cafb63_dad03ef4",
+      "revId": "cb104f8cc417ea929c2504a97b654bcf386ba4e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
