@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '1.6.3'
+project: 'policy-engine'
+log_dir: 'policy-engine-maven-docker-stage-master/321/'
+ref: fdd97327b8b3c646825c055de65d20c87261decb
+containers:
+    - name: 'policy-pe'
+      version: '1.6.3-20200430T1443'
