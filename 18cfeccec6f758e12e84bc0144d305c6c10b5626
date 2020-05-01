@@ -22,6 +22,30 @@
       "revId": "18cfeccec6f758e12e84bc0144d305c6c10b5626",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "084053d8_1a6b7fa5",
+        "filename": "ONAP-SDK-APP/src/main/webapp/WEB-INF/defs/definitions.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1725
+      },
+      "writtenOn": "2020-05-01T15:52:22Z",
+      "side": 1,
+      "message": "Ok, but this is a temporary change?",
+      "parentUuid": "f920545d_c866dbaa",
+      "range": {
+        "startLine": 6,
+        "startChar": 16,
+        "endLine": 6,
+        "endChar": 25
+      },
+      "revId": "18cfeccec6f758e12e84bc0144d305c6c10b5626",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
