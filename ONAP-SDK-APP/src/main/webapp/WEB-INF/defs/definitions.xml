@@ -33,5 +33,6 @@
 
 	<definition name="tileKey" template="/path/to/page_template.html"/>
 	<definition name="policy_Editor" template="/app/policyApp/main/policyEditor.html"/>
+	<definition name="welcome" template="/app/fusion/scripts/DS2-view-models/welcome.html" />
 		
 </tiles-definitions>
