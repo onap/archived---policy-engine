@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14417f88_2ebc9851",
+        "filename": "ONAP-SDK-APP/src/main/webapp/WEB-INF/defs/definitions.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-05-01T16:19:19Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "f750137e7c6c987d9e21eee20cbfcfe457435c29",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84068450_3e70601f",
+        "filename": "ONAP-SDK-APP/src/main/webapp/WEB-INF/defs/definitions.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-05-01T16:19:19Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "f750137e7c6c987d9e21eee20cbfcfe457435c29",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
