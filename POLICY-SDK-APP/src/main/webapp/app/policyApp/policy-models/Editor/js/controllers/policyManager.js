@@ -301,6 +301,7 @@ app.controller('PolicyManagerController', [
     $scope.uploadFiles = function() {
     $scope.policyUploader.upload($scope.uploadFileList, $scope.policyNavigator.currentPath).then(function() {
          $scope.policyNavigator.refresh();
+         Notification.success('Policy Import Complete');
          $scope.modal('uploadfile', true);
     }, function(data) {
          var errorMsg = data.result && data.result.error || 'Error Occured while Uploading....';
