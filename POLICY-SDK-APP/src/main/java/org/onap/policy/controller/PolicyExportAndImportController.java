@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019, 2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ package org.onap.policy.controller;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,11 +35,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
-
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -69,6 +67,7 @@ import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.onap.portalsdk.core.web.support.UserUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -114,6 +113,11 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 
     public PolicyExportAndImportController() {
         // Empty constructor
+    }
+
+    @Autowired
+    private PolicyExportAndImportController(CommonClassDao commonClassDao) {
+        PolicyExportAndImportController.commonClassDao = commonClassDao;
     }
 
     /**
@@ -257,7 +261,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
      * @return JSONObject
      * @throws IOException error out
      */
-    public JSONObject importRepositoryFile(String file, HttpServletRequest request) throws IOException {
+    public String importRepositoryFile(String file, HttpServletRequest request) throws IOException {
         boolean configExists = false;
         boolean actionExists = false;
         String configName = null;
@@ -276,7 +280,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
                 HSSFWorkbook workbook = new HSSFWorkbook(excelFile)) {
             Sheet datatypeSheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = datatypeSheet.iterator();
-
+            String sendResult = null;
             while (rowIterator.hasNext()) {
                 finalColumn = false;
                 PolicyEntity policyEntity = new PolicyEntity();
@@ -291,6 +295,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
                 int bodySize = 0;
                 int setBodySize = 0;
                 boolean configurationBodySet = false;
+                boolean errorFlag = false;
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
                     if (policyName.equalsIgnoreCase(getCellHeaderName(cell))) {
@@ -314,13 +319,18 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
                     configurationDataEntity =
                             populateConfigurationDataEntity(policyEntity, configurationDataEntity, cell);
                     actionBodyEntity = populateActionBodyObject(policyEntity, actionBodyEntity, cell);
-                    JSONObject response = validatRequiredValue(policyEntity, body, finalColumn, configurationBodySet);
-                    if (response != null) {
-                        return response;
+                    String response = null;
+                    response = validatRequiredValue(policyEntity, body, finalColumn, configurationBodySet);
+                    if (!StringUtils.isBlank(response)) {
+                        sendResult = sendResult + "\n" + response;
+                        errorFlag = true;
+                    }
+                    if (!StringUtils.isBlank(response) && rowIterator.hasNext() == false) {
+                        return sendResult;
                     }
                     savePolicyEntiies(finalColumn, configurationBodySet, configurationDataEntity, policyEntity,
                             controller, roles, userInfo, scopes, configName, userId, configExists, actionExists,
-                            actionBodyEntity, body);
+                            actionBodyEntity, body, errorFlag);
 
                 }
             }
@@ -365,43 +375,40 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
      * @return String
      */
     public String validatMatchRequiredFields(String policyName, String jsonString) {
-
+        String errorMsg = "";
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
-            String configName = jsonObject.getString("configName");
-            String uuid = jsonObject.getString("uuid");
-            String erorMsg = validConfigName(configName);
-            if (erorMsg != null) {
-                return erorMsg;
+            String confErorMsg = validConfigName(jsonObject.getString("configName"));
+            if (!confErorMsg.isEmpty()) {
+                errorMsg = errorMsg + "\n POLICY :" + policyName + " at " + confErorMsg;
             }
-            erorMsg = validUuid(uuid);
-            if (erorMsg != null) {
-                return erorMsg;
+            String uuidErorMsg = validUuid(jsonObject.getString("uuid"));
+            if (!uuidErorMsg.isEmpty()) {
+                errorMsg = errorMsg + "\n POLICY :" + policyName + " at " + uuidErorMsg;
             }
-            String location = jsonObject.getString("location");
-            erorMsg = validLocation(location);
-            if (erorMsg != null) {
-                return erorMsg;
+            String locErorMsg = validLocation(jsonObject.getString("location"));
+            if (!locErorMsg.isEmpty()) {
+                errorMsg = errorMsg + "\n POLICY :" + policyName + " at " + locErorMsg;
             }
-            String policyScope = jsonObject.getString("policyScope");
-            erorMsg = validPolicyScope(policyScope);
-            if (erorMsg != null) {
-                return erorMsg;
+            String pScopeErorMsg = validPolicyScope(jsonObject.getString("policyScope"));
+            if (!pScopeErorMsg.isEmpty()) {
+                errorMsg = errorMsg + "\n POLICY :" + policyName + " at " + pScopeErorMsg;
             }
             String msVersion = jsonObject.getString("version");
             String msService = jsonObject.getString("service");
             if (!isAttributeObjectFound(msService, msVersion)) {
-                return POLICY + policyName + " MS Service: " + msService + " and MS Version: " + msVersion + NOTVALID;
+                errorMsg = errorMsg + "\n POLICY :" + policyName + " at MS Service: " + msService + " and MS Version: "
+                        + msVersion + NOTVALID;
             }
 
         } catch (Exception e) {
             logger.error("Exception Occured While validating required fields", e);
         }
 
-        return null;
+        return errorMsg;
     }
 
-    private JSONObject validatRequiredValue(PolicyEntity policyEntity, StringBuilder body, boolean finalColumn,
+    private String validatRequiredValue(PolicyEntity policyEntity, StringBuilder body, boolean finalColumn,
             boolean configurationBodySet) {
         if (finalColumn && configurationBodySet && (policyEntity.getPolicyName().contains(CONFIG_MS))) {
             String errorMsg = validatMatchRequiredFields(policyEntity.getPolicyName(), body.toString());
@@ -409,7 +416,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
                 logger.error("errorMsg => " + errorMsg);
                 JSONObject response = new JSONObject();
                 response.append("error", errorMsg);
-                return response;
+                return errorMsg;
             }
         }
         return null;
@@ -751,9 +758,9 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
     private void savePolicyEntiies(boolean finalColumn, boolean configurationBodySet,
             ConfigurationDataEntity configurationDataEntity, PolicyEntity policyEntity, PolicyController controller,
             List<String> roles, UserInfo userInfo, Set<String> scopes, String configName, String userId,
-            boolean configExists, boolean actionExists, ActionBodyEntity actionBodyEntity, StringBuilder body) {
+            boolean configExists, boolean actionExists, ActionBodyEntity actionBodyEntity, StringBuilder body, boolean errorFlagSent) {
 
-        if (finalColumn && configurationBodySet) {
+        if (finalColumn && configurationBodySet && errorFlagSent == false) {
             configurationDataEntity.setConfigBody(body.toString());
             String scope = policyEntity.getScope().replace(".", File.separator);
             String query = "FROM PolicyEntity where policyName = :policyName and scope = :policyScope";
