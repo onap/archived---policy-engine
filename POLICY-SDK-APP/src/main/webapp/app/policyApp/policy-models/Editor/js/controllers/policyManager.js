@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -301,6 +301,7 @@ app.controller('PolicyManagerController', [
     $scope.uploadFiles = function() {
     $scope.policyUploader.upload($scope.uploadFileList, $scope.policyNavigator.currentPath).then(function() {
          $scope.policyNavigator.refresh();
+         Notification.success('Policy Import Complete');
          $scope.modal('uploadfile', true);
     }, function(data) {
          var errorMsg = data.result && data.result.error || 'Error Occured while Uploading....';

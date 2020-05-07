@@ -25,7 +25,6 @@ package org.onap.policy.admin;
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -49,7 +48,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonReader;
@@ -61,11 +59,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.elasticsearch.common.Strings;
 import org.json.JSONArray;
@@ -266,20 +264,24 @@ public class PolicyManagerServlet extends HttpServlet {
     private void uploadFile(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
             Map<String, InputStream> files = new HashMap<>();
-
+            String resp = null;
             List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
             for (FileItem item : items) {
                 if (!item.isFormField()) {
                     // Process form file field (input type="file").
                     files.put(item.getName(), item.getInputStream());
-                    processFormFile(request, item);
+                    resp = processFormFile(request, item, response);
                 }
             }
 
-            JSONObject responseJsonObject;
-            responseJsonObject = this.success();
             response.setContentType(CONTENTTYPE);
             PrintWriter out = response.getWriter();
+            JSONObject responseJsonObject;
+            if (!StringUtils.isBlank(resp)) {
+                responseJsonObject = this.error("Import Issue " + resp);
+            } else {
+                responseJsonObject = this.success();
+            }
             out.print(responseJsonObject);
             out.flush();
         } catch (Exception e) {
@@ -288,23 +290,27 @@ public class PolicyManagerServlet extends HttpServlet {
         }
     }
 
-    private void processFormFile(HttpServletRequest request, FileItem item) {
+    private String processFormFile(HttpServletRequest request, FileItem item, HttpServletResponse response) {
         String newFile;
+        String outPutResp = null;
         if (item.getName().endsWith(".xls") && item.getSize() <= getFileSizeLimit()) {
             File file = new File(item.getName());
             try (OutputStream outputStream = new FileOutputStream(file)) {
-                copyStream(item.getInputStream(), outputStream);
+                IOUtils.copy(item.getInputStream(), outputStream);
                 newFile = file.toString();
                 PolicyExportAndImportController importController = new PolicyExportAndImportController();
-                importController.importRepositoryFile(newFile, request);
+                return importController.importRepositoryFile(newFile, request);
             } catch (Exception e) {
                 LOGGER.error("Upload error : " + e);
             }
         } else if (!item.getName().endsWith(".xls")) {
-            LOGGER.error("Non .xls filetype uploaded: " + item.getName());
+            outPutResp = "Non .xls filetype uploaded: " + item.getName();
+            LOGGER.error(outPutResp);
         } else { // uploaded file size is greater than allowed
-            LOGGER.error("Upload file size limit exceeded! File size (Bytes) is: " + item.getSize());
+            outPutResp = "Upload file size limit exceeded! File size (Bytes) is: " + item.getSize();
+            LOGGER.error(outPutResp);
         }
+        return outPutResp;
     }
 
     protected long copyStream(InputStream inputStream, OutputStream outputStream) throws IOException {
