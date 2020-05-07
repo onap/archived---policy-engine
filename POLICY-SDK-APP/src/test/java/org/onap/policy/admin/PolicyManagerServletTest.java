@@ -27,7 +27,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -855,6 +854,7 @@ public class PolicyManagerServletTest extends Mockito {
             }
         };
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse mockResp = Mockito.mock(HttpServletResponse.class);
         FileItem mockFileItem = Mockito.mock(FileItem.class);
         InputStream mockInputStream = Mockito.mock(InputStream.class);
 
@@ -862,18 +862,18 @@ public class PolicyManagerServletTest extends Mockito {
         when(mockFileItem.getInputStream()).thenReturn(mockInputStream);
         when(mockFileItem.getSize()).thenReturn(fileSizeLimit + 1);
 
-        Whitebox.invokeMethod(servlet, "processFormFile", mockRequest, mockFileItem);
+        Whitebox.invokeMethod(servlet, "processFormFile", mockRequest, mockFileItem, mockResp);
         verify(mockFileItem, atLeast(1)).getName();
         verify(mockFileItem, atLeast(1)).getSize();
 
         when(mockFileItem.getName()).thenReturn("testFileName.txt");
-        Whitebox.invokeMethod(servlet, "processFormFile", mockRequest, mockFileItem);
+        Whitebox.invokeMethod(servlet, "processFormFile", mockRequest, mockFileItem, mockResp);
         verify(mockFileItem, atLeast(1)).getName();
 
         when(mockFileItem.getSize()).thenReturn(fileSizeLimit);
         when(mockFileItem.getName()).thenReturn("testFileName.xls");
         when(mockFileItem.getInputStream()).thenThrow(IOException.class);
-        Whitebox.invokeMethod(servlet, "processFormFile", mockRequest, mockFileItem);
+        Whitebox.invokeMethod(servlet, "processFormFile", mockRequest, mockFileItem, mockResp);
         verify(mockFileItem, atLeast(1)).getName();
         verify(mockFileItem, atLeast(1)).getInputStream();
         verify(mockFileItem, atLeast(1)).getSize();
