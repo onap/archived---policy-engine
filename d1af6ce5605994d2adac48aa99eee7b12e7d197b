@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ebd1149_b5531e5d",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-05-08T13:53:45Z",
+      "side": 1,
+      "message": "\"2019, 2020\" \u003d\u003e \"2020\"",
+      "revId": "d1af6ce5605994d2adac48aa99eee7b12e7d197b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa9af328_d20d1f16",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-05-08T13:53:45Z",
+      "side": 1,
+      "message": "use \"!\" instead of \"\u003d\u003d false\"",
+      "revId": "d1af6ce5605994d2adac48aa99eee7b12e7d197b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "740b543f_dd091877",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-05-08T13:53:45Z",
+      "side": 1,
+      "message": "use \"!\" instead of \"\u003d\u003d false\"",
+      "revId": "d1af6ce5605994d2adac48aa99eee7b12e7d197b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f535d5b_31972e00",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/js/controllers/policyManager.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-05-08T13:53:45Z",
+      "side": 1,
+      "message": "\"2019, 2020\" \u003d\u003e \"2019-2020\"",
+      "revId": "d1af6ce5605994d2adac48aa99eee7b12e7d197b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
