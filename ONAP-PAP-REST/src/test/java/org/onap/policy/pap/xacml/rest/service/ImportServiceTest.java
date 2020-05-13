@@ -23,11 +23,14 @@ package org.onap.policy.pap.xacml.rest.service;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 public class ImportServiceTest {
@@ -73,5 +76,14 @@ public class ImportServiceTest {
         request.setBodyContent("foo");
         HttpServletResponse response = new MockHttpServletResponse();
         assertThatThrownBy(() -> service.doImportMicroServicePut(request, response)).isInstanceOf(Exception.class);
+    }
+
+    @AfterClass
+    public static void tearDown(){
+        try {
+            FileUtils.deleteDirectory(new File("ExtractDir"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 }
