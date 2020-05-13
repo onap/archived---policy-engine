@@ -50,6 +50,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -1144,5 +1145,11 @@ public class PolicyManagerServletTest extends Mockito {
         verify(mockPolicyVersion, atLeast(1)).getActiveVersion();
         verify(mockPolicyVersion, atLeast(1)).getCreatedBy();
         verify(mockPolicyVersion, atLeast(1)).getModifiedBy();
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        File destroyFile = new File("testFileName.xls");
+        destroyFile.delete();
     }
 }
