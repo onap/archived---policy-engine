@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7eb4f351_943c570c",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/service/ImportServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-05-14T12:02:57Z",
+      "side": 1,
+      "message": "I\u0027m all for the simple fix - but wondering where this is hardcoded? During production is the engine writing to this directory? Seems like its something that should be configurable. But I don\u0027t really want to go making that change right now.",
+      "range": {
+        "startLine": 84,
+        "startChar": 12,
+        "endLine": 84,
+        "endChar": 62
+      },
+      "revId": "a7f572701a4818c6cb2747c45feefc04608afa43",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "baf2d40a_6d101e2f",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/PolicyManagerServletTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 862,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-05-14T12:02:57Z",
+      "side": 1,
+      "message": "Wondering if we use JUnit TemporaryFolder and be able to give a full path for this?? Then JUnit just cleans up that directory.",
+      "range": {
+        "startLine": 862,
+        "startChar": 48,
+        "endLine": 862,
+        "endChar": 66
+      },
+      "revId": "a7f572701a4818c6cb2747c45feefc04608afa43",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
