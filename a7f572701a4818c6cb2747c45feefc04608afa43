@@ -45,6 +45,40 @@
       "revId": "a7f572701a4818c6cb2747c45feefc04608afa43",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "752d6e3e_4c306220",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/PolicyManagerServletTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1150,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-05-14T16:29:50Z",
+      "side": 1,
+      "message": "please move this before the @Before method",
+      "revId": "a7f572701a4818c6cb2747c45feefc04608afa43",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8febeab3_1246d1af",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/PolicyManagerServletTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1153,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-05-14T16:29:50Z",
+      "side": 1,
+      "message": "could use deleteOnExit() and then just put this in @Before",
+      "revId": "a7f572701a4818c6cb2747c45feefc04608afa43",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
