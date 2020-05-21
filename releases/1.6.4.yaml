@@ -1,0 +1,6 @@
+distribution_type: 'maven'
+version: '1.6.4'
+project: 'policy-engine'
+tag_release: false
+log_dir: 'policy-engine-maven-stage-frankfurt/3/'
+
