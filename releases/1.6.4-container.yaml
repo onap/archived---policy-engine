@@ -1,0 +1,9 @@
+distribution_type: 'container'
+container_release_tag: '1.6.4'
+project: 'policy-engine'
+log_dir: 'policy-engine-maven-docker-stage-frankfurt/3/'
+ref: 1615a7b4e7a76529911cc9f25e48cd2542682171
+containers:
+    - name: 'policy-pe'
+      version: '1.6.4-20200521T1354'
+
