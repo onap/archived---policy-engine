@@ -124,7 +124,7 @@ ONAP Policy requires all the *policy* modules from the ONAP repository. It also 
             fi
         fi
      
-        git clone https://gerrit.onap.org/r/${repo} $clone_dir/$repo
+        git clone --depth 1 https://gerrit.onap.org/r/${repo} $clone_dir/$repo
     done
      
     echo ONAP has been cloned into '"'$clone_dir'"'

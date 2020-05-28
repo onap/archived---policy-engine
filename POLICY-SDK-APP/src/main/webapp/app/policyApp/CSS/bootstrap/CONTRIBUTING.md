@@ -154,7 +154,7 @@ included in the project:
 
    ```bash
    # Clone your fork of the repo into the current directory
-   git clone https://github.com/<your-username>/bootstrap.git
+   git clone --depth 1 https://github.com/<your-username>/bootstrap.git
    # Navigate to the newly cloned directory
    cd bootstrap
    # Assign the original repo to a remote called "upstream"

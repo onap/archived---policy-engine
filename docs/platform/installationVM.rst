@@ -146,7 +146,7 @@ Install the ONAP Policy Framework
 
 	.. code-block:: bash 
 	
-	    git clone https://gerrit.onap.org/r/integration
+	    git clone --depth 1 https://gerrit.onap.org/r/integration
 
 **Step 2:** Change to the policy integration script location
 
