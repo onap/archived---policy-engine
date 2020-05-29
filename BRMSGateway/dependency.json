@@ -3,7 +3,7 @@
         "default": [{
             "groupId": "org.onap.policy.drools-applications.controlloop.templates",
             "artifactId": "template.demo",
-            "version": "1.5.3"
+            "version": "1.5.4"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-impl",
             "artifactId": "events",
@@ -72,11 +72,11 @@
         }, {
             "groupId": "org.onap.policy.drools-applications.controlloop.common",
             "artifactId": "eventmanager",
-            "version": "1.5.3"
+            "version": "1.5.4"
         }, {
             "groupId": "org.onap.policy.drools-applications.controlloop.common",
             "artifactId": "guard",
-            "version": "1.5.3"
+            "version": "1.5.4"
         }, {
             "groupId": "org.onap.policy.models.policy-models-interactions.model-actors",
             "artifactId": "actorServiceProvider",
