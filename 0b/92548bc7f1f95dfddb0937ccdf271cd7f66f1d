@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Jim Hahn <jrh3@att.com>
+Code-Review+2: Ram Krishna Verma <ram_krishna.verma@bell.ca>
+Submitted-by: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-at: Mon, 01 Jun 2020 22:41:02 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/engine/+/108642
+Project: policy/engine
+Branch: refs/heads/elalto
