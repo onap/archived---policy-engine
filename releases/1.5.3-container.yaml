@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '1.5.3'
+project: 'policy-engine'
+log_dir: 'policy-engine-maven-docker-stage-elalto/16/'
+ref: b6fd4b95bd818a9cc16b9e105bf4914a6fa989a8
+containers:
+    - name: 'policy-pe'
+      version: '1.5.3-20200601T1636'
