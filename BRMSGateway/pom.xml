@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.onap.policy.engine</groupId>
         <artifactId>PolicyEngineSuite</artifactId>
-        <version>1.5.3-SNAPSHOT</version>
+        <version>1.5.4-SNAPSHOT</version>
     </parent>
     <artifactId>BRMSGateway</artifactId>
     <description>This application will take in BRMS rules and acts as interface between PR and PDP XACML</description>
