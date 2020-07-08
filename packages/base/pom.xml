@@ -124,7 +124,7 @@
 									update the docker-install.sh script to ensure the right
 									file name is installed. 
 									 -->
-									<destFileName>apache-tomcat-9.0.16.tar.gz</destFileName>
+									<destFileName>apache-tomcat-9.0.36.tar.gz</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
