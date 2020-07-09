@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.onap.policy.engine</groupId>
         <artifactId>PolicyEngineSuite</artifactId>
-        <version>1.6.5-SNAPSHOT</version>
+        <version>1.6.6-SNAPSHOT</version>
     </parent>
     <artifactId>ONAP-PDP-REST</artifactId>
     <description>ONAP PDP REST</description>
