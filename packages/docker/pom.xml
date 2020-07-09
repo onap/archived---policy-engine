@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.onap.policy.engine</groupId>
         <artifactId>packages</artifactId>
-        <version>1.6.5-SNAPSHOT</version>
+        <version>1.6.5</version>
     </parent>
 
     <artifactId>docker</artifactId>
