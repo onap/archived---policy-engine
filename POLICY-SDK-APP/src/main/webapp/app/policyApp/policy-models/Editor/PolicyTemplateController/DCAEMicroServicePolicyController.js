@@ -1493,14 +1493,14 @@ angular.module('abs').controller('dcaeMicroServiceController',
             }else{
             if(splitPlainAttributeKey[1]!= undefined && splitPlainAttributeKey[1] == "boolean"){
                 jsonPolicy[key]= false;
-                for(var i=0; i<booleanTrueElements.length; i++){                
+                for(var i=0; i<booleanTrueElements.length; i++){
                 if(booleanTrueElements[i] == key){
                     jsonPolicy[key]= true;
                 }
                 }
 
             }else{
-                jsonPolicy[key]= searchElement.value;
+                jsonPolicy[key]= window.btoa(searchElement.value);
             }
             }
             } else {
