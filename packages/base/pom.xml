@@ -117,14 +117,14 @@
 								<artifactItem>
 									<groupId>org.apache.tomcat</groupId>
 									<artifactId>tomcat</artifactId>
-									<version>9.0.36</version>
+									<version>9.0.37</version>
 									<type>tar.gz</type>
 									<!--
 									Please note that if you change this version, you must
 									update the docker-install.sh script to ensure the right
 									file name is installed. 
 									 -->
-									<destFileName>apache-tomcat-9.0.36.tar.gz</destFileName>
+									<destFileName>apache-tomcat-9.0.37.tar.gz</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
