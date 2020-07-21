@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
+import java.util.stream.Collectors;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
@@ -1345,7 +1345,8 @@ public class PolicyValidation {
                 Map<String, String> attributesMap = null;
                 if (",".equals(attributes.substring(attributes.length() - 1))) {
                     String attributesString = attributes.substring(0, attributes.length() - 1);
-                    attributesMap = Splitter.on(",").withKeyValueSeparator("=").split(attributesString);
+                    attributesMap = Splitter.on(",").splitToList(attributesString).stream().map(kv -> kv.split("="))
+                            .collect(Collectors.toMap(kv -> kv[0], kv -> kv[1], (exist, d2) -> exist));
                 } else if (!StringUtils.isBlank(modelAttributes)) {
                     attributesMap = Splitter.on(",").withKeyValueSeparator("=").split(modelAttributes);
                 } else {

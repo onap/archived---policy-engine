@@ -1500,7 +1500,7 @@ angular.module('abs').controller('dcaeMicroServiceController',
                 }
 
             }else{
-                jsonPolicy[key]= searchElement.value;
+                jsonPolicy[key]= window.btoa(searchElement.value);
             }
             }
             } else {
