@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ad7e402_0b82adfe",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-07-22T18:34:08Z",
+      "side": 1,
+      "message": "\"2017-2020\" \u003d\u003e \"2017-2018, 2020\"",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 26
+      },
+      "revId": "c62131a94e20ff04310290e644eb9102e80143c4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
