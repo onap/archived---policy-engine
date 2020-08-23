@@ -9,9 +9,9 @@ ENV BUILD_VERSION_ENGINE ${BUILD_VERSION_ENGINE}
 ENV POLICY_LOGS ${POLICY_LOGS}
 
 RUN apt update && \
-    apt-get install -y mariadb-client && \
-    apt-get install -y netcat && \
-    apt-get install -y cron && \
+    apt-get install -y -qq --no-install-recommends mariadb-client && \
+    apt-get install -y -qq --no-install-recommends netcat && \
+    apt-get install -y -qq --no-install-recommends cron && \
     mkdir -p /tmp/policy-install ${POLICY_LOGS} && \
     chown policy:policy /tmp/policy-install ${POLICY_LOGS}
 
